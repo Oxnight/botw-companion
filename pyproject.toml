@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "botw-companion"
+version = "0.39.0"
+description = "Analyse locale d'une sauvegarde Ryujinx/Switch de Zelda BOTW et suivi de complétion."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "BOTW Companion contributors"}]
+dependencies = []
+
+[project.scripts]
+botw-companion = "botw_companion.cli:main"
+
+[tool.setuptools.package-data]
+botw_companion = [
+    "data/*.json",
+    "web/*.html",
+    "web/*.css",
+    "web/*.js",
+    "web/*.webp",
+    "web/map-tiles/*.json",
+    "web/map-tiles/*.txt",
+    "web/map-tiles/*/*.webp",
+    "dsu/JoyConDSU",
+    "dsu/*.sh",
+    "dsu/*.md",
+]
+
+[tool.setuptools.packages.find]
+include = ["botw_companion*"]
+exclude = ["tests*", "tools*"]

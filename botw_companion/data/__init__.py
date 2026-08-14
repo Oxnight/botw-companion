@@ -1,0 +1,1 @@
+"""Données générées et versionnées du catalogue BOTW."""

@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environnements Python
+.venv/
+venv/
+env/
+
+# PyCharm
+.idea/
+*.iml
+
+# Construction et distributions
+build/
+dist/
+*.egg-info/
+deliverables/
+*.zip
+
+# Sauvegardes BOTW / Ryujinx
+*.sav
+caption.jpg
+last_save/
+ryujinx-save/
+saves/
+
+# Données personnelles BOTW Companion
+manual_tracking.json
+manual_tracking.backup.json
+route_sessions.json
+route_sessions.backup.json
+progression.json
+
+# Variables et secrets éventuels
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+._*
+__MACOSX/
+
+# Fichiers temporaires
+*.tmp
+*.log

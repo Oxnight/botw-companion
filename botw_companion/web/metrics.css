@@ -1,0 +1,809 @@
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+    margin: 32px 0;
+}
+
+.metric {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 22px;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: linear-gradient(145deg, #121e23, #0f191d);
+}
+
+.officialMetric {
+    border-color: #5a5031;
+}
+
+.ring {
+    width: 108px;
+    height: 108px;
+}
+
+.officialRing {
+    background: conic-gradient(var(--gold) var(--progress, 0%), #302d22 0);
+}
+
+.ring span {
+    font-size: 23px;
+}
+
+.hero h2 {
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.hero p {
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.metricLabel {
+    font-size: 9px;
+    letter-spacing: .14em;
+    color: var(--gold) !important;
+}
+
+.quick {
+    gap: 7px;
+}
+
+#mapBreakdown,
+#quickStats {
+    margin-top: 16px;
+}
+
+.quick span {
+    padding: 5px 8px;
+    font-size: 11px;
+}
+
+.bloodMoonBar {
+    display: grid;
+    grid-template-columns: 86px minmax(440px, 1fr) minmax(250px, 320px);
+    gap: 20px;
+    align-items: center;
+    margin-top: 16px;
+    padding: 18px 20px;
+    overflow: visible;
+    border-color: #633a3d;
+    background:
+        radial-gradient(
+            circle at 5% 50%,
+            #57242a55,
+            transparent 18%
+        ),
+        linear-gradient(
+            120deg,
+            #21191c,
+            #111b1f 58%
+        );
+}
+
+.bloodMoonVisual {
+    display: grid;
+    place-items: center;
+    gap: 7px;
+    min-width: 0;
+    color: #e8a39d;
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.bloodMoonOrb {
+    width: 62px;
+    height: 62px;
+    border: 2px solid #cb6a6f;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 38% 34%,
+        #ffd8ca 0 9%,
+        #ca6b68 28%,
+        #6e252c 65%,
+        #2b1118 100%
+    );
+    box-shadow: 0 0 24px #c43b455c;
+}
+
+.bloodMoonBar.scheduled .bloodMoonOrb {
+    box-shadow: 0 0 32px #f04c58a8;
+}
+
+.bloodMoonBar.unavailable {
+    opacity: .72;
+}
+
+.bloodMoonMain,
+.bloodMoonDetails {
+    min-width: 0;
+}
+
+.bloodMoonHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.bloodMoonMain h2 {
+    margin: 8px 0 4px;
+    font-size: 22px;
+    line-height: 1.15;
+}
+
+.bloodMoonMain p,
+.bloodMoonDetails p {
+    margin: 0;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.bloodMoonPhase {
+    flex: 0 0 auto;
+    padding: 5px 8px;
+    border: 1px solid #743e42;
+    border-radius: 999px;
+    color: #e8aaa3;
+    background: #371c20;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.bloodMoonTimeline {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.bloodMoonTimeline > div {
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid #3b2d30;
+    border-radius: 7px;
+    background: #0d171b99;
+}
+
+.bloodMoonTimeline small,
+.bloodMoonTimeline b {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.bloodMoonTimeline small {
+    color: var(--muted);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.bloodMoonTimeline b {
+    margin-top: 2px;
+    color: #e5ece8;
+    font-size: 10px;
+}
+
+.bloodMoonTimeline .bloodMoonFinal {
+    border-color: #744148;
+    background: #29191d;
+}
+
+.bloodMoonTimeline .bloodMoonFinal b {
+    color: #f0afa8;
+}
+
+.bloodMoonDetails {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+    padding-left: 18px;
+    border-left: 1px solid var(--line);
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+#bloodMoonMeasuredAt {
+    color: var(--gold);
+    font-weight: 650;
+}
+
+.bloodMoonProgress {
+    height: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #351c21;
+}
+
+.bloodMoonProgress i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #8b343c, #ed7d73);
+    transition: width .3s ease;
+}
+
+.mapPanel .panelTitle > div:first-child span {
+    display: block;
+    margin-top: 3px;
+}
+
+.mapControls {
+    display: flex;
+    gap: 5px;
+}
+
+.mapControls button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    color: var(--text);
+    background: #0c171b;
+    cursor: pointer;
+}
+
+.mapControls button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+#map {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+#map.dragging {
+    cursor: grabbing;
+}
+
+#mapStage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1200px;
+    height: 1000px;
+    transform-origin: 0 0;
+    background: #172126;
+}
+
+#mapStage > .mapFallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: auto;
+    pointer-events: none;
+}
+
+.mapTiles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.mapTile {
+    position: absolute;
+    display: block;
+    max-width: none;
+    border: 0;
+    color: transparent;
+    image-rendering: auto;
+    user-select: none;
+    pointer-events: none;
+}
+
+#geoPath {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: visible;
+}
+
+#geoPath polyline {
+    fill: none;
+    stroke: #f2d681;
+    stroke-width: 4;
+    stroke-dasharray: 12 8;
+    opacity: .85;
+    vector-effect: non-scaling-stroke;
+}
+
+#markers {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+}
+
+.mapCoords {
+    position: absolute;
+    z-index: 5;
+    left: 12px;
+    bottom: 9px;
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #d6ded9;
+    background: #071014c7;
+    font-size: 10px;
+    pointer-events: none;
+}
+
+.marker {
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
+    transform: translate(-50%, -50%) scale(var(--pin-scale, 1));
+    transform-origin: center;
+}
+
+.marker:hover,
+.marker.selected {
+    transform:
+        translate(-50%, -50%)
+        scale(calc(var(--pin-scale, 1) * 1.7));
+}
+
+.marker.cluster {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #ead28b;
+    color: #fff5d3;
+    background: #7d6430;
+    font-size: 9px;
+    font-weight: 700;
+    box-shadow: 0 0 0 4px #d5b7652b;
+}
+
+.marker.waypoint {
+    z-index: 6;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #fff1bd;
+    color: #111;
+    background: var(--gold);
+    font-size: 10px;
+    font-weight: 800;
+    box-shadow: 0 0 0 5px #d5b76535;
+}
+
+.detailDrawer {
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    right: 0;
+    width: min(430px, 94vw);
+    height: 100vh;
+    padding: 28px;
+    overflow: auto;
+    border-left: 1px solid #4a573d;
+    background: linear-gradient(155deg, #15242a, #091115 70%);
+    box-shadow: -20px 0 55px #0009;
+    transform: translateX(105%);
+    transition: transform .22s ease;
+}
+
+.detailDrawer.open {
+    transform: translateX(0);
+}
+
+.detailClose {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    border: 0;
+    color: var(--muted);
+    background: transparent;
+    font-size: 29px;
+    cursor: pointer;
+}
+
+.detailEyebrow {
+    margin: 0 35px 7px 0;
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: .15em;
+}
+
+.detailDrawer h2 {
+    margin: 0 35px 5px 0;
+    font: 500 27px/1.15 Georgia, serif;
+}
+
+.detailMeta {
+    color: var(--muted);
+}
+
+.detailStatus {
+    display: inline-flex;
+    align-items: center;
+    margin: 10px 0 22px;
+    padding: 5px 9px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+}
+
+.detailSection {
+    margin-top: 23px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+}
+
+.detailSection h3 {
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.detailSection p {
+    color: #c5d0cc;
+    white-space: pre-line;
+}
+
+.detailFacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.detailFact {
+    padding: 9px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0c171b;
+}
+
+.detailFact small {
+    display: block;
+    color: var(--muted);
+}
+
+.detailActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.detailActions button,
+.detailActions a {
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    background: #14252a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.detailActions button:hover,
+.detailActions a:hover {
+    border-color: var(--gold);
+}
+
+.geoPoints {
+    display: grid;
+    gap: 9px;
+}
+
+.geoPoint {
+    padding: 11px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #0c171b;
+}
+
+.geoPoint b,
+.geoPoint small,
+.geoPoint span {
+    display: block;
+}
+
+.geoPoint b {
+    color: var(--text);
+}
+
+.geoPoint small {
+    margin: 3px 0;
+    color: var(--muted);
+}
+
+.geoPoint span {
+    color: var(--gold);
+    font-size: 11px;
+}
+
+.interiorCard {
+    border-color: rgba(95, 190, 255, .3);
+    background: linear-gradient(
+        145deg,
+        rgba(20, 54, 72, .25),
+        rgba(16, 22, 30, .38)
+    );
+}
+
+.interiorPoints {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.interiorPoints article {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(5, 11, 16, .42);
+}
+
+.interiorPoints article > span {
+    display: grid;
+    place-items: center;
+    flex: 0 0 25px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #071017;
+    font-weight: 800;
+}
+
+.interiorPoints div {
+    display: grid;
+    gap: 3px;
+}
+
+.interiorPoints small,
+.interiorNote {
+    color: var(--muted);
+}
+
+.geoActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.geoActions button,
+.geoActions a {
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    color: var(--text);
+    background: #14252a;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.geoActions button:hover,
+.geoActions a:hover {
+    border-color: var(--gold);
+}
+
+.guideSummary {
+    color: #d4ddd9 !important;
+}
+
+.currentAction {
+    display: grid;
+    gap: 4px;
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px solid #8a7138;
+    border-radius: 9px;
+    background: #2d2819;
+}
+
+.currentAction small,
+.completionProof small {
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: .12em;
+}
+
+.guideSteps {
+    display: grid;
+    gap: 8px;
+}
+
+.guideStep {
+    display: grid;
+    grid-template-columns: 25px 1fr auto;
+    gap: 9px;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #0c171b;
+}
+
+.guideStep > span {
+    display: grid;
+    place-items: center;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    color: #091214;
+    background: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.guideStep b {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.guideStep p {
+    margin: 0 0 3px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.guideStep small {
+    color: var(--muted);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.guideStep button {
+    align-self: center;
+    padding: 5px 7px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--text);
+    background: #14252a;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.guideStep.termine > span {
+    background: var(--green);
+}
+
+.guideStep.actuel {
+    border-color: #b89443;
+    background: #211f16;
+}
+
+.guideStep.actuel > span {
+    background: var(--gold);
+}
+
+.guideStep.a_verifier > span {
+    background: var(--orange);
+}
+
+.guideStep.verrouille {
+    opacity: .58;
+}
+
+.guideNotes {
+    margin-top: 11px;
+    padding: 10px 11px;
+    border-radius: 8px;
+    background: #101c20;
+}
+
+.guideNotes b {
+    color: var(--gold);
+}
+
+.guideNotes ul {
+    margin: 5px 0 0;
+    padding-left: 17px;
+    color: var(--muted);
+}
+
+.guideNotes.warnings {
+    border-left: 3px solid var(--orange);
+}
+
+.completionProof {
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid var(--line);
+}
+
+.completionProof p {
+    margin: 4px 0 0;
+}
+
+@media (max-width: 1200px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .bloodMoonBar {
+        grid-template-columns: 76px minmax(0, 1fr);
+    }
+
+    .bloodMoonDetails {
+        grid-column: 1 / -1;
+        padding: 12px 0 0;
+        border-top: 1px solid var(--line);
+        border-left: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .metric {
+        grid-template-columns: 82px 1fr;
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .ring {
+        width: 78px;
+        height: 78px;
+    }
+
+    .ring span {
+        font-size: 18px;
+    }
+
+    #map {
+        height: 440px;
+    }
+
+    .detailDrawer {
+        padding: 23px;
+    }
+
+    .bloodMoonBar {
+        grid-template-columns: 1fr;
+        gap: 13px;
+        padding: 15px;
+    }
+
+    .bloodMoonVisual {
+        grid-template-columns: auto auto;
+        justify-content: start;
+    }
+
+    .bloodMoonOrb {
+        width: 46px;
+        height: 46px;
+    }
+
+    .bloodMoonHeading {
+        align-items: flex-start;
+    }
+
+    .bloodMoonPhase {
+        white-space: normal;
+        text-align: center;
+    }
+
+    .bloodMoonTimeline {
+        grid-template-columns: 1fr;
+    }
+
+    .bloodMoonDetails {
+        grid-column: auto;
+    }
+}

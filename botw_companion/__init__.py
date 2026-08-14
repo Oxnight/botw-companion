@@ -1,0 +1,3 @@
+"""BOTW Companion: analyse locale et en lecture seule des sauvegardes."""
+
+__version__ = "0.39.0"

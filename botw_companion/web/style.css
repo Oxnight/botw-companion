@@ -1,0 +1,516 @@
+:root {
+    --bg: #0b1115;
+    --panel: #111b20;
+    --panel2: #15242a;
+    --text: #f2f4eb;
+    --muted: #91a29e;
+    --gold: #d5b765;
+    --green: #5ed0a3;
+    --orange: #e99d57;
+    --red: #e36d68;
+    --line: #23343a
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at 70% -20%, #18353c 0, transparent 38%), var(--bg);
+    color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    min-height: 100vh
+}
+
+aside {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid var(--line);
+    padding: 28px 18px;
+    background: #0b1317dd;
+    backdrop-filter: blur(14px)
+}
+
+.brand {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0 8px 32px
+}
+
+.brand b,
+.brand small {
+    display: block;
+    letter-spacing: .18em
+}
+
+.brand small {
+    color: var(--muted);
+    font-size: 9px
+}
+
+.triforce {
+    color: var(--gold);
+    font-size: 25px;
+    text-shadow: 0 0 18px #d5b76588
+}
+
+nav button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 9px 10px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0
+}
+
+nav button:hover,
+nav button.active {
+    color: var(--text);
+    background: var(--panel2)
+}
+
+nav button span {
+    color: #62736f;
+    font-size: 12px
+}
+
+.legend {
+    position: absolute;
+    bottom: 24px;
+    color: var(--muted);
+    font-size: 12px
+}
+
+.legend p {
+    margin: 7px
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px
+}
+
+.todo {
+    background: var(--red)
+}
+
+.doing {
+    background: var(--orange)
+}
+
+.done {
+    background: var(--green)
+}
+
+main {
+    padding: 34px 42px 60px;
+    min-width: 0
+}
+
+header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between
+}
+
+h1 {
+    font: 500 34px/1.1 Georgia, serif;
+    margin: 5px 0 8px
+}
+
+h2,
+h3,
+p {
+    margin-top: 0
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--gold);
+    margin-bottom: 5px
+}
+
+#saveInfo {
+    color: var(--muted)
+}
+
+button,
+#refresh,
+select,
+input {
+    font: inherit
+}
+
+#refresh {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 9px;
+    padding: 9px 14px;
+    cursor: pointer
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    gap: 28px;
+    align-items: center;
+    margin: 32px 0
+}
+
+.ring {
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(var(--green) var(--progress, 0%), #203036 0);
+    position: relative
+}
+
+.ring:before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: var(--bg)
+}
+
+.ring span,
+.ring small {
+    z-index: 1
+}
+
+.ring span {
+    font: 500 25px Georgia, serif
+}
+
+.ring small {
+    color: var(--muted);
+    font-size: 10px
+}
+
+.hero h2 {
+    font-size: 21px;
+    margin-bottom: 6px
+}
+
+.hero p {
+    color: var(--muted)
+}
+
+.officialMetric label {
+    display: grid;
+    grid-template-columns: 70px max-content;
+    align-items: center
+}
+
+.companionMetric label {
+    display: grid;
+    grid-template-columns: 50px max-content;
+    align-items: center
+}
+
+.quick {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap
+}
+
+.quick span {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 6px 9px;
+    color: var(--muted)
+}
+
+.quick b {
+    color: var(--text)
+}
+
+.toolbar {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) auto auto auto;
+    gap: 9px;
+    margin-bottom: 16px
+}
+
+.toolbar input,
+.toolbar select {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    outline: none
+}
+
+.toolbar input:focus {
+    border-color: #4d756f
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(390px, 1.15fr) minmax(330px, .85fr);
+    gap: 16px
+}
+
+.panel {
+    background: linear-gradient(145deg, #121e23, #0f191d);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden
+}
+
+.panelTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 19px 12px
+}
+
+.panelTitle h3 {
+    margin: 0;
+    font-size: 14px
+}
+
+.panelTitle span {
+    color: var(--muted);
+    font-size: 12px
+}
+
+#map {
+    height: 520px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 55% 45%, #183c3a 0, #13282b 45%, #0e191d 75%)
+}
+
+.mapGrid {
+    position: absolute;
+    inset: 0;
+    opacity: .14;
+    background-image: linear-gradient(#7eaca1 1px, transparent 1px), linear-gradient(90deg, #7eaca1 1px, transparent 1px);
+    background-size: 10% 10%
+}
+
+.mapGrid:after {
+    content: "HYRULE";
+    position: absolute;
+    inset: 42% 0;
+    text-align: center;
+    letter-spacing: .5em;
+    color: #9dbab2;
+    font: 24px Georgia, serif;
+    opacity: .2
+}
+
+.marker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #0c171a;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: .15s;
+    box-shadow: 0 0 0 2px #ffffff16
+}
+
+.marker:hover,
+.marker.selected {
+    transform: translate(-50%, -50%) scale(1.9);
+    z-index: 3
+}
+
+.marker.todo {
+    background: var(--red)
+}
+
+.marker.doing {
+    background: var(--orange)
+}
+
+.marker.done {
+    background: var(--green)
+}
+
+.mapHint {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    color: #839995;
+    font-size: 11px
+}
+
+.listPanel {
+    height: 570px
+}
+
+.listPanel #list {
+    height: 515px;
+    overflow: auto
+}
+
+@media (min-width: 1001px) {
+    .workspace {
+        align-items: stretch
+    }
+
+    .listPanel {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0
+    }
+
+    .listPanel #list {
+        height: auto;
+        flex: 1 1 auto;
+        min-height: 0
+    }
+}
+
+.item {
+    border-top: 1px solid var(--line);
+    padding: 13px 17px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    gap: 11px;
+    align-items: start
+}
+
+.item:hover {
+    background: #17262b
+}
+
+.item h4 {
+    margin: 0 0 3px;
+    font-size: 13px;
+    font-weight: 600
+}
+
+.item p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px
+}
+
+.item .coords {
+    color: var(--gold);
+    font-size: 10px;
+    white-space: nowrap
+}
+
+.empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 70px 20px
+}
+
+#toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    background: #20352f;
+    border: 1px solid #3d675b;
+    padding: 10px 15px;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: .2s;
+    pointer-events: none
+}
+
+#toast.show {
+    opacity: 1;
+    transform: none
+}
+
+@media(max-width:1000px) {
+    body {
+        grid-template-columns: 1fr
+    }
+
+    aside {
+        height: auto;
+        position: relative;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 15px
+    }
+
+    .brand {
+        margin: 0
+    }
+
+    nav,
+    .legend {
+        display: none
+    }
+
+    main {
+        padding: 25px
+    }
+
+    .workspace {
+        grid-template-columns: 1fr
+    }
+
+    .toolbar {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .toolbar input {
+        grid-column: 1/-1
+    }
+}
+
+@media(max-width:600px) {
+    main {
+        padding: 18px
+    }
+
+    .hero {
+        grid-template-columns: 90px 1fr
+    }
+
+    .ring {
+        width: 85px;
+        height: 85px
+    }
+
+    .toolbar {
+        grid-template-columns: 1fr
+    }
+
+    .toolbar input {
+        grid-column: auto
+    }
+
+    .workspace {
+        grid-template-columns: 1fr
+    }
+
+    #map {
+        height: 370px
+    }
+}

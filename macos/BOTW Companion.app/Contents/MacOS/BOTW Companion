@@ -1,0 +1,120 @@
+#!/bin/zsh
+set -u
+
+readonly APP_NAME="BOTW Companion"
+readonly URL="http://127.0.0.1:8765/"
+readonly EXPECTED_VERSION="0.39.0"
+readonly PROJECT_DEFAULT="/Users/oxnight/Documents/Botw companion"
+readonly RYUJINX_APP="/Applications/Ryujinx.app"
+readonly SUPPORT_DIR="$HOME/Library/Application Support/BOTW Companion"
+readonly PROJECT_FILE="$SUPPORT_DIR/project_path"
+readonly LOG_FILE="$SUPPORT_DIR/launcher.log"
+readonly LOCK_DIR="$SUPPORT_DIR/launcher.lock"
+
+mkdir -p "$SUPPORT_DIR"
+
+show_error() {
+  /usr/bin/osascript -e "display alert \"$APP_NAME\" message \"$1\" as critical" >/dev/null 2>&1
+}
+
+project_is_valid() {
+  [[ -f "$1/pyproject.toml" && -x "$1/.venv/bin/python" && -d "$1/botw_companion" ]]
+}
+
+resolve_project() {
+  local configured=""
+  [[ -f "$PROJECT_FILE" ]] && configured="$(<"$PROJECT_FILE")"
+  if project_is_valid "$configured"; then
+    print -r -- "$configured"
+    return
+  fi
+  if project_is_valid "$PROJECT_DEFAULT"; then
+    print -r -- "$PROJECT_DEFAULT" > "$PROJECT_FILE"
+    print -r -- "$PROJECT_DEFAULT"
+    return
+  fi
+  local selected
+  selected="$(/usr/bin/osascript -e 'POSIX path of (choose folder with prompt "Sélectionne le dossier Botw companion contenant pyproject.toml")' 2>/dev/null)" || return 1
+  selected="${selected%/}"
+  if ! project_is_valid "$selected"; then
+    show_error "Ce dossier ne contient pas le projet et son environnement .venv."
+    return 1
+  fi
+  print -r -- "$selected" > "$PROJECT_FILE"
+  print -r -- "$selected"
+}
+
+server_is_ready() {
+  /usr/bin/curl --silent --fail --max-time 1 "$URL" >/dev/null 2>&1
+}
+
+server_version() {
+  /usr/bin/curl --silent --fail --max-time 1 "${URL}api/version" 2>/dev/null \
+    | /usr/bin/sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'
+}
+
+ryujinx_is_running() {
+  /usr/bin/pgrep -f "$RYUJINX_APP/Contents/MacOS" >/dev/null 2>&1
+}
+
+start_ryujinx_watcher() {
+  if ! ryujinx_is_running; then
+    return
+  fi
+  (
+    while ryujinx_is_running; do /bin/sleep 15; done
+    /bin/sleep 30
+    if ! ryujinx_is_running; then
+      /usr/bin/curl --silent --max-time 2 -X POST "${URL}api/shutdown" >/dev/null 2>&1
+    fi
+  ) >/dev/null 2>&1 &
+}
+
+if server_is_ready; then
+  if [[ "$(server_version)" == "$EXPECTED_VERSION" ]]; then
+    /usr/bin/open "$URL"
+    exit 0
+  fi
+
+  # Le code a été mis à jour alors qu'une ancienne instance Python était
+  # encore chargée. L'arrêter évite de rouvrir indéfiniment l'ancienne version.
+  /usr/bin/curl --silent --max-time 2 -X POST "${URL}api/shutdown" >/dev/null 2>&1 || true
+  for _attempt in {1..40}; do
+    server_is_ready || break
+    /bin/sleep 0.25
+  done
+fi
+
+if ! /bin/mkdir "$LOCK_DIR" 2>/dev/null; then
+  for _attempt in {1..80}; do
+    server_is_ready && { /usr/bin/open "$URL"; exit 0; }
+    /bin/sleep 0.25
+  done
+  show_error "Une autre tentative de lancement semble bloquée. Réessaie dans quelques secondes."
+  exit 1
+fi
+trap '/bin/rmdir "$LOCK_DIR" 2>/dev/null' EXIT
+
+PROJECT="$(resolve_project)" || exit 1
+PYTHON="$PROJECT/.venv/bin/python"
+
+if [[ -f "$LOG_FILE" && $(/usr/bin/stat -f%z "$LOG_FILE" 2>/dev/null || print 0) -gt 500000 ]]; then
+  /usr/bin/tail -c 200000 "$LOG_FILE" > "$LOG_FILE.tmp"
+  /bin/mv "$LOG_FILE.tmp" "$LOG_FILE"
+fi
+
+cd "$PROJECT" || { show_error "Impossible d’ouvrir le dossier du projet."; exit 1; }
+/usr/bin/nohup "$PYTHON" -m botw_companion interface --sans-navigateur >> "$LOG_FILE" 2>&1 &
+print -r -- $! > "$SUPPORT_DIR/server.pid"
+
+for _attempt in {1..120}; do
+  if server_is_ready; then
+    start_ryujinx_watcher
+    /usr/bin/open "$URL"
+    exit 0
+  fi
+  /bin/sleep 0.25
+done
+
+show_error "Le serveur n’a pas démarré. Consulte $LOG_FILE."
+exit 1

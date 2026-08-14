@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>BOTW Companion</title>
+
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/metrics.css">
+    <link rel="stylesheet" href="/armor.css">
+</head>
+
+<body>
+    <aside>
+        <div class="brand">
+            <span class="triforce">▲</span>
+
+            <div>
+                <b>BOTW</b>
+                <small>COMPANION</small>
+            </div>
+        </div>
+
+        <nav id="categories"></nav>
+
+        <div class="legend">
+            <p>
+                <i class="dot todo"></i>
+                À faire
+            </p>
+
+            <p>
+                <i class="dot doing"></i>
+                En cours
+            </p>
+
+            <p>
+                <i class="dot done"></i>
+                Terminé
+            </p>
+
+            <p>
+                <i class="dot info"></i>
+                Informatif
+            </p>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <p class="eyebrow">SAUVEGARDE RYUJINX • macOS</p>
+
+                <h1>Progression vers le 100 %</h1>
+
+                <p id="saveInfo">
+                    Chargement de la dernière sauvegarde…
+                </p>
+            </div>
+
+            <div id="dsuControl" class="dsuControl" aria-live="polite">
+                <i id="dsuDot" class="dsu-off" aria-hidden="true"></i>
+
+                <div>
+                    <small>GYROSCOPE JOY-CON • DSU</small>
+                    <b id="dsuStatus">Désactivé</b>
+                    <span id="dsuMessage">Serveur local arrêté.</span>
+                </div>
+
+                <button id="toggleDsu" type="button">
+                    Activer
+                </button>
+            </div>
+        </header>
+
+        <section class="panel syncBar">
+            <div class="syncState">
+                <i id="syncDot"></i>
+
+                <div>
+                    <p class="metricLabel">
+                        SYNCHRONISATION RYUJINX
+                    </p>
+
+                    <h2 id="syncStatus">
+                        Première lecture en attente
+                    </h2>
+
+                    <p id="syncTimes">
+                        Vérification de la sauvegarde…
+                    </p>
+                </div>
+            </div>
+
+            <div class="syncControls">
+                <label>
+                    Vérifier toutes les
+
+                    <select id="syncInterval">
+                        <option value="5">5 s</option>
+                        <option value="10">10 s</option>
+                        <option value="15">15 s</option>
+                        <option value="30" selected>30 s</option>
+                        <option value="60">60 s</option>
+                    </select>
+                </label>
+
+                <button id="pauseSync">
+                    Pause
+                </button>
+
+                <button id="refresh">
+                    ↻ Lire maintenant
+                </button>
+
+                <button id="quitCompanion" class="dangerButton">
+                    Quitter
+                </button>
+            </div>
+
+            <details class="syncHistory">
+                <summary>
+                    Historique récent
+                </summary>
+
+                <div id="syncEvents">
+                    <p>Aucun événement.</p>
+                </div>
+            </details>
+        </section>
+
+        <section
+            id="bloodMoonPanel"
+            class="panel bloodMoonBar"
+            aria-live="polite"
+        >
+            <div class="bloodMoonVisual">
+                <div
+                    class="bloodMoonOrb"
+                    aria-hidden="true"
+                ></div>
+
+                <span id="bloodMoonPercent">-</span>
+            </div>
+
+            <div class="bloodMoonMain">
+                <div class="bloodMoonHeading">
+                    <div>
+                        <p class="metricLabel">
+                            PROCHAINE LUNE DE SANG
+                        </p>
+
+                        <h2 id="bloodMoonCountdown">
+                            Lecture du compteur interne…
+                        </h2>
+                    </div>
+
+                    <span
+                        id="bloodMoonPhase"
+                        class="bloodMoonPhase"
+                    >
+                        Analyse…
+                    </span>
+                </div>
+
+                <p id="bloodMoonStatus">
+                    Analyse de la dernière sauvegarde.
+                </p>
+
+                <div class="bloodMoonTimeline">
+                    <div>
+                        <small>
+                            Seuil des 7 jours
+                        </small>
+
+                        <b id="bloodMoonThreshold">-</b>
+                    </div>
+
+                    <div>
+                        <small>
+                            Programmation
+                        </small>
+
+                        <b id="bloodMoonScheduled">-</b>
+                    </div>
+
+                    <div class="bloodMoonFinal">
+                        <small>
+                            Déclenchement
+                        </small>
+
+                        <b id="bloodMoonEvent">-</b>
+                    </div>
+                </div>
+
+                <div
+                    class="bloodMoonProgress"
+                    aria-hidden="true"
+                >
+                    <i id="bloodMoonProgress"></i>
+                </div>
+            </div>
+
+            <div class="bloodMoonDetails">
+                <p id="bloodMoonMeasuredAt">
+                    Mesure de la dernière sauvegarde
+                </p>
+
+                <p id="bloodMoonInternal">-</p>
+                <p id="bloodMoonAccuracy">-</p>
+            </div>
+        </section>
+
+        <section class="hero">
+            <article class="metric officialMetric">
+                <div class="ring officialRing">
+                    <span id="mapPercent">-</span>
+                    <small>carte BOTW</small>
+                </div>
+
+                <div>
+                    <p class="metricLabel">
+                        POURCENTAGE OFFICIEL DE LA CARTE
+                    </p>
+
+                    <h2 id="mapScore">
+                        Analyse en cours
+                    </h2>
+
+                    <p id="mapStatus"></p>
+
+                    <label>
+                        Formule
+
+                        <select id="mapDlcMode">
+                            <option value="automatique">
+                                Automatique
+                            </option>
+
+                            <option value="base">
+                                Jeu de base
+                            </option>
+
+                            <option value="dlc">
+                                Jeu + DLC
+                            </option>
+                        </select>
+                    </label>
+
+                    <div
+                        id="mapBreakdown"
+                        class="quick"
+                    ></div>
+                </div>
+            </article>
+
+            <article class="metric companionMetric">
+                <div class="ring companionRing">
+                    <span id="percent">-</span>
+                    <small>couverture</small>
+                </div>
+
+                <div>
+                    <p class="metricLabel">
+                        PROFIL DE COMPLÉTION
+                    </p>
+
+                    <h2 id="score">
+                        Analyse en cours
+                    </h2>
+
+                    <p id="scoreNote"></p>
+
+                    <label>
+                        Profil
+
+                        <select id="completionProfile"></select>
+                    </label>
+
+                    <div
+                        id="quickStats"
+                        class="quick"
+                    ></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="manualBar panel">
+            <div>
+                <p class="metricLabel">
+                    SUIVI MANUEL LOCAL
+                </p>
+
+                <h2 id="manualScore">
+                    Chargement…
+                </h2>
+
+                <p id="manualNote">
+                    Séparé de l’analyse automatique et du pourcentage officiel.
+                </p>
+            </div>
+
+            <div class="manualActions">
+                <button id="exportManual">
+                    Exporter
+                </button>
+
+                <button id="importManual">
+                    Importer
+                </button>
+
+                <input
+                    id="manualFile"
+                    type="file"
+                    accept="application/json,.json"
+                    hidden
+                >
+            </div>
+        </section>
+
+        <section class="toolbar">
+            <input
+                id="search"
+                type="search"
+                placeholder="Rechercher un sanctuaire, une quête, une région…"
+            >
+
+            <select id="status">
+                <option value="todo">
+                    À faire, en cours et infos
+                </option>
+
+                <option value="all">
+                    Tout afficher
+                </option>
+
+                <option value="done">
+                    Terminés (tous)
+                </option>
+
+                <option value="automatic">
+                    Validés automatiquement
+                </option>
+
+                <option value="manual">
+                    Validés manuellement
+                </option>
+
+                <option value="mixed">
+                    Validés automatiquement + manuellement
+                </option>
+
+                <option value="info">
+                    Points informatifs
+                </option>
+            </select>
+
+            <select id="dlc">
+                <option value="all">
+                    Tous les contenus
+                </option>
+
+                <option value="base">
+                    Jeu de base
+                </option>
+
+                <option value="expansion">
+                    Expansion Pass complet
+                </option>
+
+                <option value="expansion_bonus">
+                    Bonus Expansion Pass
+                </option>
+
+                <option value="master_trials">
+                    DLC 1 - Les épreuves légendaires
+                </option>
+
+                <option value="champions_ballad">
+                    DLC 2 - L'Ode aux Prodiges
+                </option>
+
+                <option value="amiibo">
+                    Extension amiibo
+                </option>
+
+                <option value="master_mode">
+                    Mode expert
+                </option>
+
+                <option value="free_update">
+                    Mise à jour Xenoblade
+                </option>
+            </select>
+
+            <select id="gameMode">
+                <option value="save">
+                    Mode de la sauvegarde
+                </option>
+
+                <option value="all">
+                    Tous les modes (averti)
+                </option>
+
+                <option value="normal">
+                    Placements du mode normal
+                </option>
+
+                <option value="expert">
+                    Placements du mode Expert
+                </option>
+            </select>
+
+            <select id="location">
+                <option value="all">
+                    Toutes les localisations
+                </option>
+
+                <option value="map_and_list">
+                    Affichables sur Hyrule
+                </option>
+
+                <option value="interior_only">
+                    Cartes intérieures
+                </option>
+
+                <option value="list_only">
+                    Liste seulement
+                </option>
+
+                <option value="coordinates_missing">
+                    Sans coordonnées renseignées
+                </option>
+
+                <option value="no_natural_location">
+                    Sans localisation naturelle
+                </option>
+            </select>
+
+            <select id="variant">
+                <option value="all">
+                    Toutes les variantes
+                </option>
+            </select>
+
+            <select id="region">
+                <option value="all">
+                    Toutes les régions
+                </option>
+            </select>
+        </section>
+
+        <section
+            id="filterScopeNotice"
+            class="filterScopeNotice panel"
+            aria-live="polite"
+        ></section>
+
+        <section
+            id="routePlanner"
+            class="panel routePlanner"
+        >
+            <div class="routeHeader">
+                <div>
+                    <p class="metricLabel">
+                        SESSION DE JEU
+                    </p>
+
+                    <h2>
+                        Planificateur d’itinéraire
+                    </h2>
+
+                    <p id="routeSummary">
+                        Aucune étape sélectionnée.
+                    </p>
+                </div>
+
+                <button
+                    id="toggleRoute"
+                    aria-expanded="false"
+                >
+                    Afficher
+                </button>
+            </div>
+
+            <div id="routeBody" hidden>
+                <div class="routeSessions">
+                    <label>
+                        Session
+
+                        <select id="routeSessionSelect"></select>
+                    </label>
+
+                    <label>
+                        Nom
+
+                        <input
+                            id="routeSessionName"
+                            maxlength="120"
+                            value="Session BOTW"
+                        >
+                    </label>
+
+                    <button id="newRouteSession">
+                        Nouvelle
+                    </button>
+
+                    <button id="duplicateRouteSession">
+                        Dupliquer
+                    </button>
+
+                    <button id="deleteRouteSession">
+                        Supprimer
+                    </button>
+
+                    <label>
+                        Optimisation
+
+                        <select id="routeStrategy">
+                            <option value="distance">
+                                Distance directe
+                            </option>
+
+                            <option value="region">
+                                Priorité régionale
+                            </option>
+
+                            <option value="teleport">
+                                Téléportations privilégiées
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="routeToolbar">
+                    <div class="routeToolGroup">
+                        <span class="routeToolTitle">OBJECTIFS</span>
+
+                        <div class="routeToolControls">
+                            <button id="addFiltered">
+                                + Ajouter les résultats filtrés
+                            </button>
+
+                            <button id="optimizeRoute">
+                                Optimiser l’itinéraire
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="routeToolGroup">
+                        <span class="routeToolTitle">POINT DE DÉPART</span>
+
+                        <div class="routeToolControls">
+                            <button id="pickRouteStart">
+                                Choisir sur la carte
+                            </button>
+
+                            <button id="useSelectedStart">
+                                Utiliser la fiche ouverte
+                            </button>
+
+                            <label>
+                                X
+
+                                <input
+                                    id="routeStartX"
+                                    type="number"
+                                    step="1"
+                                    placeholder="auto"
+                                >
+                            </label>
+
+                            <label>
+                                Z
+
+                                <input
+                                    id="routeStartZ"
+                                    type="number"
+                                    step="1"
+                                    placeholder="auto"
+                                >
+                            </label>
+
+                            <button id="applyRouteStart">
+                                Utiliser ces coordonnées
+                            </button>
+
+                            <button id="clearRouteStart">
+                                Réinitialiser le départ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="routeWorkspace">
+                    <div
+                        id="routeList"
+                        class="routeList"
+                    >
+                        <div class="empty">
+                            Ajoute des objectifs depuis les résultats ou une fiche.
+                        </div>
+                    </div>
+
+                    <div class="routeExport">
+                        <h3>Session</h3>
+
+                        <p id="routeStartLabel">
+                            Départ : premier objectif
+                        </p>
+
+                        <p id="routeRegions">
+                            Régions : -
+                        </p>
+
+                        <p class="routeWarning">
+                            Calcul indicatif : le relief, la météo, l’escalade et les dangers ne sont pas simulés.
+                        </p>
+
+                        <div class="routeExportActions">
+                            <button id="exportRouteJson">
+                                Exporter la session
+                            </button>
+
+                            <button id="importRouteJson">
+                                Importer une session
+                            </button>
+
+                            <input
+                                id="routeFile"
+                                type="file"
+                                accept="application/json,.json"
+                                hidden
+                            >
+
+                            <button id="exportRouteText">
+                                Exporter en texte
+                            </button>
+
+                            <button id="exportAllData">
+                                Sauvegarder toutes les données
+                            </button>
+
+                            <button id="clearRoute" class="routeClearButton">
+                                Vider la session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <div class="panel mapPanel">
+                <div class="panelTitle">
+                    <div>
+                        <h3>
+                            Carte d’Hyrule
+                        </h3>
+
+                        <span id="mapCount"></span>
+                    </div>
+
+                    <div class="mapControls">
+                        <button
+                            id="zoomOut"
+                            title="Dézoomer"
+                        >
+                            −
+                        </button>
+
+                        <button
+                            id="mapReset"
+                            title="Voir toute la carte"
+                        >
+                            ⌂
+                        </button>
+
+                        <button
+                            id="zoomIn"
+                            title="Zoomer"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <div id="map">
+                    <div id="mapStage">
+                        <img
+                            id="mapFallback"
+                            class="mapFallback"
+                            src="/hyrule-map.webp"
+                            alt="Carte topographique d’Hyrule"
+                            draggable="false"
+                        >
+
+                        <div id="mapTiles" class="mapTiles" aria-hidden="true"></div>
+
+                        <svg
+                            id="geoPath"
+                            viewBox="0 0 1200 1000"
+                            aria-hidden="true"
+                        ></svg>
+
+                        <div id="markers"></div>
+                    </div>
+
+                    <p
+                        id="mapCoords"
+                        class="mapCoords"
+                    >
+                        Déplace la carte • molette pour zoomer
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel listPanel">
+                <div class="panelTitle">
+                    <h3 id="listTitle">
+                        Éléments restants
+                    </h3>
+
+                    <span id="resultCount"></span>
+                </div>
+
+                <div id="list"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <div
+        id="itemDetails"
+        class="detailDrawer"
+        aria-hidden="true"
+    >
+        <button
+            id="closeDetails"
+            class="detailClose"
+            aria-label="Fermer"
+        >
+            ×
+        </button>
+
+        <div id="detailContent"></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="/route_planner.js"></script>
+    <script src="/app.js"></script>
+</body>
+</html>
