@@ -8,6 +8,11 @@ const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
+let runtimePlatform = {
+    label: "Système local",
+    native_dsu_engine: "DSU",
+    relaunch_hint: "Tu peux fermer cet onglet. Relance BOTW Companion pour redémarrer l’application."
+};
 const LIST_PAGE_SIZE = 300;
 let listRenderLimit = LIST_PAGE_SIZE;
 const ROUTE_STORAGE_KEY = "botw-companion-route-v1", ROUTE_LIMIT = 1000;
@@ -655,7 +660,12 @@ function renderDsu(state) {
     $("#dsuDot").className = `dsu-${state.state}`;
     $("#dsuStatus").textContent = state.state_label;
     $("#dsuMessage").textContent = state.message;
-    $("#dsuControl").title = state.message;
+    $("#dsuEngineLabel").textContent =
+        state.engine_name || runtimePlatform.native_dsu_engine || "DSU";
+    $("#dsuControl").title = [
+        state.message,
+        state.log_path ? `Journal : ${state.log_path}` : null
+    ].filter(Boolean).join("\n");
     $("#toggleDsu").textContent = state.running ? "Désactiver" : "Activer";
     $("#toggleDsu").classList.toggle("active", state.running);
     $("#toggleDsu").disabled = dsuBusy || state.state === "unavailable";
@@ -668,10 +678,39 @@ async function loadRuntimePlatform() {
         if (!response.ok) {
             throw Error("Plateforme inaccessible");
         }
+        runtimePlatform = {
+            ...runtimePlatform,
+            ...(data.platform || {})
+        };
         $("#runtimePlatform").textContent =
-            String(data.platform?.label || "Système local").toUpperCase();
+            String(runtimePlatform.label || "Système local").toUpperCase();
+        $("#dsuEngineLabel").textContent =
+            runtimePlatform.native_dsu_engine || "DSU";
     } catch (_error) {
         $("#runtimePlatform").textContent = "SYSTÈME LOCAL";
+    }
+}
+
+async function copyText(text) {
+    if (navigator.clipboard?.writeText) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return;
+        } catch (_error) {
+        }
+    }
+
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand("copy");
+    field.remove();
+    if (!copied) {
+        throw Error("Copie impossible dans ce navigateur");
     }
 }
 
@@ -1138,7 +1177,7 @@ async function quitCompanion() {
     }
 
     document.body.innerHTML =
-        '<main class="shutdownPage"><div class="panel"><h1>BOTW Companion est arrêté</h1><p>Tu peux fermer cet onglet. Clique à nouveau sur l’icône du Dock pour le relancer.</p></div></main>';
+        `<main class="shutdownPage"><div class="panel"><h1>BOTW Companion est arrêté</h1><p>${esc(runtimePlatform.relaunch_hint)}</p></div></main>`;
 }
 
 async function checkSync(force = false) {
@@ -2570,7 +2609,7 @@ function renderDetails(x) {
 
         $("#copyCoords").onclick =
             async () => {
-                await navigator.clipboard.writeText(
+                await copyText(
                     `${x.x}, ${x.z}`
                 );
 
@@ -2616,7 +2655,7 @@ function renderDetails(x) {
                                 +button.dataset.geoCopy
                             ];
 
-                        await navigator.clipboard.writeText(
+                        await copyText(
                             `${p.x}, ${p.z}`
                         );
 

@@ -11,7 +11,7 @@ import threading
 import time
 import zlib
 
-from ..platforms import companion_data_dir
+from ..platforms import companion_data_dir, platform_label
 
 
 DSU_HOST = "127.0.0.1"
@@ -88,8 +88,13 @@ class DsuManager:
         self._started_at: float | None = None
 
     def _availability_error(self) -> str | None:
+        if self.system == "Windows":
+            return (
+                "Le moteur JoyConDSU.exe intégré pour Windows sera ajouté à "
+                "l’étape dédiée. Les autres fonctions du Companion restent disponibles."
+            )
         if self.system != "Darwin":
-            return "JoyConDSU intégré est disponible uniquement sur macOS."
+            return "Le moteur JoyConDSU intégré n’est pas disponible sur ce système."
         if not self.executable.is_file():
             return "Le binaire JoyConDSU est absent du paquet."
         if not self.launcher.is_file():
@@ -162,6 +167,7 @@ class DsuManager:
 
     def _payload(self, state: str, label: str, message: str,
                  running: bool, controller_connected: bool) -> dict:
+        engine_name = "JoyConDSU.exe" if self.system == "Windows" else self.executable.name
         return {
             "schema_version": 1,
             "state": state,
@@ -173,6 +179,9 @@ class DsuManager:
             "port": DSU_PORT,
             "enabled_by_default": False,
             "started_at": self._started_at,
+            "platform": platform_label(self.system),
+            "engine_name": engine_name,
+            "log_path": str(self.log_path),
         }
 
     def start(self) -> dict:

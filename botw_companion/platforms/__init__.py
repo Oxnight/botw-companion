@@ -55,12 +55,59 @@ def platform_label(system: str | None = None) -> str:
     }.get(platform_id(system), system_name(system) or "Système inconnu")
 
 
-def platform_metadata(system: str | None = None) -> dict[str, str]:
+def platform_metadata(system: str | None = None, *,
+                      environ: Environment | None = None,
+                      home: Path | None = None) -> dict[str, str]:
     resolved = system_name(system)
+    data_root = companion_data_dir(system=resolved, environ=environ, home=home)
+    platform_key = platform_id(resolved)
+    presentation = {
+        "macos": {
+            "installation_label": "application macOS",
+            "native_dsu_engine": "JoyConDSU",
+            "relaunch_hint": (
+                "Tu peux fermer cet onglet. Relance BOTW Companion depuis "
+                "son icône dans le Dock ou depuis le Finder."
+            ),
+            "shortcut_modifier": "⌘",
+        },
+        "windows": {
+            "installation_label": "application Windows",
+            "native_dsu_engine": "JoyConDSU.exe",
+            "relaunch_hint": (
+                "Tu peux fermer cet onglet. Relance BOTW Companion depuis "
+                "son raccourci Windows ou son dossier d’installation."
+            ),
+            "shortcut_modifier": "Ctrl",
+        },
+        "linux": {
+            "installation_label": "application Linux",
+            "native_dsu_engine": "JoyConDSU",
+            "relaunch_hint": (
+                "Tu peux fermer cet onglet. Relance BOTW Companion depuis "
+                "ton lanceur ou son dossier d’installation."
+            ),
+            "shortcut_modifier": "Ctrl",
+        },
+    }.get(platform_key, {
+        "installation_label": "application locale",
+        "native_dsu_engine": "JoyConDSU",
+        "relaunch_hint": (
+            "Tu peux fermer cet onglet. Relance BOTW Companion pour "
+            "redémarrer l’application."
+        ),
+        "shortcut_modifier": "Ctrl",
+    })
     return {
-        "id": platform_id(resolved),
+        "id": platform_key,
         "label": platform_label(resolved),
         "system": resolved,
+        "installation_label": presentation["installation_label"],
+        "native_dsu_engine": presentation["native_dsu_engine"],
+        "relaunch_hint": presentation["relaunch_hint"],
+        "shortcut_modifier": presentation["shortcut_modifier"],
+        "data_directory": str(data_root),
+        "dsu_log_path": str(data_root / "joycon-dsu.log"),
     }
 
 

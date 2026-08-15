@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 3**. Elle conserve le paquet macOS Apple Silicon validé, le socle multiplateforme et la synchronisation Windows fiable de l’alpha 2. Le cycle de vie commun sait maintenant identifier une instance existante, protéger le serveur par un mutex Windows, surveiller Ryujinx à faible fréquence et résister aux onglets suspendus ainsi qu’aux sorties de veille. Le lanceur graphique et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 4**. Elle adapte désormais l’interface au système réellement détecté sans modifier son design : nom du système, consigne de relance, moteur DSU, emplacement des journaux et chemins locaux sont fournis par l’API. Le socle Windows conserve la détection des sauvegardes, la synchronisation et le cycle de vie fiable de l’alpha 3. Le lanceur graphique et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -29,7 +29,7 @@ La version actuelle est **0.40.0 alpha 3**. Elle conserve le paquet macOS Apple 
 * Suivi manuel persistant pour les éléments que la sauvegarde ne peut pas prouver.
 * Planificateur d’itinéraire avec sessions persistantes.
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
-* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx.
+* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS ; portage Windows prévu à l’étape dédiée.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceur macOS pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
@@ -53,7 +53,15 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 
 Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-Le lanceur graphique Windows qui activera automatiquement cette surveillance et JoyConDSU Windows ne font pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows qui activera automatiquement la surveillance et JoyConDSU Windows ne fait pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
+
+Pour essayer le socle Windows avant l’arrivée du lanceur graphique, utiliser PowerShell dans le clone :
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\python.exe -m botw_companion interface
+```
 
 La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine.
 
@@ -168,6 +176,26 @@ Les fichiers personnels, journaux et préférences sont conservés hors du dép�
 ```text
 ~/Library/Application Support/BOTW Companion/
 ```
+
+Sous Windows, ils sont conservés dans :
+
+```text
+%LOCALAPPDATA%\BOTW Companion\
+```
+
+L’API locale `/api/version` fournit le chemin exact du dossier de données et du journal DSU à l’interface. Le survol de l’encadré DSU affiche également l’emplacement réellement utilisé.
+
+## Validation des navigateurs
+
+Le même test fonctionnel peut viser les trois navigateurs prévus :
+
+```bash
+node tools/browser_smoke.js http://127.0.0.1:8765 chrome
+node tools/browser_smoke.js http://127.0.0.1:8765 edge
+node tools/browser_smoke.js http://127.0.0.1:8765 firefox
+```
+
+Chrome, Microsoft Edge et Firefox doivent être installés sur la machine de test. Le script s’appuie sur leurs canaux officiels Playwright et vérifie notamment l’état initial des filtres, la carte, les fiches, la désélection et le planificateur masqué.
 
 ## Mise à jour du clone
 
