@@ -34,4 +34,12 @@ Les réglages et le journal se trouvent dans `%LOCALAPPDATA%\BOTW Companion`. Le
 }
 ```
 
-L'activation du moteur JoyConDSU natif sous Windows appartient à l'étape suivante de la feuille de route.
+## Gyroscope Joy-Con
+
+Construire une fois le moteur natif depuis la racine du clone :
+
+```powershell
+.\tools\build_joycon_dsu_windows.ps1
+```
+
+Le script installe `JoyConDSU.exe` et `SDL3.dll` dans les ressources locales du Companion. Le bouton **Activer** du site lance ensuite le moteur sans console, affiche les mêmes états que sur macOS et l'arrête avec le serveur Web. Le port Cemuhook reste `127.0.0.1:26760`.

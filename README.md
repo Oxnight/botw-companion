@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 6**. Elle porte le moteur natif JoyConDSU en C sous Windows sans modifier le protocole Cemuhook, la calibration, les timestamps, la télémétrie ni le fonctionnement macOS. La construction Windows reproductible fournit `JoyConDSU.exe` avec sa `SDL3.dll` locale ; son raccordement au bouton du Companion appartient à l’étape suivante. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 7**. Elle raccorde le moteur natif JoyConDSU Windows au même bouton, aux mêmes états et au même cycle de vie que sous macOS, sans modifier le design, le protocole Cemuhook, la calibration, les timestamps ni la télémétrie. Le moteur est lancé sans console, s'arrête proprement avec le Companion et conserve exactement le port local `127.0.0.1:26760`. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -30,7 +30,7 @@ La version actuelle est **0.40.0 alpha 6**. Elle porte le moteur natif JoyConDSU
 * Suivi manuel persistant pour les éléments que la sauvegarde ne peut pas prouver.
 * Planificateur d’itinéraire avec sessions persistantes.
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
-* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS, avec moteur C désormais portable et constructible sous Windows.
+* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS et Windows.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
@@ -54,7 +54,7 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 
 Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le moteur JoyConDSU se construit désormais nativement sous Windows avec Winsock 2.2 et SDL3 ; son pilotage par l’interface sera ajouté à l’étape suivante. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le moteur JoyConDSU se construit nativement sous Windows avec Winsock 2.2 et SDL3, puis le bouton **Activer** le lance directement sans fenêtre de console. Les états de calibration, d'attente, de disponibilité et d'erreur restent identiques à ceux de macOS. Le comportement macOS existant reste inchangé.
 
 Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 
@@ -64,6 +64,14 @@ py -3.12 -m venv .venv
 ```
 
 La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine. La procédure de construction Windows du moteur est décrite dans `third_party/JoyConDSU/README_WINDOWS.md`.
+
+Dans un clone Windows, construire une fois le moteur avant d'utiliser le bouton du gyroscope :
+
+```powershell
+.\tools\build_joycon_dsu_windows.ps1
+```
+
+Le script place automatiquement `JoyConDSU.exe`, `SDL3.dll` et leur manifeste dans les ressources utilisées par le Companion. Un paquet Windows autonome les embarquera directement lors de l'étape de distribution.
 
 ## Installation depuis un clone Git
 
@@ -142,7 +150,7 @@ Le fichier `%LOCALAPPDATA%\BOTW Companion\launcher.json` permet de changer le po
 
 ## Configurer le gyroscope Joy-Con dans Ryujinx
 
-1. Connecter les deux Joy-Con au Mac et les utiliser comme paire L/R.
+1. Connecter les deux Joy-Con à l'ordinateur et les utiliser comme paire L/R.
 2. Dans Ryujinx, activer la source de mouvement Cemuhook/DSU.
 3. Utiliser l’hôte `127.0.0.1` et le port `26760`.
 4. Sur BOTW Companion, cliquer sur **Activer** dans l’encadré du gyroscope.

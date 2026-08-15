@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "botw-companion"
-version = "0.40.0a6"
+version = "0.40.0a7"
 description = "Analyse locale d'une sauvegarde Ryujinx/Switch de Zelda BOTW et suivi de complétion."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,6 +29,9 @@ botw_companion = [
     "dsu/JoyConDSU",
     "dsu/*.sh",
     "dsu/*.md",
+    "dsu/windows/*.exe",
+    "dsu/windows/*.dll",
+    "dsu/windows/*.json",
 ]
 
 [tool.setuptools.packages.find]

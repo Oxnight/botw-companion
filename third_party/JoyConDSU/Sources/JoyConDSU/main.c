@@ -742,16 +742,19 @@ int main(void)
     if (!SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS, "1")
         || !SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS, "1")) {
         fprintf(stderr, "Impossible de configurer la détection des Joy-Con.\n");
+        dsu_platform_cleanup();
         return EXIT_FAILURE;
     }
 
     if (!SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_SENSOR)) {
         fprintf(stderr, "SDL_Init : %s\n", SDL_GetError());
+        dsu_platform_cleanup();
         return EXIT_FAILURE;
     }
 
     if (!dsu_socket_platform_init()) {
         SDL_Quit();
+        dsu_platform_cleanup();
         return EXIT_FAILURE;
     }
     const DsuSocket socket_handle =
@@ -759,6 +762,7 @@ int main(void)
     if (socket_handle == DSU_INVALID_SOCKET) {
         dsu_socket_platform_cleanup();
         SDL_Quit();
+        dsu_platform_cleanup();
         return EXIT_FAILURE;
     }
 
@@ -938,6 +942,7 @@ int main(void)
     dsu_socket_close(socket_handle);
     dsu_socket_platform_cleanup();
     SDL_Quit();
+    dsu_platform_cleanup();
 
     return EXIT_SUCCESS;
 }

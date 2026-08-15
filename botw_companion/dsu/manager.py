@@ -12,12 +12,33 @@ import time
 import zlib
 
 from ..platforms import companion_data_dir, platform_label
+from .windows_runtime import signal_stop_event
 
 
 DSU_HOST = "127.0.0.1"
 DSU_PORT = 26760
 DSU_PROTOCOL_VERSION = 1001
 DSU_MSG_PORTS = 0x100001
+WINDOWS_CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+
+
+def _windows_runtime_directory(resource_root: Path, *,
+                               environ=None,
+                               project_root: Path | None = None) -> Path:
+    values = os.environ if environ is None else environ
+    override = values.get("BOTW_COMPANION_DSU_DIR")
+    if override:
+        return Path(override).expanduser()
+    project = project_root or Path(__file__).resolve().parents[2]
+    candidates = [
+        resource_root / "windows",
+        project / "windows" / "native-dsu",
+    ]
+    for candidate in candidates:
+        if (candidate / "JoyConDSU.exe").is_file() \
+                and (candidate / "SDL3.dll").is_file():
+            return candidate
+    return candidates[0]
 
 
 def _client_packet(message_type: int, payload: bytes = b"") -> bytes:
@@ -68,19 +89,31 @@ class DsuManager:
                  launcher: Path | None = None, system: str | None = None,
                  machine: str | None = None, support_dir: Path | None = None,
                  sdl_library: Path | None = None,
-                 probe=probe_dsu, popen=subprocess.Popen) -> None:
-        resource_root = files("botw_companion.dsu")
-        self.executable = executable or Path(str(resource_root.joinpath("JoyConDSU")))
-        self.launcher = launcher or Path(str(resource_root.joinpath("launch_managed.sh")))
+                 runtime_dir: Path | None = None, environ=None,
+                 probe=probe_dsu, popen=subprocess.Popen,
+                 windows_stop_signal=signal_stop_event) -> None:
+        resource_root = Path(str(files("botw_companion.dsu")))
         self.system = system or platform.system()
         self.machine = (machine or platform.machine()).lower()
+        if self.system == "Windows":
+            self.runtime_dir = runtime_dir or _windows_runtime_directory(
+                resource_root,
+                environ=environ,
+            )
+            self.executable = executable or self.runtime_dir / "JoyConDSU.exe"
+            self.sdl_library = sdl_library or self.executable.parent / "SDL3.dll"
+        else:
+            self.runtime_dir = resource_root
+            self.executable = executable or resource_root / "JoyConDSU"
+            self.sdl_library = sdl_library or Path(
+                "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib"
+            )
+        self.launcher = launcher or resource_root / "launch_managed.sh"
         self.support_dir = support_dir or companion_data_dir(system=self.system)
         self.log_path = self.support_dir / "joycon-dsu.log"
-        self.sdl_library = sdl_library or Path(
-            "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib"
-        )
         self._probe = probe
         self._popen = popen
+        self._windows_stop_signal = windows_stop_signal
         self._process = None
         self._log_handle = None
         self._lock = threading.RLock()
@@ -89,10 +122,11 @@ class DsuManager:
 
     def _availability_error(self) -> str | None:
         if self.system == "Windows":
-            return (
-                "Le moteur JoyConDSU.exe intégré pour Windows sera ajouté à "
-                "l’étape dédiée. Les autres fonctions du Companion restent disponibles."
-            )
+            if not self.executable.is_file():
+                return "Le moteur JoyConDSU.exe est absent du paquet Windows."
+            if not self.sdl_library.is_file():
+                return "SDL3.dll doit se trouver à côté de JoyConDSU.exe."
+            return None
         if self.system != "Darwin":
             return "Le moteur JoyConDSU intégré n’est pas disponible sur ce système."
         if not self.executable.is_file():
@@ -202,13 +236,27 @@ class DsuManager:
 
             self._rotate_log()
             self._log_handle = self.log_path.open("ab", buffering=0)
+            if self.system == "Windows":
+                command = [str(self.executable)]
+                launch_options = {
+                    "cwd": self.executable.parent,
+                    "creationflags": WINDOWS_CREATE_NO_WINDOW,
+                }
+            else:
+                command = [
+                    str(self.launcher),
+                    str(self.executable),
+                    str(os.getpid()),
+                ]
+                launch_options = {}
             try:
                 self._process = self._popen(
-                    [str(self.launcher), str(self.executable), str(os.getpid())],
+                    command,
                     stdin=subprocess.DEVNULL,
                     stdout=self._log_handle,
                     stderr=subprocess.STDOUT,
                     close_fds=True,
+                    **launch_options,
                 )
             except OSError as exc:
                 self._log_handle.close()
@@ -229,7 +277,21 @@ class DsuManager:
         with self._lock:
             process = self._process
             if process is not None and process.poll() is None:
-                process.terminate()
+                cooperatively_stopped = False
+                if self.system == "Windows" and getattr(process, "pid", 0):
+                    try:
+                        cooperatively_stopped = bool(
+                            self._windows_stop_signal(process.pid)
+                        )
+                    except OSError:
+                        cooperatively_stopped = False
+                    if cooperatively_stopped:
+                        try:
+                            process.wait(timeout=4)
+                        except subprocess.TimeoutExpired:
+                            pass
+                if process.poll() is None:
+                    process.terminate()
                 try:
                     process.wait(timeout=4)
                 except subprocess.TimeoutExpired:

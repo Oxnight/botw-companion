@@ -24,6 +24,10 @@ bool dsu_platform_stop_requested(void)
     return stop_requested != 0;
 }
 
+void dsu_platform_cleanup(void)
+{
+}
+
 uint32_t dsu_platform_process_id(void)
 {
     return (uint32_t)getpid();
