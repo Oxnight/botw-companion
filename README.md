@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 4**. Elle adapte désormais l’interface au système réellement détecté sans modifier son design : nom du système, consigne de relance, moteur DSU, emplacement des journaux et chemins locaux sont fournis par l’API. Le socle Windows conserve la détection des sauvegardes, la synchronisation et le cycle de vie fiable de l’alpha 3. Le lanceur graphique et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 5**. Elle ajoute un véritable lanceur Windows sans terminal, des raccourcis Bureau et menu Démarrer, la réutilisation de l’instance existante et la surveillance sobre de Ryujinx. Le socle Windows conserve la détection des sauvegardes, la synchronisation et le cycle de vie fiable des versions précédentes. Le moteur JoyConDSU Windows sera fourni à l’étape suivante. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -15,6 +15,7 @@ La version actuelle est **0.40.0 alpha 4**. Elle adapte désormais l’interface
   * [3. Créer l’environnement Python](#3-créer-lenvironnement-python).
   * [4. Premier lancement dans le terminal](#4-premier-lancement-dans-le-terminal).
 * [Installer le lanceur macOS](#installer-le-lanceur-macos).
+* [Installer le lanceur Windows](#installer-le-lanceur-windows).
 * [Configurer le gyroscope Joy-Con dans Ryujinx](#configurer-le-gyroscope-joy-con-dans-ryujinx).
 * [Utilisation en ligne de commande](#utilisation-en-ligne-de-commande).
 * [Données locales et confidentialité](#données-locales-et-confidentialité).
@@ -31,7 +32,7 @@ La version actuelle est **0.40.0 alpha 4**. Elle adapte désormais l’interface
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
 * Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS ; portage Windows prévu à l’étape dédiée.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
-* Lanceur macOS pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
+* Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
 ## Configuration prise en charge
 
@@ -53,14 +54,13 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 
 Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows qui activera automatiquement la surveillance et JoyConDSU Windows ne fait pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le portage natif de JoyConDSU reste l’étape suivante. Le comportement macOS existant reste inchangé.
 
-Pour essayer le socle Windows avant l’arrivée du lanceur graphique, utiliser PowerShell dans le clone :
+Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
-.\.venv\Scripts\python.exe -m botw_companion interface
 ```
 
 La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine.
@@ -129,6 +129,16 @@ chmod +x "macos/Installer BOTW Companion.command"
 L’installeur copie `BOTW Companion.app` dans `~/Applications`. Au premier lancement, si le projet n’est pas trouvé automatiquement, l’application demande de sélectionner le dossier cloné contenant `pyproject.toml` et `.venv`.
 
 L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la bloque après le téléchargement, utiliser **Réglages Système > Confidentialité et sécurité > Ouvrir quand même**, ou faire un clic droit sur l’application puis **Ouvrir**. Il n’existe pas de réinstallation périodique tous les sept jours pour cette application locale.
+
+## Installer le lanceur Windows
+
+Après avoir créé `.venv` avec les commandes PowerShell ci-dessus, ouvrir le dossier `windows` et double-cliquer sur `Installer BOTW Companion.cmd`. L’installeur ne demande pas de droits administrateur. Il crée un raccourci sur le Bureau et dans le menu Démarrer, puis conserve les réglages dans `%LOCALAPPDATA%\BOTW Companion`.
+
+Le raccourci utilise `wscript.exe` et `pythonw.exe` : aucune fenêtre de terminal n’apparaît. Un runtime autonome placé dans `runtime\pythonw.exe` est utilisé en priorité lorsqu’il est fourni par un futur paquet ; un clone de développement utilise `.venv\Scripts\pythonw.exe`.
+
+À chaque double-clic, le lanceur vérifie d’abord le serveur local. S’il fonctionne déjà, il tente de remettre la fenêtre BOTW Companion au premier plan ; Windows peut refuser cette opération selon ses règles de sécurité, auquel cas le navigateur par défaut ouvre ou réactive la page. Sinon, le serveur démarre puis le navigateur s’ouvre une seule fois. Après avoir vu Ryujinx actif, la surveillance vérifie son état toutes les 15 secondes et demande un arrêt propre après 30 secondes d’absence confirmée.
+
+Le fichier `%LOCALAPPDATA%\BOTW Companion\launcher.json` permet de changer le port, d’indiquer une sauvegarde précise ou d’ajouter le nom d’un exécutable Ryujinx personnalisé. Les erreurs de lancement sont consignées dans `%LOCALAPPDATA%\BOTW Companion\launcher.log`.
 
 ## Configurer le gyroscope Joy-Con dans Ryujinx
 
@@ -211,7 +221,7 @@ ou, sans `uv` :
 .venv/bin/python -m pip install -e .
 ```
 
-Le lanceur macOS vérifie la version du serveur déjà ouvert. Lorsqu’une nouvelle version du code est installée, il ferme l’ancienne instance locale avant de lancer la nouvelle.
+Les lanceurs macOS et Windows vérifient la version du serveur déjà ouvert. Lorsqu’une nouvelle version du code est installée, ils ferment l’ancienne instance locale avant de lancer la nouvelle.
 
 ## Remarques
 

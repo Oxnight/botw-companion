@@ -182,10 +182,11 @@ def server_instance_guard(*, system: str | None = None,
 
 
 def ryujinx_is_running(*, system: str | None = None,
-                       process_names: Callable[[], set[str]] | None = None) -> bool:
+                       process_names: Callable[[], set[str]] | None = None,
+                       environ: Environment | None = None) -> bool:
     resolved = system_name(system)
     if resolved == "Windows":
-        return windows.ryujinx_is_running(process_names)
+        return windows.ryujinx_is_running(process_names, environ)
     return False
 
 

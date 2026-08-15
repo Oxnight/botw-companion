@@ -4,6 +4,7 @@ import ctypes
 from ctypes import wintypes
 import os
 from pathlib import Path
+import re
 from typing import Callable, Mapping
 
 
@@ -141,9 +142,22 @@ def running_process_names(*, kernel32=None) -> set[str]:
     return names
 
 
-def ryujinx_is_running(process_names: Callable[[], set[str]] | None = None) -> bool:
+def configured_ryujinx_process_names(
+        environ: Mapping[str, str] | None = None) -> frozenset[str]:
+    values = os.environ if environ is None else environ
+    extra = {
+        name.strip().casefold()
+        for name in re.split(r"[;,\n]", values.get("BOTW_RYUJINX_PROCESS_NAMES", ""))
+        if name.strip()
+    }
+    return frozenset((*RYUJINX_PROCESS_NAMES, *extra))
+
+
+def ryujinx_is_running(process_names: Callable[[], set[str]] | None = None,
+                       environ: Mapping[str, str] | None = None) -> bool:
     names = process_names() if process_names is not None else running_process_names()
-    return bool(RYUJINX_PROCESS_NAMES.intersection(name.casefold() for name in names))
+    expected = configured_ryujinx_process_names(environ)
+    return bool(expected.intersection(name.casefold() for name in names))
 
 
 def _environment_path(environ: Mapping[str, str], name: str, fallback: Path) -> Path:
