@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 5**. Elle ajoute un véritable lanceur Windows sans terminal, des raccourcis Bureau et menu Démarrer, la réutilisation de l’instance existante et la surveillance sobre de Ryujinx. Le socle Windows conserve la détection des sauvegardes, la synchronisation et le cycle de vie fiable des versions précédentes. Le moteur JoyConDSU Windows sera fourni à l’étape suivante. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 6**. Elle porte le moteur natif JoyConDSU en C sous Windows sans modifier le protocole Cemuhook, la calibration, les timestamps, la télémétrie ni le fonctionnement macOS. La construction Windows reproductible fournit `JoyConDSU.exe` avec sa `SDL3.dll` locale ; son raccordement au bouton du Companion appartient à l’étape suivante. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -30,7 +30,7 @@ La version actuelle est **0.40.0 alpha 5**. Elle ajoute un véritable lanceur Wi
 * Suivi manuel persistant pour les éléments que la sauvegarde ne peut pas prouver.
 * Planificateur d’itinéraire avec sessions persistantes.
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
-* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS ; portage Windows prévu à l’étape dédiée.
+* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS, avec moteur C désormais portable et constructible sous Windows.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
@@ -54,7 +54,7 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 
 Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le portage natif de JoyConDSU reste l’étape suivante. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le moteur JoyConDSU se construit désormais nativement sous Windows avec Winsock 2.2 et SDL3 ; son pilotage par l’interface sera ajouté à l’étape suivante. Le comportement macOS existant reste inchangé.
 
 Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 
@@ -63,7 +63,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
 
-La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine.
+La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine. La procédure de construction Windows du moteur est décrite dans `third_party/JoyConDSU/README_WINDOWS.md`.
 
 ## Installation depuis un clone Git
 

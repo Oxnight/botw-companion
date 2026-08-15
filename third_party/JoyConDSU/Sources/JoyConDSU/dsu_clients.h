@@ -4,14 +4,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <sys/socket.h>
+
+#include "platform_socket.h"
 
 enum { DSU_MAX_CLIENTS = 8 };
 
 typedef struct {
     bool active;
-    struct sockaddr_storage address;
-    socklen_t address_len;
+    DsuSocketAddress address;
+    DsuSocklen address_len;
     uint64_t last_subscription_ns;
     uint32_t packet_number;
 } DsuClient;
@@ -23,8 +24,8 @@ typedef struct {
 void dsu_clients_reset(DsuClientRegistry *registry);
 DsuClient *dsu_clients_subscribe(
     DsuClientRegistry *registry,
-    const struct sockaddr_storage *address,
-    socklen_t address_len,
+    const DsuSocketAddress *address,
+    DsuSocklen address_len,
     uint64_t now_ns,
     bool *is_new
 );

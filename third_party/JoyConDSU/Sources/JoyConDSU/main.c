@@ -5,21 +5,16 @@
 #include "dsu_clients.h"
 #include "dsu_protocol.h"
 #include "motion_pipeline.h"
+#include "platform_runtime.h"
+#include "platform_socket.h"
 #include "telemetry.h"
 
-#include <arpa/inet.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <math.h>
-#include <netinet/in.h>
-#include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 enum {
     RECEIVE_BUFFER_SIZE = 1024,
@@ -59,18 +54,10 @@ typedef struct {
     uint64_t last_complete_sample_host_ns;
 } Controller;
 
-static volatile sig_atomic_t stop_requested = 0;
-
-static void handle_signal(int signal_number)
-{
-    (void)signal_number;
-    stop_requested = 1;
-}
-
 static uint32_t make_server_id(void)
 {
     const uint64_t now = SDL_GetTicksNS();
-    const uint32_t pid = (uint32_t)getpid();
+    const uint32_t pid = dsu_platform_process_id();
     uint32_t x = (uint32_t)(now ^ (now >> 32) ^ pid ^ 0x4a434453u);
 
     /* xorshift32: deterministic inside one call, no global PRNG state needed. */
@@ -81,79 +68,13 @@ static uint32_t make_server_id(void)
     return x == 0u ? 1u : x;
 }
 
-static bool set_nonblocking(int fd)
+static void print_client(const DsuSocketAddress *address)
 {
-    const int flags = fcntl(fd, F_GETFL, 0);
-    if (flags < 0) {
-        return false;
-    }
-
-    return fcntl(fd, F_SETFL, flags | O_NONBLOCK) == 0;
-}
-
-static int create_server_socket(void)
-{
-    const int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (fd < 0) {
-        perror("socket");
-        return -1;
-    }
-
-    if (!set_nonblocking(fd)) {
-        perror("fcntl");
-        close(fd);
-        return -1;
-    }
-
-    const struct sockaddr_in address = {
-        .sin_family = AF_INET,
-        .sin_port = htons(DSU_DEFAULT_PORT),
-        .sin_addr = { .s_addr = htonl(INADDR_LOOPBACK) },
-    };
-
-    if (bind(fd, (const struct sockaddr *)&address, sizeof(address)) != 0) {
-        perror("bind");
-        close(fd);
-        return -1;
-    }
-
-    return fd;
-}
-
-static bool send_packet(
-    int fd,
-    const uint8_t *packet,
-    size_t size,
-    const struct sockaddr_storage *address,
-    socklen_t address_len
-)
-{
-    const ssize_t sent = sendto(
-        fd,
-        packet,
-        size,
-        0,
-        (const struct sockaddr *)address,
-        address_len
-    );
-
-    return sent == (ssize_t)size;
-}
-
-static void print_client(const struct sockaddr_storage *address)
-{
-    if (address->ss_family != AF_INET) {
+    char ip[64] = {0};
+    if (!dsu_socket_address_ipv4_text(address, ip, sizeof(ip))) {
         return;
     }
-
-    const struct sockaddr_in *ipv4 = (const struct sockaddr_in *)address;
-    char ip[INET_ADDRSTRLEN] = {0};
-
-    if (inet_ntop(AF_INET, &ipv4->sin_addr, ip, sizeof(ip)) == NULL) {
-        return;
-    }
-
-    printf("Client DSU connecté : %s:%u\n", ip, ntohs(ipv4->sin_port));
+    printf("Client DSU connecté : %s:%u\n", ip, dsu_socket_address_port(address));
 }
 
 static bool controller_has_motion(SDL_Gamepad *gamepad)
@@ -305,7 +226,7 @@ static bool wait_for_motion_sample(
     const uint64_t deadline =
         SDL_GetTicksNS() + (uint64_t)timeout_ms * 1000000ULL;
 
-    while (!stop_requested && SDL_GetTicksNS() < deadline) {
+    while (!dsu_platform_stop_requested() && SDL_GetTicksNS() < deadline) {
         SDL_Event event;
         const uint64_t remaining_ns = deadline - SDL_GetTicksNS();
         const Sint32 remaining_ms = (Sint32)fmax(
@@ -437,7 +358,7 @@ static bool calibrate_controller(
 }
 
 static void process_requests(
-    int fd,
+    DsuSocket socket_handle,
     DsuClientRegistry *clients,
     uint32_t server_id,
     bool controller_connected,
@@ -449,24 +370,22 @@ static void process_requests(
          request_index < MAX_REQUESTS_PER_TURN;
          ++request_index) {
         uint8_t packet[RECEIVE_BUFFER_SIZE] = {0};
-        struct sockaddr_storage sender = {0};
-        socklen_t sender_len = sizeof(sender);
+        DsuSocketAddress sender = {0};
+        DsuSocklen sender_len = (DsuSocklen)sizeof(sender);
 
-        const ssize_t received = recvfrom(
-            fd,
+        const DsuIoSize received = dsu_socket_receive(
+            socket_handle,
             packet,
             sizeof(packet),
-            0,
-            (struct sockaddr *)&sender,
+            &sender,
             &sender_len
         );
 
         if (received < 0) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            if (dsu_socket_last_error_would_block()) {
                 return;
             }
-
-            perror("recvfrom");
+            dsu_socket_print_last_error("recvfrom");
             return;
         }
         telemetry->requests_received += 1;
@@ -502,7 +421,9 @@ static void process_requests(
         if (parsed.message_type == DSU_MSG_VERSION) {
             uint8_t response[DSU_PACKET_VERSION_SIZE];
             dsu_build_version_response(response, server_id);
-            (void)send_packet(fd, response, sizeof(response), &sender, sender_len);
+            (void)dsu_socket_send(
+                socket_handle, response, sizeof(response), &sender, sender_len
+            );
             continue;
         }
 
@@ -537,7 +458,9 @@ static void process_requests(
                     CONTROLLER_MAC
                 );
 
-                (void)send_packet(fd, response, sizeof(response), &sender, sender_len);
+                (void)dsu_socket_send(
+                    socket_handle, response, sizeof(response), &sender, sender_len
+                );
             }
 
             continue;
@@ -578,7 +501,7 @@ static void process_requests(
 }
 
 static void send_motion_to_clients(
-    int fd,
+    DsuSocket socket_handle,
     DsuClientRegistry *clients,
     uint32_t server_id,
     const Controller *controller,
@@ -645,8 +568,8 @@ static void send_motion_to_clients(
         }
         client->packet_number += 1u;
 
-        if (send_packet(
-                fd,
+        if (dsu_socket_send(
+                socket_handle,
                 packet,
                 sizeof(packet),
                 &client->address,
@@ -701,7 +624,7 @@ static bool telemetry_health_ok(
 static void handle_runtime_event(
     const SDL_Event *event,
     Controller *controller,
-    int socket_fd,
+    DsuSocket socket_handle,
     DsuClientRegistry *clients,
     uint32_t server_id,
     MotionDsuTimeline *timeline,
@@ -727,7 +650,7 @@ static void handle_runtime_event(
             controller->has_latest_sample = true;
             controller->last_complete_sample_host_ns = SDL_GetTicksNS();
             send_motion_to_clients(
-                socket_fd,
+                socket_handle,
                 clients,
                 server_id,
                 controller,
@@ -806,16 +729,35 @@ static void print_telemetry(
 
 int main(void)
 {
-    signal(SIGINT, handle_signal);
-    signal(SIGTERM, handle_signal);
+    if (!dsu_platform_install_stop_handler()) {
+        fprintf(stderr, "Impossible d'installer le gestionnaire d'arrêt.\n");
+        return EXIT_FAILURE;
+    }
+
+    /*
+     * Force SDL's native HIDAPI path and the logical L/R pairing before the
+     * gamepad subsystem starts. This makes Windows deterministic even when
+     * another application changed SDL's process environment.
+     */
+    if (!SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS, "1")
+        || !SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS, "1")) {
+        fprintf(stderr, "Impossible de configurer la détection des Joy-Con.\n");
+        return EXIT_FAILURE;
+    }
 
     if (!SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_SENSOR)) {
         fprintf(stderr, "SDL_Init : %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
-    const int socket_fd = create_server_socket();
-    if (socket_fd < 0) {
+    if (!dsu_socket_platform_init()) {
+        SDL_Quit();
+        return EXIT_FAILURE;
+    }
+    const DsuSocket socket_handle =
+        dsu_socket_create_loopback_udp(DSU_DEFAULT_PORT);
+    if (socket_handle == DSU_INVALID_SOCKET) {
+        dsu_socket_platform_cleanup();
         SDL_Quit();
         return EXIT_FAILURE;
     }
@@ -833,21 +775,22 @@ int main(void)
     bool previously_connected = false;
 
     printf("\n╔══════════════════════════════════════════╗\n");
-    printf("║            JoyConDSU macOS               ║\n");
+    printf("║              JoyConDSU                   ║\n");
     printf("╚══════════════════════════════════════════╝\n");
     printf("DSU : 127.0.0.1:%d | protocole %d\n",
            DSU_DEFAULT_PORT, DSU_PROTOCOL_VERSION);
+    printf("Plateforme : %s\n", dsu_platform_name());
     printf("Traitement motion : calibration du biais uniquement\n");
     printf("Filtre / deadzone : aucun\n\n");
 
-    while (!stop_requested) {
+    while (!dsu_platform_stop_requested()) {
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
             handle_runtime_event(
                 &event,
                 &controller,
-                socket_fd,
+                socket_handle,
                 &clients,
                 server_id,
                 &dsu_timeline,
@@ -874,7 +817,7 @@ int main(void)
                 );
 
                 if (!calibrate_controller(&controller, &telemetry)) {
-                    if (stop_requested) {
+                    if (dsu_platform_stop_requested()) {
                         break;
                     }
 
@@ -904,7 +847,7 @@ int main(void)
         }
 
         process_requests(
-            socket_fd,
+            socket_handle,
             &clients,
             server_id,
             /* La télémétrie ne doit jamais couper un flux frais et calibré. */
@@ -979,7 +922,7 @@ int main(void)
             handle_runtime_event(
                 &waited_event,
                 &controller,
-                socket_fd,
+                socket_handle,
                 &clients,
                 server_id,
                 &dsu_timeline,
@@ -992,7 +935,8 @@ int main(void)
     printf("\nArrêt propre de JoyConDSU.\n");
 
     close_controller(&controller);
-    close(socket_fd);
+    dsu_socket_close(socket_handle);
+    dsu_socket_platform_cleanup();
     SDL_Quit();
 
     return EXIT_SUCCESS;

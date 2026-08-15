@@ -42,7 +42,7 @@ build_native_runtime() {
     return 1
   }
 
-  for source in main.c calibration.c calibration.h dsu_clients.c dsu_clients.h dsu_protocol.c dsu_protocol.h motion_pipeline.c motion_pipeline.h telemetry.c telemetry.h; do
+  for source in main.c calibration.c calibration.h dsu_clients.c dsu_clients.h dsu_protocol.c dsu_protocol.h motion_pipeline.c motion_pipeline.h telemetry.c telemetry.h platform_socket.h platform_socket_posix.c platform_runtime.h platform_runtime_posix.c; do
     [[ -f "$SOURCE_DIR/$source" ]] || {
       print -u2 -- "Source native manquante : $source"
       return 1
@@ -62,6 +62,10 @@ build_native_runtime() {
       "$SOURCE_DIR/motion_pipeline.h" \
       "$SOURCE_DIR/telemetry.c" \
       "$SOURCE_DIR/telemetry.h" \
+      "$SOURCE_DIR/platform_socket.h" \
+      "$SOURCE_DIR/platform_socket_posix.c" \
+      "$SOURCE_DIR/platform_runtime.h" \
+      "$SOURCE_DIR/platform_runtime_posix.c" \
       | /usr/bin/shasum -a 256 | /usr/bin/awk '{print $1}'
   )"
   /bin/mkdir -p "$CACHE_DIR"
@@ -80,9 +84,11 @@ build_native_runtime() {
       "$SOURCE_DIR/dsu_protocol.c" \
       "$SOURCE_DIR/motion_pipeline.c" \
       "$SOURCE_DIR/telemetry.c" \
+      "$SOURCE_DIR/platform_socket_posix.c" \
+      "$SOURCE_DIR/platform_runtime_posix.c" \
       -L"$sdl_prefix/lib" \
       -Wl,-rpath,"$sdl_prefix/lib" \
-      -lSDL3 -lz -lm \
+      -lSDL3 -lm \
       -o "$temporary" || {
         /bin/rm -f "$temporary"
         print -u2 -- "Compilation native JoyConDSU impossible."

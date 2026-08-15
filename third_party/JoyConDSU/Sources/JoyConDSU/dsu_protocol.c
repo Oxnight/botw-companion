@@ -2,7 +2,6 @@
 
 #include <math.h>
 #include <string.h>
-#include <zlib.h>
 
 enum {
     DSU_HEADER_SIZE = 16,
@@ -58,7 +57,15 @@ uint32_t dsu_read_u32_le(const uint8_t *buffer, size_t offset)
 
 static uint32_t packet_crc32(const uint8_t *packet, size_t size)
 {
-    return (uint32_t)crc32(0L, packet, (uInt)size);
+    uint32_t crc = 0xffffffffu;
+    for (size_t i = 0; i < size; ++i) {
+        crc ^= packet[i];
+        for (unsigned bit = 0; bit < 8; ++bit) {
+            const uint32_t mask = 0u - (crc & 1u);
+            crc = (crc >> 1) ^ (0xedb88320u & mask);
+        }
+    }
+    return ~crc;
 }
 
 static void finish_server_packet(

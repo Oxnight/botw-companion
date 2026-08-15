@@ -1,11 +1,10 @@
 #include "dsu_clients.h"
 
-#include <netinet/in.h>
 #include <string.h>
 
 static bool same_address(
-    const struct sockaddr_storage *left,
-    const struct sockaddr_storage *right
+    const DsuSocketAddress *left,
+    const DsuSocketAddress *right
 )
 {
     if (left->ss_family != AF_INET || right->ss_family != AF_INET) {
@@ -26,8 +25,8 @@ void dsu_clients_reset(DsuClientRegistry *registry)
 
 DsuClient *dsu_clients_subscribe(
     DsuClientRegistry *registry,
-    const struct sockaddr_storage *address,
-    socklen_t address_len,
+    const DsuSocketAddress *address,
+    DsuSocklen address_len,
     uint64_t now_ns,
     bool *is_new
 )
