@@ -1192,10 +1192,6 @@ function renderFilterNav() {
     );
 
     if (!filtersInitialized) {
-        available.forEach(
-            type => selectedTypes.add(type)
-        );
-
         filtersInitialized = true;
     } else {
         [...selectedTypes].forEach(type => {
