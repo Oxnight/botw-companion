@@ -1,5 +1,5 @@
 #define MyAppName "BOTW Companion"
-#define MyAppVersion "0.40.0-alpha.9"
+#define MyAppVersion "0.40.0-alpha.10"
 #define MyAppExeName "BOTW Companion.exe"
 
 [Setup]
@@ -13,7 +13,7 @@ DefaultGroupName=BOTW Companion
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=..\dist\installer
-OutputBaseFilename=BOTW_Companion_0.40.0-alpha.9_Setup
+OutputBaseFilename=BOTW_Companion_0.40.0-alpha.10_Setup
 SetupIconFile=BOTW Companion.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2

@@ -25,7 +25,9 @@ def report_revision_key(report: dict) -> str:
 
 
 def compact_item(item: dict) -> dict:
-    return {key: deepcopy(value) for key, value in item.items()
+    # Ces vues sont uniquement sérialisées. Réutiliser les valeurs immuables du
+    # rapport évite une seconde copie complète de milliers de marqueurs.
+    return {key: value for key, value in item.items()
             if key not in CATALOG_HEAVY_FIELDS}
 
 
@@ -74,30 +76,36 @@ class ReportViewCache:
         self._catalog: dict | None = None
         self._details: dict[str, dict] = {}
 
-    def _prepare(self, report: dict) -> None:
+    def _select_report(self, report: dict) -> None:
         identity = id(report)
         if identity == self._report_object:
             return
         self._report_object = identity
-        self._bootstrap = bootstrap_report(report)
-        self._catalog = compact_catalog(report)
-        self._details = {
-            item["tracking_id"]: item
-            for item in [*report.get("elements", []), *report.get("map_layers", [])]
-            if item.get("tracking_id")
-        }
+        self._bootstrap = None
+        self._catalog = None
+        self._details = {}
 
     def bootstrap(self, report: dict) -> dict:
         with self._lock:
-            self._prepare(report)
+            self._select_report(report)
+            if self._bootstrap is None:
+                self._bootstrap = bootstrap_report(report)
             return self._bootstrap  # treated as immutable by the JSON encoder
 
     def catalog(self, report: dict) -> dict:
         with self._lock:
-            self._prepare(report)
+            self._select_report(report)
+            if self._catalog is None:
+                self._catalog = compact_catalog(report)
             return self._catalog
 
     def detail(self, report: dict, tracking_id: str) -> dict | None:
         with self._lock:
-            self._prepare(report)
+            self._select_report(report)
+            if not self._details:
+                self._details = {
+                    item["tracking_id"]: item
+                    for item in [*report.get("elements", []), *report.get("map_layers", [])]
+                    if item.get("tracking_id")
+                }
             return self._details.get(tracking_id)

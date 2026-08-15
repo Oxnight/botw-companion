@@ -147,7 +147,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.9_Setup.exe
+BOTW_Companion_0.40.0-alpha.10_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
@@ -262,6 +262,7 @@ Les lanceurs macOS et Windows vérifient la version du serveur déjà ouvert. Lo
 * `manual_tracking.json`, `route_sessions.json`, `preferences.json` et `runtime_state.json` possèdent chacun un schéma versionné et une sauvegarde valide. La première lecture d’un ancien format utilisateur conserve aussi une copie `pre-migration`.
 * La sauvegarde générale contient le suivi manuel, les itinéraires et les préférences portables. Son import restaure l’ensemble ou revient intégralement à l’état précédent en cas d’échec.
 * `runtime_state.json` mémorise uniquement sur la machine la dernière source Ryujinx et l’historique récent de synchronisation. Il n’est jamais inclus dans un export multiplateforme, car il peut contenir un chemin local.
-* Les fichiers `catalog_fr_compiled.json` et `nomenclature_audit_compiled.json` sont des ressources d’exécution nécessaires au démarrage rapide : ils doivent rester dans le dépôt.
+* Les fichiers `catalog_fr_compiled.json`, `cartography_reference_fr_compiled.json` et `nomenclature_audit_compiled.json` sont des ressources d’exécution nécessaires au démarrage rapide : ils doivent rester dans le dépôt.
 * Les tuiles de `botw_companion/web/map-tiles/` sont nécessaires à la carte haute définition hors ligne.
+* L’interface ne charge automatiquement aucune police, bibliothèque, image ou API distante. Les liens vers des guides externes restent optionnels et n’empêchent aucune fonction locale lorsque l’ordinateur est hors ligne.
 * Le dossier `third_party/JoyConDSU/Sources/JoyConDSU/` est nécessaire à la compilation locale du serveur DSU.

@@ -2,9 +2,6 @@ import json
 from functools import lru_cache
 from importlib.resources import files
 
-from .localization import localize_catalog
-
-
 @lru_cache(maxsize=1)
 def load_hashes() -> dict[int, tuple[int, str]]:
     raw = json.loads(files("botw_companion.data").joinpath("hashes.json").read_text())
@@ -42,9 +39,15 @@ def load_completion_standard() -> dict:
 
 @lru_cache(maxsize=1)
 def load_cartography_reference() -> dict:
-    return localize_catalog(json.loads(
-        files("botw_companion.data").joinpath("cartography_reference.json").read_text()
-    ))
+    """Charge les données cartographiques françaises préparées à la construction."""
+    payload = json.loads(
+        files("botw_companion.data").joinpath(
+            "cartography_reference_fr_compiled.json"
+        ).read_text()
+    )
+    if payload.get("schema_version") != 1 or not isinstance(payload.get("reference"), dict):
+        raise ValueError("Référence cartographique française précompilée invalide")
+    return payload["reference"]
 
 
 @lru_cache(maxsize=1)
