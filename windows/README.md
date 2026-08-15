@@ -16,10 +16,12 @@ Livrables :
 
 ```text
 dist\BOTW Companion\BOTW Companion.exe
-dist\installer\BOTW_Companion_0.40.0-alpha.10_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.11_Setup.exe
 ```
 
 L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
+
+Le workflow Windows teste aussi une installation silencieuse dans un dossier contenant des espaces, retire Python, Git, uv, les compilateurs et SDL du `PATH`, exécute l’auto-test du paquet, désinstalle l’application et vérifie que les données personnelles sont conservées. La matrice complète se trouve dans `windows/TESTING.md`.
 
 ## Lanceur d'un clone
 
