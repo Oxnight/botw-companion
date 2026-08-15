@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 7**. Elle raccorde le moteur natif JoyConDSU Windows au même bouton, aux mêmes états et au même cycle de vie que sous macOS, sans modifier le design, le protocole Cemuhook, la calibration, les timestamps ni la télémétrie. Le moteur est lancé sans console, s'arrête proprement avec le Companion et conserve exactement le port local `127.0.0.1:26760`. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 8**. Elle ajoute la construction d'une véritable application Windows autonome en mode one-folder et d'un installateur par utilisateur. L'exécutable possède l'icône du Companion, ne montre aucun terminal et embarque Python, l'interface, les catalogues français, la carte HD, les tuiles hors ligne, `JoyConDSU.exe` et `SDL3.dll`. Le design, le protocole Cemuhook, la calibration, les timestamps, la télémétrie et le comportement macOS restent inchangés. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -39,7 +39,7 @@ La version actuelle est **0.40.0 alpha 7**. Elle raccorde le moteur natif JoyCon
 * Mac Apple Silicon : M1, M2, M3, M4 ou génération ultérieure.
 * macOS 12 ou plus récent.
 * Détection préparée pour Windows 10 et 11 : `%APPDATA%\Ryujinx\bis\user\save` et installations portables identifiables.
-* Python 3.10 ou plus récent, Python 3.12 recommandé.
+* Python 3.10 ou plus récent, Python 3.12 recommandé pour un clone ; aucun Python requis par l'application Windows installée.
 * Ryujinx installé dans `/Applications/Ryujinx.app` pour bénéficier de l’arrêt automatique associé au jeu.
 * Homebrew, SDL3 et les outils en ligne de commande Xcode pour compiler le serveur JoyConDSU sur le Mac cible.
 
@@ -71,7 +71,9 @@ Dans un clone Windows, construire une fois le moteur avant d'utiliser le bouton 
 .\tools\build_joycon_dsu_windows.ps1
 ```
 
-Le script place automatiquement `JoyConDSU.exe`, `SDL3.dll` et leur manifeste dans les ressources utilisées par le Companion. Un paquet Windows autonome les embarquera directement lors de l'étape de distribution.
+Le script place automatiquement `JoyConDSU.exe`, `SDL3.dll` et leur manifeste dans les ressources utilisées par le Companion.
+
+La chaîne de distribution Windows produit maintenant un paquet autonome. Elle utilise PyInstaller en mode one-folder afin d'éviter l'extraction temporaire et le ralentissement initial du mode one-file. L'installateur Inno Setup place l'application dans `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le raccourci du menu Démarrer et propose celui du Bureau. Les données personnelles restent dans `%LOCALAPPDATA%\BOTW Companion` et ne font pas partie des fichiers désinstallés.
 
 ## Installation depuis un clone Git
 
@@ -140,6 +142,20 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 
 ## Installer le lanceur Windows
 
+### Application autonome recommandée
+
+Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
+
+```text
+BOTW_Companion_0.40.0-alpha.8_Setup.exe
+```
+
+L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
+
+Cette version alpha n'est pas encore signée. Windows SmartScreen peut donc demander une confirmation ; la signature et le durcissement de la distribution correspondent à l'étape 14 de la roadmap.
+
+### Lanceur depuis un clone de développement
+
 Après avoir créé `.venv` avec les commandes PowerShell ci-dessus, ouvrir le dossier `windows` et double-cliquer sur `Installer BOTW Companion.cmd`. L’installeur ne demande pas de droits administrateur. Il crée un raccourci sur le Bureau et dans le menu Démarrer, puis conserve les réglages dans `%LOCALAPPDATA%\BOTW Companion`.
 
 Le raccourci utilise `wscript.exe` et `pythonw.exe` : aucune fenêtre de terminal n’apparaît. Un runtime autonome placé dans `runtime\pythonw.exe` est utilisé en priorité lorsqu’il est fourni par un futur paquet ; un clone de développement utilise `.venv\Scripts\pythonw.exe`.
@@ -147,6 +163,16 @@ Le raccourci utilise `wscript.exe` et `pythonw.exe` : aucune fenêtre de termina
 À chaque double-clic, le lanceur vérifie d’abord le serveur local. S’il fonctionne déjà, il tente de remettre la fenêtre BOTW Companion au premier plan ; Windows peut refuser cette opération selon ses règles de sécurité, auquel cas le navigateur par défaut ouvre ou réactive la page. Sinon, le serveur démarre puis le navigateur s’ouvre une seule fois. Après avoir vu Ryujinx actif, la surveillance vérifie son état toutes les 15 secondes et demande un arrêt propre après 30 secondes d’absence confirmée.
 
 Le fichier `%LOCALAPPDATA%\BOTW Companion\launcher.json` permet de changer le port, d’indiquer une sauvegarde précise ou d’ajouter le nom d’un exécutable Ryujinx personnalisé. Les erreurs de lancement sont consignées dans `%LOCALAPPDATA%\BOTW Companion\launcher.log`.
+
+### Construire l'application Windows
+
+La construction doit être effectuée sous Windows x64 avec Python 3.12, Visual Studio 2022 Build Tools comprenant C++ et CMake, ainsi qu'Inno Setup 6 :
+
+```powershell
+.\tools\build_windows_app.ps1
+```
+
+Le script compile le moteur C, crée un environnement de construction isolé, génère le dossier `dist\BOTW Companion`, vérifie ses ressources par un auto-test, puis produit l'installateur dans `dist\installer`. La même procédure est exécutée automatiquement par le workflow Windows du dépôt.
 
 ## Configurer le gyroscope Joy-Con dans Ryujinx
 

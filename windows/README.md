@@ -1,4 +1,27 @@
-# Lanceur Windows
+# Application Windows
+
+## Application autonome
+
+La distribution recommandée est une application PyInstaller one-folder entourée d'un installateur Inno Setup par utilisateur. Elle embarque Python, toutes les données hors ligne, le moteur `JoyConDSU.exe` et `SDL3.dll`.
+
+Pour construire l'ensemble sous Windows x64 :
+
+```powershell
+.\tools\build_windows_app.ps1
+```
+
+Prérequis de construction uniquement : Python 3.12, Visual Studio 2022 Build Tools avec C++ et CMake, ainsi qu'Inno Setup 6. Les utilisateurs de l'application produite n'ont besoin d'aucun de ces outils.
+
+Livrables :
+
+```text
+dist\BOTW Companion\BOTW Companion.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.8_Setup.exe
+```
+
+L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
+
+## Lanceur d'un clone
 
 Le lanceur installe deux raccourcis, sur le Bureau et dans le menu Démarrer. Il ne demande pas de droits administrateur et ne copie pas le projet : le clone doit donc rester à son emplacement actuel.
 

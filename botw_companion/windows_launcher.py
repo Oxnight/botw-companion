@@ -193,16 +193,18 @@ def wait_until_ready(port: int, expected_version: str, process, *,
 
 
 def server_command(python: Path, project_root: Path, port: int,
-                   config: Mapping[str, object]) -> list[str]:
-    command = [
-        str(python),
-        "-m",
-        "botw_companion",
-        "interface",
-    ]
+                   config: Mapping[str, object], *, frozen: bool = False) -> list[str]:
+    command = (
+        [str(python), "--server"]
+        if frozen
+        else [str(python), "-m", "botw_companion", "interface"]
+    )
     save_path = config.get("save_path")
     if save_path:
-        command.append(str(save_path))
+        if frozen:
+            command.extend(["--save-path", str(save_path)])
+        else:
+            command.append(str(save_path))
     command.extend([
         "--port",
         str(port),
@@ -214,7 +216,7 @@ def server_command(python: Path, project_root: Path, port: int,
 
 def launch_server(python: Path, project_root: Path, port: int,
                   config: Mapping[str, object], log_path: Path, *,
-                  popen=subprocess.Popen):
+                  popen=subprocess.Popen, frozen: bool = False):
     environment = os.environ.copy()
     names = config.get("ryujinx_process_names")
     if isinstance(names, list):
@@ -224,7 +226,7 @@ def launch_server(python: Path, project_root: Path, port: int,
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("ab", buffering=0) as log:
         return popen(
-            server_command(python, project_root, port, config),
+            server_command(python, project_root, port, config, frozen=frozen),
             cwd=project_root,
             env=environment,
             stdin=subprocess.DEVNULL,
@@ -256,7 +258,8 @@ def run(*, explicit_project: str | None = None,
         probe=probe_companion_server,
         focus=focus_companion_window,
         browser=open_default_browser,
-        popen=subprocess.Popen) -> int:
+        popen=subprocess.Popen,
+        frozen: bool | None = None) -> int:
     data_root = companion_data_dir(system="Windows")
     path = config_path or data_root / "launcher.json"
     config = load_config(path)
@@ -278,8 +281,13 @@ def run(*, explicit_project: str | None = None,
         raise LauncherError(
             f"Le port local {port} est déjà occupé par une autre application"
         )
-    project_root = find_project_root(explicit_project, config)
-    python = find_python(project_root, config)
+    packaged = bool(getattr(sys, "frozen", False)) if frozen is None else frozen
+    if packaged:
+        python = Path(sys.executable).resolve()
+        project_root = python.parent
+    else:
+        project_root = find_project_root(explicit_project, config)
+        python = find_python(project_root, config)
     log_path = data_root / "launcher.log"
     process = launch_server(
         python,
@@ -288,6 +296,7 @@ def run(*, explicit_project: str | None = None,
         config,
         log_path,
         popen=popen,
+        frozen=packaged,
     )
     wait_until_ready(port, __version__, process, probe=probe)
     browser(url)
