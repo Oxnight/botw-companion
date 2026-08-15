@@ -1188,6 +1188,7 @@ aside {
 }
 
 .syncState > i.sync-erreur,
+.syncState > i.sync-source_indisponible,
 .syncState > i.sync-fichier_corrompu,
 .syncState > i.sync-erreur_analyse {
     background: var(--red);

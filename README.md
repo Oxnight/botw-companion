@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 1**. Elle conserve le paquet macOS Apple Silicon validé et introduit le socle multiplateforme ainsi que la détection des sauvegardes Windows. Le lanceur et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 2**. Elle conserve le paquet macOS Apple Silicon validé, le socle multiplateforme et la détection des sauvegardes Windows. La synchronisation compare maintenant les installations Ryujinx standard et portables, analyse une copie cohérente en mémoire et conserve le dernier rapport valide pendant une écriture, un verrou Windows ou une indisponibilité temporaire. Le lanceur et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 

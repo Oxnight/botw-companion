@@ -33,10 +33,9 @@ def _endian(data: bytes) -> str:
     raise SaveError("Format de sauvegarde BOTW non reconnu")
 
 
-def parse_file(path: Path) -> dict[str, object]:
-    data = path.read_bytes()
+def parse_data(data: bytes, source: str | Path = "mémoire") -> dict[str, object]:
     if len(data) < 16 or data[-4:] != b"\xff\xff\xff\xff":
-        raise SaveError(f"Fichier incomplet ou invalide : {path}")
+        raise SaveError(f"Fichier incomplet ou invalide : {source}")
     endian = _endian(data)
     hashes = load_hashes()
     result: dict[str, object] = {}
@@ -61,6 +60,10 @@ def parse_file(path: Path) -> dict[str, object]:
     return result
 
 
+def parse_file(path: Path) -> dict[str, object]:
+    return parse_data(path.read_bytes(), path)
+
+
 _ITEMS_HASH = 0x5F283289
 _ITEMS_QUANTITY_HASH = 0x6A09FC59
 _ARMOR_RE = re.compile(r"Armor_\d{3}_(?:Head|Upper|Lower)$")
@@ -74,11 +77,10 @@ def _array_base(data: bytes, endian: str, hash_id: int) -> int:
     raise SaveError(f"Tableau GameData 0x{hash_id:08x} introuvable")
 
 
-def parse_inventory(path: Path) -> list[dict[str, object]]:
+def parse_inventory_data(data: bytes, source: str | Path = "mémoire") -> list[dict[str, object]]:
     """Lit les identifiants et quantités des emplacements d'inventaire BOTW."""
-    data = path.read_bytes()
     if len(data) < 16 or data[-4:] != b"\xff\xff\xff\xff":
-        raise SaveError(f"Fichier incomplet ou invalide : {path}")
+        raise SaveError(f"Fichier incomplet ou invalide : {source}")
     endian = _endian(data)
     names_base = _array_base(data, endian, _ITEMS_HASH)
     quantities_base = _array_base(data, endian, _ITEMS_QUANTITY_HASH)
@@ -102,6 +104,10 @@ def parse_inventory(path: Path) -> list[dict[str, object]]:
     return inventory
 
 
+def parse_inventory(path: Path) -> list[dict[str, object]]:
+    return parse_inventory_data(path.read_bytes(), path)
+
+
 def _candidate_slots(path: Path) -> list[Path]:
     path = path.expanduser().resolve()
     if (path / "caption.sav").is_file() and (path / "game_data.sav").is_file():
@@ -121,25 +127,42 @@ def default_ryujinx_save_roots() -> list[Path]:
     return ryujinx_save_roots()
 
 
-def discover_ryujinx_save_root(search_roots: list[Path] | None = None) -> Path:
-    """Trouve la sauvegarde BOTW la plus récente dans l'arborescence Ryujinx."""
+def find_ryujinx_game_save_roots(search_roots: list[Path] | None = None) -> list[Path]:
+    """Recense les dossiers de sauvegarde candidats, y compris en cours d'écriture."""
     roots = search_roots if search_roots is not None else default_ryujinx_save_roots()
     candidates: set[Path] = set()
     for root in roots:
-        if not root.is_dir():
+        try:
+            if not root.is_dir():
+                continue
+            for filename in ("caption.sav", "game_data.sav"):
+                for save_file in root.rglob(filename):
+                    slot = save_file.parent
+                    if slot.parent != root and slot.parent.is_dir():
+                        candidates.add(slot.parent)
+        except OSError:
             continue
-        for game_data in root.rglob("game_data.sav"):
-            slot = game_data.parent
-            if (slot / "caption.sav").is_file():
-                candidates.add(slot.parent)
-    if not candidates:
+    return sorted(candidates, key=lambda path: str(path).casefold())
+
+
+def discover_ryujinx_save_root(search_roots: list[Path] | None = None) -> Path:
+    """Trouve la sauvegarde BOTW la plus récente dans l'arborescence Ryujinx."""
+    roots = search_roots if search_roots is not None else default_ryujinx_save_roots()
+    candidates = find_ryujinx_game_save_roots(roots)
+    readable = []
+    for candidate in candidates:
+        try:
+            readable.append((find_latest_slot(candidate).timestamp, candidate))
+        except (OSError, SaveError):
+            continue
+    if not readable:
         checked = ", ".join(str(path) for path in roots)
         raise SaveError(
             "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. "
             "Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, "
             f"puis passe ce dossier au programme. Emplacements vérifiés : {checked}"
         )
-    return max(candidates, key=lambda root: find_latest_slot(root).timestamp)
+    return max(readable, key=lambda item: (item[0], str(item[1]).casefold()))[1]
 
 
 def find_latest_slot(path: Path | str | None = None) -> SaveSlot:
@@ -166,10 +189,14 @@ def load_save(path: Path | str | None = None) -> tuple[SaveSlot, dict[str, objec
     return slot, parse_file(slot.path / "caption.sav"), parse_file(slot.path / "game_data.sav")
 
 
-def identify_platform(path: Path) -> str:
-    marker = path.read_bytes()[4:12]
+def identify_platform_data(data: bytes) -> str:
+    marker = data[4:12]
     if marker == b"\xff\xff\xff\xff\x01\x00\x00\x00":
         return "Nintendo Switch / Ryujinx (little-endian)"
     if marker == b"\xff\xff\xff\xff\x00\x00\x00\x01":
         return "Wii U / Cemu (big-endian)"
     return "format inconnu"
+
+
+def identify_platform(path: Path) -> str:
+    return identify_platform_data(path.read_bytes())

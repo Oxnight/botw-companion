@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from collections import deque
+from dataclasses import dataclass
 from datetime import datetime
 from hashlib import sha256
+import os
 from pathlib import Path
 import threading
 import time
 from typing import Callable
 
-from .save import SaveError, find_latest_slot, parse_file
+from .save import SaveError, find_ryujinx_game_save_roots, parse_data, parse_file
 
 
 def _iso_now() -> str:
@@ -19,24 +21,39 @@ def _iso_timestamp(value: float) -> str:
     return datetime.fromtimestamp(value).astimezone().isoformat(timespec="seconds")
 
 
+@dataclass(frozen=True)
+class SaveSnapshot:
+    """Copie cohérente des deux fichiers d'un slot, capturée avant l'analyse."""
+
+    slot_path: Path
+    caption_data: bytes
+    game_data: bytes
+    internal_timestamp: int
+
+
 class ReliableSaveSync:
     """Cache le dernier rapport valide et ne lit qu'un fichier devenu stable."""
 
     def __init__(self, save_path: str | Path | None, payload_factory: Callable[[], dict],
                  stability_checks: int = 3, stability_delay: float = 0.12,
                  event_limit: int = 12, max_wait_seconds: float = 15.0,
-                 monotonic_clock: Callable[[], float] = time.monotonic) -> None:
+                 monotonic_clock: Callable[[], float] = time.monotonic,
+                 snapshot_payload_factory: Callable[[SaveSnapshot], dict] | None = None,
+                 read_bytes: Callable[[Path], bytes] | None = None) -> None:
         self.save_path = save_path
         self.payload_factory = payload_factory
         self.stability_checks = max(2, stability_checks)
         self.stability_delay = max(0.0, stability_delay)
         self.max_wait_seconds = max(0.0, max_wait_seconds)
         self.monotonic_clock = monotonic_clock
+        self.snapshot_payload_factory = snapshot_payload_factory
+        self.read_bytes = read_bytes or (lambda path: path.read_bytes())
         self._lock = threading.Lock()
         self._report: dict | None = None
         self._quick_signature: tuple | None = None
         self._digest: str | None = None
         self._slot: str | None = None
+        self._slot_path: Path | None = None
         self._internal_timestamp: int | None = None
         self._known_timestamps: dict[str, int] = {}
         self._pending_since: dict[str, float] = {}
@@ -44,7 +61,7 @@ class ReliableSaveSync:
         self._failures = 0
         self._events: deque[dict[str, str]] = deque(maxlen=event_limit)
         self._state: dict[str, object] = {
-            "schema_version": 2,
+            "schema_version": 3,
             "status": "initialisation",
             "status_label": "Première lecture en attente",
             "last_check_at": None,
@@ -52,6 +69,8 @@ class ReliableSaveSync:
             "last_change_at": None,
             "last_file_modified_at": None,
             "slot": None,
+            "source_root": None,
+            "source_kind": None,
             "save_mode": None,
             "save_timestamp": None,
             "save_timestamp_at": None,
@@ -69,39 +88,30 @@ class ReliableSaveSync:
     def _event(self, kind: str, message: str) -> None:
         self._events.appendleft({"at": _iso_now(), "kind": kind, "message": message})
 
-    def _files(self) -> tuple[Path, tuple[Path, Path]]:
-        slot = find_latest_slot(self.save_path)
-        return slot.path, (slot.path / "caption.sav", slot.path / "game_data.sav")
-
-    def _newest_filesystem_activity(self) -> tuple[Path, int] | None:
-        """Repère aussi un nouveau slot dont le caption n'est pas encore lisible."""
-        if self.save_path is None:
-            return None
-        root = Path(self.save_path).expanduser().resolve()
-        candidates = ([root] if (root / "caption.sav").exists() or (root / "game_data.sav").exists()
-                      else [child for child in root.iterdir() if child.is_dir()]
-                      if root.is_dir() else [])
-        activity = []
-        for candidate in candidates:
-            files = [candidate / name for name in ("caption.sav", "game_data.sav")]
-            mtimes = [path.stat().st_mtime_ns for path in files if path.exists()]
-            if mtimes:
-                activity.append((candidate, max(mtimes)))
-        return max(activity, key=lambda value: value[1]) if activity else None
-
     def _candidate_paths(self) -> list[Path]:
         if self.save_path is None:
-            latest = find_latest_slot(None)
-            root = latest.path.parent
+            roots = find_ryujinx_game_save_roots()
         else:
-            root = Path(self.save_path).expanduser().resolve()
-        if (root / "caption.sav").exists() or (root / "game_data.sav").exists():
-            return [root]
-        if not root.is_dir():
-            return []
-        return sorted(child for child in root.iterdir() if child.is_dir() and any(
-            (child / name).exists() for name in ("caption.sav", "game_data.sav")
-        ))
+            roots = [Path(self.save_path).expanduser().resolve()]
+        candidates: set[Path] = set()
+        for root in roots:
+            if (root / "caption.sav").exists() or (root / "game_data.sav").exists():
+                candidates.add(root)
+                continue
+            if not root.is_dir():
+                continue
+            candidates.update(child for child in root.iterdir() if child.is_dir() and any(
+                (child / name).exists() for name in ("caption.sav", "game_data.sav")
+            ))
+        return sorted(candidates, key=lambda path: self._path_key(path))
+
+    @staticmethod
+    def _path_key(path: Path) -> str:
+        return os.path.normcase(os.path.normpath(str(path)))
+
+    @staticmethod
+    def _source_kind(slot: Path) -> str:
+        return "portable" if "portable" in (part.casefold() for part in slot.parts) else "standard"
 
     def _observations(self) -> list[dict[str, object]]:
         observations = []
@@ -120,7 +130,7 @@ class ReliableSaveSync:
             if files[0].is_file():
                 try:
                     timestamp = int(parse_file(files[0]).get("LastSaveTime_Lower", 0))
-                    self._known_timestamps[slot.name] = timestamp
+                    self._known_timestamps[self._path_key(slot)] = timestamp
                 except (OSError, SaveError, ValueError) as exc:
                     error = str(exc)
             else:
@@ -171,10 +181,23 @@ class ReliableSaveSync:
         values = []
         for path in files:
             stat = path.stat()
-            values.extend((path.name, stat.st_size, stat.st_mtime_ns, getattr(stat, "st_ino", 0)))
+            values.extend((
+                path.name,
+                stat.st_size,
+                stat.st_mtime_ns,
+                getattr(stat, "st_ctime_ns", 0),
+                getattr(stat, "st_dev", 0),
+                getattr(stat, "st_ino", 0),
+                getattr(stat, "st_file_attributes", 0),
+            ))
         return (str(slot), *values)
 
-    def _stable_bytes(self, slot: Path, files: tuple[Path, Path]) -> tuple[str, tuple[tuple, str] | None, str | None]:
+    def _read_pair(self, files: tuple[Path, Path]) -> tuple[bytes, bytes]:
+        return self.read_bytes(files[0]), self.read_bytes(files[1])
+
+    def _stable_snapshot(self, slot: Path, files: tuple[Path, Path]) -> tuple[
+        str, tuple[tuple, str, SaveSnapshot] | None, str | None,
+    ]:
         try:
             signature = self._stats(slot, files)
         except OSError as exc:
@@ -187,20 +210,30 @@ class ReliableSaveSync:
                     return "changing", None, None
             except OSError as exc:
                 return "changing", None, str(exc)
-        digest = sha256()
         try:
-            for path in files:
-                data = path.read_bytes()
-                if len(data) < 16 or data[-4:] != b"\xff\xff\xff\xff":
-                    return "invalid", None, f"Fichier incomplet ou invalide : {path.name}"
-                digest.update(path.name.encode())
-                digest.update(len(data).to_bytes(8, "big"))
-                digest.update(data)
+            first = self._read_pair(files)
             if self._stats(slot, files) != signature:
+                return "changing", None, None
+            if self.stability_delay:
+                time.sleep(self.stability_delay)
+            second = self._read_pair(files)
+            if first != second or self._stats(slot, files) != signature:
                 return "changing", None, None
         except OSError as exc:
             return "changing", None, str(exc)
-        return "stable", (signature, digest.hexdigest()), None
+        digest = sha256()
+        for path, data in zip(files, second):
+            if len(data) < 16 or data[-4:] != b"\xff\xff\xff\xff":
+                return "invalid", None, f"Fichier incomplet ou invalide : {path.name}"
+            digest.update(path.name.encode())
+            digest.update(len(data).to_bytes(8, "big"))
+            digest.update(data)
+        try:
+            timestamp = int(parse_data(second[0], files[0]).get("LastSaveTime_Lower", 0))
+        except (SaveError, ValueError) as exc:
+            return "invalid", None, str(exc)
+        snapshot = SaveSnapshot(slot, second[0], second[1], timestamp)
+        return "stable", (signature, digest.hexdigest(), snapshot), None
 
     def _metadata(self, *, changed: bool = False) -> dict:
         return {**self._state, "changed": changed, "events": list(self._events)}
@@ -216,13 +249,22 @@ class ReliableSaveSync:
         """Vérifie la source; conserve le dernier rapport si Ryujinx écrit encore."""
         with self._lock:
             self._state["last_check_at"] = _iso_now()
+            source_unavailable = False
             try:
                 observations = self._observations()
-            except (OSError, SaveError) as exc:
+            except OSError as exc:
+                observations = []
+                observation_error = str(exc)
+                source_unavailable = True
+            except SaveError as exc:
                 observations = []
                 observation_error = str(exc)
             else:
                 observation_error = "Aucun slot Ryujinx détecté"
+
+            if not observations and self.save_path is not None:
+                source = Path(self.save_path).expanduser()
+                source_unavailable = source_unavailable or not source.exists()
 
             if observations:
                 newest_mtime = max(int(item["mtime_ns"]) for item in observations)
@@ -234,19 +276,25 @@ class ReliableSaveSync:
                     "slot": Path("inconnu"), "error": observation_error,
                 }
                 expired = self._pending_expired(observation)
-                status = "fichier_corrompu" if expired else "ecriture_en_cours"
-                label = (f"Fichier corrompu ou incomplet dans le slot {observation['slot'].name}"
-                         if expired else f"Écriture en cours dans le slot {observation['slot'].name}")
+                if source_unavailable:
+                    status = "source_indisponible"
+                    label = "Dossier de sauvegarde Ryujinx momentanément indisponible"
+                else:
+                    status = "fichier_corrompu" if expired else "ecriture_en_cours"
+                    label = (f"Fichier corrompu ou incomplet dans le slot {observation['slot'].name}"
+                             if expired else f"Écriture en cours dans le slot {observation['slot'].name}")
                 self._failures += 1
                 self._problem(status, label, observation,
                               error=str(observation.get("error") or observation_error),
-                              event_kind="erreur" if expired else "attente")
+                              event_kind="erreur" if expired or source_unavailable else "attente")
                 self._state["consecutive_failures"] = self._failures
                 if self._report is not None:
                     return self._cached_result(include_report=include_report)
                 raise SaveError(label)
 
-            selected = max(readable, key=lambda item: (int(item["timestamp"]), item["slot"].name))
+            selected = max(readable, key=lambda item: (
+                int(item["timestamp"]), self._path_key(item["slot"]),
+            ))
             slot = selected["slot"]
             files = selected["files"]
             timestamp = int(selected["timestamp"])
@@ -259,7 +307,8 @@ class ReliableSaveSync:
 
             # Un slot plus ancien ne doit jamais remplacer le dernier rapport valide.
             if self._report is not None and self._internal_timestamp is not None and timestamp < self._internal_timestamp:
-                current = next((item for item in observations if item["slot"].name == self._slot), selected)
+                current = next((item for item in observations
+                                if self._slot_path is not None and item["slot"] == self._slot_path), selected)
                 expired = self._pending_expired(current)
                 status = "fichier_corrompu" if expired else "ecriture_en_cours"
                 label = (f"Slot courant {self._slot} illisible - dernier rapport valide conservé"
@@ -276,7 +325,7 @@ class ReliableSaveSync:
             if hottest["slot"] != slot and int(hottest["mtime_ns"]) > int(selected["mtime_ns"]):
                 known = hottest["timestamp"]
                 if known is None:
-                    known = self._known_timestamps.get(hottest["slot"].name)
+                    known = self._known_timestamps.get(self._path_key(hottest["slot"]))
                 if known is not None and int(known) <= timestamp:
                     ignored = hottest
                 else:
@@ -302,17 +351,20 @@ class ReliableSaveSync:
                     self._state.update({"status": "a_jour", "status_label": "À jour",
                                         "ignored_slot": None, "error": None})
                 self._state.update({"slot": slot.name, "candidate_slot": None,
+                                    "source_root": str(slot.parent),
+                                    "source_kind": self._source_kind(slot),
                                     "candidate_status": None, "candidate_since": None,
                                     "consecutive_failures": 0})
                 return self._cached_result(include_report=include_report)
 
             old_slot = self._slot
+            old_slot_path = self._slot_path
             self._state.update({
                 "status": "changement_detecte", "status_label": "Changement détecté",
                 "last_change_at": _iso_now(), "slot": slot.name, "error": None,
             })
             self._event("changement", f"Modification détectée dans le slot {slot.name}.")
-            stable_status, stable, stable_error = self._stable_bytes(slot, files)
+            stable_status, stable, stable_error = self._stable_snapshot(slot, files)
             if stable_status != "stable" or stable is None:
                 expired = self._pending_expired(selected)
                 # Un fichier momentanément tronqué est indiscernable d'une écriture
@@ -327,23 +379,38 @@ class ReliableSaveSync:
                 raise SaveError(label)
 
             self._clear_pending(slot)
-            stable_signature, digest = stable
+            stable_signature, digest, snapshot = stable
+            if snapshot.internal_timestamp != timestamp:
+                self._problem("ecriture_en_cours", "La sauvegarde a changé pendant sa lecture",
+                              selected, error="Horodatage interne modifié pendant la capture")
+                if self._report is not None:
+                    return self._cached_result(include_report=include_report)
+                raise SaveError("La sauvegarde a changé pendant sa lecture")
             if self._report is not None and digest == self._digest and not force:
                 self._quick_signature = stable_signature
                 self._internal_timestamp = timestamp
+                self._slot = slot.name
+                self._slot_path = slot
                 self._state.update({"status": "a_jour", "status_label": "À jour - contenu inchangé",
                                     "slot": slot.name, "candidate_slot": None,
+                                    "source_root": str(slot.parent),
+                                    "source_kind": self._source_kind(slot),
                                     "candidate_status": None, "candidate_since": None})
                 return self._cached_result(include_report=include_report)
 
             self._state.update({"status": "analyse", "status_label": "Analyse de la nouvelle sauvegarde"})
             try:
-                report = self.payload_factory()
+                report = (self.snapshot_payload_factory(snapshot)
+                          if self.snapshot_payload_factory is not None else self.payload_factory())
                 current = self._observations()
                 current_readable = [item for item in current
                                     if item["timestamp"] is not None and item["signature"] is not None]
+                if not current_readable:
+                    raise SaveError("La sauvegarde a changé pendant l’analyse")
                 current_selected = max(current_readable,
-                                       key=lambda item: (int(item["timestamp"]), item["slot"].name))
+                                       key=lambda item: (
+                                           int(item["timestamp"]), self._path_key(item["slot"]),
+                                       ))
                 if (current_selected["slot"] != slot or int(current_selected["timestamp"]) != timestamp
                         or self._stats(slot, files) != stable_signature):
                     raise SaveError("La sauvegarde a changé pendant l’analyse")
@@ -371,15 +438,18 @@ class ReliableSaveSync:
             self._quick_signature = stable_signature
             self._digest = digest
             self._slot = slot.name
+            self._slot_path = slot
             self._internal_timestamp = timestamp
             self._revision += 1
             self._failures = 0
-            changed_slot = old_slot is not None and old_slot != slot.name
+            changed_slot = old_slot_path is not None and old_slot_path != slot
             status = "nouveau_slot_valide" if changed_slot else "actualise"
             label = f"Nouveau slot {slot.name} analysé" if changed_slot else "Nouvelle sauvegarde analysée"
             self._state.update({
                 "status": status, "status_label": label,
                 "last_success_at": _iso_now(), "slot": slot.name,
+                "source_root": str(slot.parent),
+                "source_kind": self._source_kind(slot),
                 "save_timestamp": timestamp, "save_timestamp_at": _iso_timestamp(timestamp),
                 "save_mode": self._save_mode(slot), "fingerprint": digest[:16],
                 "report_revision": self._revision, "consecutive_failures": 0,

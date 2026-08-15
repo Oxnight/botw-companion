@@ -8,9 +8,18 @@ import time
 
 from .analyzer import analyze
 from .blood_moon import blood_moon_status
-from .save import SaveError, identify_platform, load_save, parse_inventory
+from .save import (
+    SaveError,
+    SaveSlot,
+    identify_platform,
+    identify_platform_data,
+    load_save,
+    parse_data,
+    parse_inventory,
+    parse_inventory_data,
+)
 from .server import serve
-from .synchronization import ReliableSaveSync
+from .synchronization import ReliableSaveSync, SaveSnapshot
 
 
 def _item_line(item: dict) -> str:
@@ -56,9 +65,8 @@ def _save_context(slot_path: Path, flags: dict[str, object]) -> dict:
     }
 
 
-def _payload(path: str | None) -> dict:
-    slot, caption, flags = load_save(path)
-    inventory = parse_inventory(slot.path / "game_data.sav")
+def _build_payload(slot: SaveSlot, caption: dict[str, object], flags: dict[str, object],
+                   inventory: list[dict[str, object]], platform_label: str) -> dict:
     context = _save_context(slot.path, flags)
     report = analyze(flags, inventory, context)
     report["lune_de_sang"] = blood_moon_status(flags)
@@ -66,13 +74,38 @@ def _payload(path: str | None) -> dict:
         "slot": slot.path.name,
         "chemin": str(slot.path),
         "date": slot.date.isoformat(sep=" ", timespec="seconds"),
-        "plateforme": identify_platform(slot.path / "game_data.sav"),
+        "plateforme": platform_label,
         "rubis": caption.get("CurrentRupee"),
         "temps_jeu_secondes": caption.get("PlayReport_PlayTime"),
         "mode": context["mode"],
         "detection_mode": context["detection"],
     }
     return report
+
+
+def _payload(path: str | None) -> dict:
+    slot, caption, flags = load_save(path)
+    game_data_path = slot.path / "game_data.sav"
+    return _build_payload(
+        slot,
+        caption,
+        flags,
+        parse_inventory(game_data_path),
+        identify_platform(game_data_path),
+    )
+
+
+def _payload_snapshot(snapshot: SaveSnapshot) -> dict:
+    caption = parse_data(snapshot.caption_data, snapshot.slot_path / "caption.sav")
+    flags = parse_data(snapshot.game_data, snapshot.slot_path / "game_data.sav")
+    slot = SaveSlot(snapshot.slot_path, snapshot.internal_timestamp)
+    return _build_payload(
+        slot,
+        caption,
+        flags,
+        parse_inventory_data(snapshot.game_data, snapshot.slot_path / "game_data.sav"),
+        identify_platform_data(snapshot.game_data),
+    )
 
 
 def _map_for_mode(payload: dict, mode: str) -> dict:
@@ -128,7 +161,7 @@ def _print_summary(payload: dict, map_mode: str = "automatique",
 
 def _watch(path: str | None, interval: float, map_mode: str = "automatique",
            profile_mode: str = "automatique") -> None:
-    sync = ReliableSaveSync(path, lambda: _payload(path))
+    sync = ReliableSaveSync(path, lambda: _payload(path), snapshot_payload_factory=_payload_snapshot)
     previous_revision = 0
     print("Surveillance active; Ctrl+C pour arrêter.")
     while True:
@@ -175,7 +208,11 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.commande == "interface":
             factory = lambda: _payload(args.sauvegarde)
-            sync = ReliableSaveSync(args.sauvegarde, factory)
+            sync = ReliableSaveSync(
+                args.sauvegarde,
+                factory,
+                snapshot_payload_factory=_payload_snapshot,
+            )
             serve(factory, port=args.port, open_browser=not args.sans_navigateur,
                   sync_controller=sync)
             return 0
