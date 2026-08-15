@@ -5,14 +5,20 @@ from importlib.resources import files
 import gzip
 import json
 import re
+import signal
 import threading
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
 
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
 from .dsu import DsuManager
-from .lifecycle import WebLifecycle
-from .platforms import platform_metadata
+from .lifecycle import APPLICATION_NAME, RyujinxLifecycleWatcher, WebLifecycle
+from .platforms import (
+    platform_metadata,
+    ryujinx_is_running,
+    server_instance_guard,
+    system_shutdown_notifier,
+)
 from .route_sessions import RouteSessionStore
 from .report_views import ReportViewCache, report_revision_key
 from .synchronization import ReliableSaveSync
@@ -24,7 +30,11 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           route_store: RouteSessionStore | None = None,
           sync_controller: ReliableSaveSync | None = None,
           inactivity_seconds: float = 300,
-          dsu_manager: DsuManager | None = None) -> None:
+          dsu_manager: DsuManager | None = None,
+          monitor_ryujinx: bool = False,
+          ryujinx_running=None,
+          instance_guard=None,
+          shutdown_notifier_factory=None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -109,8 +119,14 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 return
             if path == "/api/version":
                 self._json_response(200, {
+                    "application": APPLICATION_NAME,
+                    "api_schema_version": 1,
                     "version": __version__,
                     "platform": platform_metadata(),
+                    "lifecycle": {
+                        "monitoring_ryujinx": monitor_ryujinx,
+                        "shutdown_reason": lifecycle.shutdown_reason,
+                    },
                 })
                 return
             if path in {"/api/manual", "/api/manual/export"}:
@@ -191,10 +207,9 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self._json_response(200, lifecycle.heartbeat())
                 return
             if path == "/api/shutdown":
-                lifecycle.request_shutdown()
                 dsu_manager.stop()
                 self._json_response(200, {"status": "arret", "message": "BOTW Companion va s’arrêter"})
-                threading.Thread(target=server.shutdown, daemon=True).start()
+                request_server_shutdown("bouton_quitter")
                 return
             if path == "/api/dsu/start":
                 payload = dsu_manager.start()
@@ -233,8 +248,31 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
         def log_message(self, _format: str, *_args) -> None:
             pass
 
-    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    guard = instance_guard or server_instance_guard()
+    if not guard.acquire():
+        raise OSError("Une instance de BOTW Companion fonctionne déjà pour cet utilisateur")
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    except Exception:
+        guard.close()
+        raise
     lifecycle_stop = threading.Event()
+
+    def request_server_shutdown(reason: str) -> None:
+        if lifecycle.should_shutdown():
+            return
+        lifecycle.request_shutdown(reason)
+        threading.Thread(
+            target=server.shutdown,
+            name="botw-companion-shutdown",
+            daemon=True,
+        ).start()
+
+    shutdown_notifier = (
+        shutdown_notifier_factory(request_server_shutdown)
+        if shutdown_notifier_factory is not None
+        else system_shutdown_notifier(request_server_shutdown)
+    )
 
     def monitor_lifecycle() -> None:
         while not lifecycle_stop.wait(15):
@@ -243,6 +281,25 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 return
 
     threading.Thread(target=monitor_lifecycle, name="botw-companion-lifecycle", daemon=True).start()
+    watcher = None
+    if monitor_ryujinx:
+        watcher = RyujinxLifecycleWatcher(
+            ryujinx_running or ryujinx_is_running,
+            request_server_shutdown,
+        )
+        watcher.start()
+
+    previous_signals = {}
+
+    def handle_signal(signum, _frame) -> None:
+        request_server_shutdown(f"signal_{signum}")
+
+    if threading.current_thread() is threading.main_thread():
+        for signal_name in ("SIGINT", "SIGTERM", "SIGBREAK"):
+            signum = getattr(signal, signal_name, None)
+            if signum is not None:
+                previous_signals[signum] = signal.getsignal(signum)
+                signal.signal(signum, handle_signal)
     url = f"http://127.0.0.1:{port}"
     print(f"Interface BOTW Companion : {url}")
     print("Laisse ce terminal ouvert. Ctrl+C pour arrêter.")
@@ -252,5 +309,11 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
         server.serve_forever()
     finally:
         lifecycle_stop.set()
+        if watcher is not None:
+            watcher.stop()
         dsu_manager.close()
         server.server_close()
+        shutdown_notifier.close()
+        guard.close()
+        for signum, previous in previous_signals.items():
+            signal.signal(signum, previous)

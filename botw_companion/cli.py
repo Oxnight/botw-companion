@@ -197,6 +197,11 @@ def build_parser() -> argparse.ArgumentParser:
     interface.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")
     interface.add_argument("--port", type=int, default=8765)
     interface.add_argument("--sans-navigateur", action="store_true")
+    interface.add_argument(
+        "--arreter-avec-ryujinx",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
     return parser
 
 
@@ -214,7 +219,8 @@ def main(argv: list[str] | None = None) -> int:
                 snapshot_payload_factory=_payload_snapshot,
             )
             serve(factory, port=args.port, open_browser=not args.sans_navigateur,
-                  sync_controller=sync)
+                  sync_controller=sync,
+                  monitor_ryujinx=args.arreter_avec_ryujinx)
             return 0
         payload = _payload(args.sauvegarde)
         if args.commande == "analyse":

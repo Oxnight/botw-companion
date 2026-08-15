@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 2**. Elle conserve le paquet macOS Apple Silicon validé, le socle multiplateforme et la détection des sauvegardes Windows. La synchronisation compare maintenant les installations Ryujinx standard et portables, analyse une copie cohérente en mémoire et conserve le dernier rapport valide pendant une écriture, un verrou Windows ou une indisponibilité temporaire. Le lanceur et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 3**. Elle conserve le paquet macOS Apple Silicon validé, le socle multiplateforme et la synchronisation Windows fiable de l’alpha 2. Le cycle de vie commun sait maintenant identifier une instance existante, protéger le serveur par un mutex Windows, surveiller Ryujinx à faible fréquence et résister aux onglets suspendus ainsi qu’aux sorties de veille. Le lanceur graphique et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -51,7 +51,9 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 * `RYUJINX_DATA_DIR` : dossier de données Ryujinx contenant `bis\user\save` ;
 * `BOTW_COMPANION_DATA_DIR` : dossier persistant de BOTW Companion.
 
-Le lancement graphique Windows, la surveillance du processus Ryujinx et JoyConDSU Windows ne font pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
+Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
+
+Le lanceur graphique Windows qui activera automatiquement cette surveillance et JoyConDSU Windows ne font pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
 
 La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine.
 

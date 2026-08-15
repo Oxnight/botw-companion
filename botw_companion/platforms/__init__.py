@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from hashlib import sha256
 import os
 import platform
 import shutil
@@ -11,6 +12,27 @@ from . import linux, macos, windows
 
 Environment = Mapping[str, str]
 Which = Callable[[str], str | None]
+
+
+class LocalInstanceGuard:
+    """Le socket assure déjà l'instance unique hors Windows."""
+
+    def acquire(self) -> bool:
+        return True
+
+    def close(self) -> None:
+        pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _exc_type, _exc, _traceback) -> None:
+        self.close()
+
+
+class LocalShutdownNotifier:
+    def close(self) -> None:
+        pass
 
 
 def system_name(system: str | None = None) -> str:
@@ -95,3 +117,35 @@ def ryujinx_save_roots(*, system: str | None = None,
     else:
         candidates.extend(linux.ryujinx_save_roots(values, root))
     return _unique(candidates)
+
+
+def server_instance_guard(*, system: str | None = None,
+                          environ: Environment | None = None,
+                          home: Path | None = None,
+                          mutex_factory=None):
+    """Retourne un verrou par utilisateur pour l'unique serveur Windows."""
+    resolved = system_name(system)
+    if resolved != "Windows":
+        return LocalInstanceGuard()
+    data_root = companion_data_dir(system=resolved, environ=environ, home=home)
+    identity = sha256(str(data_root).casefold().encode("utf-8")).hexdigest()[:16]
+    name = f"Local\\BOTWCompanion.Server.{identity}"
+    factory = mutex_factory or windows.WindowsNamedMutex
+    return factory(name)
+
+
+def ryujinx_is_running(*, system: str | None = None,
+                       process_names: Callable[[], set[str]] | None = None) -> bool:
+    resolved = system_name(system)
+    if resolved == "Windows":
+        return windows.ryujinx_is_running(process_names)
+    return False
+
+
+def system_shutdown_notifier(callback: Callable[[str], None], *,
+                             system: str | None = None,
+                             windows_factory=None):
+    if system_name(system) != "Windows":
+        return LocalShutdownNotifier()
+    factory = windows_factory or windows.WindowsConsoleShutdownHandler
+    return factory(callback)
