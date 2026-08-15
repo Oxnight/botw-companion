@@ -661,6 +661,20 @@ function renderDsu(state) {
     $("#toggleDsu").disabled = dsuBusy || state.state === "unavailable";
 }
 
+async function loadRuntimePlatform() {
+    try {
+        const response = await fetch("/api/version");
+        const data = await response.json();
+        if (!response.ok) {
+            throw Error("Plateforme inaccessible");
+        }
+        $("#runtimePlatform").textContent =
+            String(data.platform?.label || "Système local").toUpperCase();
+    } catch (_error) {
+        $("#runtimePlatform").textContent = "SYSTÈME LOCAL";
+    }
+}
+
 function scheduleDsu(state) {
     clearTimeout(dsuTimer);
     const active = state?.running || ["starting", "waiting_controller", "ready"].includes(state?.state);
@@ -4109,6 +4123,7 @@ $("#refresh").onclick =
         )
 );
 
+loadRuntimePlatform();
 load();
 refreshDsu();
 

@@ -11,6 +11,8 @@ import threading
 import time
 import zlib
 
+from ..platforms import companion_data_dir
+
 
 DSU_HOST = "127.0.0.1"
 DSU_PORT = 26760
@@ -72,9 +74,7 @@ class DsuManager:
         self.launcher = launcher or Path(str(resource_root.joinpath("launch_managed.sh")))
         self.system = system or platform.system()
         self.machine = (machine or platform.machine()).lower()
-        self.support_dir = support_dir or (
-            Path.home() / "Library" / "Application Support" / "BOTW Companion"
-        )
+        self.support_dir = support_dir or companion_data_dir(system=self.system)
         self.log_path = self.support_dir / "joycon-dsu.log"
         self.sdl_library = sdl_library or Path(
             "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib"

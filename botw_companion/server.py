@@ -12,6 +12,7 @@ import webbrowser
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
 from .dsu import DsuManager
 from .lifecycle import WebLifecycle
+from .platforms import platform_metadata
 from .route_sessions import RouteSessionStore
 from .report_views import ReportViewCache, report_revision_key
 from .synchronization import ReliableSaveSync
@@ -107,7 +108,10 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self._json_response(200, dsu_manager.status())
                 return
             if path == "/api/version":
-                self._json_response(200, {"version": __version__})
+                self._json_response(200, {
+                    "version": __version__,
+                    "platform": platform_metadata(),
+                })
                 return
             if path in {"/api/manual", "/api/manual/export"}:
                 try:

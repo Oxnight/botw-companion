@@ -144,7 +144,7 @@ def _watch(path: str | None, interval: float, map_mode: str = "automatique",
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Compagnon de complétion Zelda BOTW (Switch/Ryujinx sur macOS)")
+    parser = argparse.ArgumentParser(description="Compagnon local de complétion Zelda BOTW pour Switch/Ryujinx")
     sub = parser.add_subparsers(dest="commande", required=True)
     analyse = sub.add_parser("analyse", help="analyser la sauvegarde la plus récente")
     analyse.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")

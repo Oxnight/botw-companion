@@ -3,11 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-import os
 import re
 import struct
 
 from .resources import load_hashes
+from .platforms import ryujinx_save_roots
 
 
 class SaveError(ValueError):
@@ -118,15 +118,7 @@ def _candidate_slots(path: Path) -> list[Path]:
 
 def default_ryujinx_save_roots() -> list[Path]:
     """Emplacements connus, sans supposer lequel est utilisé par l'installation."""
-    home = Path.home()
-    roots = [
-        home / "Library/Application Support/Ryujinx/bis/user/save",
-        home / ".config/Ryujinx/bis/user/save",
-    ]
-    custom = os.environ.get("RYUJINX_DATA_DIR")
-    if custom:
-        roots.insert(0, Path(custom).expanduser() / "bis/user/save")
-    return roots
+    return ryujinx_save_roots()
 
 
 def discover_ryujinx_save_root(search_roots: list[Path] | None = None) -> Path:

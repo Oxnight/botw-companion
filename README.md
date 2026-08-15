@@ -1,8 +1,8 @@
 # BOTW Companion
 
-BOTW Companion est une application locale pour macOS qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
+BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.39.1**. Le projet vise les Mac Apple Silicon et fonctionne hors ligne après l’installation. Les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 1**. Elle conserve le paquet macOS Apple Silicon validé et introduit le socle multiplateforme ainsi que la détection des sauvegardes Windows. Le lanceur et le moteur JoyConDSU Windows seront fournis dans les étapes suivantes. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -37,9 +37,21 @@ La version actuelle est **0.39.1**. Le projet vise les Mac Apple Silicon et fonc
 
 * Mac Apple Silicon : M1, M2, M3, M4 ou génération ultérieure.
 * macOS 12 ou plus récent.
+* Détection préparée pour Windows 10 et 11 : `%APPDATA%\Ryujinx\bis\user\save` et installations portables identifiables.
 * Python 3.10 ou plus récent, Python 3.12 recommandé.
 * Ryujinx installé dans `/Applications/Ryujinx.app` pour bénéficier de l’arrêt automatique associé au jeu.
 * Homebrew, SDL3 et les outils en ligne de commande Xcode pour compiler le serveur JoyConDSU sur le Mac cible.
+
+### État du socle Windows
+
+Cette version alpha détecte automatiquement le dossier standard `%APPDATA%\Ryujinx\bis\user\save`. Elle reconnaît aussi une installation portable lorsque l’exécutable Ryujinx est indiqué par `RYUJINX_EXECUTABLE` ou `RYUJINX_EXE`, présent dans le `PATH`, ou installé dans un emplacement Windows courant.
+
+Deux variables permettent de forcer un emplacement particulier sans modifier le code :
+
+* `RYUJINX_DATA_DIR` : dossier de données Ryujinx contenant `bis\user\save` ;
+* `BOTW_COMPANION_DATA_DIR` : dossier persistant de BOTW Companion.
+
+Le lancement graphique Windows, la surveillance du processus Ryujinx et JoyConDSU Windows ne font pas encore partie de cette alpha. Le comportement macOS existant reste inchangé.
 
 La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine.
 

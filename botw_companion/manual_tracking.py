@@ -6,8 +6,9 @@ import json
 import os
 from pathlib import Path
 import shutil
-import sys
 import threading
+
+from .platforms import companion_data_dir
 
 
 SCHEMA_VERSION = 1
@@ -18,14 +19,7 @@ class ManualTrackingError(ValueError):
 
 
 def default_tracking_path() -> Path:
-    override = os.environ.get("BOTW_COMPANION_DATA_DIR")
-    if override:
-        root = Path(override).expanduser()
-    elif sys.platform == "darwin":
-        root = Path.home() / "Library" / "Application Support" / "BOTW Companion"
-    else:
-        root = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share")) / "botw-companion"
-    return root / "manual_tracking.json"
+    return companion_data_dir() / "manual_tracking.json"
 
 
 class ManualTrackingStore:
