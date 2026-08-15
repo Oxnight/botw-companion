@@ -1,17 +1,20 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from datetime import datetime, timezone
 import json
-import os
 from pathlib import Path
-import shutil
 import threading
 
+from .persistence import (
+    atomic_write_json,
+    copy_valid_backup,
+    migration_backup_path,
+    read_json,
+)
 from .platforms import companion_data_dir
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class ManualTrackingError(ValueError):
@@ -38,6 +41,8 @@ class ManualTrackingStore:
     def _validate(payload: object) -> dict:
         if not isinstance(payload, dict) or not isinstance(payload.get("entries"), dict):
             raise ManualTrackingError("Format de suivi manuel invalide")
+        if payload.get("schema_version") != SCHEMA_VERSION:
+            raise ManualTrackingError("Version du suivi manuel non prise en charge")
         entries = {}
         for tracking_id, raw in payload["entries"].items():
             if not isinstance(tracking_id, str) or not tracking_id or len(tracking_id) > 300:
@@ -63,24 +68,51 @@ class ManualTrackingStore:
             "entries": entries,
         }
 
-    def _read_file(self, path: Path) -> dict:
-        return self._validate(json.loads(path.read_text(encoding="utf-8")))
+    @staticmethod
+    def _migrate(payload: object) -> tuple[dict, int]:
+        if not isinstance(payload, dict):
+            raise ManualTrackingError("Format de suivi manuel invalide")
+        source_version = payload.get("schema_version", 1)
+        if not isinstance(source_version, int) or source_version < 1 or source_version > SCHEMA_VERSION:
+            raise ManualTrackingError("Version du suivi manuel non prise en charge")
+        migrated = dict(payload)
+        if source_version == 1:
+            migrated["schema_version"] = 2
+        return migrated, source_version
+
+    def _read_file(self, path: Path) -> tuple[dict, int]:
+        migrated, source_version = self._migrate(read_json(path))
+        return self._validate(migrated), source_version
 
     def load(self) -> dict:
         with self._lock:
             if not self.path.exists():
                 return self._empty()
             try:
-                return self._read_file(self.path)
+                payload, source_version = self._read_file(self.path)
+            except ManualTrackingError as exc:
+                if "Version" in str(exc):
+                    raise
+                payload = self._load_backup_or_raise()
+                return payload
+            except (OSError, json.JSONDecodeError):
+                return self._load_backup_or_raise()
+            if source_version < SCHEMA_VERSION:
+                migration_backup = migration_backup_path(self.path, source_version)
+                if not migration_backup.exists():
+                    copy_valid_backup(self.path, migration_backup)
+                atomic_write_json(self.path, payload)
+            return payload
+
+    def _load_backup_or_raise(self) -> dict:
+        if self.backup_path.exists():
+            try:
+                return self._read_file(self.backup_path)[0]
             except (OSError, json.JSONDecodeError, ManualTrackingError):
-                if self.backup_path.exists():
-                    try:
-                        return self._read_file(self.backup_path)
-                    except (OSError, json.JSONDecodeError, ManualTrackingError):
-                        pass
-                raise ManualTrackingError(
-                    f"Le suivi manuel est illisible. Une copie est conservée dans {self.path.parent}"
-                )
+                pass
+        raise ManualTrackingError(
+            f"Le suivi manuel est illisible. Une copie est conservée dans {self.path.parent}"
+        )
 
     def _write(self, payload: dict) -> dict:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -90,15 +122,8 @@ class ManualTrackingStore:
             except (OSError, json.JSONDecodeError, ManualTrackingError):
                 pass
             else:
-                shutil.copy2(self.path, self.backup_path)
-        temporary = self.path.with_suffix(".tmp")
-        data = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-        with temporary.open("w", encoding="utf-8") as stream:
-            stream.write(data)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, self.path)
-        return deepcopy(payload)
+                copy_valid_backup(self.path, self.backup_path)
+        return atomic_write_json(self.path, payload)
 
     @staticmethod
     def _check_revision(current: dict, expected_revision: object) -> None:
@@ -126,7 +151,7 @@ class ManualTrackingStore:
 
     def import_data(self, imported: object, mode: str = "merge",
                     expected_revision: int | None = None) -> dict:
-        incoming = self._validate(imported)
+        incoming = self._validate(self._migrate(imported)[0])
         if mode not in {"merge", "replace"}:
             raise ManualTrackingError("Mode d’import inconnu")
         with self._lock:

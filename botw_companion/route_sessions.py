@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from datetime import datetime, timezone
 import json
-import os
 from pathlib import Path
-import shutil
 import threading
 import uuid
 
 from .manual_tracking import ManualTrackingError, default_tracking_path
+from .persistence import (
+    atomic_write_json,
+    copy_valid_backup,
+    migration_backup_path,
+    read_json,
+)
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 MAX_SESSIONS = 100
 MAX_ENTRIES = 1000
 
@@ -122,6 +125,8 @@ class RouteSessionStore:
     def _validate(cls, payload: object) -> dict:
         if not isinstance(payload, dict) or not isinstance(payload.get("sessions"), dict):
             raise ManualTrackingError("Format des itinéraires invalide")
+        if payload.get("schema_version") != SCHEMA_VERSION:
+            raise ManualTrackingError("Version des itinéraires non prise en charge")
         if len(payload["sessions"]) > MAX_SESSIONS:
             raise ManualTrackingError(f"Le planificateur est limité à {MAX_SESSIONS} sessions")
         sessions = {sid: cls._validate_session(raw, sid) for sid, raw in payload["sessions"].items()}
@@ -137,24 +142,85 @@ class RouteSessionStore:
                 "updated_at": payload.get("updated_at"), "active_session_id": active,
                 "sessions": sessions}
 
-    def _read_file(self, path: Path) -> dict:
-        return self._validate(json.loads(path.read_text(encoding="utf-8")))
+    @classmethod
+    def _migrate(cls, payload: object) -> tuple[dict, int]:
+        if not isinstance(payload, dict):
+            raise ManualTrackingError("Format des itinéraires invalide")
+        source_version = payload.get("schema_version", 1)
+        if not isinstance(source_version, int) or source_version < 1 or source_version > SCHEMA_VERSION:
+            raise ManualTrackingError("Version des itinéraires non prise en charge")
+        migrated = dict(payload)
+        if source_version == 1 and "sessions" not in migrated:
+            session_id = cls._new_id()
+            raw_entries = migrated.get("entries", migrated.get("steps", []))
+            entries = []
+            for entry in raw_entries if isinstance(raw_entries, list) else []:
+                if not isinstance(entry, dict):
+                    entries.append(entry)
+                    continue
+                if "snapshot" in entry:
+                    entries.append(entry)
+                    continue
+                entries.append({
+                    "tracking_id": entry.get("tracking_id"),
+                    "locked": entry.get("locked", False),
+                    "snapshot": {
+                        key: entry[key]
+                        for key in ("name", "category", "region", "x", "z", "content_origin")
+                        if entry.get(key) is not None
+                    },
+                })
+            migrated = {
+                "schema_version": 2,
+                "revision": migrated.get("revision", 0),
+                "updated_at": migrated.get("updated_at"),
+                "active_session_id": session_id,
+                "sessions": {session_id: {
+                    "id": session_id,
+                    "name": migrated.get("name", "Session BOTW"),
+                    "start": migrated.get("start"),
+                    "strategy": migrated.get("strategy", "distance"),
+                    "entries": entries,
+                    "created_at": migrated.get("created_at"),
+                    "updated_at": migrated.get("updated_at"),
+                }},
+            }
+        if source_version <= 2:
+            migrated["schema_version"] = 3
+        return migrated, source_version
+
+    def _read_file(self, path: Path) -> tuple[dict, int]:
+        migrated, source_version = self._migrate(read_json(path))
+        return self._validate(migrated), source_version
 
     def load(self) -> dict:
         with self._lock:
             if not self.path.exists():
                 return self._empty()
             try:
-                return self._read_file(self.path)
+                payload, source_version = self._read_file(self.path)
+            except ManualTrackingError as exc:
+                if "Version" in str(exc):
+                    raise
+                return self._load_backup_or_raise()
+            except (OSError, json.JSONDecodeError):
+                return self._load_backup_or_raise()
+            if source_version < SCHEMA_VERSION:
+                migration_backup = migration_backup_path(self.path, source_version)
+                if not migration_backup.exists():
+                    copy_valid_backup(self.path, migration_backup)
+                atomic_write_json(self.path, payload)
+            return payload
+
+    def _load_backup_or_raise(self) -> dict:
+        if self.backup_path.exists():
+            try:
+                return self._read_file(self.backup_path)[0]
             except (OSError, json.JSONDecodeError, ManualTrackingError):
-                if self.backup_path.exists():
-                    try:
-                        return self._read_file(self.backup_path)
-                    except (OSError, json.JSONDecodeError, ManualTrackingError):
-                        pass
-                raise ManualTrackingError(
-                    f"Les itinéraires sont illisibles. Une copie est conservée dans {self.path.parent}"
-                )
+                pass
+        raise ManualTrackingError(
+            f"Les itinéraires sont illisibles. Une copie est conservée dans {self.path.parent}"
+        )
 
     def _write(self, payload: dict) -> dict:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -164,15 +230,8 @@ class RouteSessionStore:
             except (OSError, json.JSONDecodeError, ManualTrackingError):
                 pass
             else:
-                shutil.copy2(self.path, self.backup_path)
-        temporary = self.path.with_suffix(".tmp")
-        data = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-        with temporary.open("w", encoding="utf-8") as stream:
-            stream.write(data)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, self.path)
-        return deepcopy(payload)
+                copy_valid_backup(self.path, self.backup_path)
+        return atomic_write_json(self.path, payload)
 
     def replace(self, incoming: object, expected_revision: int | None = None) -> dict:
         clean = self._validate(incoming)

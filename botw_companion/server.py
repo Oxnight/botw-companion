@@ -10,6 +10,7 @@ import threading
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
 
+from .backup import CompanionBackup
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
 from .dsu import DsuManager
 from .lifecycle import APPLICATION_NAME, RyujinxLifecycleWatcher, WebLifecycle
@@ -20,6 +21,8 @@ from .platforms import (
     system_shutdown_notifier,
 )
 from .route_sessions import RouteSessionStore
+from .preferences import PreferenceStore
+from .runtime_state import RuntimeStateStore
 from .report_views import ReportViewCache, report_revision_key
 from .synchronization import ReliableSaveSync
 from . import __version__
@@ -28,6 +31,8 @@ from . import __version__
 def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           tracking_store: ManualTrackingStore | None = None,
           route_store: RouteSessionStore | None = None,
+          preference_store: PreferenceStore | None = None,
+          runtime_state_store: RuntimeStateStore | None = None,
           sync_controller: ReliableSaveSync | None = None,
           inactivity_seconds: float = 300,
           dsu_manager: DsuManager | None = None,
@@ -38,12 +43,24 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
+    preference_store = preference_store or PreferenceStore()
+    runtime_state_store = runtime_state_store or RuntimeStateStore()
+    backup_manager = CompanionBackup(tracking_store, route_store, preference_store)
     report_views = ReportViewCache()
     lifecycle = WebLifecycle(inactivity_seconds)
     dsu_manager = dsu_manager or DsuManager()
 
+    def remember_sync(synchronization: object) -> None:
+        try:
+            runtime_state_store.update_sync(synchronization)
+        except (ManualTrackingError, OSError):
+            pass
+
     def current_report(force: bool = False) -> dict:
-        return (sync_controller.report(force=force) if sync_controller else payload_factory())
+        report = sync_controller.report(force=force) if sync_controller else payload_factory()
+        if sync_controller and isinstance(report.get("synchronisation"), dict):
+            remember_sync(report["synchronisation"])
+        return report
 
     class Handler(BaseHTTPRequestHandler):
         def _json_response(self, status: int, payload: object, **headers: str) -> None:
@@ -109,6 +126,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             if path == "/api/sync" and sync_controller:
                 try:
                     payload = sync_controller.check(force=force)
+                    remember_sync(payload.get("synchronisation", {}))
                 except Exception as exc:
                     self._json_response(500, {"erreur": str(exc)})
                 else:
@@ -149,10 +167,17 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 else:
                     self._json_response(200, payload, **headers)
                 return
+            if path == "/api/preferences":
+                try:
+                    payload = preference_store.load()
+                except ManualTrackingError as exc:
+                    self._json_response(500, {"erreur": str(exc)})
+                else:
+                    self._json_response(200, payload)
+                return
             if path == "/api/backup/export":
                 try:
-                    payload = {"schema_version": 1, "application": "BOTW Companion",
-                               "manual_tracking": tracking_store.load(), "route_sessions": route_store.load()}
+                    payload = backup_manager.export()
                 except ManualTrackingError as exc:
                     self._json_response(500, {"erreur": str(exc)})
                 else:
@@ -176,6 +201,18 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
 
         def do_PUT(self) -> None:  # noqa: N802
             path = urlsplit(self.path).path
+            if path == "/api/preferences":
+                try:
+                    data = self._read_json()
+                    if not isinstance(data, dict) or "values" not in data:
+                        raise ManualTrackingError("Préférences invalides")
+                    result = preference_store.update(
+                        data["values"], data.get("expected_revision")
+                    )
+                    self._json_response(200, result)
+                except ManualTrackingError as exc:
+                    self._json_response(409 if "autre fenêtre" in str(exc) else 400, {"erreur": str(exc)})
+                return
             if path == "/api/routes":
                 try:
                     data = self._read_json()
@@ -230,6 +267,16 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     self._json_response(200, result)
                 except ManualTrackingError as exc:
                     self._json_response(409 if "autre fenêtre" in str(exc) else 400, {"erreur": str(exc)})
+                return
+            if path == "/api/backup/import":
+                try:
+                    data = self._read_json()
+                    if not isinstance(data, dict) or "backup" not in data:
+                        raise ManualTrackingError("Sauvegarde générale invalide")
+                    result = backup_manager.restore(data["backup"])
+                    self._json_response(200, result)
+                except (ManualTrackingError, OSError) as exc:
+                    self._json_response(400, {"erreur": str(exc)})
                 return
             if path != "/api/manual/import":
                 self.send_error(404)

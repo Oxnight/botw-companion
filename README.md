@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 8**. Elle ajoute la construction d'une véritable application Windows autonome en mode one-folder et d'un installateur par utilisateur. L'exécutable possède l'icône du Companion, ne montre aucun terminal et embarque Python, l'interface, les catalogues français, la carte HD, les tuiles hors ligne, `JoyConDSU.exe` et `SDL3.dll`. Le design, le protocole Cemuhook, la calibration, les timestamps, la télémétrie et le comportement macOS restent inchangés. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 9**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Le design, les données de jeu, le moteur JoyConDSU et le comportement de l’interface restent inchangés. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -80,8 +80,8 @@ La chaîne de distribution Windows produit maintenant un paquet autonome. Elle u
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/Oxnight/BOTW_companion.git
-cd BOTW_companion
+git clone https://github.com/Oxnight/botw-companion.git
+cd botw-companion
 ```
 
 ### 2. Installer les prérequis macOS
@@ -147,7 +147,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.8_Setup.exe
+BOTW_Companion_0.40.0-alpha.9_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
@@ -259,6 +259,9 @@ Les lanceurs macOS et Windows vérifient la version du serveur déjà ouvert. Lo
 
 ## Remarques
 
+* `manual_tracking.json`, `route_sessions.json`, `preferences.json` et `runtime_state.json` possèdent chacun un schéma versionné et une sauvegarde valide. La première lecture d’un ancien format utilisateur conserve aussi une copie `pre-migration`.
+* La sauvegarde générale contient le suivi manuel, les itinéraires et les préférences portables. Son import restaure l’ensemble ou revient intégralement à l’état précédent en cas d’échec.
+* `runtime_state.json` mémorise uniquement sur la machine la dernière source Ryujinx et l’historique récent de synchronisation. Il n’est jamais inclus dans un export multiplateforme, car il peut contenir un chemin local.
 * Les fichiers `catalog_fr_compiled.json` et `nomenclature_audit_compiled.json` sont des ressources d’exécution nécessaires au démarrage rapide : ils doivent rester dans le dépôt.
 * Les tuiles de `botw_companion/web/map-tiles/` sont nécessaires à la carte haute définition hors ligne.
 * Le dossier `third_party/JoyConDSU/Sources/JoyConDSU/` est nécessaire à la compilation locale du serveur DSU.

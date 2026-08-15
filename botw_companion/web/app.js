@@ -1,6 +1,8 @@
 let report = null, selectedId = null, filtersInitialized = false;
 const detailCache = new Map();
-let manualTracking = { schema_version: 1, revision: 0, updated_at: null, entries: {} };
+let manualTracking = { schema_version: 2, revision: 0, updated_at: null, entries: {} };
+let preferencesData = { schema_version: 1, revision: 0, updated_at: null, values: {} };
+let preferenceSaveQueue = Promise.resolve();
 const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
 const PROFILE_KEY = "botw-companion-completion-profile";
@@ -38,7 +40,7 @@ function loadRouteState() {
 }
 
 let routeState = loadRouteState(), routesData = {
-    schema_version: 2,
+    schema_version: 3,
     revision: 0,
     updated_at: null,
     active_session_id: null,
@@ -49,6 +51,71 @@ let routeSaveQueue = Promise.resolve();
 const selectedTypes = new Set();
 const SHRINE_CHESTS_REMAINING_FILTER =
     "sanctuaires_termines_coffres_restants";
+
+function preferenceValue(name, localKey, fallback) {
+    return preferencesData.values[name] ??
+        localStorage.getItem(localKey) ?? fallback;
+}
+
+function savePreference(name, value) {
+    preferencesData.values[name] = value;
+    preferenceSaveQueue = preferenceSaveQueue
+        .then(async () => {
+            const response = await fetch("/api/preferences", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    values: { [name]: value },
+                    expected_revision: preferencesData.revision
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw Error(data.erreur || "Préférences impossibles à enregistrer");
+            }
+            preferencesData = data;
+        })
+        .catch(error => toast(error.message, true));
+    return preferenceSaveQueue;
+}
+
+async function migrateBrowserPreferences() {
+    const candidates = {
+        sync_interval: Number(localStorage.getItem(SYNC_INTERVAL_KEY)),
+        map_content_mode: localStorage.getItem(MAP_MODE_KEY),
+        completion_profile: localStorage.getItem(PROFILE_KEY),
+        game_mode_filter: localStorage.getItem(MODE_FILTER_KEY)
+    };
+    const allowed = {
+        sync_interval: [5, 10, 15, 30, 60],
+        map_content_mode: ["automatique", "base", "dlc"],
+        completion_profile: ["automatique", "base", "dlc", "amiibo", "expert", "automatic_only"],
+        game_mode_filter: ["save", "all", "normal", "expert"]
+    };
+    const values = Object.fromEntries(
+        Object.entries(candidates).filter(
+            ([key, value]) =>
+                preferencesData.values[key] == null &&
+                allowed[key].includes(value)
+        )
+    );
+    if (!Object.keys(values).length) {
+        return;
+    }
+    const response = await fetch("/api/preferences", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            values,
+            expected_revision: preferencesData.revision
+        })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw Error(data.erreur || "Migration des préférences impossible");
+    }
+    preferencesData = data;
+}
 
 function isCompletedShrineWithRemainingChest(x) {
     return x.categorie === "coffres_sanctuaires" &&
@@ -412,7 +479,7 @@ function refreshProfileSelect() {
             profile => profile.id !== "carte"
         );
 
-    const stored = localStorage.getItem(PROFILE_KEY),
+    const stored = preferenceValue("completion_profile", PROFILE_KEY, null),
         fallback =
             report.referentiel_100.selection.save_mode === "expert"
                 ? "expert"
@@ -780,16 +847,19 @@ async function load(showToast = false) {
         const [
             reportResponse,
             manualResponse,
-            routesResponse
+            routesResponse,
+            preferencesResponse
         ] = await Promise.all([
             fetch("/api/report?" + Date.now()),
             fetch("/api/manual?" + Date.now()),
-            fetch("/api/routes?" + Date.now())
+            fetch("/api/routes?" + Date.now()),
+            fetch("/api/preferences?" + Date.now())
         ]);
 
         const data = await reportResponse.json(),
             manual = await manualResponse.json(),
-            routes = await routesResponse.json();
+            routes = await routesResponse.json(),
+            preferences = await preferencesResponse.json();
 
         if (!reportResponse.ok) {
             throw Error(
@@ -809,6 +879,13 @@ async function load(showToast = false) {
             throw Error(
                 routes.erreur ||
                 "Itinéraires inaccessibles"
+            );
+        }
+
+        if (!preferencesResponse.ok) {
+            throw Error(
+                preferences.erreur ||
+                "Préférences inaccessibles"
             );
         }
 
@@ -852,6 +929,11 @@ async function load(showToast = false) {
 
         manualTracking = manual;
         routesData = routes;
+        preferencesData = preferences;
+        await migrateBrowserPreferences();
+        syncInterval = Number(
+            preferenceValue("sync_interval", SYNC_INTERVAL_KEY, 30)
+        );
         routeState =
             routesData.sessions[
                 routesData.active_session_id
@@ -903,8 +985,7 @@ async function load(showToast = false) {
 
 function renderAll() {
     const storedMode =
-        localStorage.getItem(MODE_FILTER_KEY) ||
-        "save";
+        preferenceValue("game_mode_filter", MODE_FILTER_KEY, "save");
 
     $("#gameMode").value =
         [
@@ -915,6 +996,23 @@ function renderAll() {
         ].includes(storedMode)
             ? storedMode
             : "save";
+
+    const storedMapMode = preferenceValue(
+        "map_content_mode",
+        MAP_MODE_KEY,
+        "automatique"
+    );
+    $("#mapDlcMode").value = [
+        "automatique",
+        "base",
+        "dlc"
+    ].includes(storedMapMode) ? storedMapMode : "automatique";
+
+    $("#syncInterval").value = String(
+        [5, 10, 15, 30, 60].includes(syncInterval)
+            ? syncInterval
+            : 30
+    );
 
     refreshProfileSelect();
 
@@ -2782,10 +2880,43 @@ async function saveManual(
 
 async function importManualFile(file) {
     try {
-        const tracking =
+        const imported =
             JSON.parse(
                 await file.text()
             );
+
+        if (
+            imported?.application ===
+            "BOTW Companion" &&
+            imported?.manual_tracking &&
+            imported?.route_sessions
+        ) {
+            const response = await fetch(
+                "/api/backup/import",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body: JSON.stringify({
+                        backup: imported
+                    })
+                }
+            );
+            const data = await response.json();
+            if (!response.ok) {
+                throw Error(
+                    data.erreur ||
+                    "Restauration impossible"
+                );
+            }
+            await load(false);
+            toast(
+                "Suivi, itinéraires et préférences restaurés"
+            );
+            return;
+        }
 
         const response =
             await fetch(
@@ -2798,7 +2929,7 @@ async function importManualFile(file) {
                     },
                     body:
                         JSON.stringify({
-                            tracking,
+                            tracking: imported,
                             mode: "merge",
                             expected_revision:
                                 manualTracking.revision
@@ -4004,13 +4135,9 @@ $("#mapDlcMode").value =
         "base",
         "dlc"
     ].includes(
-        localStorage.getItem(
-            MAP_MODE_KEY
-        )
+        preferenceValue("map_content_mode", MAP_MODE_KEY, "automatique")
     )
-        ? localStorage.getItem(
-            MAP_MODE_KEY
-        )
+        ? preferenceValue("map_content_mode", MAP_MODE_KEY, "automatique")
         : "automatique";
 
 $("#mapDlcMode").onchange =
@@ -4019,6 +4146,7 @@ $("#mapDlcMode").onchange =
             MAP_MODE_KEY,
             $("#mapDlcMode").value
         );
+        savePreference("map_content_mode", $("#mapDlcMode").value);
 
         if (report) {
             renderAll()
@@ -4031,6 +4159,7 @@ $("#completionProfile").onchange =
             PROFILE_KEY,
             $("#completionProfile").value
         );
+        savePreference("completion_profile", $("#completionProfile").value);
 
         if (report) {
             renderAll()
@@ -4043,6 +4172,7 @@ $("#gameMode").onchange =
             MODE_FILTER_KEY,
             $("#gameMode").value
         );
+        savePreference("game_mode_filter", $("#gameMode").value);
 
         listRenderLimit =
             LIST_PAGE_SIZE;
@@ -4075,6 +4205,7 @@ $("#syncInterval").onchange =
             SYNC_INTERVAL_KEY,
             String(syncInterval)
         );
+        savePreference("sync_interval", syncInterval);
 
         scheduleSync();
 
