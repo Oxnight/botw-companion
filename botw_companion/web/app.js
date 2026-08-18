@@ -1034,6 +1034,10 @@ function renderAll() {
                 : "Mode normal"
         } • ${saveDate} • ${s.chemin}`;
 
+    const emulatorLabel = String(s.emulateur || "Émulateur").toUpperCase();
+    const runtimeEmulator = $("#runtimeEmulator");
+    if (runtimeEmulator) runtimeEmulator.textContent = emulatorLabel;
+
     renderBloodMoon();
 
     $("#mapPercent").textContent =
@@ -2662,7 +2666,7 @@ function renderDetails(x) {
         farmWarning =
             x.farm
                 ? "Cet état n’enlève jamais ce point de farm de sa catégorie : l’ennemi réapparaît à la lune de sang."
-                : "La validation reste conservée après une nouvelle analyse Ryujinx.";
+                : "La validation reste conservée après une nouvelle analyse de la sauvegarde.";
 
     const scopeBlock =
         x.coverage_note

@@ -5,6 +5,7 @@ from hashlib import sha256
 import os
 import platform
 import shutil
+import xml.etree.ElementTree as ET
 from typing import Callable, Mapping
 
 from . import linux, macos, windows
@@ -166,6 +167,60 @@ def ryujinx_save_roots(*, system: str | None = None,
     return _unique(candidates)
 
 
+
+def _cemu_mlc_from_settings(data_dir: Path) -> list[Path]:
+    settings = data_dir / "settings.xml"
+    if not settings.is_file():
+        return []
+    try:
+        root = ET.parse(settings).getroot()
+    except (OSError, ET.ParseError):
+        return []
+    value = root.findtext("mlc_path")
+    if not value or not value.strip():
+        return []
+    candidate = Path(value.strip()).expanduser()
+    if not candidate.is_absolute():
+        candidate = data_dir / candidate
+    return [candidate]
+
+
+def cemu_save_roots(*, system: str | None = None,
+                    environ: Environment | None = None,
+                    home: Path | None = None,
+                    which: Which = shutil.which) -> list[Path]:
+    values = _environment(environ)
+    resolved = system_name(system)
+    root = _home(home)
+    data_dirs: list[Path] = []
+    direct_mlc = values.get("CEMU_MLC_PATH") or values.get("BOTW_CEMU_MLC_PATH")
+    if direct_mlc:
+        data_dirs.append(Path(direct_mlc).expanduser())
+    if resolved == "Darwin":
+        app_dirs = macos.cemu_data_dirs(values, root)
+    elif resolved == "Windows":
+        app_dirs = windows.cemu_data_dirs(values, root, which)
+    else:
+        app_dirs = []
+    mlc_roots: list[Path] = list(data_dirs)
+    for data_dir in app_dirs:
+        mlc_roots.extend(_cemu_mlc_from_settings(data_dir))
+        mlc_roots.append(data_dir / "mlc01")
+    return _unique([mlc / "usr" / "save" for mlc in mlc_roots])
+
+
+def cemu_is_running(*, system: str | None = None,
+                    process_names: Callable[[], set[str]] | None = None,
+                    environ: Environment | None = None) -> bool:
+    values = _environment(environ)
+    resolved = system_name(system)
+    if resolved == "Windows":
+        return windows.cemu_is_running(process_names, values)
+    if resolved == "Darwin":
+        return macos.cemu_is_running(process_names, values)
+    return False
+
+
 def server_instance_guard(*, system: str | None = None,
                           environ: Environment | None = None,
                           home: Path | None = None,
@@ -184,9 +239,12 @@ def server_instance_guard(*, system: str | None = None,
 def ryujinx_is_running(*, system: str | None = None,
                        process_names: Callable[[], set[str]] | None = None,
                        environ: Environment | None = None) -> bool:
+    values = _environment(environ)
     resolved = system_name(system)
     if resolved == "Windows":
-        return windows.ryujinx_is_running(process_names, environ)
+        return windows.ryujinx_is_running(process_names, values)
+    if resolved == "Darwin":
+        return macos.ryujinx_is_running(process_names, values)
     return False
 
 

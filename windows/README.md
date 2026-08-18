@@ -16,7 +16,7 @@ Livrables :
 
 ```text
 dist\BOTW Companion\BOTW Companion.exe
-dist\installer\BOTW_Companion_0.40.0-alpha.11_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.12_Setup.exe
 ```
 
 L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
@@ -42,9 +42,9 @@ Double-cliquer ensuite sur `Installer BOTW Companion.cmd` dans ce dossier.
 
 Le raccourci utilise `wscript.exe` et `pythonw.exe`, donc aucun terminal n'apparaît. Le lanceur recherche d'abord un éventuel runtime embarqué, puis `.venv`. Il vérifie l'instance locale sur le port 8765, remet sa fenêtre au premier plan lorsque Windows l'autorise ou ouvre le navigateur, et ne démarre jamais un second serveur identique.
 
-Le serveur est lancé avec la surveillance sobre de Ryujinx. Après avoir vu Ryujinx actif, il vérifie son état toutes les 15 secondes et s'arrête proprement après 30 secondes d'absence confirmée. L'arrêt du Companion arrête également JoyConDSU.
+Le serveur est lancé avec la surveillance sobre de l’émulateur. Après avoir vu Ryujinx ou Cemu actif, il vérifie son état toutes les 15 secondes et s’arrête proprement après 30 secondes d’absence confirmée. L'arrêt du Companion arrête également JoyConDSU.
 
-Les réglages et le journal se trouvent dans `%LOCALAPPDATA%\BOTW Companion`. Le fichier `launcher.json` permet notamment d'ajouter un nom d'exécutable Ryujinx :
+Les réglages et le journal se trouvent dans `%LOCALAPPDATA%\BOTW Companion`. Le fichier `launcher.json` permet notamment d’ajouter des noms d’exécutables Ryujinx ou Cemu :
 
 ```json
 {
@@ -55,6 +55,9 @@ Les réglages et le journal se trouvent dans `%LOCALAPPDATA%\BOTW Companion`. Le
     "Ryujinx.exe",
     "Ryujinx.Ava.exe",
     "MonRyujinx.exe"
+  ],
+  "cemu_process_names": [
+    "Cemu.exe"
   ]
 }
 ```

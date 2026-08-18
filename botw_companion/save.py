@@ -8,6 +8,7 @@ import struct
 
 from .resources import load_hashes
 from .platforms import ryujinx_save_roots
+from .emulators import EmulatorBackend, emulator_for_path, emulator_save_roots, running_emulators
 
 
 class SaveError(ValueError):
@@ -122,6 +123,63 @@ def _candidate_slots(path: Path) -> list[Path]:
     )
 
 
+def find_game_save_roots(search_roots: list[tuple[EmulatorBackend, Path]] | None = None) -> list[tuple[EmulatorBackend, Path]]:
+    """Recense les sauvegardes BOTW de tous les émulateurs supportés."""
+    roots = search_roots if search_roots is not None else emulator_save_roots()
+    candidates: dict[Path, EmulatorBackend] = {}
+    for backend, root in roots:
+        try:
+            if not root.is_dir():
+                continue
+            for filename in ("caption.sav", "game_data.sav"):
+                for save_file in root.rglob(filename):
+                    slot = save_file.parent
+                    game_root = slot.parent if slot.parent != root and slot.parent.is_dir() else slot
+                    candidates[game_root] = backend
+        except OSError:
+            continue
+    return sorted(((backend, path) for path, backend in candidates.items()),
+                  key=lambda item: (item[0].id, str(item[1]).casefold()))
+
+
+def discover_save_root(search_roots: list[tuple[EmulatorBackend, Path]] | None = None) -> tuple[EmulatorBackend, Path]:
+    """Trouve la sauvegarde BOTW la plus récente entre Ryujinx et Cemu."""
+    roots = search_roots if search_roots is not None else emulator_save_roots()
+    candidates = find_game_save_roots(roots)
+    active = {backend.id for backend in running_emulators()}
+    if len(active) == 1:
+        active_candidates = [item for item in candidates if item[0].id in active]
+        if active_candidates:
+            candidates = active_candidates
+    readable: list[tuple[int, EmulatorBackend, Path]] = []
+    for backend, candidate in candidates:
+        try:
+            readable.append((find_latest_slot(candidate).timestamp, backend, candidate))
+        except (OSError, SaveError):
+            continue
+    if not readable:
+        checked = ", ".join(f"{backend.label}: {path}" for backend, path in roots)
+        raise SaveError(
+            "Sauvegarde BOTW introuvable automatiquement dans Ryujinx ou Cemu. "
+            f"Emplacements vérifiés : {checked}"
+        )
+    _timestamp, backend, path = max(readable, key=lambda item: (item[0], item[1].id, str(item[2]).casefold()))
+    return backend, path
+
+
+def detect_save_emulator(path: Path | str) -> EmulatorBackend | None:
+    resolved = Path(path).expanduser().resolve()
+    inferred = emulator_for_path(resolved)
+    if inferred is not None:
+        return inferred
+    try:
+        platform_name = identify_platform(resolved / "game_data.sav" if (resolved / "game_data.sav").is_file() else find_latest_slot(resolved).path / "game_data.sav")
+    except (OSError, SaveError):
+        return None
+    from .emulators import CEMU, RYUJINX
+    return CEMU if "Cemu" in platform_name else RYUJINX if "Ryujinx" in platform_name else None
+
+
 def default_ryujinx_save_roots() -> list[Path]:
     """Emplacements connus, sans supposer lequel est utilisé par l'installation."""
     return ryujinx_save_roots()
@@ -166,7 +224,7 @@ def discover_ryujinx_save_root(search_roots: list[Path] | None = None) -> Path:
 
 
 def find_latest_slot(path: Path | str | None = None) -> SaveSlot:
-    resolved = discover_ryujinx_save_root() if path is None else Path(path)
+    resolved = discover_save_root()[1] if path is None else Path(path)
     candidates = _candidate_slots(resolved)
     if not candidates:
         raise SaveError("Aucun slot contenant caption.sav et game_data.sav")

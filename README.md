@@ -1,8 +1,8 @@
 # BOTW Companion
 
-BOTW Companion est une application locale qui analyse une sauvegarde Ryujinx de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
+BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 11**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Le design, les données de jeu, le moteur JoyConDSU et le comportement de l’interface restent inchangés. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 12**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Cette alpha ajoute la détection automatique de Cemu sur macOS et Windows, y compris les MLC personnalisés, tout en conservant la compatibilité Ryujinx. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -24,7 +24,7 @@ La version actuelle est **0.40.0 alpha 11**. Elle versionne et migre automatique
 
 ## Fonctions principales
 
-* Détection et actualisation fiables de la sauvegarde Ryujinx la plus récente.
+* Détection automatique de Ryujinx ou Cemu et actualisation fiable de la sauvegarde BOTW de l’émulateur actif.
 * Suivi détaillé de la carte officielle, des sanctuaires, quêtes, Korogus, équipements, boss, DLC et autres objectifs.
 * Filtres cartographiques et marqueurs hors ligne.
 * Suivi manuel persistant pour les éléments que la sauvegarde ne peut pas prouver.
@@ -38,23 +38,23 @@ La version actuelle est **0.40.0 alpha 11**. Elle versionne et migre automatique
 
 * Mac Apple Silicon : M1, M2, M3, M4 ou génération ultérieure.
 * macOS 12 ou plus récent.
-* Détection préparée pour Windows 10 et 11 : `%APPDATA%\Ryujinx\bis\user\save` et installations portables identifiables.
+* Windows 10/11 : détection de Ryujinx standard/portable et de Cemu standard/portable, avec lecture du `mlc_path` de Cemu lorsqu’il est personnalisé.
 * Python 3.10 ou plus récent, Python 3.12 recommandé pour un clone ; aucun Python requis par l'application Windows installée.
-* Ryujinx installé dans `/Applications/Ryujinx.app` pour bénéficier de l’arrêt automatique associé au jeu.
+* Sur macOS, Ryujinx et Cemu sont détectés comme processus ; l’arrêt automatique fonctionne avec l’un ou l’autre après qu’il a été observé actif.
 * Homebrew, SDL3 et les outils en ligne de commande Xcode pour compiler le serveur JoyConDSU sur le Mac cible.
 
 ### État du socle Windows
 
-Cette version alpha détecte automatiquement le dossier standard `%APPDATA%\Ryujinx\bis\user\save`. Elle reconnaît aussi une installation portable lorsque l’exécutable Ryujinx est indiqué par `RYUJINX_EXECUTABLE` ou `RYUJINX_EXE`, présent dans le `PATH`, ou installé dans un emplacement Windows courant.
+Cette version alpha détecte automatiquement les sauvegardes Ryujinx et Cemu. Pour Cemu, elle inspecte les dossiers standards, les installations portables connues, le chemin de l’exécutable Cemu actuellement lancé et le `mlc_path` enregistré dans `settings.xml`.
 
 Deux variables permettent de forcer un emplacement particulier sans modifier le code :
 
 * `RYUJINX_DATA_DIR` : dossier de données Ryujinx contenant `bis\user\save` ;
 * `BOTW_COMPANION_DATA_DIR` : dossier persistant de BOTW Companion.
 
-Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe` et `Ryujinx.Ava.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu Ryujinx actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
+Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe`, `Ryujinx.Ava.exe` et `Cemu.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu un émulateur supporté actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx. Le moteur JoyConDSU se construit nativement sous Windows avec Winsock 2.2 et SDL3, puis le bouton **Activer** le lance directement sans fenêtre de console. Les états de calibration, d'attente, de disponibilité et d'erreur restent identiques à ceux de macOS. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx ou Cemu. Le moteur JoyConDSU se construit nativement sous Windows avec Winsock 2.2 et SDL3, puis le bouton **Activer** le lance directement sans fenêtre de console. Les états de calibration, d'attente, de disponibilité et d'erreur restent identiques à ceux de macOS. Le comportement macOS existant reste inchangé.
 
 Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 
@@ -147,7 +147,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.11_Setup.exe
+BOTW_Companion_0.40.0-alpha.12_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.

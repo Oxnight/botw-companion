@@ -186,7 +186,7 @@ class DsuManager:
             if probe and probe["connected"] and probe["motion"]:
                 return self._payload(
                     "ready", "Gyroscope Joy-Con prêt",
-                    "Mouvements transmis à Ryujinx sur 127.0.0.1:26760.", True, True,
+                    "Mouvements transmis à l’émulateur sur 127.0.0.1:26760.", True, True,
                 )
             if probe is not None:
                 return self._payload(

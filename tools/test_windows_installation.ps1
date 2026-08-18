@@ -1,5 +1,5 @@
 param(
-    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.11_Setup.exe"
+    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.12_Setup.exe"
 )
 
 $ErrorActionPreference = "Stop"

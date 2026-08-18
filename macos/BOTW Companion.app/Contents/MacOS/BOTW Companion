@@ -3,9 +3,8 @@ set -u
 
 readonly APP_NAME="BOTW Companion"
 readonly URL="http://127.0.0.1:8765/"
-readonly EXPECTED_VERSION="0.40.0a11"
+readonly EXPECTED_VERSION="0.40.0a12"
 readonly PROJECT_DEFAULT="/Users/oxnight/Documents/Botw companion"
-readonly RYUJINX_APP="/Applications/Ryujinx.app"
 readonly SUPPORT_DIR="$HOME/Library/Application Support/BOTW Companion"
 readonly PROJECT_FILE="$SUPPORT_DIR/project_path"
 readonly LOG_FILE="$SUPPORT_DIR/launcher.log"
@@ -53,22 +52,6 @@ server_version() {
     | /usr/bin/sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'
 }
 
-ryujinx_is_running() {
-  /usr/bin/pgrep -f "$RYUJINX_APP/Contents/MacOS" >/dev/null 2>&1
-}
-
-start_ryujinx_watcher() {
-  if ! ryujinx_is_running; then
-    return
-  fi
-  (
-    while ryujinx_is_running; do /bin/sleep 15; done
-    /bin/sleep 30
-    if ! ryujinx_is_running; then
-      /usr/bin/curl --silent --max-time 2 -X POST "${URL}api/shutdown" >/dev/null 2>&1
-    fi
-  ) >/dev/null 2>&1 &
-}
 
 if server_is_ready; then
   if [[ "$(server_version)" == "$EXPECTED_VERSION" ]]; then
@@ -104,12 +87,11 @@ if [[ -f "$LOG_FILE" && $(/usr/bin/stat -f%z "$LOG_FILE" 2>/dev/null || print 0)
 fi
 
 cd "$PROJECT" || { show_error "Impossible d’ouvrir le dossier du projet."; exit 1; }
-/usr/bin/nohup "$PYTHON" -m botw_companion interface --sans-navigateur >> "$LOG_FILE" 2>&1 &
+/usr/bin/nohup "$PYTHON" -m botw_companion interface --sans-navigateur --arreter-avec-emulateur >> "$LOG_FILE" 2>&1 &
 print -r -- $! > "$SUPPORT_DIR/server.pid"
 
 for _attempt in {1..120}; do
   if server_is_ready; then
-    start_ryujinx_watcher
     /usr/bin/open "$URL"
     exit 0
   fi

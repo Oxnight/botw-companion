@@ -13,7 +13,8 @@ import webbrowser
 from .backup import CompanionBackup
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
 from .dsu import DsuManager
-from .lifecycle import APPLICATION_NAME, RyujinxLifecycleWatcher, WebLifecycle
+from .lifecycle import APPLICATION_NAME, EmulatorLifecycleWatcher, WebLifecycle
+from .emulators import any_supported_emulator_running, running_emulators
 from .platforms import (
     platform_metadata,
     ryujinx_is_running,
@@ -38,6 +39,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           dsu_manager: DsuManager | None = None,
           monitor_ryujinx: bool = False,
           ryujinx_running=None,
+          monitor_emulator: bool = False,
+          emulator_running=None,
           instance_guard=None,
           shutdown_notifier_factory=None) -> None:
     web_root = files("botw_companion.web")
@@ -141,7 +144,12 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     "api_schema_version": 1,
                     "version": __version__,
                     "platform": platform_metadata(),
+                    "emulators": {
+                        "supported": ["Ryujinx", "Cemu"],
+                        "running": [backend.label for backend in running_emulators()],
+                    },
                     "lifecycle": {
+                        "monitoring_emulator": bool(monitor_emulator or monitor_ryujinx),
                         "monitoring_ryujinx": monitor_ryujinx,
                         "shutdown_reason": lifecycle.shutdown_reason,
                     },
@@ -329,9 +337,10 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
 
     threading.Thread(target=monitor_lifecycle, name="botw-companion-lifecycle", daemon=True).start()
     watcher = None
-    if monitor_ryujinx:
-        watcher = RyujinxLifecycleWatcher(
-            ryujinx_running or ryujinx_is_running,
+    if monitor_emulator or monitor_ryujinx:
+        detector = emulator_running or (ryujinx_running if monitor_ryujinx and not monitor_emulator else None)
+        watcher = EmulatorLifecycleWatcher(
+            detector or any_supported_emulator_running,
             request_server_shutdown,
         )
         watcher.start()

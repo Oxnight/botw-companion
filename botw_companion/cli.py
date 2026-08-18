@@ -19,6 +19,8 @@ from .save import (
     parse_inventory_data,
 )
 from .server import serve
+from .emulators import running_emulators
+from .platforms import cemu_is_running, ryujinx_is_running
 from .synchronization import ReliableSaveSync, SaveSnapshot
 
 
@@ -75,6 +77,7 @@ def _build_payload(slot: SaveSlot, caption: dict[str, object], flags: dict[str, 
         "chemin": str(slot.path),
         "date": slot.date.isoformat(sep=" ", timespec="seconds"),
         "plateforme": platform_label,
+        "emulateur": "Cemu" if "Cemu" in platform_label else "Ryujinx" if "Ryujinx" in platform_label else "Émulateur inconnu",
         "rubis": caption.get("CurrentRupee"),
         "temps_jeu_secondes": caption.get("PlayReport_PlayTime"),
         "mode": context["mode"],
@@ -177,30 +180,29 @@ def _watch(path: str | None, interval: float, map_mode: str = "automatique",
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Compagnon local de complétion Zelda BOTW pour Switch/Ryujinx")
+    parser = argparse.ArgumentParser(description="Compagnon local de complétion Zelda BOTW pour Ryujinx et Cemu")
     sub = parser.add_subparsers(dest="commande", required=True)
     analyse = sub.add_parser("analyse", help="analyser la sauvegarde la plus récente")
-    analyse.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")
+    analyse.add_argument("sauvegarde", nargs="?", help="dossier de sauvegarde Ryujinx/Cemu; auto-détecté si omis")
     analyse.add_argument("--json", action="store_true", dest="as_json")
     analyse.add_argument("--formule-carte", choices=("automatique", "base", "dlc"), default="automatique")
     analyse.add_argument("--profil", choices=("automatique", "base", "dlc", "amiibo", "expert"), default="automatique")
     reste = sub.add_parser("reste", help="lister les éléments restants")
-    reste.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")
+    reste.add_argument("sauvegarde", nargs="?", help="dossier de sauvegarde Ryujinx/Cemu; auto-détecté si omis")
     reste.add_argument("--categorie", required=True)
     reste.add_argument("--json", action="store_true", dest="as_json")
     watch = sub.add_parser("surveille", help="réanalyser à chaque nouvelle sauvegarde")
-    watch.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")
+    watch.add_argument("sauvegarde", nargs="?", help="dossier de sauvegarde Ryujinx/Cemu; auto-détecté si omis")
     watch.add_argument("--intervalle", type=float, default=3.0)
     watch.add_argument("--formule-carte", choices=("automatique", "base", "dlc"), default="automatique")
     watch.add_argument("--profil", choices=("automatique", "base", "dlc", "amiibo", "expert"), default="automatique")
     interface = sub.add_parser("interface", help="ouvrir le tableau de bord local dans le navigateur")
-    interface.add_argument("sauvegarde", nargs="?", help="dossier exporté par Ryujinx; auto-détecté si omis")
+    interface.add_argument("sauvegarde", nargs="?", help="dossier de sauvegarde Ryujinx/Cemu; auto-détecté si omis")
     interface.add_argument("--port", type=int, default=8765)
     interface.add_argument("--sans-navigateur", action="store_true")
     interface.add_argument(
-        "--arreter-avec-ryujinx",
-        action="store_true",
-        help=argparse.SUPPRESS,
+        "--arreter-avec-emulateur", "--arreter-avec-ryujinx",
+        dest="arreter_avec_emulateur", action="store_true", help=argparse.SUPPRESS,
     )
     return parser
 
@@ -218,9 +220,25 @@ def main(argv: list[str] | None = None) -> int:
                 factory,
                 snapshot_payload_factory=_payload_snapshot,
             )
+            selected_emulator: list[str | None] = [None]
+
+            def selected_emulator_running() -> bool:
+                source = sync.source_emulator()
+                if source:
+                    selected_emulator[0] = source
+                if selected_emulator[0] == "ryujinx":
+                    return ryujinx_is_running()
+                if selected_emulator[0] == "cemu":
+                    return cemu_is_running()
+                active = running_emulators()
+                if len(active) == 1:
+                    selected_emulator[0] = active[0].id
+                return bool(active)
+
             serve(factory, port=args.port, open_browser=not args.sans_navigateur,
                   sync_controller=sync,
-                  monitor_ryujinx=args.arreter_avec_ryujinx)
+                  monitor_emulator=args.arreter_avec_emulateur,
+                  emulator_running=selected_emulator_running)
             return 0
         payload = _payload(args.sauvegarde)
         if args.commande == "analyse":

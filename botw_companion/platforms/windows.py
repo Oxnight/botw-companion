@@ -10,7 +10,9 @@ from typing import Callable, Mapping
 
 Which = Callable[[str], str | None]
 RYUJINX_PROCESS_NAMES = frozenset({"ryujinx.exe", "ryujinx.ava.exe"})
+CEMU_PROCESS_NAMES = frozenset({"cemu.exe"})
 TH32CS_SNAPPROCESS = 0x00000002
+PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
 ERROR_ALREADY_EXISTS = 183
 INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
 WINDOWS_SHUTDOWN_EVENTS = frozenset({0, 1, 2, 5, 6})
@@ -142,6 +144,48 @@ def running_process_names(*, kernel32=None) -> set[str]:
     return names
 
 
+def running_process_paths(*, kernel32=None) -> list[Path]:
+    """Retourne les chemins exécutables accessibles, sans PowerShell/tasklist."""
+    if kernel32 is None:
+        if os.name != "nt":
+            return []
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.CreateToolhelp32Snapshot.argtypes = (wintypes.DWORD, wintypes.DWORD)
+        kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+        kernel32.Process32FirstW.argtypes = (wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W))
+        kernel32.Process32FirstW.restype = wintypes.BOOL
+        kernel32.Process32NextW.argtypes = (wintypes.HANDLE, ctypes.POINTER(PROCESSENTRY32W))
+        kernel32.Process32NextW.restype = wintypes.BOOL
+        kernel32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.QueryFullProcessImageNameW.argtypes = (wintypes.HANDLE, wintypes.DWORD, wintypes.LPWSTR, ctypes.POINTER(wintypes.DWORD))
+        kernel32.QueryFullProcessImageNameW.restype = wintypes.BOOL
+        kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+        kernel32.CloseHandle.restype = wintypes.BOOL
+    snapshot = kernel32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+    if snapshot in (None, 0, INVALID_HANDLE_VALUE):
+        return []
+    paths: list[Path] = []
+    entry = PROCESSENTRY32W()
+    entry.dwSize = ctypes.sizeof(entry)
+    try:
+        available = kernel32.Process32FirstW(snapshot, ctypes.byref(entry))
+        while available:
+            handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, entry.th32ProcessID)
+            if handle:
+                try:
+                    size = wintypes.DWORD(32768)
+                    buffer = ctypes.create_unicode_buffer(size.value)
+                    if kernel32.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(size)):
+                        paths.append(Path(buffer.value))
+                finally:
+                    kernel32.CloseHandle(handle)
+            available = kernel32.Process32NextW(snapshot, ctypes.byref(entry))
+    finally:
+        kernel32.CloseHandle(snapshot)
+    return paths
+
+
 def configured_ryujinx_process_names(
         environ: Mapping[str, str] | None = None) -> frozenset[str]:
     values = os.environ if environ is None else environ
@@ -157,6 +201,26 @@ def ryujinx_is_running(process_names: Callable[[], set[str]] | None = None,
                        environ: Mapping[str, str] | None = None) -> bool:
     names = process_names() if process_names is not None else running_process_names()
     expected = configured_ryujinx_process_names(environ)
+    return bool(expected.intersection(name.casefold() for name in names))
+
+
+
+
+def configured_cemu_process_names(
+        environ: Mapping[str, str] | None = None) -> frozenset[str]:
+    values = os.environ if environ is None else environ
+    extra = {
+        name.strip().casefold()
+        for name in re.split(r"[;,\n]", values.get("BOTW_CEMU_PROCESS_NAMES", ""))
+        if name.strip()
+    }
+    return frozenset((*CEMU_PROCESS_NAMES, *extra))
+
+
+def cemu_is_running(process_names: Callable[[], set[str]] | None = None,
+                    environ: Mapping[str, str] | None = None) -> bool:
+    names = process_names() if process_names is not None else running_process_names()
+    expected = configured_cemu_process_names(environ)
     return bool(expected.intersection(name.casefold() for name in names))
 
 
@@ -197,4 +261,23 @@ def ryujinx_save_roots(environ: Mapping[str, str], home: Path,
     roots = [roaming / "Ryujinx" / "bis" / "user" / "save"]
     for executable in _known_executables(environ, home, which):
         roots.append(executable.parent / "portable" / "bis" / "user" / "save")
+    return roots
+
+def cemu_data_dirs(environ: Mapping[str, str], home: Path, which: Which) -> list[Path]:
+    roaming = _environment_path(environ, "APPDATA", home / "AppData" / "Roaming")
+    local = _environment_path(environ, "LOCALAPPDATA", home / "AppData" / "Local")
+    roots: list[Path] = []
+    override = environ.get("CEMU_DATA_DIR") or environ.get("BOTW_CEMU_DATA_DIR")
+    if override:
+        roots.append(Path(override).expanduser())
+    roots.extend([roaming / "Cemu", local / "Cemu", home / "Cemu"])
+    executable_values = [environ.get("CEMU_EXECUTABLE"), environ.get("CEMU_EXE"), which("Cemu.exe")]
+    for value in executable_values:
+        if value:
+            roots.append(Path(value).expanduser().parent)
+    for directory in (local / "Programs" / "Cemu", Path("C:/Program Files/Cemu")):
+        roots.append(directory)
+    for executable in running_process_paths():
+        if executable.name.casefold() in configured_cemu_process_names(environ):
+            roots.append(executable.parent)
     return roots

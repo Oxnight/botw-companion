@@ -10,7 +10,8 @@ import threading
 import time
 from typing import Callable
 
-from .save import SaveError, find_ryujinx_game_save_roots, parse_data, parse_file
+from .save import SaveError, find_game_save_roots, find_ryujinx_game_save_roots, parse_data, parse_file
+from .emulators import RYUJINX, emulator_for_path, running_emulators
 
 
 def _iso_now() -> str:
@@ -71,6 +72,8 @@ class ReliableSaveSync:
             "slot": None,
             "source_root": None,
             "source_kind": None,
+            "emulator": None,
+            "emulator_label": None,
             "save_mode": None,
             "save_timestamp": None,
             "save_timestamp_at": None,
@@ -90,7 +93,21 @@ class ReliableSaveSync:
 
     def _candidate_paths(self) -> list[Path]:
         if self.save_path is None:
-            roots = find_ryujinx_game_save_roots()
+            discovered = [(RYUJINX, path) for path in find_ryujinx_game_save_roots()]
+            discovered.extend(
+                (backend, path) for backend, path in find_game_save_roots()
+                if backend.id != RYUJINX.id
+            )
+            unique = {}
+            for backend, path in discovered:
+                unique[self._path_key(path)] = (backend, path)
+            discovered = list(unique.values())
+            active = {backend.id for backend in running_emulators()}
+            if len(active) == 1:
+                active_discovered = [item for item in discovered if item[0].id in active]
+                if active_discovered:
+                    discovered = active_discovered
+            roots = [path for _backend, path in discovered]
         else:
             roots = [Path(self.save_path).expanduser().resolve()]
         candidates: set[Path] = set()
@@ -246,7 +263,7 @@ class ReliableSaveSync:
         }
 
     def check(self, force: bool = False, include_report: bool = False) -> dict:
-        """Vérifie la source; conserve le dernier rapport si Ryujinx écrit encore."""
+        """Vérifie la source; conserve le dernier rapport si l’émulateur écrit encore."""
         with self._lock:
             self._state["last_check_at"] = _iso_now()
             source_unavailable = False
@@ -260,7 +277,7 @@ class ReliableSaveSync:
                 observations = []
                 observation_error = str(exc)
             else:
-                observation_error = "Aucun slot Ryujinx détecté"
+                observation_error = "Aucun slot Ryujinx ou Cemu détecté"
 
             if not observations and self.save_path is not None:
                 source = Path(self.save_path).expanduser()
@@ -278,7 +295,7 @@ class ReliableSaveSync:
                 expired = self._pending_expired(observation)
                 if source_unavailable:
                     status = "source_indisponible"
-                    label = "Dossier de sauvegarde Ryujinx momentanément indisponible"
+                    label = "Dossier de sauvegarde de l’émulateur momentanément indisponible"
                 else:
                     status = "fichier_corrompu" if expired else "ecriture_en_cours"
                     label = (f"Fichier corrompu ou incomplet dans le slot {observation['slot'].name}"
@@ -299,10 +316,13 @@ class ReliableSaveSync:
             files = selected["files"]
             timestamp = int(selected["timestamp"])
             quick = selected["signature"]
+            backend = emulator_for_path(slot)
             self._state.update({
                 "save_timestamp": timestamp,
                 "save_timestamp_at": _iso_timestamp(timestamp),
                 "save_mode": self._save_mode(slot),
+                "emulator": backend.id if backend else None,
+                "emulator_label": backend.label if backend else None,
             })
 
             # Un slot plus ancien ne doit jamais remplacer le dernier rapport valide.
@@ -368,7 +388,7 @@ class ReliableSaveSync:
             if stable_status != "stable" or stable is None:
                 expired = self._pending_expired(selected)
                 # Un fichier momentanément tronqué est indiscernable d'une écriture
-                # Ryujinx : on ne le déclare corrompu qu'après l'attente maximale.
+                # Émulateur : on ne le déclare corrompu qu’après l’attente maximale.
                 status = "fichier_corrompu" if expired else "ecriture_en_cours"
                 label = (f"Fichier corrompu ou incomplet dans le slot {slot.name}"
                          if status == "fichier_corrompu" else f"Écriture en cours dans le slot {slot.name}")
@@ -462,6 +482,12 @@ class ReliableSaveSync:
             self._event("succes", message)
             report["synchronisation"] = self._metadata(changed=True)
             return self._cached_result(include_report=True, changed=True)
+
+
+    def source_emulator(self) -> str | None:
+        with self._lock:
+            value = self._state.get("emulator")
+            return str(value) if value else None
 
     def report(self, force: bool = False) -> dict:
         result = self.check(force=force, include_report=True)

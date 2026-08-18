@@ -31,9 +31,9 @@ def probe_companion_server(port: int = 8765, timeout: float = 0.8,
 class WebLifecycle:
     """Tracks the local browser without treating a hidden tab as an exit.
 
-    Browsers may heavily throttle a background tab while Ryujinx is in the
-    foreground.  Heartbeats therefore remain diagnostic only: shutdown is an
-    explicit action, or is handled by the macOS launcher when Ryujinx exits.
+    Browsers may heavily throttle a background tab while an emulator is in the
+    foreground. Heartbeats therefore remain diagnostic only: shutdown is an
+    explicit action, or is handled by the native emulator watcher.
     """
 
     def __init__(self, inactivity_seconds: float = 300,
@@ -72,8 +72,12 @@ class WebLifecycle:
             return self._shutdown_reason
 
 
-class RyujinxLifecycleWatcher:
-    """Surveille Ryujinx à faible fréquence sans dépendre du navigateur."""
+class EmulatorLifecycleWatcher:
+    """Surveille Ryujinx/Cemu sans dépendre du navigateur.
+
+    L'arrêt n'est demandé qu'après avoir observé au moins un émulateur supporté
+    réellement actif, puis confirmé son absence pendant la période de grâce.
+    """
 
     def __init__(self, is_running: Callable[[], bool],
                  request_shutdown: Callable[[str], None], *,
@@ -110,10 +114,10 @@ class RyujinxLifecycleWatcher:
         if running:
             self._seen_running = True
             self._missing_since = None
-            self._state = "ryujinx_actif"
+            self._state = "emulateur_actif"
             return False
         if not self._seen_running:
-            self._state = "attente_ryujinx"
+            self._state = "attente_emulateur"
             return False
         if resumed:
             self._missing_since = now
@@ -126,8 +130,8 @@ class RyujinxLifecycleWatcher:
         if now - self._missing_since < self.close_grace_seconds:
             self._state = "fermeture_a_confirmer"
             return False
-        self._state = "ryujinx_ferme"
-        self.request_shutdown("ryujinx_ferme")
+        self._state = "emulateur_ferme"
+        self.request_shutdown("emulateur_ferme")
         return True
 
     def _run(self) -> None:
@@ -142,9 +146,7 @@ class RyujinxLifecycleWatcher:
             return
         self._stop.clear()
         self._thread = threading.Thread(
-            target=self._run,
-            name="botw-companion-ryujinx-watcher",
-            daemon=True,
+            target=self._run, name="botw-companion-emulator-watcher", daemon=True,
         )
         self._thread.start()
 
@@ -156,12 +158,31 @@ class RyujinxLifecycleWatcher:
 
     def status(self) -> dict:
         return {
-            "enabled": True,
-            "state": self._state,
+            "enabled": True, "state": self._state,
             "seen_running": self._seen_running,
-            "missing_since": self._missing_since,
-            "last_check": self._last_check,
-            "error": self._error,
-            "poll_seconds": self.poll_seconds,
+            "missing_since": self._missing_since, "last_check": self._last_check,
+            "error": self._error, "poll_seconds": self.poll_seconds,
             "close_grace_seconds": self.close_grace_seconds,
         }
+
+
+class RyujinxLifecycleWatcher(EmulatorLifecycleWatcher):
+    """Alias rétrocompatible conservé pour les intégrations existantes."""
+
+    def __init__(self, is_running: Callable[[], bool], request_shutdown: Callable[[str], None], **kwargs) -> None:
+        self._legacy_shutdown = request_shutdown
+        super().__init__(is_running, lambda reason: request_shutdown("ryujinx_ferme" if reason == "emulateur_ferme" else reason), **kwargs)
+
+    def check_once(self) -> bool:
+        stopped = super().check_once()
+        aliases = {
+            "emulateur_actif": "ryujinx_actif",
+            "attente_emulateur": "attente_ryujinx",
+            "emulateur_ferme": "ryujinx_ferme",
+        }
+        self._state = aliases.get(self._state, self._state)
+        if stopped and self._state == "ryujinx_ferme":
+            # L'ancien contrat de test attend ce motif précis.
+            # Le watcher générique utilisé par le serveur produit emulateur_ferme.
+            pass
+        return stopped

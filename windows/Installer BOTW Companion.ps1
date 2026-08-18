@@ -52,6 +52,7 @@ $configuration = if (Test-Path -LiteralPath $configPath -PathType Leaf) {
         project_root = $projectRoot
         port = 8765
         ryujinx_process_names = @("Ryujinx.exe", "Ryujinx.Ava.exe")
+        cemu_process_names = @("Cemu.exe")
     }
 }
 if ($null -eq $configuration.PSObject.Properties["project_root"]) {

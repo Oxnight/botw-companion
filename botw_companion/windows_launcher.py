@@ -218,11 +218,15 @@ def launch_server(python: Path, project_root: Path, port: int,
                   config: Mapping[str, object], log_path: Path, *,
                   popen=subprocess.Popen, frozen: bool = False):
     environment = os.environ.copy()
-    names = config.get("ryujinx_process_names")
-    if isinstance(names, list):
-        cleaned = [str(name).strip() for name in names if str(name).strip()]
-        if cleaned:
-            environment["BOTW_RYUJINX_PROCESS_NAMES"] = ";".join(cleaned)
+    for config_key, env_key in (
+        ("ryujinx_process_names", "BOTW_RYUJINX_PROCESS_NAMES"),
+        ("cemu_process_names", "BOTW_CEMU_PROCESS_NAMES"),
+    ):
+        names = config.get(config_key)
+        if isinstance(names, list):
+            cleaned = [str(name).strip() for name in names if str(name).strip()]
+            if cleaned:
+                environment[env_key] = ";".join(cleaned)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("ab", buffering=0) as log:
         return popen(
