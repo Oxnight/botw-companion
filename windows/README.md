@@ -16,7 +16,7 @@ Livrables :
 
 ```text
 dist\BOTW Companion\BOTW Companion.exe
-dist\installer\BOTW_Companion_0.40.0-alpha.12_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.13_Setup.exe
 ```
 
 L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
@@ -62,7 +62,7 @@ Les réglages et le journal se trouvent dans `%LOCALAPPDATA%\BOTW Companion`. Le
 }
 ```
 
-## Gyroscope Joy-Con
+## Gyroscope universel
 
 Construire une fois le moteur natif depuis la racine du clone :
 
@@ -70,4 +70,4 @@ Construire une fois le moteur natif depuis la racine du clone :
 .\tools\build_joycon_dsu_windows.ps1
 ```
 
-Le script installe `JoyConDSU.exe` et `SDL3.dll` dans les ressources locales du Companion. Le bouton **Activer** du site lance ensuite le moteur sans console, affiche les mêmes états que sur macOS et l'arrête avec le serveur Web. Le port Cemuhook reste `127.0.0.1:26760`.
+Le script installe `JoyConDSU.exe` et `SDL3.dll` dans les ressources locales du Companion. Le site détecte les manettes SDL3 en USB ou Bluetooth, permet de choisir une source possédant gyro + accéléromètre, puis le bouton **Activer** lance le même moteur sans console. La paire Joy-Con reste combinée en mode grip. Le moteur conserve calibration, reconnexion et arrêt propre ; le port Cemuhook/DSU reste `127.0.0.1:26760` pour Ryujinx comme pour Cemu.

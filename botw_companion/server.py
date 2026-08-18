@@ -257,7 +257,20 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 request_server_shutdown("bouton_quitter")
                 return
             if path == "/api/dsu/start":
-                payload = dsu_manager.start()
+                source_id = None
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length > 0:
+                    try:
+                        data = self._read_json()
+                        if isinstance(data, dict):
+                            source_id = data.get("source_id")
+                    except ManualTrackingError as exc:
+                        self._json_response(400, {"erreur": str(exc)})
+                        return
+                payload = dsu_manager.start(source_id) if source_id else dsu_manager.start()
                 self._json_response(
                     200 if payload["state"] not in {"error", "unavailable"} else 503,
                     payload,

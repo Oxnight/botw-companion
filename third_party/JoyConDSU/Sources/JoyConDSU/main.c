@@ -45,6 +45,10 @@ typedef struct {
     SDL_Gamepad *gamepad;
     SDL_JoystickID instance_id;
     SDL_GamepadType type;
+    uint16_t vendor_id;
+    uint16_t product_id;
+    char name[256];
+    char path[1024];
     float gyro_rate_hz;
     float accel_rate_hz;
     DsuVec3 gyro_bias_rad_s;
@@ -83,6 +87,12 @@ static bool controller_has_motion(SDL_Gamepad *gamepad)
         && SDL_GamepadHasSensor(gamepad, SDL_SENSOR_ACCEL);
 }
 
+static bool is_single_joycon_type(SDL_GamepadType type)
+{
+    return type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT
+        || type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT;
+}
+
 static int gamepad_priority(SDL_Gamepad *gamepad)
 {
     const SDL_GamepadType type = SDL_GetGamepadType(gamepad);
@@ -90,25 +100,117 @@ static int gamepad_priority(SDL_Gamepad *gamepad)
     if (type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR) {
         return 100;
     }
-
     if (type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO) {
         return 80;
     }
-
-    /*
-     * Un Joy-Con isolé est physiquement tenu dans une autre orientation.
-     * L'accepter silencieusement produirait des axes trompeurs pour un profil
-     * configuré comme paire dans Ryujinx.
-     */
-    if (type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT
-        || type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT) {
-        return 0;
+    if (is_single_joycon_type(type)) {
+        return 5;
     }
-
     return controller_has_motion(gamepad) ? 10 : 0;
 }
 
-static bool open_best_controller(Controller *controller)
+static void copy_controller_identity(Controller *controller, SDL_Gamepad *gamepad)
+{
+    const char *name = SDL_GetGamepadName(gamepad);
+    controller->vendor_id = SDL_GetGamepadVendor(gamepad);
+    controller->product_id = SDL_GetGamepadProduct(gamepad);
+    snprintf(
+        controller->name,
+        sizeof(controller->name),
+        "%s",
+        name != NULL ? name : "Contrôleur inconnu"
+    );
+    const char *path = SDL_GetGamepadPath(gamepad);
+    snprintf(
+        controller->path,
+        sizeof(controller->path),
+        "%s",
+        path != NULL ? path : ""
+    );
+}
+
+static bool enable_controller_sensors(Controller *controller)
+{
+    if (!SDL_SetGamepadSensorEnabled(controller->gamepad, SDL_SENSOR_GYRO, true)) {
+        fprintf(stderr, "Impossible d'activer le gyro : %s\n", SDL_GetError());
+        return false;
+    }
+    if (!SDL_SetGamepadSensorEnabled(controller->gamepad, SDL_SENSOR_ACCEL, true)) {
+        fprintf(stderr, "Impossible d'activer l'accéléromètre : %s\n", SDL_GetError());
+        return false;
+    }
+
+    controller->gyro_rate_hz =
+        SDL_GetGamepadSensorDataRate(controller->gamepad, SDL_SENSOR_GYRO);
+    controller->accel_rate_hz =
+        SDL_GetGamepadSensorDataRate(controller->gamepad, SDL_SENSOR_ACCEL);
+    motion_pipeline_reset(&controller->motion);
+    return true;
+}
+
+static bool adopt_controller(
+    Controller *controller,
+    SDL_Gamepad *gamepad,
+    SDL_JoystickID instance_id
+)
+{
+    if (!controller_has_motion(gamepad)) {
+        SDL_CloseGamepad(gamepad);
+        return false;
+    }
+
+    controller->gamepad = gamepad;
+    controller->instance_id = instance_id;
+    controller->type = SDL_GetGamepadType(gamepad);
+    copy_controller_identity(controller, gamepad);
+
+    if (!enable_controller_sensors(controller)) {
+        SDL_CloseGamepad(gamepad);
+        memset(controller, 0, sizeof(*controller));
+        return false;
+    }
+    return true;
+}
+
+static bool controller_matches_identity(
+    SDL_Gamepad *gamepad,
+    const Controller *wanted
+)
+{
+    if (wanted->name[0] == '\0') {
+        return false;
+    }
+
+    const char *candidate_path = SDL_GetGamepadPath(gamepad);
+    if (wanted->path[0] != '\0'
+        && candidate_path != NULL
+        && strcmp(candidate_path, wanted->path) == 0) {
+        return true;
+    }
+
+    const char *name = SDL_GetGamepadName(gamepad);
+    if (name == NULL || strcmp(name, wanted->name) != 0) {
+        return false;
+    }
+    if (wanted->vendor_id != 0
+        && SDL_GetGamepadVendor(gamepad) != wanted->vendor_id) {
+        return false;
+    }
+    if (wanted->product_id != 0
+        && SDL_GetGamepadProduct(gamepad) != wanted->product_id) {
+        return false;
+    }
+    return SDL_GetGamepadType(gamepad) == wanted->type;
+}
+
+static bool open_controller(
+    Controller *controller,
+    SDL_JoystickID requested_id,
+    const char *requested_path,
+    bool require_requested,
+    bool reconnect_identity,
+    const Controller *wanted
+)
 {
     int count = 0;
     SDL_JoystickID *ids = SDL_GetGamepads(&count);
@@ -120,7 +222,7 @@ static bool open_best_controller(Controller *controller)
 
     SDL_Gamepad *best = NULL;
     SDL_JoystickID best_id = 0;
-    int best_priority = 0;
+    int best_priority = -1;
 
     for (int i = 0; i < count; ++i) {
         SDL_Gamepad *candidate = SDL_OpenGamepad(ids[i]);
@@ -128,16 +230,30 @@ static bool open_best_controller(Controller *controller)
             continue;
         }
 
+        bool match = false;
         const int priority = gamepad_priority(candidate);
 
-        if (priority > best_priority && controller_has_motion(candidate)) {
+        if (require_requested && !reconnect_identity) {
+            const char *candidate_path = SDL_GetGamepadPath(candidate);
+            match = requested_path != NULL && requested_path[0] != '\0'
+                ? candidate_path != NULL && strcmp(candidate_path, requested_path) == 0
+                : ids[i] == requested_id;
+        } else if (reconnect_identity) {
+            match = wanted != NULL && controller_matches_identity(candidate, wanted);
+        } else {
+            match = priority > best_priority && controller_has_motion(candidate);
+        }
+
+        if (match && controller_has_motion(candidate)) {
             if (best != NULL) {
                 SDL_CloseGamepad(best);
             }
-
             best = candidate;
             best_id = ids[i];
             best_priority = priority;
+            if (require_requested || reconnect_identity) {
+                break;
+            }
         } else {
             SDL_CloseGamepad(candidate);
         }
@@ -149,28 +265,54 @@ static bool open_best_controller(Controller *controller)
         return false;
     }
 
-    if (!SDL_SetGamepadSensorEnabled(best, SDL_SENSOR_GYRO, true)) {
-        fprintf(stderr, "Impossible d'activer le gyro : %s\n", SDL_GetError());
-        SDL_CloseGamepad(best);
-        return false;
+    return adopt_controller(controller, best, best_id);
+}
+
+static const char *gamepad_type_name(SDL_GamepadType type)
+{
+    const char *name = SDL_GetGamepadStringForType(type);
+    return name != NULL ? name : "unknown";
+}
+
+static void print_inventory(void)
+{
+    int count = 0;
+    SDL_JoystickID *ids = SDL_GetGamepads(&count);
+
+    printf("BOTW_DSU_CONTROLLERS\t1\n");
+    if (ids == NULL || count <= 0) {
+        SDL_free(ids);
+        return;
     }
 
-    if (!SDL_SetGamepadSensorEnabled(best, SDL_SENSOR_ACCEL, true)) {
-        fprintf(stderr, "Impossible d'activer l'accéléromètre : %s\n", SDL_GetError());
-        SDL_CloseGamepad(best);
-        return false;
+    for (int i = 0; i < count; ++i) {
+        SDL_Gamepad *gamepad = SDL_OpenGamepad(ids[i]);
+        if (gamepad == NULL) {
+            continue;
+        }
+
+        const char *name = SDL_GetGamepadName(gamepad);
+        const char *path = SDL_GetGamepadPath(gamepad);
+        const SDL_GamepadType type = SDL_GetGamepadType(gamepad);
+        const bool gyro = SDL_GamepadHasSensor(gamepad, SDL_SENSOR_GYRO);
+        const bool accel = SDL_GamepadHasSensor(gamepad, SDL_SENSOR_ACCEL);
+
+        printf(
+            "CONTROLLER\t%u\t%u\t%u\t%d\t%d\t%d\t%s\t%s\t%s\n",
+            (unsigned int)ids[i],
+            (unsigned int)SDL_GetGamepadVendor(gamepad),
+            (unsigned int)SDL_GetGamepadProduct(gamepad),
+            (int)type,
+            gyro ? 1 : 0,
+            accel ? 1 : 0,
+            gamepad_type_name(type),
+            name != NULL ? name : "Contrôleur inconnu",
+            path != NULL ? path : ""
+        );
+        SDL_CloseGamepad(gamepad);
     }
 
-    controller->gamepad = best;
-    controller->instance_id = best_id;
-    controller->type = SDL_GetGamepadType(best);
-    controller->gyro_rate_hz =
-        SDL_GetGamepadSensorDataRate(best, SDL_SENSOR_GYRO);
-    controller->accel_rate_hz =
-        SDL_GetGamepadSensorDataRate(best, SDL_SENSOR_ACCEL);
-    motion_pipeline_reset(&controller->motion);
-
-    return true;
+    SDL_free(ids);
 }
 
 static void close_controller(Controller *controller)
@@ -259,7 +401,7 @@ static bool calibrate_controller(
 {
     for (int attempt = 1; attempt <= 3; ++attempt) {
         printf("\nCalibration gyro (%d/3)\n", attempt);
-        printf("Pose le grip IMMOBILE sur une surface stable...\n");
+        printf("Pose la manette IMMOBILE sur une surface stable...\n");
 
         SDL_Delay(300);
         SDL_FlushEvents(
@@ -322,7 +464,7 @@ static bool calibrate_controller(
             );
 
             if (attempt < 3) {
-                fprintf(stderr, "On recommence : ne touche pas au grip.\n");
+                fprintf(stderr, "On recommence : ne touche pas à la manette.\n");
             }
 
             continue;
@@ -727,11 +869,35 @@ static void print_telemetry(
     fflush(stdout);
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     if (!dsu_platform_install_stop_handler()) {
         fprintf(stderr, "Impossible d'installer le gestionnaire d'arrêt.\n");
         return EXIT_FAILURE;
+    }
+
+    SDL_JoystickID requested_controller_id = 0;
+    const char *requested_controller_path = NULL;
+    bool require_requested_controller = false;
+    bool inventory_only = false;
+
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "--list-controllers") == 0) {
+            inventory_only = true;
+        } else if (strcmp(argv[i], "--controller-path") == 0 && i + 1 < argc) {
+            requested_controller_path = argv[++i];
+            require_requested_controller = true;
+        } else if (strcmp(argv[i], "--controller-id") == 0 && i + 1 < argc) {
+            char *end = NULL;
+            const unsigned long parsed = strtoul(argv[++i], &end, 10);
+            if (end == argv[i] || *end != '\0' || parsed == 0) {
+                fprintf(stderr, "Identifiant de manette invalide.\n");
+                dsu_platform_cleanup();
+                return EXIT_FAILURE;
+            }
+            requested_controller_id = (SDL_JoystickID)parsed;
+            require_requested_controller = true;
+        }
     }
 
     /*
@@ -752,6 +918,13 @@ int main(void)
         return EXIT_FAILURE;
     }
 
+    if (inventory_only) {
+        print_inventory();
+        SDL_Quit();
+        dsu_platform_cleanup();
+        return EXIT_SUCCESS;
+    }
+
     if (!dsu_socket_platform_init()) {
         SDL_Quit();
         dsu_platform_cleanup();
@@ -768,6 +941,7 @@ int main(void)
 
     const uint32_t server_id = make_server_id();
     Controller controller = {0};
+    Controller selected_identity = {0};
     DsuClientRegistry clients = {0};
     bool crc_warning_printed = false;
     uint64_t total_packets = 0;
@@ -804,8 +978,32 @@ int main(void)
         }
 
         if (controller.gamepad == NULL) {
-            if (open_best_controller(&controller)) {
+            if (open_controller(
+                    &controller,
+                    requested_controller_id,
+                    requested_controller_path,
+                    require_requested_controller,
+                    previously_connected && require_requested_controller,
+                    &selected_identity
+                )) {
                 const char *name = SDL_GetGamepadName(controller.gamepad);
+                if (require_requested_controller && selected_identity.name[0] == '\0') {
+                    selected_identity.type = controller.type;
+                    selected_identity.vendor_id = controller.vendor_id;
+                    selected_identity.product_id = controller.product_id;
+                    snprintf(
+                        selected_identity.name,
+                        sizeof(selected_identity.name),
+                        "%s",
+                        controller.name
+                    );
+                    snprintf(
+                        selected_identity.path,
+                        sizeof(selected_identity.path),
+                        "%s",
+                        controller.path
+                    );
+                }
 
                 printf(
                     "Contrôleur : %s\n"
@@ -814,7 +1012,7 @@ int main(void)
                     name != NULL ? name : "Inconnu",
                     (int)controller.type,
                     controller.type == SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR
-                        ? " (paire Joy-Con confirmée)"
+                        ? " (paire Joy-Con / grip)"
                         : "",
                     controller.gyro_rate_hz,
                     controller.accel_rate_hz
@@ -835,13 +1033,13 @@ int main(void)
                     telemetry.reconnects += 1;
                 }
                 previously_connected = true;
-                printf("READY - lance Ryujinx.\n\n");
+                printf("READY - lance ou reprends ton émulateur.\n\n");
             } else {
                 static uint64_t last_wait_message = 0;
                 const uint64_t now = SDL_GetTicksNS();
 
                 if (now - last_wait_message >= NS_PER_SECOND) {
-                    printf("\rEn attente d'un Joy-Con (L/R) avec gyro...   ");
+                    printf("\rEn attente de la source gyroscope sélectionnée...   ");
                     fflush(stdout);
                     last_wait_message = now;
                 }

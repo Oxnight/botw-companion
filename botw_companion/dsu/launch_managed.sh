@@ -3,6 +3,8 @@ set -u
 
 readonly BINARY="$1"
 readonly PARENT_PID="$2"
+shift 2
+readonly EXTRA_ARGS=("$@")
 readonly PROJECT_ROOT="${0:A:h:h:h}"
 readonly SOURCE_DIR="$PROJECT_ROOT/third_party/JoyConDSU/Sources/JoyConDSU"
 readonly CACHE_DIR="$HOME/Library/Application Support/BOTW Companion/native"
@@ -105,6 +107,10 @@ build_native_runtime() {
 # explicitement la tranche ARM évite que cette architecture soit héritée par
 # le sous-processus JoyConDSU sur un Mac Apple Silicon.
 RUNTIME="$(build_native_runtime)" || {
+  if [[ "${EXTRA_ARGS[1]:-}" == "--list-controllers" ]]; then
+    print -u2 -- "Inventaire des manettes impossible sans runtime natif à jour."
+    exit 1
+  fi
   if [[ -x "$BINARY" ]]; then
     print -u2 -- "Repli sur le binaire JoyConDSU intégré."
     RUNTIME="$BINARY"
@@ -113,7 +119,13 @@ RUNTIME="$(build_native_runtime)" || {
   fi
 }
 readonly RUNTIME
-/usr/bin/arch -arm64 "$RUNTIME" &
+
+if [[ "${EXTRA_ARGS[1]:-}" == "--list-controllers" ]]; then
+  /usr/bin/arch -arm64 "$RUNTIME" "${EXTRA_ARGS[@]}"
+  exit $?
+fi
+
+/usr/bin/arch -arm64 "$RUNTIME" "${EXTRA_ARGS[@]}" &
 child_pid=$!
 
 while /bin/kill -0 "$child_pid" 2>/dev/null; do

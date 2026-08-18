@@ -7,6 +7,7 @@ const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
 const PROFILE_KEY = "botw-companion-completion-profile";
 const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
+const DSU_SOURCE_KEY = "botw-companion-dsu-source";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
@@ -716,6 +717,67 @@ function worldPoint(x) {
     }
 }
 
+function renderDsuSources(state) {
+    const select = $("#dsuSource");
+    const controllers = Array.isArray(state?.controllers) ? state.controllers : [];
+    const preferred =
+        state?.selected_source?.id ||
+        select.value ||
+        localStorage.getItem(DSU_SOURCE_KEY) ||
+        "";
+
+    select.replaceChildren();
+    if (!controllers.length) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Aucune manette détectée";
+        select.appendChild(option);
+        select.value = "";
+        $("#dsuCapabilities").textContent =
+            "Connecte une manette en USB ou Bluetooth puis attends la détection.";
+        return null;
+    }
+
+    for (const controller of controllers) {
+        const option = document.createElement("option");
+        option.value = String(controller.id);
+        const suffix = controller.compatible
+            ? " - gyroscope disponible"
+            : controller.kind === "joycon_single"
+                ? " - associe les deux Joy-Con"
+                : " - gyroscope indisponible";
+        option.textContent = `${controller.name}${suffix}`;
+        option.dataset.compatible = controller.compatible ? "1" : "0";
+        select.appendChild(option);
+    }
+
+    const chosen = controllers.find(x => String(x.id) === String(preferred)) ||
+        controllers.find(x => x.compatible) ||
+        controllers[0];
+    select.value = String(chosen.id);
+    localStorage.setItem(DSU_SOURCE_KEY, String(chosen.id));
+
+    const vidPid = controllerVidPid(chosen);
+    const kind = chosen.kind === "joycon_pair"
+        ? "Paire Joy-Con / grip"
+        : chosen.type || "Manette";
+    $("#dsuCapabilities").textContent = chosen.compatible
+        ? `${kind}${vidPid} • gyroscope + accéléromètre disponibles`
+        : chosen.kind === "joycon_single"
+            ? `${kind}${vidPid} • utilise la paire Joy-Con combinée`
+            : `${kind}${vidPid} • aucun gyroscope exploitable par SDL3`;
+    return chosen;
+}
+
+function controllerVidPid(controller) {
+    const vid = Number(controller?.vendor_id || 0);
+    const pid = Number(controller?.product_id || 0);
+    if (!vid && !pid) {
+        return "";
+    }
+    return ` • ${vid.toString(16).padStart(4, "0").toUpperCase()}:${pid.toString(16).padStart(4, "0").toUpperCase()}`;
+}
+
 function renderDsu(state) {
     state = state || {
         state: "error",
@@ -724,6 +786,7 @@ function renderDsu(state) {
         running: false
     };
 
+    const selectedSource = renderDsuSources(state);
     $("#dsuDot").className = `dsu-${state.state}`;
     $("#dsuStatus").textContent = state.state_label;
     $("#dsuMessage").textContent = state.message;
@@ -735,7 +798,11 @@ function renderDsu(state) {
     ].filter(Boolean).join("\n");
     $("#toggleDsu").textContent = state.running ? "Désactiver" : "Activer";
     $("#toggleDsu").classList.toggle("active", state.running);
-    $("#toggleDsu").disabled = dsuBusy || state.state === "unavailable";
+    $("#dsuSource").disabled = dsuBusy || state.running;
+    $("#toggleDsu").disabled =
+        dsuBusy ||
+        state.state === "unavailable" ||
+        (!state.running && (!selectedSource || !selectedSource.compatible));
 }
 
 async function loadRuntimePlatform() {
@@ -784,7 +851,7 @@ async function copyText(text) {
 function scheduleDsu(state) {
     clearTimeout(dsuTimer);
     const active = state?.running || ["starting", "waiting_controller", "ready"].includes(state?.state);
-    const seconds = document.hidden ? 30 : active ? 2 : 12;
+const seconds = document.hidden ? 30 : active ? 2 : 3;
     dsuTimer = setTimeout(refreshDsu, seconds * 1000);
 }
 
@@ -818,15 +885,18 @@ async function toggleDsu() {
     const stop = $("#toggleDsu").classList.contains("active");
     let state = null;
     try {
+        const sourceId = $("#dsuSource").value || null;
         const response = await fetch(`/api/dsu/${stop ? "stop" : "start"}`, {
-            method: "POST"
+            method: "POST",
+            headers: stop ? {} : { "Content-Type": "application/json" },
+            body: stop ? null : JSON.stringify({ source_id: sourceId })
         });
         state = await response.json();
         renderDsu(state);
         if (!response.ok) {
             throw Error(state.message || "Commande DSU impossible");
         }
-        toast(stop ? "Gyroscope Joy-Con désactivé" : "Serveur DSU activé - pose le grip immobile");
+        toast(stop ? "Gyroscope désactivé" : "Serveur DSU activé - laisse la manette immobile");
         scheduleDsu(state);
     } catch (error) {
         toast(error.message, true);
@@ -4246,6 +4316,12 @@ $("#pauseSync").onclick =
 
 $("#quitCompanion").onclick =
     quitCompanion;
+
+$("#dsuSource").onchange =
+    () => {
+        localStorage.setItem(DSU_SOURCE_KEY, $("#dsuSource").value);
+        refreshDsu();
+    };
 
 $("#toggleDsu").onclick =
     toggleDsu;

@@ -91,6 +91,7 @@ class DsuManager:
                  sdl_library: Path | None = None,
                  runtime_dir: Path | None = None, environ=None,
                  probe=probe_dsu, popen=subprocess.Popen,
+                 run=subprocess.run,
                  windows_stop_signal=signal_stop_event) -> None:
         resource_root = Path(str(files("botw_companion.dsu")))
         self.system = system or platform.system()
@@ -113,12 +114,16 @@ class DsuManager:
         self.log_path = self.support_dir / "joycon-dsu.log"
         self._probe = probe
         self._popen = popen
+        self._run = run
         self._windows_stop_signal = windows_stop_signal
         self._process = None
         self._log_handle = None
         self._lock = threading.RLock()
         self._last_error: str | None = None
         self._started_at: float | None = None
+        self._selected_source: dict | None = None
+        self._controller_cache: list[dict] = []
+        self._controller_cache_at = 0.0
 
     def _availability_error(self) -> str | None:
         if self.system == "Windows":
@@ -165,6 +170,115 @@ class DsuManager:
             self._last_error = self._tail_error()
         return False
 
+    @staticmethod
+    def _parse_controller_inventory(output: str) -> list[dict]:
+        controllers: list[dict] = []
+        for line in output.splitlines():
+            if not line.startswith("CONTROLLER\t"):
+                continue
+            parts = line.split("\t", 9)
+            if len(parts) != 10:
+                continue
+            try:
+                instance_id = int(parts[1])
+                vendor_id = int(parts[2])
+                product_id = int(parts[3])
+                type_id = int(parts[4])
+                gyro = parts[5] == "1"
+                accel = parts[6] == "1"
+            except ValueError:
+                continue
+            type_name, name, path = parts[7], parts[8], parts[9]
+            kind = (
+                "joycon_pair"
+                if type_name == "joyconpair"
+                else "joycon_single"
+                if type_name in {"joyconleft", "joyconright"}
+                else "gamepad"
+            )
+            source_id = (
+                f"path:{path}"
+                if path else
+                f"device:{vendor_id:04x}:{product_id:04x}:{type_id}:{name}"
+            )
+            controllers.append({
+                "id": source_id,
+                "instance_id": instance_id,
+                "name": name or "Contrôleur inconnu",
+                "type": type_name or "unknown",
+                "type_id": type_id,
+                "vendor_id": vendor_id,
+                "product_id": product_id,
+                "path": path,
+                "gyro": gyro,
+                "accelerometer": accel,
+                "compatible": gyro and accel and kind != "joycon_single",
+                "kind": kind,
+            })
+        controllers.sort(
+            key=lambda item: (
+                0 if item["kind"] == "joycon_pair" else 1,
+                0 if item["compatible"] else 1,
+                item["name"].lower(),
+                item["id"],
+            )
+        )
+        return controllers
+
+    def _inventory_command(self) -> tuple[list[str], dict]:
+        if self.system == "Windows":
+            options = {"cwd": self.executable.parent}
+            if os.name == "nt":
+                options["creationflags"] = WINDOWS_CREATE_NO_WINDOW
+            return [str(self.executable), "--list-controllers"], options
+        return [
+            str(self.launcher),
+            str(self.executable),
+            str(os.getpid()),
+            "--list-controllers",
+        ], {}
+
+    def controllers(self, *, force: bool = False) -> list[dict]:
+        with self._lock:
+            if self._refresh_process():
+                return list(self._controller_cache)
+            if self._availability_error():
+                return []
+            now = time.monotonic()
+            if not force and now - self._controller_cache_at < 3.0:
+                return list(self._controller_cache)
+            command, options = self._inventory_command()
+            try:
+                result = self._run(
+                    command,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=8,
+                    close_fds=True,
+                    **options,
+                )
+            except (OSError, subprocess.SubprocessError):
+                self._controller_cache = []
+                self._controller_cache_at = now
+                return []
+            if result.returncode != 0:
+                self._controller_cache = []
+                self._controller_cache_at = now
+                return []
+            self._controller_cache = self._parse_controller_inventory(result.stdout)
+            self._controller_cache_at = now
+            return list(self._controller_cache)
+
+    def _resolve_source(self, source_id: str | None) -> dict | None:
+        controllers = self.controllers(force=True)
+        if source_id:
+            return next((item for item in controllers if item["id"] == str(source_id)), None)
+        return next((item for item in controllers if item["compatible"]), None)
+
     def status(self) -> dict:
         with self._lock:
             running = self._refresh_process()
@@ -177,33 +291,36 @@ class DsuManager:
                     state, label, message = "unavailable", "DSU indisponible", availability_error
                 else:
                     state, label, message = (
-                        "off", "Gyroscope Joy-Con désactivé",
-                        "Active-le uniquement lorsque tu joues avec les deux Joy-Con."
+                        "off", "Gyroscope désactivé",
+                        "Choisis une manette avec gyroscope puis active le serveur DSU."
                     )
                 return self._payload(state, label, message, False, False)
 
             probe = self._probe()
             if probe and probe["connected"] and probe["motion"]:
                 return self._payload(
-                    "ready", "Gyroscope Joy-Con prêt",
+                    "ready", "Gyroscope prêt",
                     "Mouvements transmis à l’émulateur sur 127.0.0.1:26760.", True, True,
                 )
             if probe is not None:
                 return self._payload(
-                    "waiting_controller", "En attente des Joy-Con",
-                    "Connecte la paire L/R puis pose le grip immobile pendant la calibration.",
+                    "waiting_controller", "En attente de la manette",
+                    "Reconnecte la source sélectionnée puis laisse-la immobile pendant la calibration.",
                     True, False,
                 )
             return self._payload(
                 "starting", "Démarrage et calibration DSU",
-                "Laisse le grip immobile quelques secondes pendant l’initialisation.", True, False,
+                "Laisse la manette immobile quelques secondes pendant l’initialisation.", True, False,
             )
 
     def _payload(self, state: str, label: str, message: str,
                  running: bool, controller_connected: bool) -> dict:
         engine_name = "JoyConDSU.exe" if self.system == "Windows" else self.executable.name
+        controllers = list(self._controller_cache)
+        if not running and self._availability_error() is None:
+            controllers = self.controllers()
         return {
-            "schema_version": 1,
+            "schema_version": 2,
             "state": state,
             "state_label": label,
             "message": message,
@@ -216,9 +333,11 @@ class DsuManager:
             "platform": platform_label(self.system),
             "engine_name": engine_name,
             "log_path": str(self.log_path),
+            "controllers": controllers,
+            "selected_source": self._selected_source,
         }
 
-    def start(self) -> dict:
+    def start(self, source_id: str | None = None) -> dict:
         with self._lock:
             if self._refresh_process():
                 return self.status()
@@ -234,10 +353,29 @@ class DsuManager:
                 )
                 return self.status()
 
+            source = self._resolve_source(source_id)
+            if source_id and source is None:
+                self._last_error = "La manette sélectionnée n’est plus connectée."
+                return self.status()
+            if source is not None and not source["compatible"]:
+                self._last_error = (
+                    f"« {source['name']} » n’expose pas un gyroscope et un "
+                    "accéléromètre compatibles."
+                )
+                self._selected_source = source
+                return self.status()
+            self._selected_source = source
+
             self._rotate_log()
             self._log_handle = self.log_path.open("ab", buffering=0)
+            if source is None:
+                source_args = []
+            elif source.get("path"):
+                source_args = ["--controller-path", source["path"]]
+            else:
+                source_args = ["--controller-id", str(source["instance_id"])]
             if self.system == "Windows":
-                command = [str(self.executable)]
+                command = [str(self.executable), *source_args]
                 launch_options = {
                     "cwd": self.executable.parent,
                     "creationflags": WINDOWS_CREATE_NO_WINDOW,
@@ -247,6 +385,7 @@ class DsuManager:
                     str(self.launcher),
                     str(self.executable),
                     str(os.getpid()),
+                    *source_args,
                 ]
                 launch_options = {}
             try:

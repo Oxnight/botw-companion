@@ -16,7 +16,7 @@ La version actuelle est **0.40.0 alpha 12**. Elle versionne et migre automatique
   * [4. Premier lancement dans le terminal](#4-premier-lancement-dans-le-terminal).
 * [Installer le lanceur macOS](#installer-le-lanceur-macos).
 * [Installer le lanceur Windows](#installer-le-lanceur-windows).
-* [Configurer le gyroscope Joy-Con dans Ryujinx](#configurer-le-gyroscope-joy-con-dans-ryujinx).
+* [Configurer le gyroscope universel dans Ryujinx ou Cemu](#configurer-le-gyroscope-universel-dans-ryujinx-ou-cemu).
 * [Utilisation en ligne de commande](#utilisation-en-ligne-de-commande).
 * [Données locales et confidentialité](#données-locales-et-confidentialité).
 * [Mise à jour du clone](#mise-à-jour-du-clone).
@@ -30,7 +30,7 @@ La version actuelle est **0.40.0 alpha 12**. Elle versionne et migre automatique
 * Suivi manuel persistant pour les éléments que la sauvegarde ne peut pas prouver.
 * Planificateur d’itinéraire avec sessions persistantes.
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
-* Serveur gyroscopique Joy-Con compatible Cemuhook/DSU pour Ryujinx sur macOS et Windows.
+* Serveur gyroscopique universel compatible Cemuhook/DSU pour Ryujinx et Cemu sur macOS et Windows, avec sélection de la source SDL3.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
@@ -147,7 +147,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.12_Setup.exe
+BOTW_Companion_0.40.0-alpha.13_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
@@ -174,16 +174,16 @@ La construction doit être effectuée sous Windows x64 avec Python 3.12, Visual 
 
 Le script compile le moteur C, crée un environnement de construction isolé, génère le dossier `dist\BOTW Companion`, vérifie ses ressources par un auto-test, puis produit l'installateur dans `dist\installer`. La même procédure est exécutée automatiquement par le workflow Windows du dépôt.
 
-## Configurer le gyroscope Joy-Con dans Ryujinx
+## Configurer le gyroscope universel dans Ryujinx ou Cemu
 
-1. Connecter les deux Joy-Con à l'ordinateur et les utiliser comme paire L/R.
-2. Dans Ryujinx, activer la source de mouvement Cemuhook/DSU.
-3. Utiliser l’hôte `127.0.0.1` et le port `26760`.
-4. Sur BOTW Companion, cliquer sur **Activer** dans l’encadré du gyroscope.
-5. Poser le grip immobile pendant la calibration.
-6. Attendre l’état **Gyroscope Joy-Con prêt** avant de jouer.
+1. Connecter la manette à l’ordinateur en Bluetooth ou en USB.
+2. Dans BOTW Companion, choisir la **Source du gyroscope**. Toutes les manettes détectées par SDL3 sont affichées ; seules celles qui exposent réellement gyro + accéléromètre peuvent être activées. La paire Joy-Con reste proposée comme une source unique en mode grip.
+3. Dans Ryujinx ou Cemu, activer la source de mouvement Cemuhook/DSU.
+4. Utiliser l’hôte `127.0.0.1` et le port `26760`.
+5. Cliquer sur **Activer** puis laisser la manette immobile pendant la calibration.
+6. Attendre l’état **Gyroscope prêt** avant de jouer.
 
-Le serveur DSU reste désactivé par défaut. Il s’arrête avec BOTW Companion et reprend proprement après une reconnexion Bluetooth ou une sortie de veille. Le traitement n’ajoute ni filtre ni zone morte aux mouvements.
+Le serveur DSU reste désactivé par défaut. Le moteur conserve le calibrage, la précision, le protocole, la reconnexion et l’arrêt propre déjà utilisés pour les Joy-Con. Le traitement n’ajoute ni filtre ni zone morte aux mouvements.
 
 ## Utilisation en ligne de commande
 

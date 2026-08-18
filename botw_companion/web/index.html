@@ -60,17 +60,45 @@
             </div>
 
             <div id="dsuControl" class="dsuControl" aria-live="polite">
-                <i id="dsuDot" class="dsu-off" aria-hidden="true"></i>
 
-                <div>
-                    <small>GYROSCOPE JOY-CON • <span id="dsuEngineLabel">DSU</span></small>
-                    <b id="dsuStatus">Désactivé</b>
-                    <span id="dsuMessage">Serveur local arrêté.</span>
+                <div class="dsuHeader">
+                    <div class="dsuTitle">
+                        <i id="dsuDot" class="dsu-off" aria-hidden="true"></i>
+
+                        <small>
+                            GYROSCOPE
+                            <span class="dsuSeparator">•</span>
+                            <span id="dsuEngineLabel">DSU</span>
+                        </small>
+                    </div>
                 </div>
 
-                <button id="toggleDsu" type="button">
-                    Activer
-                </button>
+                <div class="dsuMain">
+                    <div class="dsuSource">
+                        <label class="dsuSourceLabel" for="dsuSource">
+                            Source du gyroscope
+                        </label>
+
+                        <select id="dsuSource" aria-label="Source du gyroscope">
+                            <option value="">Détection des manettes…</option>
+                        </select>
+                    </div>
+
+                    <button id="toggleDsu" type="button">
+                        Activer
+                    </button>
+                </div>
+
+                <div class="dsuStatusBlock">
+                    <b id="dsuStatus">Désactivé</b>
+
+                    <span id="dsuMessage">
+                        Serveur local arrêté.
+                    </span>
+
+                    <span id="dsuCapabilities"></span>
+                </div>
+
             </div>
         </header>
 
