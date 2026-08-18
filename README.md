@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 12**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Cette alpha ajoute la détection automatique de Cemu sur macOS et Windows, y compris les MLC personnalisés, tout en conservant la compatibilité Ryujinx. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 14**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Cette alpha conserve la détection automatique Ryujinx/Cemu et le gyroscope universel de l’alpha précédente, force le chargement UTF-8 des données françaises sous Windows et empêche la sélection d’un marqueur de faire défiler toute la page en donnant à la liste de résultats son propre défilement. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -147,7 +147,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.13_Setup.exe
+BOTW_Companion_0.40.0-alpha.14_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.

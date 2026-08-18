@@ -3,7 +3,7 @@ set -u
 
 readonly APP_NAME="BOTW Companion"
 readonly URL="http://127.0.0.1:8765/"
-readonly EXPECTED_VERSION="0.40.0a13"
+readonly EXPECTED_VERSION="0.40.0a14"
 readonly PROJECT_DEFAULT="/Users/oxnight/Documents/Botw companion"
 readonly SUPPORT_DIR="$HOME/Library/Application Support/BOTW Companion"
 readonly PROJECT_FILE="$SUPPORT_DIR/project_path"

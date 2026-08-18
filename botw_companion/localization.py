@@ -11,7 +11,7 @@ from .nomenclature_fr import normalize_catalog
 @lru_cache(maxsize=1)
 def _strings() -> dict[str, str]:
     import json
-    raw = json.loads(files("botw_companion.data").joinpath("localization_fr.json").read_text())
+    raw = json.loads(files("botw_companion.data").joinpath("localization_fr.json").read_text(encoding="utf-8"))
     return raw["strings"]
 
 
@@ -36,7 +36,7 @@ def _translate_text(value: str, translations: dict[str, str]) -> str:
 @lru_cache(maxsize=1)
 def _editorial_exact() -> dict[str, str]:
     import json
-    raw = json.loads(files("botw_companion.data").joinpath("nomenclature_fr_reference.json").read_text())
+    raw = json.loads(files("botw_companion.data").joinpath("nomenclature_fr_reference.json").read_text(encoding="utf-8"))
     return raw["exact"]
 
 

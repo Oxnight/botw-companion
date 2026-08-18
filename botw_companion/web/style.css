@@ -375,16 +375,17 @@ input {
     }
 
     .listPanel {
-        height: auto;
+        height: 570px;
         display: flex;
         flex-direction: column;
         min-height: 0
     }
 
     .listPanel #list {
-        height: auto;
         flex: 1 1 auto;
-        min-height: 0
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 }
 

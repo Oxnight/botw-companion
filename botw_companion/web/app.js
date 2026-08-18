@@ -1944,14 +1944,31 @@ async function select(id, fromList = false) {
                     x.dataset.id === id
             );
 
-    if (
-        row &&
-        !fromList
-    ) {
-        row.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth"
-        });
+    if (row && !fromList) {
+        const list = $("#list");
+
+        if (list) {
+            const listRect = list.getBoundingClientRect();
+            const rowRect = row.getBoundingClientRect();
+
+            if (rowRect.top < listRect.top) {
+                list.scrollTo({
+                    top:
+                        list.scrollTop +
+                        rowRect.top -
+                        listRect.top,
+                    behavior: "smooth"
+                });
+            } else if (rowRect.bottom > listRect.bottom) {
+                list.scrollTo({
+                    top:
+                        list.scrollTop +
+                        rowRect.bottom -
+                        listRect.bottom,
+                    behavior: "smooth"
+                });
+            }
+        }
     }
 }
 
