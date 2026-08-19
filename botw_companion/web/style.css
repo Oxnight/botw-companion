@@ -361,7 +361,7 @@ input {
 }
 
 .listPanel {
-    height: 570px
+    height: auto
 }
 
 .listPanel #list {
@@ -375,7 +375,7 @@ input {
     }
 
     .listPanel {
-        height: 570px;
+        height: auto;
         display: flex;
         flex-direction: column;
         min-height: 0

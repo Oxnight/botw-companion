@@ -635,7 +635,7 @@ function renderBloodMoon() {
         moon.active_seconds_until_event
     ),
         savedAt =
-            report?.synchronisation?.save_timestamp_at;
+            report?.synchronisation?.save_time;
 
     const phase =
         moon.scheduled
@@ -678,7 +678,7 @@ function renderBloodMoon() {
 
     $("#bloodMoonMeasuredAt").textContent =
         savedAt
-            ? `Mesure exacte de la sauvegarde à ${syncDate(savedAt)}`
+            ? `Mesure exacte de la sauvegarde à ${savedAt}`
             : "Mesure exacte de la dernière sauvegarde";
 
     $("#bloodMoonInternal").textContent =
@@ -1270,7 +1270,7 @@ function updateSync(meta, error = null) {
     $("#syncTimes").textContent =
         error
             ? `${error} • dernier rapport conservé`
-            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${syncDate(meta.save_timestamp_at)} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
+            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${meta.save_time || "-"} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
 
     const events = meta.events || [];
 

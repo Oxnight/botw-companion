@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from hashlib import sha256
 import os
 from pathlib import Path
@@ -20,6 +20,12 @@ def _iso_now() -> str:
 
 def _iso_timestamp(value: float) -> str:
     return datetime.fromtimestamp(value).astimezone().isoformat(timespec="seconds")
+
+def _botw_save_time(value: float) -> str:
+    return datetime.fromtimestamp(
+        value,
+        tz=timezone.utc,
+    ).strftime("%H:%M:%S")
 
 
 @dataclass(frozen=True)
@@ -77,6 +83,7 @@ class ReliableSaveSync:
             "save_mode": None,
             "save_timestamp": None,
             "save_timestamp_at": None,
+            "save_time": None,
             "candidate_slot": None,
             "candidate_status": None,
             "candidate_since": None,
@@ -320,6 +327,7 @@ class ReliableSaveSync:
             self._state.update({
                 "save_timestamp": timestamp,
                 "save_timestamp_at": _iso_timestamp(timestamp),
+                "save_time": _botw_save_time(timestamp),
                 "save_mode": self._save_mode(slot),
                 "emulator": backend.id if backend else None,
                 "emulator_label": backend.label if backend else None,
@@ -470,7 +478,7 @@ class ReliableSaveSync:
                 "last_success_at": _iso_now(), "slot": slot.name,
                 "source_root": str(slot.parent),
                 "source_kind": self._source_kind(slot),
-                "save_timestamp": timestamp, "save_timestamp_at": _iso_timestamp(timestamp),
+                "save_timestamp": timestamp, "save_timestamp_at": _iso_timestamp(timestamp), "save_time": _botw_save_time(timestamp),
                 "save_mode": self._save_mode(slot), "fingerprint": digest[:16],
                 "report_revision": self._revision, "consecutive_failures": 0,
                 "candidate_slot": None, "candidate_status": None, "candidate_since": None,
