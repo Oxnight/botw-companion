@@ -94,6 +94,25 @@ def _quest(item: dict, category: str, flags: dict[str, object]) -> dict:
                 + (f", près de {point['nearby']}" if point.get("nearby") else "") + ".",
                 point_state, geo_point_index=index,
             ))
+    walkthrough = item.get("quest_walkthrough", {})
+    route = walkthrough.get("steps", [])
+    if route:
+        if started and not done:
+            steps.append(_step(
+                "Reprendre la solution détaillée",
+                "Compare le journal du jeu aux actions ci-dessous et reprends à la première action qui n'est pas encore validée.",
+                "actuel",
+            ))
+        for index, instruction in enumerate(route, 1):
+            if done:
+                route_state = "termine"
+            elif not started and index == 1:
+                route_state = "actuel"
+            elif started:
+                route_state = "a_verifier"
+            else:
+                route_state = "verrouille"
+            steps.append(_step(f"Solution {index}/{len(route)}", instruction, route_state))
     steps.append(_step(
         "Valider la quête dans le journal",
         "Termine la dernière consigne, attends la mise à jour du journal puis effectue une sauvegarde.",
@@ -106,8 +125,8 @@ def _quest(item: dict, category: str, flags: dict[str, object]) -> dict:
     }[category]
     status = "terminée" if done else ("déjà découverte" if started else "pas encore découverte")
     warnings = []
-    if started and not done and len(points) > 2:
-        warnings.append("La sauvegarde ne prouve pas séparément chaque point intermédiaire : vérifie leur état dans le journal du jeu.")
+    if started and not done:
+        warnings.append("Certains marqueurs intermédiaires ne prouvent pas séparément chaque action : le journal du jeu reste la référence pour choisir où reprendre.")
     if category == "quetes_sanctuaires":
         warnings.append("Le départ de la quête et le sanctuaire obtenu sont deux points distincts dans cette fiche.")
     return _base(

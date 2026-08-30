@@ -18,7 +18,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.18_Setup.exe"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.19_Setup.exe"
 
 if (-not $SkipNative) {
     & (Join-Path $projectRoot "tools\build_joycon_dsu_windows.ps1")

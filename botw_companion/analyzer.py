@@ -8,6 +8,7 @@ from collections.abc import Iterable
 from .guide_enrichment import build_map_guide
 from .guides import build_guide
 from .localization import localize_editorial_text
+from .quest_walkthroughs import QUEST_SOURCE_BY_CATEGORY, QUEST_WALKTHROUGHS
 from .resources import (load_cartography_reference, load_catalog,
                         load_completion_standard, load_nomenclature_reference,
                         load_runtime_nomenclature_audit, load_solution_reference)
@@ -44,7 +45,12 @@ def _apply_solution_reference(catalog: dict) -> dict:
     reference = load_solution_reference()
     quest_evidence = reference.get("quests", {})
     quest_facts = reference.get("quest_facts", {})
-    for key in ("main_quests", "shrine_quests", "side_quests"):
+    categories = {
+        "main_quests": "quetes_principales",
+        "shrine_quests": "quetes_sanctuaires",
+        "side_quests": "quetes_secondaires",
+    }
+    for key, category in categories.items():
         for item in catalog.get(key, []):
             evidence = quest_evidence.get(item.get("quest_internal_id"))
             if evidence:
@@ -56,6 +62,27 @@ def _apply_solution_reference(catalog: dict) -> dict:
                     if localized_facts.get(field):
                         localized_facts[field] = localize_editorial_text(localized_facts[field])
                 item["quest_facts"] = localized_facts
+            walkthrough = QUEST_WALKTHROUGHS.get(item.get("quest_internal_id"))
+            if walkthrough:
+                item["quest_walkthrough"] = copy.deepcopy(walkthrough)
+                item["quest_walkthrough"]["steps"] = [
+                    localize_editorial_text(step)
+                    for step in item["quest_walkthrough"]["steps"]
+                ]
+                reward = item.get("quest_facts", {}).get("reward", "")
+                if category == "quetes_sanctuaires" and reward.startswith("Sanctuaire de "):
+                    shrine_name = f"le {reward[0].lower()}{reward[1:]}"
+                    item["quest_walkthrough"]["steps"] = [
+                        re.sub(
+                            r"(?:le )?sanctuaire de [A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’\-]*(?: [A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’\-]*)*",
+                            shrine_name,
+                            step,
+                        )
+                        for step in item["quest_walkthrough"]["steps"]
+                    ]
+                item["quest_walkthrough"]["source"] = copy.deepcopy(
+                    QUEST_SOURCE_BY_CATEGORY[category]
+                )
     stage_by_id = {
         "epreuves-debutant": "beginning",
         "epreuves-moyen": "middle",
@@ -69,6 +96,13 @@ def _apply_solution_reference(catalog: dict) -> dict:
                 if room.get("stage") == stage
             ]
     catalog["solution_audit"] = copy.deepcopy(reference.get("audit", {}))
+    catalog["solution_audit"].update({
+        "quests_with_complete_walkthrough": len(QUEST_WALKTHROUGHS),
+        "quest_walkthrough_steps": sum(
+            len(walkthrough.get("steps", []))
+            for walkthrough in QUEST_WALKTHROUGHS.values()
+        ),
+    })
     catalog["solution_sources"] = copy.deepcopy(reference.get("sources", []))
     return catalog
 

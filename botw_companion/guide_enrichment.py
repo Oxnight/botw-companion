@@ -523,13 +523,14 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
         reward_override = QUEST_REWARD_OVERRIDES.get(item.get("quest_internal_id"))
         if reward_override:
             guide["rewards"] = [reward_override]
-        guide["detailed_steps"] = [action]
+        walkthrough = item.get("quest_walkthrough", {})
+        guide["detailed_steps"] = list(walkthrough.get("steps", [])) or [action]
         for point in item.get("geo_points", []):
             guide["detailed_steps"].append(
                 f"{point.get('label', 'Étape')} : rejoins X {point['x']:.1f}, Z {point['z']:.1f}"
                 + (f" près de {point['nearby']}" if point.get("nearby") else "") + "."
             )
-        guide["detailed_steps"].append("Après la dernière action, reparle au donneur si nécessaire et attends que le journal affiche Terminé.")
+        guide["detailed_steps"].append("Après la dernière action, vérifie que le journal affiche Terminé puis sauvegarde la partie.")
         evidence = item.get("solution_evidence", {})
         if evidence.get("event_flow_found"):
             guide["quest_evidence"] = {
@@ -547,11 +548,20 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
             _add_sources(guide, [evidence["source"]])
         if facts.get("source"):
             _add_sources(guide, [facts["source"]])
+        if walkthrough.get("source"):
+            _add_sources(guide, [walkthrough["source"]])
         if item.get("quest_internal_id") == "UotoriMini_SinkTreasure":
             _add_sources(guide, [SUNKEN_TREASURE_SOURCE])
         elif item.get("quest_internal_id") == "MarittaMini_BigWhales":
             _add_sources(guide, [LEVIATHAN_SOURCE])
         _add_sources(guide, [OBJMAP])
+        if walkthrough.get("steps"):
+            guide["specificity"] = "complete_quest_walkthrough"
+            guide["specificity_label"] = "Solution intégrale propre à cette quête"
+            _quality(
+                guide, 3,
+                "Parcours individuel recoupé avec le journal, le flux d'événements et un guide complet.",
+            )
     elif category == "korogus":
         actor_kind = "apparition aérienne" if "HiddenKorokFly" in item.get("flag", "") else "apparition au sol"
         guide["prerequisites"] = ["Aucun prérequis permanent", "Arc, Bombes, Polaris et Cinetis couvrent la majorité des puzzles"]
