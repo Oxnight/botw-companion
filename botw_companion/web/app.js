@@ -1,4 +1,5 @@
 let report = null, selectedId = null, filtersInitialized = false;
+let saveCaptionRevision = null;
 const detailCache = new Map();
 let manualTracking = { schema_version: 2, revision: 0, updated_at: null, entries: {} };
 let preferencesData = { schema_version: 1, revision: 0, updated_at: null, values: {} };
@@ -1152,6 +1153,8 @@ function renderAll() {
                 : "Mode normal"
         } • ${saveDate} • ${s.chemin}`;
 
+    renderSavePreview(s, saveDate);
+
     const emulatorLabel = String(s.emulateur || "Émulateur").toUpperCase();
     const runtimeEmulator = $("#runtimeEmulator");
     if (runtimeEmulator) runtimeEmulator.textContent = emulatorLabel;
@@ -1271,6 +1274,44 @@ function renderAll() {
         requestAnimationFrame(resetMap);
     }
 
+}
+
+function renderSavePreview(save, saveDate) {
+    const mode = save.mode === "expert" ? "Expert" : "normal",
+        emulator = save.emulateur || "Émulateur",
+        platform = save.plateforme || runtimePlatform.label || "Système local",
+        revision = String(report.report_revision_key || `${save.slot}:${save.date}`),
+        image = $("#saveCaption"),
+        fallback = $("#saveCaptionFallback");
+
+    $("#saveSlotTitle").textContent = `Slot ${save.slot} • Mode ${mode}`;
+    $("#saveSlotDate").textContent = `Dernière sauvegarde : ${saveDate}`;
+    $("#saveSlotSource").textContent = `${emulator} • ${platform}`;
+    $("#savePreview").title = save.detection_mode || "Slot sélectionné automatiquement";
+    fallback.textContent = `SLOT ${save.slot}`;
+
+    if (saveCaptionRevision === revision) {
+        return;
+    }
+
+    saveCaptionRevision = revision;
+    image.hidden = true;
+    fallback.hidden = false;
+    image.alt = `Aperçu du slot ${save.slot}, mode ${mode}, sauvegardé le ${saveDate}`;
+    image.dataset.revision = revision;
+    image.onload = () => {
+        if (image.dataset.revision === revision) {
+            image.hidden = false;
+            fallback.hidden = true;
+        }
+    };
+    image.onerror = () => {
+        if (image.dataset.revision === revision) {
+            image.hidden = true;
+            fallback.hidden = false;
+        }
+    };
+    image.src = `/api/save-caption?revision=${encodeURIComponent(revision)}`;
 }
 
 function syncDate(value) {

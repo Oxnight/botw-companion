@@ -1202,6 +1202,75 @@ aside {
     overflow: visible;
 }
 
+.savePreview {
+    display: grid;
+    grid-template-columns: 168px minmax(0, 1fr);
+    align-items: center;
+    gap: 13px;
+    width: min(100%, 430px);
+    margin: 16px 0 0;
+    padding: 9px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    background: linear-gradient(145deg, #111d22, #0c171b);
+}
+
+.saveCaptionFrame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid #30444a;
+    border-radius: 8px;
+    color: #6f827d;
+    background:
+        linear-gradient(135deg, transparent 48%, #263a3f 49%, #263a3f 51%, transparent 52%),
+        #0a1317;
+    font: 600 10px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: .13em;
+}
+
+.saveCaptionFrame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.saveCaptionFrame img[hidden],
+.saveCaptionFrame span[hidden] {
+    display: none;
+}
+
+.savePreview figcaption {
+    display: grid;
+    min-width: 0;
+}
+
+.savePreview figcaption small {
+    margin-bottom: 3px;
+    color: var(--gold);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .13em;
+}
+
+.savePreview figcaption strong {
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.savePreview figcaption span {
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .dsuControl {
     width: 460px;
     max-width: 460px;
@@ -1548,9 +1617,17 @@ aside {
 
         flex: 0 0 auto;
     }
+
+    .savePreview {
+        width: min(100%, 520px);
+    }
 }
 
 @media(max-width: 600px) {
+
+    .savePreview {
+        grid-template-columns: minmax(118px, 42%) minmax(0, 1fr);
+    }
 
     .dsuMain {
         grid-template-columns: 1fr;

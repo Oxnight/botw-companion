@@ -25,6 +25,7 @@ from .route_sessions import RouteSessionStore
 from .preferences import PreferenceStore
 from .runtime_state import RuntimeStateStore
 from .report_views import ReportViewCache, report_revision_key
+from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
 from . import __version__
 
@@ -114,6 +115,21 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     self._json_response(500, {"erreur": str(exc)})
                 else:
                     self._json_response(200, payload)
+                return
+            if path == "/api/save-caption":
+                try:
+                    caption = read_selected_caption(current_report(False))
+                except (SaveCaptionError, OSError) as exc:
+                    self._json_response(404, {"erreur": str(exc)})
+                else:
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/jpeg")
+                    self.send_header("Cache-Control", "no-store")
+                    self.send_header("X-Content-Type-Options", "nosniff")
+                    self.send_header("ETag", f'"{caption.etag}"')
+                    self.send_header("Content-Length", str(len(caption.data)))
+                    self.end_headers()
+                    self.wfile.write(caption.data)
                 return
             if path.startswith("/api/detail/"):
                 try:

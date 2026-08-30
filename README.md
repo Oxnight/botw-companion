@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 17**. Elle ajoute une vue centralisée de tous les objectifs validés manuellement, avec recherche, filtre par catégorie, accès direct à la fiche et annulation confirmée sans perte de la note personnelle. Elle conserve le diagnostic visuel détaillé du gyroscope partagé par macOS et Windows, la détection automatique Ryujinx/Cemu, les migrations et sauvegardes atomiques, le chargement UTF-8 sous Windows et le défilement adaptatif de la liste. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 18**. Elle affiche l’image `caption.jpg` du slot réellement analysé avec son numéro, son mode, sa date, son émulateur et sa plateforme. L’aperçu est lu localement en lecture seule, contrôlé avant son affichage et remplacé proprement lorsqu’il est absent. Elle conserve la vue centralisée des validations manuelles, le diagnostic visuel détaillé du gyroscope partagé par macOS et Windows, la détection automatique Ryujinx/Cemu, les migrations et sauvegardes atomiques, le chargement UTF-8 sous Windows et le défilement adaptatif de la liste. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -25,6 +25,7 @@ La version actuelle est **0.40.0 alpha 17**. Elle ajoute une vue centralisée de
 ## Fonctions principales
 
 * Détection automatique de Ryujinx ou Cemu et actualisation fiable de la sauvegarde BOTW de l’émulateur actif.
+* Aperçu visuel du slot sélectionné à partir de son `caption.jpg`, avec numéro, mode, date, émulateur et plateforme.
 * Suivi détaillé de la carte officielle, des sanctuaires, quêtes, Korogus, équipements, boss, DLC et autres objectifs.
 * Filtres cartographiques et marqueurs hors ligne.
 * Suivi manuel persistant avec vue centralisée, recherche, catégories, accès aux fiches et annulation sécurisée des validations.
@@ -148,7 +149,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.17_Setup.exe
+BOTW_Companion_0.40.0-alpha.18_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.

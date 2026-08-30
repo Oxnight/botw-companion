@@ -57,6 +57,40 @@
                 <p id="saveInfo">
                     Chargement de la dernière sauvegarde…
                 </p>
+
+                <figure
+                    id="savePreview"
+                    class="savePreview"
+                    aria-live="polite"
+                >
+                    <div class="saveCaptionFrame">
+                        <img
+                            id="saveCaption"
+                            alt=""
+                            hidden
+                        >
+
+                        <span id="saveCaptionFallback">
+                            SLOT -
+                        </span>
+                    </div>
+
+                    <figcaption>
+                        <small>SLOT ANALYSÉ</small>
+
+                        <strong id="saveSlotTitle">
+                            Sélection en cours…
+                        </strong>
+
+                        <span id="saveSlotDate">
+                            Date inconnue
+                        </span>
+
+                        <span id="saveSlotSource">
+                            Émulateur local
+                        </span>
+                    </figcaption>
+                </figure>
             </div>
 
             <div id="dsuControl" class="dsuControl" aria-live="polite">
