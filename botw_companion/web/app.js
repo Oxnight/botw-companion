@@ -778,6 +778,53 @@ function controllerVidPid(controller) {
     return ` • ${vid.toString(16).padStart(4, "0").toUpperCase()}:${pid.toString(16).padStart(4, "0").toUpperCase()}`;
 }
 
+function dsuMetric(value, digits = 1, suffix = "") {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? `${numeric.toFixed(digits)}${suffix}` : "—";
+}
+
+function dsuCounter(value) {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "—";
+}
+
+function renderDsuDiagnostic(state) {
+    const diagnostic = state?.diagnostic || {
+        status: "inactive",
+        label: "Diagnostic inactif",
+        summary: "Active le gyroscope pour mesurer la qualité du signal."
+    };
+    const telemetry = state?.telemetry || {};
+    const quality = $("#dsuQuality");
+    quality.textContent = diagnostic.label;
+    quality.className = `quality-${diagnostic.status}`;
+    $("#dsuQualitySummary").textContent = diagnostic.summary;
+    $("#dsuReceivedRate").textContent = dsuMetric(telemetry.received_hz, 1, " Hz");
+    $("#dsuSentRate").textContent = Number(telemetry.clients || 0) === 0 && telemetry.sent_hz !== undefined
+        ? "En attente de l’émulateur"
+        : dsuMetric(telemetry.sent_hz, 1, " Hz");
+    $("#dsuSampleAge").textContent = dsuMetric(telemetry.sample_age_ms, 1, " ms");
+    $("#dsuReceivedJitter").textContent = telemetry.received_jitter_mean_ms === undefined
+        ? "—"
+        : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
+    $("#dsuSentJitter").textContent = telemetry.sent_jitter_mean_ms === undefined
+        ? "—"
+        : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
+    $("#dsuTimestampErrors").textContent = telemetry.duplicate_timestamps === undefined
+        ? "—"
+        : `${dsuCounter(telemetry.duplicate_timestamps)} doublons • ${dsuCounter(telemetry.regressive_timestamps)} régressifs`;
+    $("#dsuSentPackets").textContent = dsuCounter(telemetry.sent_packets);
+    $("#dsuNetworkErrors").textContent = telemetry.send_errors === undefined
+        ? "—"
+        : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} requêtes invalides`;
+    $("#dsuReconnects").textContent = telemetry.disconnects === undefined
+        ? "—"
+        : `${dsuCounter(telemetry.disconnects)} / ${dsuCounter(telemetry.reconnects)}`;
+    $("#dsuCalibrations").textContent = telemetry.calibrations_valid === undefined
+        ? "—"
+        : `${dsuCounter(telemetry.calibrations_valid)} / ${dsuCounter(telemetry.calibrations_rejected)}`;
+}
+
 function renderDsu(state) {
     state = state || {
         state: "error",
@@ -790,6 +837,7 @@ function renderDsu(state) {
     $("#dsuDot").className = `dsu-${state.state}`;
     $("#dsuStatus").textContent = state.state_label;
     $("#dsuMessage").textContent = state.message;
+    renderDsuDiagnostic(state);
     $("#dsuEngineLabel").textContent =
         state.engine_name || runtimePlatform.native_dsu_engine || "DSU";
     $("#dsuControl").title = [

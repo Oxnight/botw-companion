@@ -1275,6 +1275,109 @@ aside {
     font-size: 9px;
 }
 
+.dsuDiagnostic {
+    border-top: 1px solid var(--line);
+    padding-top: 11px;
+}
+
+.dsuDiagnostic summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 9px;
+    letter-spacing: .08em;
+    list-style: none;
+}
+
+.dsuDiagnostic summary::-webkit-details-marker {
+    display: none;
+}
+
+.dsuDiagnostic summary:before {
+    content: "▸";
+    color: var(--gold);
+    font-size: 10px;
+    transition: transform .15s ease;
+}
+
+.dsuDiagnostic[open] summary:before {
+    transform: rotate(90deg);
+}
+
+.dsuDiagnostic summary span {
+    margin-right: auto;
+}
+
+.dsuDiagnostic summary b {
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-transform: none;
+}
+
+.dsuDiagnostic .quality-excellent {
+    color: var(--green);
+}
+
+.dsuDiagnostic .quality-correct,
+.dsuDiagnostic .quality-collecting {
+    color: var(--gold);
+}
+
+.dsuDiagnostic .quality-unstable {
+    color: var(--orange);
+}
+
+.dsuDiagnostic .quality-recalibration {
+    color: var(--red);
+}
+
+.dsuDiagnostic .quality-inactive {
+    color: var(--muted);
+}
+
+#dsuQualitySummary {
+    margin: 10px 0 8px;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.dsuMetrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
+    padding: 9px 10px;
+    border: 1px solid #21343a;
+    border-radius: 8px;
+    background: #0b171b;
+}
+
+.dsuMetrics span {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    color: var(--muted);
+    font-size: 8px;
+    line-height: 1.35;
+}
+
+.dsuMetrics b {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 9px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 @media(max-width: 900px) {
 
     header {
@@ -1300,6 +1403,10 @@ aside {
 
     .dsuControl button {
         width: 100%;
+    }
+
+    .dsuMetrics {
+        grid-template-columns: 1fr;
     }
 }
 

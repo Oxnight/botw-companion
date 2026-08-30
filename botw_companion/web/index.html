@@ -99,6 +99,31 @@
                     <span id="dsuCapabilities"></span>
                 </div>
 
+                <details id="dsuDiagnostic" class="dsuDiagnostic">
+                    <summary>
+                        <span>QUALITÉ DU SIGNAL</span>
+
+                        <b id="dsuQuality" class="quality-inactive">Diagnostic inactif</b>
+                    </summary>
+
+                    <p id="dsuQualitySummary">
+                        Active le gyroscope pour mesurer la qualité du signal.
+                    </p>
+
+                    <div class="dsuMetrics" aria-label="Mesures de qualité du gyroscope">
+                        <span>Fréquence reçue <b id="dsuReceivedRate">—</b></span>
+                        <span>Fréquence envoyée <b id="dsuSentRate">—</b></span>
+                        <span>Âge de l’échantillon <b id="dsuSampleAge">—</b></span>
+                        <span>Jitter reçu <b id="dsuReceivedJitter">—</b></span>
+                        <span>Jitter envoyé <b id="dsuSentJitter">—</b></span>
+                        <span>Timestamps anormaux <b id="dsuTimestampErrors">—</b></span>
+                        <span>Paquets envoyés <b id="dsuSentPackets">—</b></span>
+                        <span>Erreurs réseau <b id="dsuNetworkErrors">—</b></span>
+                        <span>Déconnexions / reconnexions <b id="dsuReconnects">—</b></span>
+                        <span>Calibrations valides / refusées <b id="dsuCalibrations">—</b></span>
+                    </div>
+                </details>
+
             </div>
         </header>
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from importlib.resources import files
+import math
 import os
 from pathlib import Path
 import platform
@@ -20,6 +21,20 @@ DSU_PORT = 26760
 DSU_PROTOCOL_VERSION = 1001
 DSU_MSG_PORTS = 0x100001
 WINDOWS_CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+TELEMETRY_PREFIX = "BOTW_DSU_TELEMETRY\t"
+TELEMETRY_FLOAT_FIELDS = {
+    "uptime_s", "received_hz", "sent_hz", "sample_age_ms",
+    "received_jitter_mean_ms", "received_jitter_max_ms",
+    "sent_jitter_mean_ms", "sent_jitter_max_ms",
+}
+TELEMETRY_INT_FIELDS = {
+    "version", "clients", "sensor_events", "paired_samples",
+    "duplicate_timestamps", "regressive_timestamps", "fallback_timestamps",
+    "invalid_values", "sent_packets", "requests", "invalid_requests",
+    "send_errors", "stale_samples", "nonfinite_samples", "disconnects",
+    "reconnects", "calibrations_valid", "calibrations_rejected",
+    "calibration_valid",
+}
 
 
 def _windows_runtime_directory(resource_root: Path, *,
@@ -313,14 +328,155 @@ class DsuManager:
                 "Laisse la manette immobile quelques secondes pendant l’initialisation.", True, False,
             )
 
+    @staticmethod
+    def _parse_telemetry_line(line: str) -> dict | None:
+        if not line.startswith(TELEMETRY_PREFIX):
+            return None
+        result: dict = {}
+        for part in line[len(TELEMETRY_PREFIX):].strip().split("\t"):
+            key, separator, raw = part.partition("=")
+            if not separator or not key:
+                continue
+            try:
+                if key in TELEMETRY_FLOAT_FIELDS:
+                    value = float(raw)
+                    if not math.isfinite(value):
+                        return None
+                    result[key] = value
+                elif key in TELEMETRY_INT_FIELDS:
+                    result[key] = int(raw)
+                else:
+                    result[key] = raw
+            except ValueError:
+                return None
+        if result.get("version") != 1 or "health" not in result:
+            return None
+        return result
+
+    def _telemetry_snapshot(self, running: bool) -> dict | None:
+        if not running or not self.log_path.is_file():
+            return None
+        try:
+            stat = self.log_path.stat()
+            if self._started_at is not None and stat.st_mtime < self._started_at - 1.0:
+                return None
+            with self.log_path.open("rb") as handle:
+                handle.seek(max(0, stat.st_size - 65_536))
+                tail = handle.read().decode("utf-8", errors="replace")
+        except OSError:
+            return None
+        for line in reversed(tail.splitlines()):
+            parsed = self._parse_telemetry_line(line)
+            if parsed is not None:
+                parsed["measurement_age_seconds"] = max(0.0, time.time() - stat.st_mtime)
+                return parsed
+        return None
+
+    @staticmethod
+    def _diagnostic(state: str, running: bool, telemetry: dict | None) -> dict:
+        if not running:
+            return {
+                "status": "inactive",
+                "label": "Diagnostic inactif",
+                "summary": "Active le gyroscope pour mesurer la qualité du signal.",
+            }
+        if telemetry is None:
+            return {
+                "status": "collecting",
+                "label": "Mesure en cours",
+                "summary": "Le premier diagnostic apparaîtra après quelques secondes.",
+            }
+        if not telemetry.get("calibration_valid"):
+            return {
+                "status": "recalibration",
+                "label": "Recalibration recommandée",
+                "summary": "La calibration n’est pas valide. Immobilise la manette et relance le gyroscope.",
+            }
+        if state != "ready":
+            return {
+                "status": "collecting",
+                "label": "Mesure en cours",
+                "summary": "Le contrôleur doit être prêt avant d’évaluer le signal.",
+            }
+
+        received = telemetry.get("received_hz", 0.0)
+        sent = telemetry.get("sent_hz", 0.0)
+        clients = telemetry.get("clients", 0)
+        age = telemetry.get("sample_age_ms", -1.0)
+        measurement_age = telemetry.get("measurement_age_seconds", 0.0)
+        receive_mean = telemetry.get("received_jitter_mean_ms", 0.0)
+        receive_max = telemetry.get("received_jitter_max_ms", 0.0)
+        sent_mean = telemetry.get("sent_jitter_mean_ms", 0.0)
+        sent_max = telemetry.get("sent_jitter_max_ms", 0.0)
+        events = max(1, telemetry.get("sensor_events", 0))
+        packets = max(1, telemetry.get("sent_packets", 0))
+        timestamp_ratio = (
+            telemetry.get("duplicate_timestamps", 0)
+            + telemetry.get("regressive_timestamps", 0)
+        ) / events
+        invalid_ratio = (
+            telemetry.get("invalid_values", 0)
+            + telemetry.get("nonfinite_samples", 0)
+        ) / events
+        send_error_ratio = telemetry.get("send_errors", 0) / packets
+        sending_excellent = clients == 0 or 170.0 <= sent <= 230.0
+        sending_correct = clients == 0 or 120.0 <= sent <= 260.0
+
+        excellent = all((
+            telemetry.get("health") == "ok",
+            measurement_age <= 15.0,
+            170.0 <= received <= 230.0,
+            sending_excellent,
+            0.0 <= age <= 20.0,
+            receive_mean <= 1.5,
+            receive_max <= 20.0,
+            clients == 0 or sent_mean <= 1.5,
+            clients == 0 or sent_max <= 20.0,
+            timestamp_ratio <= 0.001,
+            invalid_ratio <= 0.0001,
+            send_error_ratio <= 0.0001,
+        ))
+        correct = all((
+            telemetry.get("health") == "ok",
+            measurement_age <= 25.0,
+            120.0 <= received <= 260.0,
+            sending_correct,
+            0.0 <= age <= 50.0,
+            receive_mean <= 4.0,
+            receive_max <= 50.0,
+            clients == 0 or sent_mean <= 4.0,
+            clients == 0 or sent_max <= 50.0,
+            timestamp_ratio <= 0.01,
+            invalid_ratio <= 0.001,
+            send_error_ratio <= 0.001,
+        ))
+        if excellent:
+            return {
+                "status": "excellent",
+                "label": "Excellent",
+                "summary": "Signal régulier, récent et transmis sans anomalie notable.",
+            }
+        if correct:
+            return {
+                "status": "correct",
+                "label": "Correct",
+                "summary": "Signal exploitable avec de légères variations sans impact attendu en jeu.",
+            }
+        return {
+            "status": "unstable",
+            "label": "Instable",
+            "summary": "La cadence, le jitter ou les erreurs mesurées dépassent les seuils recommandés.",
+        }
+
     def _payload(self, state: str, label: str, message: str,
                  running: bool, controller_connected: bool) -> dict:
         engine_name = "JoyConDSU.exe" if self.system == "Windows" else self.executable.name
         controllers = list(self._controller_cache)
         if not running and self._availability_error() is None:
             controllers = self.controllers()
+        telemetry = self._telemetry_snapshot(running)
         return {
-            "schema_version": 2,
+            "schema_version": 3,
             "state": state,
             "state_label": label,
             "message": message,
@@ -335,6 +491,8 @@ class DsuManager:
             "log_path": str(self.log_path),
             "controllers": controllers,
             "selected_source": self._selected_source,
+            "diagnostic": self._diagnostic(state, running, telemetry),
+            "telemetry": telemetry,
         }
 
     def start(self, source_id: str | None = None) -> dict:

@@ -16,7 +16,7 @@ Livrables :
 
 ```text
 dist\BOTW Companion\BOTW Companion.exe
-dist\installer\BOTW_Companion_0.40.0-alpha.15_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.16_Setup.exe
 ```
 
 L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.

@@ -866,6 +866,47 @@ static void print_telemetry(
         (unsigned long long)telemetry->calibrations_valid,
         (unsigned long long)telemetry->calibrations_rejected
     );
+    printf(
+        "BOTW_DSU_TELEMETRY\tversion=1\thealth=%s\tuptime_s=%.1f\t"
+        "clients=%zu\treceived_hz=%.3f\tsent_hz=%.3f\t"
+        "sample_age_ms=%.3f\treceived_jitter_mean_ms=%.3f\t"
+        "received_jitter_max_ms=%.3f\tsent_jitter_mean_ms=%.3f\t"
+        "sent_jitter_max_ms=%.3f\tsensor_events=%llu\t"
+        "paired_samples=%llu\tduplicate_timestamps=%llu\t"
+        "regressive_timestamps=%llu\tfallback_timestamps=%llu\t"
+        "invalid_values=%llu\tsent_packets=%llu\trequests=%llu\t"
+        "invalid_requests=%llu\tsend_errors=%llu\tstale_samples=%llu\t"
+        "nonfinite_samples=%llu\tdisconnects=%llu\treconnects=%llu\t"
+        "calibrations_valid=%llu\tcalibrations_rejected=%llu\t"
+        "calibration_valid=%d\n",
+        telemetry_health_ok(controller, telemetry, now_ns) ? "ok" : "warning",
+        uptime_s,
+        dsu_clients_active_count(clients),
+        motion_pipeline_received_hz(&controller->motion),
+        telemetry_send_hz(telemetry),
+        age_ms,
+        motion_pipeline_jitter_mean_ms(&controller->motion),
+        motion_pipeline_jitter_max_ms(&controller->motion),
+        telemetry_send_jitter_mean_ms(telemetry),
+        telemetry_send_jitter_max_ms(telemetry),
+        (unsigned long long)(motion != NULL ? motion->sensor_events : 0),
+        (unsigned long long)(motion != NULL ? motion->emitted_samples : 0),
+        (unsigned long long)(motion != NULL ? motion->duplicate_timestamps : 0),
+        (unsigned long long)(motion != NULL ? motion->regressive_timestamps : 0),
+        (unsigned long long)(motion != NULL ? motion->fallback_timestamps : 0),
+        (unsigned long long)(motion != NULL ? motion->invalid_values : 0),
+        (unsigned long long)telemetry->sent_packets,
+        (unsigned long long)telemetry->requests_received,
+        (unsigned long long)telemetry->invalid_requests,
+        (unsigned long long)telemetry->send_errors,
+        (unsigned long long)telemetry->stale_samples,
+        (unsigned long long)telemetry->nonfinite_samples,
+        (unsigned long long)telemetry->disconnects,
+        (unsigned long long)telemetry->reconnects,
+        (unsigned long long)telemetry->calibrations_valid,
+        (unsigned long long)telemetry->calibrations_rejected,
+        telemetry->calibration_valid ? 1 : 0
+    );
     fflush(stdout);
 }
 

@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 15**. Elle versionne et migre automatiquement les données personnelles, conserve une copie avant migration, enregistre les préférences hors du navigateur et permet de restaurer une sauvegarde générale de façon atomique. Les exports restent compatibles entre macOS et Windows et ne contiennent aucun chemin propre à un système. Cette alpha conserve la détection automatique Ryujinx/Cemu et le gyroscope universel de l’alpha précédente, force le chargement UTF-8 des données françaises sous Windows et empêche la sélection d’un marqueur de faire défiler toute la page en donnant à la liste de résultats son propre défilement. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 16**. Elle ajoute un diagnostic visuel du gyroscope partagé par macOS et Windows : qualité excellente, correcte, instable ou recalibration recommandée, accompagnée des fréquences, du jitter, de l’âge des échantillons, des anomalies de timestamps, des paquets, des erreurs réseau, des reconnexions et des calibrations. Elle conserve la détection automatique Ryujinx/Cemu, le gyroscope universel, les migrations et sauvegardes atomiques, le chargement UTF-8 sous Windows et le défilement adaptatif de la liste. L’application fonctionne hors ligne après l’installation ; les liens externes éventuellement proposés dans certaines fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -31,6 +31,7 @@ La version actuelle est **0.40.0 alpha 15**. Elle versionne et migre automatique
 * Planificateur d’itinéraire avec sessions persistantes.
 * Estimation de la prochaine lune de sang à partir du compteur interne de la sauvegarde.
 * Serveur gyroscopique universel compatible Cemuhook/DSU pour Ryujinx et Cemu sur macOS et Windows, avec sélection de la source SDL3.
+* Diagnostic gyroscopique détaillé avec qualité globale, cadence, jitter, âge des échantillons, anomalies, réseau et historique de calibration.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
@@ -147,7 +148,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.15_Setup.exe
+BOTW_Companion_0.40.0-alpha.16_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
@@ -246,7 +247,7 @@ node tools/browser_smoke.js http://127.0.0.1:18765 edge
 node tools/browser_smoke.js http://127.0.0.1:18765 firefox
 ```
 
-Chrome et Microsoft Edge doivent être installés sur la machine de test ; Firefox peut être installé par `npx playwright install firefox`. Le parcours vérifie le chargement, les filtres, la carte, le zoom, les fiches, la désélection, le suivi manuel, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU et l’affichage responsive. Le workflow Windows exécute automatiquement ces trois parcours.
+Chrome et Microsoft Edge doivent être installés sur la machine de test ; Firefox peut être installé par `npx playwright install firefox`. Le parcours vérifie le chargement, les filtres, la carte, le zoom, les fiches, la désélection, le suivi manuel, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU, son diagnostic détaillé et l’affichage responsive. Ces parcours se lancent localement sur la machine utilisée pour la validation.
 
 ## Mise à jour du clone
 
