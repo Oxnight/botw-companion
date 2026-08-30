@@ -53,7 +53,8 @@
 }
 
 .manualActions button,
-.manualTracking button {
+.manualTracking button,
+.manualReview button {
     padding: 8px 11px;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -63,8 +64,140 @@
 }
 
 .manualActions button:hover,
-.manualTracking button:hover {
+.manualTracking button:hover,
+.manualReview button:hover {
     border-color: var(--gold);
+}
+
+.manualReview[hidden] {
+    display: none;
+}
+
+.manualReview {
+    margin: -4px 0 16px;
+    padding: 18px;
+}
+
+.manualReviewHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.manualReviewHeader h2 {
+    margin: 2px 0 3px;
+    font-size: 18px;
+}
+
+.manualReviewHeader p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.manualReviewToolbar {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, 280px);
+    gap: 9px;
+    margin: 16px 0 12px;
+}
+
+.manualReviewToolbar input,
+.manualReviewToolbar select {
+    min-width: 0;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    background: #0c171b;
+    font: inherit;
+}
+
+.manualReviewToolbar input:focus,
+.manualReviewToolbar select:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.manualReviewList {
+    display: grid;
+    gap: 8px;
+    max-height: 520px;
+    overflow: auto;
+    padding-right: 3px;
+}
+
+.manualReviewItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #0c171b;
+}
+
+.manualReviewItem h3 {
+    margin: 1px 0 3px;
+    font-size: 13px;
+}
+
+.manualReviewItem p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.manualReviewItem .manualReviewCategory {
+    color: var(--gold);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.manualReviewItem .manualReviewNote {
+    margin-top: 7px;
+    padding: 7px 8px;
+    border-left: 2px solid #6c5a30;
+    color: #c7cfca;
+    background: #142126;
+    white-space: pre-wrap;
+}
+
+.manualReviewItemActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.manualReviewItemActions button:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+.manualReviewToggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.manualReviewToggle input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--gold);
+}
+
+.manualReviewEmpty {
+    padding: 34px 18px;
+    border: 1px dashed var(--line);
+    border-radius: 9px;
+    color: var(--muted);
+    text-align: center;
 }
 
 .trackingBadge {
@@ -162,6 +295,28 @@
     .manualBar {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .manualActions {
+        flex-wrap: wrap;
+    }
+
+    .manualReviewHeader,
+    .manualReviewItem {
+        align-items: stretch;
+        grid-template-columns: 1fr;
+    }
+
+    .manualReviewHeader {
+        flex-direction: column;
+    }
+
+    .manualReviewToolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .manualReviewItemActions {
+        justify-content: space-between;
     }
 
     .toolbar {
@@ -1412,7 +1567,7 @@ aside {
 
 .syncState {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
 
@@ -1420,6 +1575,7 @@ aside {
     flex: 0 0 auto;
     width: 12px;
     height: 12px;
+    margin-top: 2px;
     border-radius: 50%;
     background: var(--muted);
     box-shadow: 0 0 0 5px #91a29e20;
@@ -1459,7 +1615,7 @@ aside {
 }
 
 .syncState h2 {
-    margin: 1px 0 2px;
+    margin: 6px 0 5px;
     font-size: 15px;
 }
 

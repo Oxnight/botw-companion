@@ -111,16 +111,16 @@
                     </p>
 
                     <div class="dsuMetrics" aria-label="Mesures de qualité du gyroscope">
-                        <span>Fréquence reçue <b id="dsuReceivedRate">—</b></span>
-                        <span>Fréquence envoyée <b id="dsuSentRate">—</b></span>
-                        <span>Âge de l’échantillon <b id="dsuSampleAge">—</b></span>
-                        <span>Jitter reçu <b id="dsuReceivedJitter">—</b></span>
-                        <span>Jitter envoyé <b id="dsuSentJitter">—</b></span>
-                        <span>Timestamps anormaux <b id="dsuTimestampErrors">—</b></span>
-                        <span>Paquets envoyés <b id="dsuSentPackets">—</b></span>
-                        <span>Erreurs réseau <b id="dsuNetworkErrors">—</b></span>
-                        <span>Déconnexions / reconnexions <b id="dsuReconnects">—</b></span>
-                        <span>Calibrations valides / refusées <b id="dsuCalibrations">—</b></span>
+                        <span>Fréquence reçue <b id="dsuReceivedRate">-</b></span>
+                        <span>Fréquence envoyée <b id="dsuSentRate">-</b></span>
+                        <span>Âge de l’échantillon <b id="dsuSampleAge">-</b></span>
+                        <span>Jitter reçu <b id="dsuReceivedJitter">-</b></span>
+                        <span>Jitter envoyé <b id="dsuSentJitter">-</b></span>
+                        <span>Timestamps anormaux <b id="dsuTimestampErrors">-</b></span>
+                        <span>Paquets envoyés <b id="dsuSentPackets">-</b></span>
+                        <span>Erreurs réseau <b id="dsuNetworkErrors">-</b></span>
+                        <span>Déconnexions / reconnexions <b id="dsuReconnects">-</b></span>
+                        <span>Calibrations valides / refusées <b id="dsuCalibrations">-</b></span>
                     </div>
                 </details>
 
@@ -355,6 +355,14 @@
             </div>
 
             <div class="manualActions">
+                <button
+                    id="toggleManualReview"
+                    aria-expanded="false"
+                    aria-controls="manualReview"
+                >
+                    Voir les validations
+                </button>
+
                 <button id="exportManual">
                     Exporter
                 </button>
@@ -370,6 +378,58 @@
                     hidden
                 >
             </div>
+        </section>
+
+        <section
+            id="manualReview"
+            class="manualReview panel"
+            hidden
+        >
+            <div class="manualReviewHeader">
+                <div>
+                    <p class="metricLabel">
+                        CONTRÔLE DES CASES PERSONNELLES
+                    </p>
+
+                    <h2>
+                        Objectifs validés manuellement
+                    </h2>
+
+                    <p id="manualReviewSummary">
+                        Aucun objectif coché manuellement.
+                    </p>
+                </div>
+
+                <button
+                    id="closeManualReview"
+                    type="button"
+                    aria-label="Fermer la liste des validations manuelles"
+                >
+                    Fermer
+                </button>
+            </div>
+
+            <div class="manualReviewToolbar">
+                <input
+                    id="manualReviewSearch"
+                    type="search"
+                    placeholder="Rechercher un objectif, une note, une région…"
+                >
+
+                <select
+                    id="manualReviewCategory"
+                    aria-label="Filtrer les validations manuelles par catégorie"
+                >
+                    <option value="all">
+                        Toutes les catégories
+                    </option>
+                </select>
+            </div>
+
+            <div
+                id="manualReviewList"
+                class="manualReviewList"
+            ></div>
         </section>
 
         <section class="toolbar">

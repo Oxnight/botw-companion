@@ -780,12 +780,12 @@ function controllerVidPid(controller) {
 
 function dsuMetric(value, digits = 1, suffix = "") {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? `${numeric.toFixed(digits)}${suffix}` : "—";
+    return Number.isFinite(numeric) ? `${numeric.toFixed(digits)}${suffix}` : "-";
 }
 
 function dsuCounter(value) {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "—";
+    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "-";
 }
 
 function renderDsuDiagnostic(state) {
@@ -805,23 +805,23 @@ function renderDsuDiagnostic(state) {
         : dsuMetric(telemetry.sent_hz, 1, " Hz");
     $("#dsuSampleAge").textContent = dsuMetric(telemetry.sample_age_ms, 1, " ms");
     $("#dsuReceivedJitter").textContent = telemetry.received_jitter_mean_ms === undefined
-        ? "—"
+        ? "-"
         : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuSentJitter").textContent = telemetry.sent_jitter_mean_ms === undefined
-        ? "—"
+        ? "-"
         : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuTimestampErrors").textContent = telemetry.duplicate_timestamps === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.duplicate_timestamps)} doublons • ${dsuCounter(telemetry.regressive_timestamps)} régressifs`;
     $("#dsuSentPackets").textContent = dsuCounter(telemetry.sent_packets);
     $("#dsuNetworkErrors").textContent = telemetry.send_errors === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} requêtes invalides`;
     $("#dsuReconnects").textContent = telemetry.disconnects === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.disconnects)} / ${dsuCounter(telemetry.reconnects)}`;
     $("#dsuCalibrations").textContent = telemetry.calibrations_valid === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.calibrations_valid)} / ${dsuCounter(telemetry.calibrations_rejected)}`;
 }
 
@@ -2961,17 +2961,212 @@ function renderManualSummary() {
 
     $("#manualNote").textContent =
         `${notes} note${notes === 1 ? '' : 's'} • révision ${manualTracking.revision} • séparé du score automatique`;
+
+    $("#toggleManualReview").textContent =
+        `Validations (${completed.toLocaleString("fr-FR")})`;
+
+    renderManualReview();
 }
 
-async function saveManual(
-    x,
+function manualSearchText(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase("fr");
+}
+
+function manualCompletedRecords() {
+    const items = new Map();
+
+    allItems().forEach(item => {
+        const id = itemId(item);
+
+        if (!items.has(id)) {
+            items.set(id, item);
+        }
+    });
+
+    return Object.entries(manualTracking.entries || {})
+        .filter(([_id, entry]) => entry.completed)
+        .map(([trackingId, entry]) => {
+            const item = items.get(trackingId),
+                categoryId = item?.categorie || trackingId.split(":", 1)[0],
+                categoryLabel =
+                    report?.categories?.[categoryId]?.label ||
+                    item?.filter_label ||
+                    categoryId.replaceAll("_", " "),
+                name =
+                    item?.name ||
+                    item?.display_name ||
+                    item?.id ||
+                    trackingId;
+
+            return {
+                trackingId,
+                entry,
+                item,
+                categoryId,
+                categoryLabel,
+                name,
+                region: item?.region || "",
+                automatic: Boolean(item?.termine)
+            };
+        })
+        .sort((left, right) => {
+            const byDate = String(right.entry.updated_at || "")
+                .localeCompare(String(left.entry.updated_at || ""));
+
+            return byDate || left.name.localeCompare(right.name, "fr");
+        });
+}
+
+function manualDate(value) {
+    if (!value) {
+        return "date inconnue";
+    }
+
+    const date = new Date(value);
+
+    return Number.isNaN(date.getTime())
+        ? "date inconnue"
+        : date.toLocaleString("fr-FR", {
+            dateStyle: "short",
+            timeStyle: "short"
+        });
+}
+
+function renderManualReview() {
+    const list = $("#manualReviewList"),
+        categorySelect = $("#manualReviewCategory");
+
+    if (!list || !categorySelect) {
+        return;
+    }
+
+    const records = manualCompletedRecords(),
+        selectedCategory = categorySelect.value || "all",
+        categories = [...new Map(
+            records.map(record => [
+                record.categoryId,
+                record.categoryLabel
+            ])
+        ).entries()].sort((left, right) => left[1].localeCompare(right[1], "fr"));
+
+    categorySelect.innerHTML =
+        '<option value="all">Toutes les catégories</option>' +
+        categories.map(
+            ([id, label]) => `<option value="${esc(id)}">${esc(label)}</option>`
+        ).join("");
+
+    categorySelect.value = categories.some(([id]) => id === selectedCategory)
+        ? selectedCategory
+        : "all";
+
+    const query = manualSearchText($("#manualReviewSearch").value),
+        filtered = records.filter(record => {
+            const matchesCategory =
+                categorySelect.value === "all" ||
+                record.categoryId === categorySelect.value,
+                haystack = manualSearchText([
+                    record.name,
+                    record.categoryLabel,
+                    record.region,
+                    record.entry.note,
+                    record.trackingId
+                ].join(" "));
+
+            return matchesCategory && (!query || haystack.includes(query));
+        });
+
+    $("#manualReviewSummary").textContent = records.length
+        ? `${records.length.toLocaleString("fr-FR")} validation${records.length === 1 ? '' : 's'} manuelle${records.length === 1 ? '' : 's'} • ${filtered.length.toLocaleString("fr-FR")} affichée${filtered.length === 1 ? '' : 's'}`
+        : "Aucun objectif coché manuellement.";
+
+    if (!filtered.length) {
+        list.innerHTML = `<div class="manualReviewEmpty">${records.length ? "Aucune validation ne correspond à cette recherche." : "Les objectifs cochés manuellement apparaîtront ici."}</div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(record => {
+        const status = record.item
+            ? record.automatic
+                ? "Aussi validé automatiquement"
+                : "Non validé automatiquement"
+            : "Fiche absente du catalogue actuel",
+            meta = [
+                record.region,
+                status,
+                manualDate(record.entry.updated_at)
+            ].filter(Boolean).join(" • "),
+            note = record.entry.note
+                ? `<p class="manualReviewNote">Note : ${esc(record.entry.note)}</p>`
+                : "";
+
+        return `<article class="manualReviewItem"><div><span class="manualReviewCategory">${esc(record.categoryLabel)}</span><h3>${esc(record.name)}</h3><p>${esc(meta)}</p>${note}</div><div class="manualReviewItemActions"><button type="button" data-manual-open="${esc(record.trackingId)}"${record.item ? "" : " disabled"}>Ouvrir la fiche</button><label class="manualReviewToggle"><input type="checkbox" checked data-manual-uncheck="${esc(record.trackingId)}"> Validé</label></div></article>`;
+    }).join("");
+
+    list.querySelectorAll("[data-manual-open]").forEach(button => {
+        button.onclick = () => {
+            closeManualReview();
+            select(button.dataset.manualOpen, true);
+        };
+    });
+
+    list.querySelectorAll("[data-manual-uncheck]").forEach(checkbox => {
+        checkbox.onchange = () => uncheckManualFromReview(
+            checkbox.dataset.manualUncheck,
+            checkbox
+        );
+    });
+}
+
+function openManualReview() {
+    $("#manualReview").hidden = false;
+    $("#toggleManualReview").setAttribute("aria-expanded", "true");
+    renderManualReview();
+    $("#manualReviewSearch").focus();
+}
+
+function closeManualReview() {
+    $("#manualReview").hidden = true;
+    $("#toggleManualReview").setAttribute("aria-expanded", "false");
+}
+
+async function uncheckManualFromReview(trackingId, checkbox) {
+    const record = manualCompletedRecords().find(
+        candidate => candidate.trackingId === trackingId
+    );
+
+    if (!record) {
+        renderManualReview();
+        return;
+    }
+
+    if (!confirm(
+        `Annuler la validation manuelle de « ${record.name} » ? La note personnelle sera conservée.`
+    )) {
+        checkbox.checked = true;
+        return;
+    }
+
+    await saveManualById(
+        trackingId,
+        false,
+        record.entry.note || "",
+        record.item
+    );
+}
+
+async function saveManualById(
+    trackingId,
     completed,
-    note
+    note,
+    detailItem = null
 ) {
     try {
         const response =
             await fetch(
-                `/api/manual/${encodeURIComponent(itemId(x))}`,
+                `/api/manual/${encodeURIComponent(trackingId)}`,
                 {
                     method: "PUT",
                     headers: {
@@ -3001,11 +3196,21 @@ async function saveManual(
         manualTracking = data;
 
         renderAll();
-        renderDetails(x);
+
+        if (
+            detailItem &&
+            selectedId === trackingId
+        ) {
+            renderDetails(detailItem);
+        }
 
         toast(
-            "Suivi manuel enregistré"
+            completed
+                ? "Validation manuelle enregistrée"
+                : "Validation manuelle annulée"
         );
+
+        return true;
 
     } catch (error) {
         toast(
@@ -3014,7 +3219,21 @@ async function saveManual(
         );
 
         await load(false);
+        return false;
     }
+}
+
+async function saveManual(
+    x,
+    completed,
+    note
+) {
+    return saveManualById(
+        itemId(x),
+        completed,
+        note,
+        x
+    );
 }
 
 async function importManualFile(file) {
@@ -4232,11 +4451,24 @@ $("#mapReset").onclick =
 $("#closeDetails").onclick =
     closeDetails;
 
+$("#toggleManualReview").onclick =
+    openManualReview;
+
+$("#closeManualReview").onclick =
+    closeManualReview;
+
+$("#manualReviewSearch").oninput =
+    renderManualReview;
+
+$("#manualReviewCategory").onchange =
+    renderManualReview;
+
 document.addEventListener(
     "keydown",
     e => {
         if (e.key === "Escape") {
-            closeDetails()
+            closeDetails();
+            closeManualReview()
         }
     }
 );
