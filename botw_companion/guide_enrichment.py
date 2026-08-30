@@ -563,20 +563,35 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
                 "Parcours individuel recoupé avec le journal, le flux d'événements et un guide complet.",
             )
     elif category == "korogus":
-        actor_kind = "apparition aérienne" if "HiddenKorokFly" in item.get("flag", "") else "apparition au sol"
-        guide["prerequisites"] = ["Aucun prérequis permanent", "Arc, Bombes, Polaris et Cinetis couvrent la majorité des puzzles"]
-        guide["preparation"] = ["Active Polaris et Cinetis pour repérer les objets interactifs autour du point"]
-        guide["detailed_steps"] = [
-            f"Place-toi précisément à X {item.get('x', 0):.1f}, Z {item.get('z', 0):.1f} et inspecte une zone d'environ 30 mètres.",
-            f"Le flag interne indique une {actor_kind}, mais pas le geste exact : cherche d'abord pierres, feuilles, fleurs, souches, cercles, moulinets et offrandes.",
-            "Si le départ et l'arrivée sont distincts, active le symbole de départ puis suis immédiatement la cible ou le parcours jusqu'au point final.",
-            "Termine le motif ou interagis avec l'étincelle, puis parle au Korogu pour enregistrer la noix.",
+        detail = item.get("korok_solution", {})
+        guide["prerequisites"] = list(detail.get("requirements", []))
+        guide["preparation"] = [
+            f"Repère Object Map {detail.get('map_id', '?')} - secteur {detail.get('map_unit', '?')}",
+            f"Position tridimensionnelle : X {detail.get('x', item.get('x', 0)):.1f}, Y {detail.get('y', 0):.1f}, Z {detail.get('z', item.get('z', 0)):.1f}",
         ]
-        guide["specificity"] = "exact_location"
-        guide["specificity_label"] = "Position exacte ; type précis non affirmé sans preuve locale"
-        _quality(guide, 1, "Coordonnée exacte vérifiée ; le flag ne révèle pas le puzzle précis.")
-        guide.setdefault("warnings", []).append("Le type exact du puzzle n'est pas contenu dans le flag de sauvegarde : la fiche propose un diagnostic ordonné sans inventer le mécanisme.")
-        _add_sources(guide, [KOROK_INDEX, OBJMAP])
+        guide["detailed_steps"] = list(detail.get("steps", []))
+        geo_points = detail.get("geo_points", [])
+        if geo_points:
+            route = " → ".join(
+                f"{point['label']} X {point['x']:.1f}, Z {point['z']:.1f}"
+                for point in geo_points
+            )
+            guide["detailed_steps"].insert(1, f"Parcours cartographique vérifié : {route}.")
+        guide["mechanic"] = detail.get("puzzle_label", "Énigme Korogu")
+        guide["korok_reference"] = {
+            "object_map_id": detail.get("map_id"),
+            "zelda_dungeon_guide_id": detail.get("guide_id"),
+            "map_unit": detail.get("map_unit"),
+            "puzzle_type": detail.get("puzzle_type"),
+            "path_points": len(geo_points),
+        }
+        guide["specificity"] = "verified_korok_puzzle"
+        guide["specificity_label"] = "Type d'énigme et solution individuelle vérifiés"
+        _quality(
+            guide, 3,
+            "Type, identifiants, position et procédure recoupés ; parcours exact ajouté lorsqu'il est publié.",
+        )
+        _add_sources(guide, detail.get("sources", [KOROK_INDEX, OBJMAP]))
     elif category == "bosses_scenarises":
         detail = _scripted_boss_detail(item)
         guide["prerequisites"] = detail["requirements"]

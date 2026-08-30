@@ -58,6 +58,16 @@ def load_solution_reference() -> dict:
 
 
 @lru_cache(maxsize=1)
+def load_korok_reference() -> dict:
+    payload = json.loads(
+        files("botw_companion.data").joinpath("korok_reference.json").read_text(encoding="utf-8")
+    )
+    if payload.get("schema_version") != 1 or len(payload.get("entries", {})) != 900:
+        raise ValueError("Référence des énigmes Korogus invalide")
+    return payload
+
+
+@lru_cache(maxsize=1)
 def load_nomenclature_reference() -> dict:
     return json.loads(
         files("botw_companion.data").joinpath("nomenclature_fr_reference.json").read_text(encoding="utf-8")

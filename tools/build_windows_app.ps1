@@ -18,7 +18,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.19_Setup.exe"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.20_Setup.exe"
 
 if (-not $SkipNative) {
     & (Join-Path $projectRoot "tools\build_joycon_dsu_windows.ps1")
@@ -70,6 +70,7 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3.dll"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\catalog_fr_compiled.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\cartography_reference_fr_compiled.json"),
+    (Join-Path $applicationDirectory "_internal\botw_companion\data\korok_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\index.html"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp")
 )) {

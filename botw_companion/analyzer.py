@@ -11,7 +11,8 @@ from .localization import localize_editorial_text
 from .quest_walkthroughs import QUEST_SOURCE_BY_CATEGORY, QUEST_WALKTHROUGHS
 from .resources import (load_cartography_reference, load_catalog,
                         load_completion_standard, load_nomenclature_reference,
-                        load_runtime_nomenclature_audit, load_solution_reference)
+                        load_runtime_nomenclature_audit, load_solution_reference,
+                        load_korok_reference)
 
 
 ORIGIN_LABELS = {
@@ -83,6 +84,26 @@ def _apply_solution_reference(catalog: dict) -> dict:
                 item["quest_walkthrough"]["source"] = copy.deepcopy(
                     QUEST_SOURCE_BY_CATEGORY[category]
                 )
+    korok_reference = load_korok_reference()
+    korok_sources = korok_reference["sources"]
+    for item in catalog.get("koroks", []):
+        detail = korok_reference["entries"].get(item.get("flag"))
+        if not detail:
+            continue
+        item["korok_solution"] = copy.deepcopy(detail)
+        item["korok_solution"]["sources"] = copy.deepcopy(korok_sources)
+        item["y"] = detail["y"]
+        points = detail.get("geo_points") or [{
+            "x": item["x"], "z": item["z"], "label": "Énigme Korogu",
+        }]
+        item["geo_points"] = [
+            {
+                **copy.deepcopy(point),
+                "source": "BOTW Object Map et BotW Unexplored",
+                "source_url": "https://objmap.zeldamods.org/",
+            }
+            for point in points
+        ]
     stage_by_id = {
         "epreuves-debutant": "beginning",
         "epreuves-moyen": "middle",
@@ -1085,9 +1106,24 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
             item.get("categorie") in {"sanctuaires", "coffres_sanctuaires"}
             and not item.get("guide", {}).get("mechanic") for item in items
         ),
+        "korogus_solution_individuelle_verifiee": sum(
+            item.get("categorie") == "korogus"
+            and item.get("guide", {}).get("specificity") == "verified_korok_puzzle" for item in items
+        ),
+        "korogus_avec_parcours_cartographique": sum(
+            item.get("categorie") == "korogus"
+            and item.get("guide", {}).get("korok_reference", {}).get("path_points", 0) >= 2
+            for item in items
+        ),
+        "types_enigmes_korogus": len({
+            item.get("guide", {}).get("korok_reference", {}).get("puzzle_type")
+            for item in items if item.get("categorie") == "korogus"
+        } - {None}),
         "korogus_position_exacte_type_non_invente": sum(
             item.get("categorie") == "korogus"
-            and item.get("guide", {}).get("specificity") == "exact_location" for item in items
+            and item.get("guide", {}).get("specificity") in {
+                "exact_location", "verified_korok_puzzle",
+            } for item in items
         ),
         "points_farm_avec_avertissement_lune_de_sang": sum(
             any("lune de sang" in warning.lower() for warning in item.get("guide", {}).get("warnings", []))
@@ -1097,7 +1133,8 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
         "sources": [
             "BOTW Object Map pour les coordonnées et les données d'objets",
             "Index de solutions de sanctuaires pour le contrôle des mécanismes",
-            "Index des 900 Korogus pour le contrôle de couverture",
+            "BOTW Object Map pour les 33 types d'énigmes des 900 Korogus",
+            "BotW Unexplored et Zelda Dungeon pour les correspondances, parcours et contrôles individuels",
         ],
     }
 

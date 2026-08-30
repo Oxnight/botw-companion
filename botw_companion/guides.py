@@ -204,15 +204,30 @@ def _memory(item: dict, category: str) -> dict:
 
 def _korok(item: dict, category: str) -> dict:
     done = item.get("termine", False)
+    detail = item.get("korok_solution", {})
+    label = detail.get("puzzle_label", "Énigme Korogu")
+    geo = item.get("geo_points", [])
+    first_index = 0 if geo else None
+    last_index = len(geo) - 1 if len(geo) > 1 else None
     steps = [
-        _step("Rejoindre le puzzle", _position(item), _state(done, not done)),
-        _step("Identifier le mécanisme", "Observe les pierres, fleurs, souches, cercles, moulinets, offrandes et éléments inhabituels autour du point.", _state(done, not done)),
-        _step("Résoudre et parler au Korogu", "Termine le petit puzzle puis récupère la noix korogu.", _state(done)),
+        _step("Rejoindre le puzzle", _position(item), _state(done, not done),
+              **({"geo_point_index": first_index} if first_index is not None else {})),
+        _step(f"Résoudre : {label}", detail.get("steps", ["Résous l'énigme indiquée."])[1],
+              _state(done)),
     ]
-    return _base(item, category, "Puzzle Korogu individuel lié à un flag permanent.",
-                 "Cherche le détail environnemental anormal autour des coordonnées.",
-                 "La noix doit être remise et le flag individuel du Korogu activé.", steps,
-                 warnings=["Le type précis du puzzle n'est pas conservé dans la sauvegarde."])
+    if last_index is not None:
+        steps.append(_step("Atteindre la fin du parcours",
+                           "Suis dans l'ordre les repères cartographiques vérifiés jusqu'au dernier point.", _state(done),
+                           geo_point_index=last_index))
+    steps.append(_step("Récupérer la noix", detail.get("steps", ["", "", "Parle au Korogu."])[-1],
+                       _state(done)))
+    return _base(
+        item, category,
+        f"{label} vérifiée individuellement - repère {detail.get('map_id', '?')}, guide {detail.get('guide_id', '?')}.",
+        detail.get("steps", ["Rejoins et résous l'énigme."])[0],
+        "La noix doit être remise et le flag individuel du Korogu activé.", steps,
+        tips=[f"Secteur cartographique {detail.get('map_unit', item.get('secteur', 'inconnu'))}."],
+    )
 
 
 def _tower_or_place(item: dict, category: str) -> dict:

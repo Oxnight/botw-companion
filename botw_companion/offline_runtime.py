@@ -12,6 +12,7 @@ DATA_FILES = (
     "completion_standard.json",
     "hashes.json",
     "solution_reference.json",
+    "korok_reference.json",
 )
 WEB_FILES = (
     "index.html",
