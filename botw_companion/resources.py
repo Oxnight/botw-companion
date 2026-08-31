@@ -82,6 +82,20 @@ def load_chest_reference() -> dict:
 
 
 @lru_cache(maxsize=1)
+def load_boss_reference() -> dict:
+    payload = json.loads(
+        files("botw_companion.data").joinpath("boss_reference.json").read_text(encoding="utf-8")
+    )
+    audit = payload.get("audit", {})
+    if (payload.get("schema_version") != 1
+            or audit.get("persistent_bosses") != 84
+            or audit.get("map_combat_points") != 284
+            or audit.get("strategies") != 21):
+        raise ValueError("Référence des stratégies de boss invalide")
+    return payload
+
+
+@lru_cache(maxsize=1)
 def load_nomenclature_reference() -> dict:
     return json.loads(
         files("botw_companion.data").joinpath("nomenclature_fr_reference.json").read_text(encoding="utf-8")

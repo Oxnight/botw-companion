@@ -614,14 +614,33 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
         _quality(guide, 3, "Parcours propre à ce combat scénarisé, récompense et condition de nouvelle apparition vérifiés.")
         _add_sources(guide, [BOSS_INDEX, NINTENDO_DLC] if item.get("dlc") else [BOSS_INDEX])
     elif category in {"hinox", "talus", "moldarquors"}:
-        steps, requirements = _boss_strategy(item)
-        guide["prerequisites"] = requirements
-        guide["preparation"] = ["Sauvegarder avant le combat", "Préparer des soins et une arme de secours"]
-        guide["detailed_steps"] = steps + ["Ramasse le butin et sauvegarde après la victoire pour enregistrer le flag permanent."]
-        guide["specificity"] = "boss_strategy"
-        guide["specificity_label"] = "Tactique adaptée à cette famille ou à ce boss"
-        _quality(guide, 2, "Tactique vérifiée pour ce boss ou cette famille ; la fiche ne prétend pas couvrir chaque phase exhaustive.")
-        _add_sources(guide, [OBJMAP])
+        detail = item.get("boss_detail", {})
+        if detail:
+            guide["prerequisites"] = detail["requirements"]
+            guide["preparation"] = detail["preparation"]
+            guide["detailed_steps"] = detail["steps"] + [
+                "Ramasse le butin puis sauvegarde : le flag individuel de cette victoire restera acquis."
+            ]
+            guide["rewards"] = detail["rewards"]
+            guide["mechanic"] = f"Point faible : {detail['weak_point']}"
+            guide["boss_profile"] = {
+                "variant": detail["label"], "weak_point": detail["weak_point"],
+                "dangers": detail["dangers"], "scaling": detail.get("scaling"),
+            }
+            guide.setdefault("warnings", []).extend(detail["dangers"])
+            guide["specificity"] = "verified_boss_variant"
+            guide["specificity_label"] = "Variante, phases, point faible et dangers vérifiés"
+            _quality(guide, 3, "Sous-type et position individuels recoupés ; séquence complète propre à cette variante.")
+            _add_sources(guide, detail["sources"])
+        else:
+            steps, requirements = _boss_strategy(item)
+            guide["prerequisites"] = requirements
+            guide["preparation"] = ["Sauvegarder avant le combat", "Préparer des soins et une arme de secours"]
+            guide["detailed_steps"] = steps + ["Ramasse le butin et sauvegarde après la victoire pour enregistrer le flag permanent."]
+            guide["specificity"] = "boss_strategy"
+            guide["specificity_label"] = "Tactique adaptée à cette famille ou à ce boss"
+            _quality(guide, 2, "Tactique vérifiée pour ce boss ou cette famille ; la fiche ne prétend pas couvrir chaque phase exhaustive.")
+            _add_sources(guide, [OBJMAP])
     elif category == "epreuves_epee" and item.get("trial_rooms"):
         rooms = item["trial_rooms"]
         guide["prerequisites"] = [
@@ -727,6 +746,30 @@ def build_map_guide(item: dict) -> dict:
              "Position fixe et tactique de famille vérifiées." if item.get("farm") else
              "Position et fonction cartographique vérifiées.")
     if item.get("farm"):
+        detail = item.get("boss_detail")
+        if detail:
+            guide["prerequisites"] = detail["requirements"]
+            guide["preparation"] = detail["preparation"]
+            guide["detailed_steps"] = [
+                f"Rejoins X {item.get('x', 0):.1f}, Z {item.get('z', 0):.1f}.",
+                *detail["steps"],
+                "Ramasse les matériaux ; ce point réapparaît après une lune de sang.",
+            ]
+            guide["warnings"] = [
+                "Le cochage manuel sert seulement de repère : cet ennemi réapparaît à la lune de sang.",
+                *detail["dangers"],
+            ]
+            guide["rewards"] = detail["rewards"]
+            guide["mechanic"] = f"Point faible : {detail['weak_point']}"
+            guide["boss_profile"] = {
+                "variant": detail["label"], "weak_point": detail["weak_point"],
+                "dangers": detail["dangers"], "scaling": detail.get("scaling"),
+            }
+            guide["specificity"] = "verified_boss_farm"
+            guide["specificity_label"] = "Variante et cycle de combat entièrement documentés"
+            _quality(guide, 3, "Placement, sous-type, phases, point faible, dangers et butin vérifiés.")
+            _add_sources(guide, detail["sources"])
+            return guide
         steps, requirements = _boss_strategy(item)
         if not any(word in _plain(name) for word in ("hinox", "lithorok", "magrok", "cryorok", "moldarquor")):
             family = {

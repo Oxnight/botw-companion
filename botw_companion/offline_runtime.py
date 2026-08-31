@@ -14,6 +14,7 @@ DATA_FILES = (
     "solution_reference.json",
     "korok_reference.json",
     "chest_reference.json",
+    "boss_reference.json",
 )
 WEB_FILES = (
     "index.html",

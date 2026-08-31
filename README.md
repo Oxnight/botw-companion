@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 21**. Elle documente les 1 361 coffres du monde : 443 accès individuels sont confirmés par leurs paramètres ou groupes d’acteurs et 918 méthodes restent volontairement décrites au niveau fiable de leur famille. Elle ajoute aussi le mécanisme et la position intérieure des 42 coffres de donjons, ainsi qu’une carte individuelle pour chacun des 205 coffres physiques répartis dans les 136 sanctuaires. Les données sont recoupées entre BOTW Object Map et les guides Zelda Dungeon, puis intégrées hors ligne sans recopier leurs textes ou leurs images. Elle conserve les solutions des 152 quêtes et des 900 Korogus, l’aperçu du slot, la vue des validations manuelles, le diagnostic gyroscopique partagé par macOS et Windows, la détection Ryujinx/Cemu et les garanties de persistance. L’application fonctionne hors ligne après l’installation ; les liens de sources proposés dans les fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 22**. Elle porte à 1 913 le nombre de fiches de niveau 3 grâce à des stratégies intégrales pour les 13 boss scénarisés, les 84 mini-boss persistants et les 284 points de combat ou de farm. Ses 21 profils vérifiés distinguent notamment chaque variante d’Hinox, Lithorok, Moldarquor, Lynel, Gardien et Nano Gardien, avec préparation, phases, point faible, dangers, récompenses et particularités d’évolution. Elle conserve les solutions détaillées des 152 quêtes, des 900 Korogus, des coffres du monde, des donjons et des sanctuaires, ainsi que l’aperçu du slot, la vue des validations manuelles et le diagnostic gyroscopique partagé par macOS et Windows. Les données sont recoupées entre BOTW Object Map, le Compendium d’Hyrule et les guides Zelda Dungeon, puis intégrées hors ligne sans recopier leurs textes ou leurs images. L’application fonctionne hors ligne après l’installation ; les liens de sources proposés dans les fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -30,6 +30,7 @@ La version actuelle est **0.40.0 alpha 21**. Elle documente les 1 361 coffres du
 * Solutions intégrales hors ligne des 152 quêtes, avec étapes spécifiques, prérequis, récompenses, sources et reprise prudente selon l'état détecté.
 * Solutions hors ligne des 900 Korogus, avec type d’énigme vérifié, étapes adaptées, prérequis, repères croisés et parcours cartographiques disponibles.
 * Solutions hors ligne des coffres : accès individuels lorsque les données le prouvent, méthodes vérifiées par famille dans les autres cas, positions intérieures et mécanismes des sanctuaires et donjons.
+* Stratégies intégrales hors ligne des boss et mini-boss, avec 21 variantes documentées, points faibles, phases, dangers, butins et règles d'évolution des ennemis.
 * Filtres cartographiques et marqueurs hors ligne.
 * Suivi manuel persistant avec vue centralisée, recherche, catégories, accès aux fiches et annulation sécurisée des validations.
 * Planificateur d’itinéraire avec sessions persistantes.
@@ -152,7 +153,7 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.21_Setup.exe
+BOTW_Companion_0.40.0-alpha.22_Setup.exe
 ```
 
 L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.

@@ -10,7 +10,7 @@ from .guides import build_guide
 from .localization import localize_editorial_text
 from .quest_walkthroughs import QUEST_SOURCE_BY_CATEGORY, QUEST_WALKTHROUGHS
 from .resources import (load_cartography_reference, load_catalog,
-                        load_chest_reference,
+                        load_boss_reference, load_chest_reference,
                         load_completion_standard, load_nomenclature_reference,
                         load_runtime_nomenclature_audit, load_solution_reference,
                         load_korok_reference)
@@ -139,6 +139,20 @@ def _apply_solution_reference(catalog: dict) -> dict:
             item["interior_chests"] = copy.deepcopy(source["interior_chests"])
     catalog["chest_solution_audit"] = copy.deepcopy(chest_reference["audit"])
     catalog["chest_solution_sources"] = copy.deepcopy(chest_reference["sources"])
+    boss_reference = load_boss_reference()
+    for group in ("hinoxes", "taluses", "moldugas"):
+        for item in catalog.get(group, []):
+            entry = boss_reference["persistent"][item["id"]]
+            item["subtype"] = entry["subtype"]
+            item["boss_detail"] = copy.deepcopy(boss_reference["strategies"][entry["strategy"]])
+            item["boss_detail"]["strategy_key"] = entry["strategy"]
+    for item in catalog.get("map_layers", []):
+        entry = boss_reference["map_layers"].get(item.get("id"))
+        if entry:
+            item["boss_detail"] = copy.deepcopy(boss_reference["strategies"][entry["strategy"]])
+            item["boss_detail"]["strategy_key"] = entry["strategy"]
+    catalog["boss_solution_audit"] = copy.deepcopy(boss_reference["audit"])
+    catalog["boss_solution_sources"] = copy.deepcopy(boss_reference["sources"])
     stage_by_id = {
         "epreuves-debutant": "beginning",
         "epreuves-moyen": "middle",
@@ -555,7 +569,7 @@ def _enrich_service_names(catalog: dict) -> None:
                 item["x"] - anchor["x"], item["z"] - anchor["z"]))
             distance = round(math.hypot(item["x"] - nearest["x"], item["z"] - nearest["z"]))
             item["technical_name"] = item["name"]
-            item["name"] = f"{label} - près de {nearest['name']}"
+            item["name"] = f"{item.get('subtype') or label} - près de {nearest['name']}"
             item["nearby"] = nearest["name"]
             item["nearby_distance_m"] = distance
 
@@ -1190,6 +1204,30 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
                 for item in items if item.get("categorie") == "coffres_monde"
             } - {None})
         },
+        "boss_scenarises_niveau_3": sum(
+            item.get("categorie") == "bosses_scenarises"
+            and item.get("guide", {}).get("quality_level") == 3
+            for item in items
+        ),
+        "mini_boss_permanents_niveau_3": sum(
+            item.get("categorie") in {"hinox", "talus", "moldarquors"}
+            and item.get("guide", {}).get("specificity") == "verified_boss_variant"
+            for item in items
+        ),
+        "points_combat_farm_niveau_3": sum(
+            item.get("guide", {}).get("specificity") == "verified_boss_farm"
+            for item in map_layers
+        ),
+        "boss_par_variante_documentee": {
+            variant: sum(
+                item.get("guide", {}).get("boss_profile", {}).get("variant") == variant
+                for item in items + map_layers
+            )
+            for variant in sorted({
+                item.get("guide", {}).get("boss_profile", {}).get("variant")
+                for item in items + map_layers
+            } - {None})
+        },
         "points_farm_avec_avertissement_lune_de_sang": sum(
             any("lune de sang" in warning.lower() for warning in item.get("guide", {}).get("warnings", []))
             for item in farm_layers
@@ -1202,6 +1240,7 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
             "BotW Unexplored et Zelda Dungeon pour les correspondances, parcours et contrôles individuels",
             "ObjMap pour les paramètres individuels et groupes d'acteurs des 1 361 coffres du monde",
             "Zelda Dungeon pour les propriétés des coffres et les mécanismes des sanctuaires et donjons",
+            "Compendium d'Hyrule et fiches Zelda Dungeon pour les variantes, points faibles et phases des boss",
         ],
     }
 

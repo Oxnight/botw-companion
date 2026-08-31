@@ -16,12 +16,12 @@ VSVersionInfo(
         [
           StringStruct(u'CompanyName', u'BOTW Companion contributors'),
           StringStruct(u'FileDescription', u'BOTW Companion'),
-          StringStruct(u'FileVersion', u'0.40.0-alpha.21'),
+          StringStruct(u'FileVersion', u'0.40.0-alpha.22'),
           StringStruct(u'InternalName', u'BOTW Companion'),
           StringStruct(u'LegalCopyright', u'Copyright BOTW Companion contributors'),
           StringStruct(u'OriginalFilename', u'BOTW Companion.exe'),
           StringStruct(u'ProductName', u'BOTW Companion'),
-          StringStruct(u'ProductVersion', u'0.40.0-alpha.21')
+          StringStruct(u'ProductVersion', u'0.40.0-alpha.22')
         ]
       )
     ]),
