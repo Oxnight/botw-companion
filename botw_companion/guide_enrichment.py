@@ -12,6 +12,10 @@ SHRINE_INDEX = {
     "name": "Zelda Dungeon - liste et guides des sanctuaires",
     "url": "https://www.zeldadungeon.net/breath-of-the-wild-walkthrough/shrine-locations/",
 }
+CHEST_TYPES = {
+    "name": "Zelda Dungeon - types de coffres",
+    "url": "https://www.zeldadungeon.net/wiki/Treasure_Chest",
+}
 KOROK_INDEX = {
     "name": "Zelda Dungeon - carte des 900 Korogus",
     "url": "https://www.zeldadungeon.net/breath-of-the-wild-walkthrough/korok-seed-locations/",
@@ -475,8 +479,11 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
             guide["interior_map_label"] = item.get("interior_map_label")
             guide["chest_details"] = [
                 {
-                    "number": index,
+                    "number": chest.get("number", index),
                     "content": chest.get("content", "Contenu non identifié"),
+                    "area": chest.get("area"),
+                    "access_label": chest.get("access_label"),
+                    "access": chest.get("access"),
                     "interior_position": {
                         "x": chest.get("x"), "y": chest.get("y"), "z": chest.get("z"),
                     },
@@ -503,6 +510,8 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
              "Mécanique ou famille d'épreuve vérifiée ; le parcours exact reste à confirmer dans le jeu."),
         )
         _add_sources(guide, [SHRINE_INDEX, OBJMAP])
+        if interior_chests:
+            _add_sources(guide, [CHEST_TYPES])
     elif category in {"quetes_principales", "quetes_sanctuaires", "quetes_secondaires"}:
         action, requirements = _quest_action(item.get("name", ""))
         guide["prerequisites"] = requirements
@@ -642,14 +651,33 @@ def enrich_guide(guide: dict, item: dict, category: str) -> dict:
         guide["detailed_steps"] = [f"Rejoins le point exact X {item.get('x', 0):.1f}, Z {item.get('z', 0):.1f}.", "Cherche la lueur au sol, examine-la et laisse la cinématique se terminer."]
         _add_sources(guide, [OBJMAP])
     elif category in {"coffres_monde", "coffres_donjons"}:
-        guide["prerequisites"] = ["Accès à la région ou au donjon concerné"]
-        guide["preparation"] = ["Utiliser Polaris si le coffre est métallique ou immergé", "Vérifier les murs destructibles et les blocs de glace"]
-        guide["detailed_steps"] = [
-            f"Rejoins {('X %.1f, Z %.1f' % (item['x'], item['z'])) if item.get('x') is not None else item.get('secteur') or item.get('section') or 'le secteur indiqué'}.",
+        access = item.get("chest_access", {})
+        requirements = access.get("requirements") or ["Accès à la région ou au donjon concerné"]
+        steps = access.get("steps") or ([access["access"]] if access.get("access") else [])
+        position = (("X %.1f, Y %.1f, Z %.1f" % (item["x"], item.get("y", 0), item["z"]))
+                    if item.get("x") is not None else
+                    item.get("interior_position", {}).get("area") or access.get("area")
+                    or item.get("secteur") or item.get("section") or "le secteur indiqué")
+        guide["prerequisites"] = requirements
+        guide["preparation"] = requirements
+        guide["detailed_steps"] = [f"Rejoins {position}.", *steps,
             f"Ouvre le coffre identifié ; contenu attendu : {item.get('contenu') or 'non renseigné'}.",
             "Sauvegarde puis vérifie que l'élément passe en statut automatique terminé.",
         ]
-        _add_sources(guide, [OBJMAP])
+        guide["mechanic"] = access.get("label") or access.get("access_label") or "Accès au coffre"
+        level = int(access.get("quality", 1))
+        if level == 3:
+            guide["specificity"] = "verified_chest_access"
+            guide["specificity_label"] = "Obstacle ou verrou individuel confirmé"
+            basis = "Position, paramètre ou groupe d'acteurs individuel recoupé avec ObjMap."
+        elif level == 2:
+            guide["specificity"] = "verified_chest_family"
+            guide["specificity_label"] = "Méthode vérifiée pour ce type de coffre ou ce donjon"
+            basis = "Type de coffre ou mécanisme du donjon vérifié ; aucun obstacle non prouvé n'est affirmé."
+        else:
+            basis = "Position et contenu du catalogue."
+        _quality(guide, level, basis)
+        _add_sources(guide, [OBJMAP, CHEST_TYPES, BOSS_INDEX])
     elif category == "compendium":
         guide["prerequisites"] = ["Module appareil photo débloqué"]
         guide["preparation"] = [f"Chercher le sujet dans la section {item.get('section') or 'indiquée'}", "Prévoir des rubis si la photo doit être achetée"]

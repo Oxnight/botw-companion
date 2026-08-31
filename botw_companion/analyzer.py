@@ -10,6 +10,7 @@ from .guides import build_guide
 from .localization import localize_editorial_text
 from .quest_walkthroughs import QUEST_SOURCE_BY_CATEGORY, QUEST_WALKTHROUGHS
 from .resources import (load_cartography_reference, load_catalog,
+                        load_chest_reference,
                         load_completion_standard, load_nomenclature_reference,
                         load_runtime_nomenclature_audit, load_solution_reference,
                         load_korok_reference)
@@ -104,6 +105,40 @@ def _apply_solution_reference(catalog: dict) -> dict:
             }
             for point in points
         ]
+    chest_reference = load_chest_reference()
+    castle_locations = {
+        "Watch Tower": "Tour de guet", "Guards' Chambers": "Quartiers des gardes",
+        "Docks": "Quais", "Lockup": "Geôles", "East Passage": "Passage est",
+        "Second Gatehouse": "Deuxième corps de garde", "First Gatehouse": "Premier corps de garde",
+        "Castle Tower": "Tour du château", "Guards' Chambers Annex": "Annexe des quartiers des gardes",
+        "East Hallway": "Couloir est", "Observation Room Balcony": "Balcon de la salle d'observation",
+        "Stairs": "Escaliers", "Zelda's Room": "Chambre de Zelda", "West Passage": "Passage ouest",
+        "Library": "Bibliothèque", "King's Study": "Cabinet du roi",
+    }
+    for item in catalog.get("world_chests", []):
+        access = chest_reference["world_chests"][str(item["hash"])]
+        item["chest_access"] = copy.deepcopy(access)
+        item["y"] = access["y"]
+        if access.get("location"):
+            item["nearby"] = castle_locations.get(access["location"], access["location"])
+    for item in catalog.get("dungeon_chests", []):
+        access = chest_reference["dungeon_chests"][str(item["hash"])]
+        item["chest_access"] = copy.deepcopy(access)
+        item["interior_position"].update({
+            "area": access["area"], "access_label": access["access_label"],
+            "access": access["access"],
+        })
+    for item in catalog.get("shrine_chests", []):
+        by_hash = {entry["hash"]: entry for entry in chest_reference["shrines"][item["id"]]}
+        for chest in item.get("interior_chests", []):
+            chest.update(copy.deepcopy(by_hash[chest["hash"]]))
+    shrine_chests = {item["id"]: item for item in catalog.get("shrine_chests", [])}
+    for item in catalog.get("shrines", []):
+        source = shrine_chests.get(item.get("id"))
+        if source:
+            item["interior_chests"] = copy.deepcopy(source["interior_chests"])
+    catalog["chest_solution_audit"] = copy.deepcopy(chest_reference["audit"])
+    catalog["chest_solution_sources"] = copy.deepcopy(chest_reference["sources"])
     stage_by_id = {
         "epreuves-debutant": "beginning",
         "epreuves-moyen": "middle",
@@ -1125,6 +1160,36 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
                 "exact_location", "verified_korok_puzzle",
             } for item in items
         ),
+        "coffres_monde_acces_individuel_verifie": sum(
+            item.get("categorie") == "coffres_monde"
+            and item.get("guide", {}).get("specificity") == "verified_chest_access"
+            for item in items
+        ),
+        "coffres_monde_methode_par_famille_verifiee": sum(
+            item.get("categorie") == "coffres_monde"
+            and item.get("guide", {}).get("specificity") == "verified_chest_family"
+            for item in items
+        ),
+        "coffres_donjons_position_interieure_et_mecanisme": sum(
+            item.get("categorie") == "coffres_donjons"
+            and bool(item.get("interior_position", {}).get("access"))
+            for item in items
+        ),
+        "coffres_physiques_sanctuaires_documentes": sum(
+            len(item.get("guide", {}).get("chest_details", []))
+            for item in items if item.get("categorie") == "coffres_sanctuaires"
+        ),
+        "coffres_par_type_acces": {
+            kind: sum(
+                item.get("categorie") == "coffres_monde"
+                and item.get("chest_access", {}).get("kind") == kind
+                for item in items
+            )
+            for kind in sorted({
+                item.get("chest_access", {}).get("kind")
+                for item in items if item.get("categorie") == "coffres_monde"
+            } - {None})
+        },
         "points_farm_avec_avertissement_lune_de_sang": sum(
             any("lune de sang" in warning.lower() for warning in item.get("guide", {}).get("warnings", []))
             for item in farm_layers
@@ -1135,6 +1200,8 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
             "Index de solutions de sanctuaires pour le contrôle des mécanismes",
             "BOTW Object Map pour les 33 types d'énigmes des 900 Korogus",
             "BotW Unexplored et Zelda Dungeon pour les correspondances, parcours et contrôles individuels",
+            "ObjMap pour les paramètres individuels et groupes d'acteurs des 1 361 coffres du monde",
+            "Zelda Dungeon pour les propriétés des coffres et les mécanismes des sanctuaires et donjons",
         ],
     }
 

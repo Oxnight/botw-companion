@@ -13,6 +13,7 @@ DATA_FILES = (
     "hashes.json",
     "solution_reference.json",
     "korok_reference.json",
+    "chest_reference.json",
 )
 WEB_FILES = (
     "index.html",

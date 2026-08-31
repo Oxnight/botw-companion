@@ -570,6 +570,24 @@
     gap: 3px;
 }
 
+.interiorPoints em {
+    color: var(--gold);
+    display: block;
+    font-size: .72rem;
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: .05em;
+    margin-top: .42rem;
+    text-transform: uppercase;
+}
+
+.interiorPoints p {
+    color: var(--muted);
+    font-size: .82rem;
+    line-height: 1.45;
+    margin: .22rem 0 0;
+}
+
 .interiorPoints small,
 .interiorNote {
     color: var(--muted);

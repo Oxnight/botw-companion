@@ -178,14 +178,21 @@ def _chest(item: dict, category: str) -> dict:
     done = item.get("termine", False)
     content = item.get("contenu") or "contenu non identifié"
     sector = item.get("secteur") or item.get("section") or "secteur non précisé"
-    position = _position(item) if item.get("x") is not None else f"Explore {sector}."
+    access = item.get("chest_access", {})
+    interior = item.get("interior_position", {})
+    position = (_position(item) if item.get("x") is not None else
+                interior.get("area") or access.get("area") or f"Explore {sector}.")
+    access_steps = access.get("steps") or ([access["access"]] if access.get("access") else [])
     steps = [
         _step("Rejoindre le coffre", position, _state(done, not done)),
+        *[_step(access.get("label") or access.get("access_label") or "Résoudre l'accès", instruction,
+                _state(done, not done)) for instruction in access_steps],
         _step("Ouvrir le coffre", f"Ouvre ce coffre contenant : {content}.", _state(done, not done)),
         _step("Enregistrer l'ouverture", "Effectue une sauvegarde après l'ouverture.", _state(done)),
     ]
-    return _base(item, category, f"Coffre persistant de {sector}. Contenu : {content}.",
-                 "Rejoins sa position et ouvre-le.",
+    location = f" près de {item['nearby']}" if item.get("nearby") else ""
+    return _base(item, category, f"Coffre persistant de {sector}{location}. Contenu : {content}.",
+                 access_steps[0] if access_steps else "Rejoins sa position et ouvre-le.",
                  "Le flag persistant propre à ce coffre doit être présent.", steps,
                  warnings=["Seuls les coffres possédant un flag permanent peuvent être prouvés automatiquement."])
 

@@ -781,12 +781,12 @@ function controllerVidPid(controller) {
 
 function dsuMetric(value, digits = 1, suffix = "") {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? `${numeric.toFixed(digits)}${suffix}` : "—";
+    return Number.isFinite(numeric) ? `${numeric.toFixed(digits)}${suffix}` : "-";
 }
 
 function dsuCounter(value) {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "—";
+    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "-";
 }
 
 function renderDsuDiagnostic(state) {
@@ -806,23 +806,23 @@ function renderDsuDiagnostic(state) {
         : dsuMetric(telemetry.sent_hz, 1, " Hz");
     $("#dsuSampleAge").textContent = dsuMetric(telemetry.sample_age_ms, 1, " ms");
     $("#dsuReceivedJitter").textContent = telemetry.received_jitter_mean_ms === undefined
-        ? "—"
+        ? "-"
         : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuSentJitter").textContent = telemetry.sent_jitter_mean_ms === undefined
-        ? "—"
+        ? "-"
         : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuTimestampErrors").textContent = telemetry.duplicate_timestamps === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.duplicate_timestamps)} doublons • ${dsuCounter(telemetry.regressive_timestamps)} régressifs`;
     $("#dsuSentPackets").textContent = dsuCounter(telemetry.sent_packets);
     $("#dsuNetworkErrors").textContent = telemetry.send_errors === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} requêtes invalides`;
     $("#dsuReconnects").textContent = telemetry.disconnects === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.disconnects)} / ${dsuCounter(telemetry.reconnects)}`;
     $("#dsuCalibrations").textContent = telemetry.calibrations_valid === undefined
-        ? "—"
+        ? "-"
         : `${dsuCounter(telemetry.calibrations_valid)} / ${dsuCounter(telemetry.calibrations_rejected)}`;
 }
 
@@ -2794,6 +2794,8 @@ function renderDetails(x) {
             ? `<div class="detailSection"><h3>${geo.length > 1 ? "Étapes et localisations" : "Localisation"}</h3><div class="geoPoints">${geo.map((p, i) => `<article class="geoPoint"><div><b>${esc(p.label)}</b><small>${esc(p.nearby ? `Près de ${p.nearby}${p.nearby_distance_m != null ? ` • environ ${p.nearby_distance_m} m` : ""}` : "Coordonnées du monde")}</small><span>X ${Number(p.x).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</span></div><div class="geoActions"><button data-geo-center="${i}">Carte</button><button data-geo-copy="${i}">Copier</button><a href="https://objmap.zeldamods.org/#/map/z6,${p.x},${p.z}" target="_blank" rel="noreferrer">ObjMap ↗</a></div></article>`).join("")}</div></div>`
             : "";
 
+    const guide = x.guide;
+
     const interiorPoints =
         x.interior_chests ||
         (
@@ -2804,10 +2806,8 @@ function renderDetails(x) {
 
     const interiorBlock =
         interiorPoints.length
-            ? `<div class="detailSection interiorCard"><h3>${esc(x.interior_map_label || "Carte intérieure")}</h3><p>${interiorPoints.length} coffre${interiorPoints.length > 1 ? 's' : ''} physique${interiorPoints.length > 1 ? 's' : ''} référencé${interiorPoints.length > 1 ? 's' : ''} dans les données du jeu.</p><div class="interiorPoints">${interiorPoints.map((p, i) => `<article><span>${i + 1}</span><div><b>${esc(p.content || x.contenu || "Coffre")}</b><small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small></div></article>`).join("")}</div><small class="interiorNote">Ces coordonnées appartiennent à ${esc(x.interior_map)} : elles ne sont volontairement pas superposées à la carte d'Hyrule.</small></div>`
+            ? `<div class="detailSection interiorCard"><h3>${esc(x.interior_map_label || "Carte intérieure")}</h3><p>${interiorPoints.length} coffre${interiorPoints.length > 1 ? 's' : ''} physique${interiorPoints.length > 1 ? 's' : ''} référencé${interiorPoints.length > 1 ? 's' : ''} dans les données du jeu.</p><div class="interiorPoints">${interiorPoints.map((p, i) => { const detail = guide?.chest_details?.[i] || p; return `<article><span>${detail.number || i + 1}</span><div><b>${esc(p.content || x.contenu || "Coffre")}</b>${detail.area ? `<small>${esc(detail.area)}</small>` : `<small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small>`}${detail.access_label ? `<em>${esc(detail.access_label)}</em>` : ""}${detail.access ? `<p>${esc(detail.access)}</p>` : ""}</div></article>`; }).join("")}</div><small class="interiorNote">Ces coordonnées appartiennent à ${esc(x.interior_map)} : elles ne sont volontairement pas superposées à la carte d'Hyrule.</small></div>`
             : "";
-
-    const guide = x.guide;
 
     const stateLabels = {
         termine: "Terminé",
