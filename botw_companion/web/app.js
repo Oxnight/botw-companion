@@ -588,12 +588,115 @@ function bloodMoonDuration(seconds) {
     return `${Math.max(1, minutes)} min`;
 }
 
+const BLOOD_MOON_VISUAL_THRESHOLDS = [
+    10, 20, 30, 40, 50, 60,
+    70, 80, 90, 95, 100
+];
+
+function updateBloodMoonVisual(panel, moon) {
+    if (!panel) return;
+
+    const rawProgress = Number(moon?.timer_progress_percent),
+        scheduled =
+            Boolean(moon?.scheduled) ||
+            moon?.status === "scheduled",
+        available = Boolean(moon?.available),
+
+        progress =
+            available && Number.isFinite(rawProgress)
+                ? Math.max(
+                    0,
+                    Math.min(100, rawProgress)
+                )
+                : 0,
+
+        visualProgress = scheduled
+            ? 100
+            : progress,
+
+        normalized = visualProgress / 100,
+
+        rise = 100 - visualProgress,
+
+        haloOpacity =
+            .06 + (.84 * normalized),
+
+        maliceOpacity =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    (visualProgress - 24) / 68
+                )
+            ),
+
+        emberOpacity =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    (visualProgress - 68) / 32
+                )
+            ),
+
+        saturation =
+            .72 + (.56 * normalized),
+
+        brightness =
+            .72 + (.32 * normalized);
+
+    panel.style.setProperty(
+        "--moon-progress",
+        visualProgress.toFixed(2)
+    );
+
+    panel.style.setProperty(
+        "--moon-rise",
+        `${rise.toFixed(2)}%`
+    );
+
+    panel.style.setProperty(
+        "--moon-halo-opacity",
+        haloOpacity.toFixed(3)
+    );
+
+    panel.style.setProperty(
+        "--moon-malice-opacity",
+        maliceOpacity.toFixed(3)
+    );
+
+    panel.style.setProperty(
+        "--moon-ember-opacity",
+        emberOpacity.toFixed(3)
+    );
+
+    panel.style.setProperty(
+        "--moon-saturation",
+        saturation.toFixed(3)
+    );
+
+    panel.style.setProperty(
+        "--moon-brightness",
+        brightness.toFixed(3)
+    );
+
+    BLOOD_MOON_VISUAL_THRESHOLDS.forEach(
+        (threshold) => {
+            panel.classList.toggle(
+                `moon-at-least-${threshold}`,
+                visualProgress >= threshold
+            );
+        }
+    );
+}
+
 function renderBloodMoon() {
     const moon = report?.lune_de_sang || {},
         panel = $("#bloodMoonPanel");
 
     panel.classList.toggle(
         "scheduled",
+        Boolean(moon.scheduled) ||
         moon.status === "scheduled"
     );
 
@@ -601,6 +704,8 @@ function renderBloodMoon() {
         "unavailable",
         !moon.available
     );
+
+    updateBloodMoonVisual(panel, moon);
 
     if (!moon.available) {
         $("#bloodMoonCountdown").textContent =

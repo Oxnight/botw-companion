@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 22**. Elle porte à 1 913 le nombre de fiches de niveau 3 grâce à des stratégies intégrales pour les 13 boss scénarisés, les 84 mini-boss persistants et les 284 points de combat ou de farm. Ses 21 profils vérifiés distinguent notamment chaque variante d’Hinox, Lithorok, Moldarquor, Lynel, Gardien et Nano Gardien, avec préparation, phases, point faible, dangers, récompenses et particularités d’évolution. Elle conserve les solutions détaillées des 152 quêtes, des 900 Korogus, des coffres du monde, des donjons et des sanctuaires, ainsi que l’aperçu du slot, la vue des validations manuelles et le diagnostic gyroscopique partagé par macOS et Windows. Les données sont recoupées entre BOTW Object Map, le Compendium d’Hyrule et les guides Zelda Dungeon, puis intégrées hors ligne sans recopier leurs textes ou leurs images. L’application fonctionne hors ligne après l’installation ; les liens de sources proposés dans les fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 23**. Cette révision ne modifie ni l’interface, ni les données de jeu, ni le moteur DSU : elle transforme la version Windows en application autonome distribuable par GitHub Releases. Elle conserve les 1 913 fiches de niveau 3, les stratégies des 13 boss scénarisés, des 84 mini-boss persistants et des 284 points de combat ou de farm, ainsi que toutes les fonctions de l’alpha 22. L’application fonctionne hors ligne après l’installation ; les liens de sources proposés dans les fiches restent naturellement soumis à une connexion Internet.
 
 ## Sommaire
 
@@ -150,15 +150,15 @@ L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la b
 
 ### Application autonome recommandée
 
-Télécharger l'artefact Windows produit par l'automatisation GitHub, puis lancer :
+Télécharger l’installateur depuis la page [GitHub Releases](https://github.com/Oxnight/botw-companion/releases), puis lancer :
 
 ```text
-BOTW_Companion_0.40.0-alpha.22_Setup.exe
+BOTW_Companion_0.40.0-alpha.23_Setup.exe
 ```
 
-L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, le clone Git, Visual Studio et SDL3 ne sont pas requis pour utiliser cette version. L'application apparaît dans le menu Démarrer, dans les applications installées et, si l'option est cochée, sur le Bureau.
+L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, Git, le clone du dépôt, Visual Studio, CMake, Inno Setup et une installation séparée de SDL3 ne sont pas requis. Le runtime Python, les données hors ligne, `JoyConDSU.exe`, `SDL3.dll`, le manifeste DSU, la carte et les icônes sont inclus. L'application apparaît dans le menu Démarrer, dans les applications installées et, par défaut, sur le Bureau.
 
-Cette version alpha n'est pas encore signée. Windows SmartScreen peut donc demander une confirmation ; la signature et le durcissement de la distribution correspondent à l'étape 14 de la roadmap.
+Cette version alpha n'est pas encore signée. Windows SmartScreen peut donc afficher **Windows a protégé votre ordinateur** : vérifier que le fichier vient bien de la page Releases officielle, comparer son SHA-256 avec `SHA256SUMS.txt`, puis choisir **Informations complémentaires > Exécuter quand même** si vous acceptez ce risque.
 
 ### Lanceur depuis un clone de développement
 

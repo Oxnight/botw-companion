@@ -8,10 +8,18 @@ package_root = project_root / "botw_companion"
 dsu_root = package_root / "dsu" / "windows"
 datas = collect_data_files(
     "botw_companion",
-    excludes=["dsu/windows/*"],
+    excludes=[
+        "data/catalog.json",
+        "dsu/JoyConDSU",
+        "dsu/*.sh",
+        "dsu/*.md",
+        "dsu/windows/*",
+    ],
 )
 datas.append((str(project_root / "LICENSE"), "."))
+datas.append((str(project_root / "THIRD_PARTY_NOTICES.md"), "."))
 datas.append((str(dsu_root / "manifest.json"), "botw_companion/dsu/windows"))
+datas.append((str(dsu_root / "SDL3-LICENSE.txt"), "botw_companion/dsu/windows"))
 binaries = [
     (str(dsu_root / "JoyConDSU.exe"), "botw_companion/dsu/windows"),
     (str(dsu_root / "SDL3.dll"), "botw_companion/dsu/windows"),

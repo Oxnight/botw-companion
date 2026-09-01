@@ -1,0 +1,3 @@
+Carte BOTW 24000x20000 utilisée par le projet open source ZeldaMods Object Map.
+Source : https://static.zeldamods.org/botw_map.png
+Projet : https://github.com/zeldamods/objmap

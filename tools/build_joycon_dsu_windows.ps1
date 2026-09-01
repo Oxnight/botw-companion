@@ -28,9 +28,11 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $executable = Join-Path $buildDirectory "Release\JoyConDSU.exe"
 $sdlLibrary = Join-Path $buildDirectory "Release\SDL3.dll"
+$sdlLicense = Join-Path $buildDirectory "_deps\sdl3-src\LICENSE.txt"
 if (-not (Test-Path -LiteralPath $executable -PathType Leaf) -or
-    -not (Test-Path -LiteralPath $sdlLibrary -PathType Leaf)) {
-    Write-Error "La construction n'a pas produit JoyConDSU.exe et SDL3.dll."
+    -not (Test-Path -LiteralPath $sdlLibrary -PathType Leaf) -or
+    -not (Test-Path -LiteralPath $sdlLicense -PathType Leaf)) {
+    Write-Error "La construction n'a pas produit le moteur, SDL3 et sa licence."
     exit 1
 }
 
@@ -38,6 +40,7 @@ New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 New-Item -ItemType Directory -Force -Path $packageDirectory | Out-Null
 Copy-Item -LiteralPath $executable -Destination $outputDirectory -Force
 Copy-Item -LiteralPath $sdlLibrary -Destination $outputDirectory -Force
+Copy-Item -LiteralPath $sdlLicense -Destination (Join-Path $outputDirectory "SDL3-LICENSE.txt") -Force
 
 $manifest = [ordered]@{
     schema_version = 1
@@ -56,5 +59,6 @@ $manifest | ConvertTo-Json | Set-Content `
 Copy-Item -LiteralPath (Join-Path $outputDirectory "JoyConDSU.exe") -Destination $packageDirectory -Force
 Copy-Item -LiteralPath (Join-Path $outputDirectory "SDL3.dll") -Destination $packageDirectory -Force
 Copy-Item -LiteralPath (Join-Path $outputDirectory "manifest.json") -Destination $packageDirectory -Force
+Copy-Item -LiteralPath (Join-Path $outputDirectory "SDL3-LICENSE.txt") -Destination $packageDirectory -Force
 
 Write-Host "Moteur Windows construit dans $outputDirectory" -ForegroundColor Green

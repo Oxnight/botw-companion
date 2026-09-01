@@ -1,9 +1,11 @@
 param(
     [switch]$SkipNative,
-    [switch]$SkipInstaller
+    [switch]$SkipInstaller,
+    [switch]$KeepBuildEnvironment
 )
 
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
     Write-Error "Cette application doit être construite sous Windows 10 ou Windows 11."
@@ -18,7 +20,14 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.22_Setup.exe"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.23_Setup.exe"
+$checksumsPath = Join-Path $installerDirectory "SHA256SUMS.txt"
+
+foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
+    if (Test-Path -LiteralPath $stalePath) {
+        Remove-Item -LiteralPath $stalePath -Recurse -Force
+    }
+}
 
 if (-not $SkipNative) {
     & (Join-Path $projectRoot "tools\build_joycon_dsu_windows.ps1")
@@ -26,7 +35,7 @@ if (-not $SkipNative) {
 }
 
 $dsuDirectory = Join-Path $projectRoot "botw_companion\dsu\windows"
-foreach ($required in @("JoyConDSU.exe", "SDL3.dll", "manifest.json")) {
+foreach ($required in @("JoyConDSU.exe", "SDL3.dll", "manifest.json", "SDL3-LICENSE.txt")) {
     if (-not (Test-Path -LiteralPath (Join-Path $dsuDirectory $required) -PathType Leaf)) {
         Write-Error "Ressource native manquante : $required"
         exit 1
@@ -53,7 +62,7 @@ if (-not (Test-Path -LiteralPath $environmentPython -PathType Leaf)) {
     exit 1
 }
 
-& $environmentPython -m pip install --disable-pip-version-check --quiet "pyinstaller==6.16.0"
+& $environmentPython -m pip install --disable-pip-version-check --quiet "pyinstaller==6.22.2"
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Push-Location $projectRoot
@@ -68,13 +77,16 @@ foreach ($required in @(
     $applicationExecutable,
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\JoyConDSU.exe"),
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3.dll"),
+    (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3-LICENSE.txt"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\catalog_fr_compiled.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\cartography_reference_fr_compiled.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\korok_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\chest_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\boss_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\index.html"),
-    (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp")
+    (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp"),
+    (Join-Path $applicationDirectory "LICENSE"),
+    (Join-Path $applicationDirectory "THIRD_PARTY_NOTICES.md")
 )) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         Write-Error "Paquet incomplet : $required"
@@ -105,9 +117,20 @@ if (-not $SkipInstaller) {
         Write-Error "L'installateur Windows n'a pas été produit."
         exit 1
     }
+    $installerHash = (Get-FileHash -Algorithm SHA256 $installerPath).Hash.ToLowerInvariant()
+    [IO.File]::WriteAllText(
+        $checksumsPath,
+        "$installerHash  $(Split-Path -Leaf $installerPath)`n",
+        [Text.UTF8Encoding]::new($false)
+    )
+}
+
+if (-not $KeepBuildEnvironment -and (Test-Path -LiteralPath $environmentRoot)) {
+    Remove-Item -LiteralPath $environmentRoot -Recurse -Force
 }
 
 Write-Host "Application autonome : $applicationDirectory" -ForegroundColor Green
 if (-not $SkipInstaller) {
     Write-Host "Installateur : $installerPath" -ForegroundColor Green
+    Write-Host "Empreinte : $checksumsPath" -ForegroundColor Green
 }

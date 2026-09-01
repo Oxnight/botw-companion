@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from importlib.resources import files
 import json
 import re
@@ -32,6 +33,46 @@ def _resource(root, relative: str):
     return root.joinpath(*relative.split("/"))
 
 
+def windows_dsu_errors(dsu_root) -> list[str]:
+    """Valide la présence, le format et les empreintes du runtime DSU Windows."""
+    errors = []
+    required = ("JoyConDSU.exe", "SDL3.dll", "manifest.json", "SDL3-LICENSE.txt")
+    for name in required:
+        if not dsu_root.joinpath(name).is_file():
+            errors.append(f"Ressource DSU Windows absente : {name}")
+    manifest_path = dsu_root.joinpath("manifest.json")
+    if not manifest_path.is_file():
+        return errors
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        errors.append(f"Manifeste DSU Windows invalide : {exc}")
+        return errors
+    expected = {
+        "schema_version": 1,
+        "architecture": "x64",
+        "protocol": 1001,
+        "port": 26760,
+    }
+    for key, value in expected.items():
+        if manifest.get(key) != value:
+            errors.append(
+                f"Manifeste DSU Windows incohérent : {key}={manifest.get(key)!r}"
+            )
+    for name, key in (
+        ("JoyConDSU.exe", "executable_sha256"),
+        ("SDL3.dll", "sdl_sha256"),
+    ):
+        resource = dsu_root.joinpath(name)
+        if not resource.is_file():
+            continue
+        actual = hashlib.sha256(resource.read_bytes()).hexdigest()
+        expected_hash = str(manifest.get(key, "")).casefold()
+        if actual != expected_hash:
+            errors.append(f"Empreinte DSU Windows invalide : {name}")
+    return errors
+
+
 def offline_resource_errors(*, windows_dsu: bool = False) -> list[str]:
     """Valide toutes les ressources nécessaires sans effectuer d'accès réseau."""
     data_root = files("botw_companion.data")
@@ -56,9 +97,7 @@ def offline_resource_errors(*, windows_dsu: bool = False) -> list[str]:
             errors.append(f"Manifeste des tuiles invalide : {exc}")
     if windows_dsu:
         dsu_root = files("botw_companion.dsu").joinpath("windows")
-        for name in ("JoyConDSU.exe", "SDL3.dll", "manifest.json"):
-            if not dsu_root.joinpath(name).is_file():
-                errors.append(f"Ressource DSU Windows absente : {name}")
+        errors.extend(windows_dsu_errors(dsu_root))
     return errors
 
 

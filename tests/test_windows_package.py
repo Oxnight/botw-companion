@@ -1,0 +1,115 @@
+import struct
+import unittest
+from pathlib import Path
+
+
+class WindowsPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.windows = cls.root / "windows"
+
+    def test_pyinstaller_uses_one_folder_without_a_console(self):
+        spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
+        self.assertIn("COLLECT(", spec)
+        self.assertIn('name="BOTW Companion"', spec)
+        self.assertIn("console=False", spec)
+        self.assertIn("exclude_binaries=True", spec)
+        self.assertIn("BOTW Companion.ico", spec)
+        self.assertNotIn("onefile", spec.casefold())
+
+    def test_every_required_offline_resource_is_collected(self):
+        spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
+        self.assertIn('collect_data_files(', spec)
+        self.assertIn('"botw_companion"', spec)
+        self.assertIn("JoyConDSU.exe", spec)
+        self.assertIn("SDL3.dll", spec)
+        self.assertIn("manifest.json", spec)
+        self.assertIn("SDL3-LICENSE.txt", spec)
+        self.assertIn("THIRD_PARTY_NOTICES.md", spec)
+
+    def test_installer_is_per_user_and_preserves_personal_data(self):
+        installer = (self.windows / "BOTW Companion.iss").read_text(encoding="utf-8")
+        self.assertIn("PrivilegesRequired=lowest", installer)
+        self.assertIn("{localappdata}\\Programs\\BOTW Companion", installer)
+        self.assertIn("{group}\\BOTW Companion", installer)
+        self.assertIn("{autodesktop}\\BOTW Companion", installer)
+        self.assertIn("Tasks: desktopicon", installer)
+        self.assertIn("UninstallDisplayIcon={app}", installer)
+        self.assertNotIn("[UninstallDelete]", installer)
+        self.assertNotIn("{localappdata}\\BOTW Companion\\manual", installer)
+
+    def test_icon_contains_all_required_windows_sizes(self):
+        icon = (self.windows / "BOTW Companion.ico").read_bytes()
+        reserved, kind, count = struct.unpack_from("<HHH", icon)
+        self.assertEqual((reserved, kind), (0, 1))
+        sizes = set()
+        for index in range(count):
+            width, height = struct.unpack_from("<BB", icon, 6 + index * 16)
+            sizes.add((256 if width == 0 else width, 256 if height == 0 else height))
+        for size in (16, 24, 32, 48, 64, 128, 256):
+            self.assertIn((size, size), sizes)
+
+    def test_build_script_validates_the_standalone_package(self):
+        script = (self.root / "tools" / "build_windows_app.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"pyinstaller==6.22.2"', script)
+        self.assertIn("--package-self-test", script)
+        self.assertIn("cartography_reference_fr_compiled.json", script)
+        self.assertIn("JoyConDSU.exe", script)
+        self.assertIn("SDL3.dll", script)
+        self.assertIn("ISCC", script)
+
+    def test_local_build_produces_and_validates_application_and_installer(self):
+        build = (self.root / "tools" / "build_windows_app.ps1").read_text(
+            encoding="utf-8"
+        )
+        validation = (
+            self.root / "tools" / "test_windows_installation.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("BOTW Companion.spec", build)
+        self.assertIn("BOTW Companion.exe", validation)
+        self.assertIn("Setup.exe", validation)
+        self.assertIn("--package-self-test", validation)
+        self.assertIn("--list-controllers", validation)
+        self.assertIn("/api/version", validation)
+        self.assertIn("/api/shutdown", validation)
+
+    def test_clean_machine_validation_removes_development_tools_from_path(self):
+        script = (self.root / "tools" / "test_windows_installation.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("$env:SystemRoot\\System32;$env:SystemRoot", script)
+        self.assertIn("--package-self-test", script)
+        self.assertIn("/VERYSILENT", script)
+        self.assertIn("donnees-a-conserver.json", script)
+        self.assertNotIn("RunAs", script)
+
+    def test_release_workflow_builds_tests_and_publishes_only_a_tag(self):
+        workflow = (self.root / ".github" / "workflows" / "windows-release.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("windows-2022", workflow)
+        self.assertIn("tools/build_windows_app.ps1", workflow)
+        self.assertIn("tools/test_windows_installation.ps1", workflow)
+        self.assertIn("tools/check_version_consistency.py", workflow)
+        self.assertIn("refs/tags/", workflow)
+        self.assertIn("gh release create", workflow)
+        self.assertIn("--verify-tag", workflow)
+        self.assertIn("SHA256SUMS.txt", workflow)
+
+    def test_browser_suite_covers_the_complete_user_path(self):
+        script = (self.root / "tools" / "browser_smoke.js").read_text(encoding="utf-8")
+        for selector in (
+            "#bloodMoonCountdown", "#syncStatus", "#zoomIn", "#mapReset",
+            "#manualComplete", "#detailRoute", "#closeDetails", "#toggleRoute",
+            "#routeSessionSelect", "/api/routes/export", "/api/routes/import",
+            "#toggleDsu",
+        ):
+            self.assertIn(selector, script)
+        self.assertIn("width: 390", script)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,5 +1,5 @@
 param(
-    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.22_Setup.exe"
+    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.23_Setup.exe"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,6 +16,8 @@ $testRoot = Join-Path $temporaryRoot "BOTW Companion installation test"
 $installRoot = Join-Path $testRoot "Programme autonome"
 $dataRoot = Join-Path $testRoot "Données utilisateur"
 $sentinel = Join-Path $dataRoot "donnees-a-conserver.json"
+$expectedVersion = "0.40.0a23"
+$testPort = 18766
 
 if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
     Write-Error "Installateur introuvable : $resolvedInstaller"
@@ -40,7 +42,23 @@ if ($installer.ExitCode -ne 0) {
 
 $application = Join-Path $installRoot "BOTW Companion.exe"
 $uninstaller = Join-Path $installRoot "unins000.exe"
-foreach ($required in @($application, $uninstaller)) {
+$dsuRoot = Join-Path $installRoot "_internal\botw_companion\dsu\windows"
+$dsuExecutable = Join-Path $dsuRoot "JoyConDSU.exe"
+$sdlLibrary = Join-Path $dsuRoot "SDL3.dll"
+$dsuManifest = Join-Path $dsuRoot "manifest.json"
+$sdlLicense = Join-Path $dsuRoot "SDL3-LICENSE.txt"
+$desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"
+$startMenuShortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\BOTW Companion\BOTW Companion.lnk"
+foreach ($required in @(
+    $application,
+    $uninstaller,
+    $dsuExecutable,
+    $sdlLibrary,
+    $dsuManifest,
+    $sdlLicense,
+    $desktopShortcut,
+    $startMenuShortcut
+)) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         Write-Error "Installation incomplète : $required"
         exit 1
@@ -49,6 +67,7 @@ foreach ($required in @($application, $uninstaller)) {
 
 $originalPath = $env:PATH
 $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
+$server = $null
 try {
     $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
     $env:BOTW_COMPANION_DATA_DIR = $dataRoot
@@ -57,7 +76,53 @@ try {
         Write-Error "L'application installée dépend encore d'un outil de développement externe."
         exit $selfTest.ExitCode
     }
+
+    & $dsuExecutable --list-controllers | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Le moteur JoyConDSU installé ne charge pas SDL3 de manière autonome."
+        exit $LASTEXITCODE
+    }
+
+    $server = Start-Process -FilePath $application -ArgumentList @(
+        "--server",
+        "--port",
+        "$testPort"
+    ) -PassThru
+    $identity = $null
+    for ($attempt = 0; $attempt -lt 120; $attempt++) {
+        if ($server.HasExited) {
+            Write-Error "Le serveur installé s'est arrêté avant de répondre."
+            exit 1
+        }
+        try {
+            $identity = Invoke-RestMethod `
+                -Uri "http://127.0.0.1:$testPort/api/version" `
+                -TimeoutSec 1
+            break
+        } catch {
+            Start-Sleep -Milliseconds 250
+        }
+    }
+    if (-not $identity -or
+        $identity.application -ne "BOTW Companion" -or
+        $identity.version -ne $expectedVersion) {
+        Write-Error "Le serveur installé n'expose pas l'identité attendue."
+        exit 1
+    }
+    Invoke-RestMethod `
+        -Method Post `
+        -Uri "http://127.0.0.1:$testPort/api/shutdown" `
+        -TimeoutSec 2 | Out-Null
+    if (-not $server.WaitForExit(10000)) {
+        $server.Kill()
+        Write-Error "Le serveur installé ne s'arrête pas proprement."
+        exit 1
+    }
 } finally {
+    if ($server -and -not $server.HasExited) {
+        $server.Kill()
+        $server.WaitForExit()
+    }
     $env:PATH = $originalPath
     $env:BOTW_COMPANION_DATA_DIR = $originalDataRoot
 }
@@ -81,4 +146,4 @@ if (-not (Test-Path -LiteralPath $sentinel -PathType Leaf)) {
     exit 1
 }
 
-Write-Host "Installation autonome sans privilèges et conservation des données validées." -ForegroundColor Green
+Write-Host "Installation, raccourcis, runtime Python, serveur et DSU autonomes validés." -ForegroundColor Green

@@ -4,6 +4,8 @@
 
 La distribution recommandée est une application PyInstaller one-folder entourée d'un installateur Inno Setup par utilisateur. Elle embarque Python, toutes les données hors ligne, le moteur `JoyConDSU.exe` et `SDL3.dll`.
 
+Pour jouer, télécharger `BOTW_Companion_0.40.0-alpha.23_Setup.exe` et `SHA256SUMS.txt` depuis la page [GitHub Releases](https://github.com/Oxnight/botw-companion/releases). Aucun clone et aucun environnement de développement ne sont nécessaires.
+
 Pour construire l'ensemble sous Windows x64 :
 
 ```powershell
@@ -16,12 +18,13 @@ Livrables :
 
 ```text
 dist\BOTW Companion\BOTW Companion.exe
-dist\installer\BOTW_Companion_0.40.0-alpha.22_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.23_Setup.exe
+dist\installer\SHA256SUMS.txt
 ```
 
-L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer, propose le raccourci Bureau et laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
+L'installateur cible `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le menu Démarrer et, par défaut, le raccourci Bureau. Il laisse toutes les données personnelles dans `%LOCALAPPDATA%\BOTW Companion`.
 
-Le workflow Windows teste aussi une installation silencieuse dans un dossier contenant des espaces, retire Python, Git, uv, les compilateurs et SDL du `PATH`, exécute l’auto-test du paquet, désinstalle l’application et vérifie que les données personnelles sont conservées. La matrice complète se trouve dans `windows/TESTING.md`.
+Le workflow Windows teste aussi une installation silencieuse dans un dossier contenant des espaces, retire Python, Git, uv, les compilateurs et SDL du `PATH`, exécute l’auto-test du paquet, charge le moteur DSU, démarre réellement le serveur et interroge son API, contrôle les deux raccourcis, désinstalle l’application et vérifie que les données personnelles sont conservées. La matrice complète se trouve dans `windows/TESTING.md`.
 
 ## Lanceur d'un clone
 

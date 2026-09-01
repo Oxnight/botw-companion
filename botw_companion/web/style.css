@@ -262,6 +262,12 @@ input {
     outline: none
 }
 
+#location,
+#variant,
+#region {
+    height: 42px;
+}
+
 .toolbar input:focus {
     border-color: #4d756f
 }

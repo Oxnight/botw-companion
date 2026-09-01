@@ -1,5 +1,5 @@
 #define MyAppName "BOTW Companion"
-#define MyAppVersion "0.40.0-alpha.22"
+#define MyAppVersion "0.40.0-alpha.23"
 #define MyAppExeName "BOTW Companion.exe"
 
 [Setup]
@@ -13,25 +13,28 @@ DefaultGroupName=BOTW Companion
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=..\dist\installer
-OutputBaseFilename=BOTW_Companion_0.40.0-alpha.22_Setup
+OutputBaseFilename=BOTW_Companion_0.40.0-alpha.23_Setup
 SetupIconFile=BOTW Companion.ico
+LicenseFile=..\LICENSE
 UninstallDisplayIcon={app}\{#MyAppExeName}
+UninstallDisplayName={#MyAppName} {#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
+MinVersion=10.0.17763
 CloseApplications=force
 RestartApplications=no
-VersionInfoVersion=0.40.0.22
-VersionInfoProductVersion=0.40.0.22
+VersionInfoVersion=0.40.0.23
+VersionInfoProductVersion=0.40.0.23
 VersionInfoDescription=Installateur BOTW Companion
 
 [Languages]
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"; GroupDescription: "Raccourcis supplémentaires :"; Flags: unchecked
+Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"; GroupDescription: "Raccourcis supplémentaires :"; Flags: checkedonce
 
 [Files]
 Source: "..\dist\BOTW Companion\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs

@@ -250,9 +250,9 @@ def load_save(path: Path | str | None = None) -> tuple[SaveSlot, dict[str, objec
 def identify_platform_data(data: bytes) -> str:
     marker = data[4:12]
     if marker == b"\xff\xff\xff\xff\x01\x00\x00\x00":
-        return "Nintendo Switch / Ryujinx (little-endian)"
+        return "Nintendo Switch / Ryujinx"
     if marker == b"\xff\xff\xff\xff\x00\x00\x00\x01":
-        return "Wii U / Cemu (big-endian)"
+        return "Wii U / Cemu"
     return "format inconnu"
 
 
