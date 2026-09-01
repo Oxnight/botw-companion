@@ -19,7 +19,7 @@ class FrenchLocalizationTests(unittest.TestCase):
         import json
         from importlib.resources import files
         localized = load_catalog()
-        raw = json.loads(files("botw_companion.data").joinpath("catalog.json").read_text())
+        raw = json.loads(files("botw_companion.data").joinpath("catalog.json").read_text(encoding="utf-8"))
         for group in ("shrines", "main_quests", "side_quests", "compendium", "armor_owned"):
             self.assertEqual([x.get("id") for x in localized[group]], [x.get("id") for x in raw[group]])
             self.assertEqual([x.get("flag") for x in localized[group]], [x.get("flag") for x in raw[group]])
@@ -44,7 +44,7 @@ class FrenchLocalizationTests(unittest.TestCase):
                          "Réveiller Marlon")
         import json
         from importlib.resources import files
-        raw = json.loads(files("botw_companion.data").joinpath("catalog.json").read_text())
+        raw = json.loads(files("botw_companion.data").joinpath("catalog.json").read_text(encoding="utf-8"))
         self.assertEqual(catalog["map_layers"][0]["id"], raw["map_layers"][0]["id"])
         self.assertEqual(catalog["map_layers"][0]["acteur"], raw["map_layers"][0]["acteur"])
 

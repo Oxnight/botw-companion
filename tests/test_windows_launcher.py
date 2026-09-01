@@ -155,10 +155,11 @@ class WindowsLauncherTests(unittest.TestCase):
             {"save_path": "D:/Ryujinx/save"},
             frozen=True,
         )
-        self.assertEqual(command[:2], [
-            "C:/Programs/BOTW Companion/BOTW Companion.exe",
-            "--server",
-        ])
+        self.assertEqual(
+            Path(command[0]),
+            Path("C:/Programs/BOTW Companion/BOTW Companion.exe"),
+        )
+        self.assertEqual(command[1], "--server")
         self.assertIn("--save-path", command)
         self.assertIn("D:/Ryujinx/save", command)
         self.assertIn("--arreter-avec-ryujinx", command)

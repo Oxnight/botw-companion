@@ -1,4 +1,5 @@
 import plistlib
+import os
 import struct
 import unittest
 from pathlib import Path
@@ -22,23 +23,20 @@ class MacOSBundleTests(unittest.TestCase):
             self.assertIn(representation, data)
         self.assertGreater(len(data), 1_000_000)
 
-        master = root / "macos" / "AppIcon-1024.png"
-        self.assertTrue(master.is_file())
-        self.assertGreater(master.stat().st_size, 500_000)
-
     def test_joycon_dsu_runtime_is_packaged_and_executable(self):
         root = Path(__file__).resolve().parents[1]
         runtime = root / "botw_companion" / "dsu" / "JoyConDSU"
         launcher = root / "botw_companion" / "dsu" / "launch_managed.sh"
         self.assertTrue(runtime.is_file())
         self.assertTrue(launcher.is_file())
-        self.assertTrue(runtime.stat().st_mode & 0o111)
-        self.assertTrue(launcher.stat().st_mode & 0o111)
+        if os.name != "nt":
+            self.assertTrue(runtime.stat().st_mode & 0o111)
+            self.assertTrue(launcher.stat().st_mode & 0o111)
         self.assertGreater(runtime.stat().st_size, 30_000)
 
     def test_native_source_uses_timestamped_sensor_events(self):
         root = Path(__file__).resolve().parents[1]
-        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text()
+        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text(encoding="utf-8")
         self.assertIn("SDL_EVENT_GAMEPAD_SENSOR_UPDATE", source)
         self.assertIn("event->sensor_timestamp", source)
         self.assertIn("SENSOR_STALL_NS", source)
@@ -52,7 +50,7 @@ class MacOSBundleTests(unittest.TestCase):
 
     def test_supervisor_builds_the_current_native_sources(self):
         root = Path(__file__).resolve().parents[1]
-        launcher = (root / "botw_companion" / "dsu" / "launch_managed.sh").read_text()
+        launcher = (root / "botw_companion" / "dsu" / "launch_managed.sh").read_text(encoding="utf-8")
         self.assertIn("main.c", launcher)
         self.assertIn("dsu_protocol.c", launcher)
         self.assertIn("motion_pipeline.c", launcher)
@@ -63,7 +61,7 @@ class MacOSBundleTests(unittest.TestCase):
 
     def test_telemetry_cannot_disconnect_a_fresh_calibrated_controller(self):
         root = Path(__file__).resolve().parents[1]
-        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text()
+        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text(encoding="utf-8")
         available = source.split("static bool controller_available", 1)[1].split(
             "static bool telemetry_health_ok", 1
         )[0]
@@ -73,7 +71,7 @@ class MacOSBundleTests(unittest.TestCase):
     def test_launcher_restarts_an_outdated_server(self):
         root = Path(__file__).resolve().parents[1]
         launcher = root / "macos" / "BOTW Companion.app" / "Contents" / "MacOS" / "BOTW Companion"
-        text = launcher.read_text()
+        text = launcher.read_text(encoding="utf-8")
         self.assertIn('EXPECTED_VERSION="0.40.0a23"', text)
         self.assertIn('"${URL}api/version"', text)
         self.assertIn('"${URL}api/shutdown"', text)

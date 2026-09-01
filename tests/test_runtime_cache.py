@@ -12,7 +12,7 @@ from botw_companion.resources import (load_catalog,
 class RuntimeCacheTests(unittest.TestCase):
     def test_compiled_french_catalog_is_exactly_equivalent_to_sources(self):
         raw = json.loads(
-            files("botw_companion.data").joinpath("catalog.json").read_text()
+            files("botw_companion.data").joinpath("catalog.json").read_text(encoding="utf-8")
         )
         self.assertEqual(load_catalog(), localize_catalog(raw))
 
@@ -24,7 +24,7 @@ class RuntimeCacheTests(unittest.TestCase):
 
     def test_compiled_french_cartography_is_exactly_equivalent_to_sources(self):
         raw = json.loads(
-            files("botw_companion.data").joinpath("cartography_reference.json").read_text()
+            files("botw_companion.data").joinpath("cartography_reference.json").read_text(encoding="utf-8")
         )
         self.assertEqual(load_cartography_reference(), localize_catalog(raw))
 

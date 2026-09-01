@@ -137,12 +137,12 @@ class PlatformTests(unittest.TestCase):
         self.assertEqual(windows["shortcut_modifier"], "Ctrl")
         self.assertIn("raccourci Windows", windows["relaunch_hint"])
         self.assertEqual(
-            windows["data_directory"],
-            "C:/Users/Link/AppData/Local/BOTW Companion",
+            Path(windows["data_directory"]),
+            Path("C:/Users/Link/AppData/Local/BOTW Companion"),
         )
         self.assertEqual(
-            windows["dsu_log_path"],
-            "C:/Users/Link/AppData/Local/BOTW Companion/joycon-dsu.log",
+            Path(windows["dsu_log_path"]),
+            Path("C:/Users/Link/AppData/Local/BOTW Companion/joycon-dsu.log"),
         )
 
         macos = platform_metadata(

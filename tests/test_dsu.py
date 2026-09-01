@@ -256,7 +256,7 @@ class DsuManagerTests(unittest.TestCase):
 
     def test_supervisor_explicitly_launches_the_arm64_binary(self):
         launcher = Path(__file__).resolve().parents[1] / "botw_companion" / "dsu" / "launch_managed.sh"
-        text = launcher.read_text()
+        text = launcher.read_text(encoding="utf-8")
         self.assertIn('/usr/bin/arch -arm64 "$RUNTIME"', text)
         self.assertIn("motion_pipeline.c", text)
         self.assertIn("/usr/bin/xcrun --sdk macosx --find clang", text)

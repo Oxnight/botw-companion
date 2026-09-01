@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 import os
 from pathlib import Path
@@ -19,7 +19,11 @@ def _iso_now() -> str:
 
 
 def _iso_timestamp(value: float) -> str:
-    return datetime.fromtimestamp(value).astimezone().isoformat(timespec="seconds")
+    # Avoid the platform-dependent C ``localtime`` conversion used by
+    # ``datetime.fromtimestamp``.  In particular, Windows rejects some small
+    # timestamps that are valid in BOTW test saves.
+    instant = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=value)
+    return instant.astimezone().isoformat(timespec="seconds")
 
 def _botw_save_time(value: float) -> str:
     return datetime.fromtimestamp(

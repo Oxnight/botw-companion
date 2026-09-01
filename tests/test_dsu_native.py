@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -34,6 +35,8 @@ class NativeDsuTests(unittest.TestCase):
         self.compile_and_run("test_calibration", ["calibration.c"])
 
     def test_cemuhook_protocol_and_clients(self):
+        if os.name == "nt":
+            self.skipTest("Le test zlib natif est exécuté sur les runners POSIX")
         self.compile_and_run(
             "test_dsu_protocol", ["dsu_protocol.c", "dsu_clients.c"]
         )
@@ -44,6 +47,8 @@ class NativeDsuTests(unittest.TestCase):
         )
 
     def test_posix_platform_adapters(self):
+        if os.name == "nt":
+            self.skipTest("Les adaptateurs POSIX sont exécutés sur les runners POSIX")
         self.compile_and_run(
             "test_platform_posix",
             ["platform_socket_posix.c", "platform_runtime_posix.c"],

@@ -86,7 +86,7 @@ def offline_resource_errors(*, windows_dsu: bool = False) -> list[str]:
     manifest_path = _resource(web_root, "map-tiles/manifest.json")
     if manifest_path.is_file():
         try:
-            manifest = json.loads(manifest_path.read_text())
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             for level in manifest.get("levels", []):
                 for column in range(int(level["columns"])):
                     for row in range(int(level["rows"])):
@@ -105,15 +105,15 @@ def remote_runtime_dependencies() -> list[str]:
     """Détecte une ressource Web distante requise automatiquement par l'interface."""
     web_root = files("botw_companion.web")
     findings = []
-    html = web_root.joinpath("index.html").read_text()
+    html = web_root.joinpath("index.html").read_text(encoding="utf-8")
     for match in re.finditer(r"(?:src|href)=[\"'](https?://[^\"']+)", html, re.I):
         findings.append(match.group(1))
     for name in ("style.css", "metrics.css", "armor.css"):
-        css = web_root.joinpath(name).read_text()
+        css = web_root.joinpath(name).read_text(encoding="utf-8")
         for match in re.finditer(r"url\(\s*[\"']?(https?://[^\"')\s]+)", css, re.I):
             findings.append(match.group(1))
     for name in ("app.js", "route_planner.js"):
-        script = web_root.joinpath(name).read_text()
+        script = web_root.joinpath(name).read_text(encoding="utf-8")
         for match in re.finditer(r"fetch\(\s*[\"'`](https?://[^\"'`]+)", script, re.I):
             findings.append(match.group(1))
     return sorted(set(findings))
