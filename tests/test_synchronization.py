@@ -50,7 +50,8 @@ class ReliableSaveSyncTests(unittest.TestCase):
             report = sync.report()
             expected_caption = (slot / "caption.sav").read_bytes()
             expected_game_data = (slot / "game_data.sav").read_bytes()
-        self.assertEqual(report["source"], str(slot))
+            resolved_slot = slot.resolve()
+        self.assertEqual(Path(report["source"]), resolved_slot)
         self.assertEqual(report["timestamp"], 10)
         self.assertEqual(received[0].caption_data, expected_caption)
         self.assertEqual(received[0].game_data, expected_game_data)
@@ -210,8 +211,11 @@ class ReliableSaveSyncTests(unittest.TestCase):
             sync = ReliableSaveSync(root, lambda: calls.append(1) or {"result": len(calls)},
                                     stability_delay=0)
             sync.report()
-            fake_file(slot / "game_data.sav", 11)
-            os.utime(slot / "game_data.sav", None)
+            game_data = slot / "game_data.sav"
+            previous = game_data.stat()
+            fake_file(game_data, 11)
+            changed_time_ns = previous.st_mtime_ns + 5_000_000_000
+            os.utime(game_data, ns=(previous.st_atime_ns, changed_time_ns))
             result = sync.check()
         self.assertTrue(result["changed"])
         self.assertEqual(result["report"]["result"], 2)

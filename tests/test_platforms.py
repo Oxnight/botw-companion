@@ -155,8 +155,8 @@ class PlatformTests(unittest.TestCase):
         self.assertEqual(macos["shortcut_modifier"], "⌘")
         self.assertIn("Dock", macos["relaunch_hint"])
         self.assertEqual(
-            macos["dsu_log_path"],
-            "/Users/link/Library/Application Support/BOTW Companion/joycon-dsu.log",
+            Path(macos["dsu_log_path"]),
+            Path("/Users/link/Library/Application Support/BOTW Companion/joycon-dsu.log"),
         )
 
     def test_windows_process_detection_accepts_both_ryujinx_names(self):
