@@ -732,6 +732,15 @@ aside {
 }
 
 @media(max-width:600px) {
+    .toolbar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .toolbar > * {
+        width: 100%;
+        min-width: 0;
+    }
+
     .guideTitle {
         display: grid;
     }
@@ -1142,10 +1151,19 @@ aside {
 @media(max-width:600px) {
     .routeHeader {
         align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .routeHeader > button {
+        width: 100%;
     }
 
     .routeWorkspace {
         grid-template-columns: 1fr;
+    }
+
+    .routeSessions {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .routeStep {

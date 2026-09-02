@@ -163,10 +163,26 @@ async function runResponsive(browser, baseUrl) {
     sidebar: sidebarBox?.width ?? 0,
     main: contentBox?.width ?? 0
   };
+  const overflowCandidates = await page.evaluate(() =>
+    Array.from(document.body.querySelectorAll("*")).flatMap(element => {
+      if (element.clientWidth <= 0 || element.scrollWidth <= element.clientWidth + 2) return [];
+      const label = element.id
+        ? `#${element.id}`
+        : `${element.tagName.toLowerCase()}${Array.from(element.classList)
+          .slice(0, 2).map(name => `.${name}`).join("")}`;
+      return [`${label}(${element.scrollWidth}/${element.clientWidth})`];
+    }).slice(0, 8));
   assert(measurements.body <= measurements.viewport + 2,
-    `Débordement horizontal responsive : ${measurements.body}px pour ${measurements.viewport}px`);
+    `Débordement horizontal responsive : ${measurements.body}px pour ${measurements.viewport}px; ` +
+    `conteneurs suspects : ${overflowCandidates.join(", ") || "aucun"}`);
   assert(measurements.sidebar > 0 && measurements.main > 0,
     "Les zones principales disparaissent en affichage étroit");
+
+  await page.locator("#toggleRoute").click();
+  await page.waitForFunction(() => !document.querySelector("#routeBody").hidden);
+  const routeWidth = await page.evaluate(() => document.body.scrollWidth);
+  assert(routeWidth <= measurements.viewport + 2,
+    `Le planificateur déborde en affichage étroit : ${routeWidth}px`);
   await context.close();
 }
 

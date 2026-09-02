@@ -11,9 +11,18 @@ if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
     exit 1
 }
 
-$existing = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+$existingCandidates = @(
+    (Get-Command ISCC.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue),
+    (Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"),
+    (Join-Path $env:ProgramFiles "Inno Setup 6\ISCC.exe")
+) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) }
+$existing = $existingCandidates | Select-Object -First 1
 if ($existing) {
-    Write-Host "Inno Setup déjà disponible : $($existing.Source)" -ForegroundColor Green
+    $existingDirectory = Split-Path -Parent $existing
+    if ($env:GITHUB_PATH) {
+        $existingDirectory | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+    }
+    Write-Host "Inno Setup déjà disponible : $existing" -ForegroundColor Green
     exit 0
 }
 

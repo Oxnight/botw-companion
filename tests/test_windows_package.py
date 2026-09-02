@@ -61,6 +61,15 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("SDL3.dll", script)
         self.assertIn("ISCC", script)
 
+    def test_inno_setup_ci_reuses_the_runner_installation(self):
+        script = (self.root / "tools" / "install_inno_setup_ci.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('${env:ProgramFiles(x86)}', script)
+        self.assertIn('$env:ProgramFiles', script)
+        self.assertIn('$env:GITHUB_PATH', script)
+        self.assertIn('Test-Path -LiteralPath $_ -PathType Leaf', script)
+
     def test_local_build_produces_and_validates_application_and_installer(self):
         build = (self.root / "tools" / "build_windows_app.ps1").read_text(
             encoding="utf-8"
@@ -113,8 +122,22 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('getByRole("complementary")', script)
         self.assertIn('getByRole("main")', script)
         self.assertNotIn('querySelector(".sidebar")', script)
+        self.assertIn("conteneurs suspects", script)
+        self.assertIn("Le planificateur déborde", script)
         self.assertIn("<aside>", markup)
         self.assertIn("<main>", markup)
+
+    def test_narrow_layout_cannot_restore_wide_grids(self):
+        styles = (self.root / "botw_companion" / "web" / "armor.css").read_text(
+            encoding="utf-8"
+        )
+        wide_breakpoint = styles.index("@media(max-width:1000px)")
+        narrow_breakpoint = styles.index("@media(max-width:600px)", wide_breakpoint)
+        narrow_rules = styles[narrow_breakpoint:]
+        self.assertIn("grid-template-columns: minmax(0, 1fr);", narrow_rules)
+        self.assertIn(".toolbar > *", narrow_rules)
+        self.assertIn(".routeSessions", narrow_rules)
+        self.assertIn(".routeHeader > button", narrow_rules)
 
 
 if __name__ == "__main__":
