@@ -135,9 +135,16 @@ class WindowsPackageTests(unittest.TestCase):
         narrow_breakpoint = styles.index("@media(max-width:600px)", wide_breakpoint)
         narrow_rules = styles[narrow_breakpoint:]
         self.assertIn("grid-template-columns: minmax(0, 1fr);", narrow_rules)
+        self.assertIn("grid-template-columns: 82px minmax(0, 1fr);", narrow_rules)
+        self.assertIn("header > div:first-child", narrow_rules)
+        self.assertIn("overflow-wrap: anywhere;", narrow_rules)
         self.assertIn(".toolbar > *", narrow_rules)
         self.assertIn(".routeSessions", narrow_rules)
         self.assertIn(".routeHeader > button", narrow_rules)
+        self.assertIn("word-break: break-word", narrow_rules)
+        self.assertIn(".officialMetric label", narrow_rules)
+        self.assertIn(".companionMetric label", narrow_rules)
+        self.assertIn(".metric select", narrow_rules)
 
 
 if __name__ == "__main__":

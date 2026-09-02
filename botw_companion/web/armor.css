@@ -1643,6 +1643,60 @@ aside {
 
 @media(max-width: 600px) {
 
+    header,
+    header > div:first-child,
+    #saveInfo,
+    .hero,
+    .metric {
+        width: 100%;
+    }
+
+    header > div:first-child,
+    #saveInfo,
+    .hero,
+    .hero > *,
+    .metric,
+    .metric > * {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    #saveInfo {
+        overflow-wrap: anywhere;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .hero {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .metric {
+        grid-template-columns: 82px minmax(0, 1fr);
+    }
+
+    .officialMetric label,
+    .companionMetric label {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .metric select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .quick,
+    .quick span {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .quick span {
+        overflow-wrap: anywhere;
+    }
+
     .savePreview {
         grid-template-columns: minmax(118px, 42%) minmax(0, 1fr);
     }

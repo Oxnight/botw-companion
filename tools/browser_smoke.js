@@ -178,6 +178,19 @@ async function runResponsive(browser, baseUrl) {
   assert(measurements.sidebar > 0 && measurements.main > 0,
     "Les zones principales disparaissent en affichage étroit");
 
+  const narrowRegions = await page.locator("header, .hero").evaluateAll(elements =>
+    elements.map(element => ({
+      name: element.tagName.toLowerCase() === "header" ? "header" : ".hero",
+      client: element.clientWidth,
+      scroll: element.scrollWidth
+    })));
+  const overflowingRegion = narrowRegions.find(region => region.scroll > region.client + 2);
+  assert(!overflowingRegion,
+    overflowingRegion
+      ? `${overflowingRegion.name} déborde en affichage étroit : ` +
+        `${overflowingRegion.scroll}px pour ${overflowingRegion.client}px`
+      : "Les régions principales respectent la largeur mobile");
+
   await page.locator("#toggleRoute").click();
   await page.waitForFunction(() => !document.querySelector("#routeBody").hidden);
   const routeWidth = await page.evaluate(() => document.body.scrollWidth);
