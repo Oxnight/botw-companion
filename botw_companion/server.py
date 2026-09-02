@@ -6,6 +6,7 @@ import gzip
 import json
 import re
 import signal
+import sys
 import threading
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
@@ -386,8 +387,9 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 previous_signals[signum] = signal.getsignal(signum)
                 signal.signal(signum, handle_signal)
     url = f"http://127.0.0.1:{port}"
-    print(f"Interface BOTW Companion : {url}")
-    print("Laisse ce terminal ouvert. Ctrl+C pour arrêter.")
+    if sys.stdout is not None:
+        print(f"Interface BOTW Companion : {url}")
+        print("Laisse ce terminal ouvert. Ctrl+C pour arrêter.")
     if open_browser:
         threading.Timer(0.35, lambda: webbrowser.open(url)).start()
     try:

@@ -227,6 +227,9 @@ def launch_server(python: Path, project_root: Path, port: int,
             cleaned = [str(name).strip() for name in names if str(name).strip()]
             if cleaned:
                 environment[env_key] = ";".join(cleaned)
+    if frozen:
+        # Le serveur est une nouvelle instance autonome du même exécutable.
+        environment["PYINSTALLER_RESET_ENVIRONMENT"] = "1"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("ab", buffering=0) as log:
         return popen(

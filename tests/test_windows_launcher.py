@@ -183,6 +183,12 @@ class WindowsLauncherTests(unittest.TestCase):
             ],
         )
 
+    def test_package_self_test_supports_a_windowed_runtime_without_stdio(self):
+        with patch.object(windows_app, "packaged_resource_errors", return_value=[]), \
+                patch.object(windows_app.sys, "stdout", None), \
+                patch.object(windows_app.sys, "stderr", None):
+            self.assertEqual(windows_app.package_self_test(), 0)
+
     def test_launch_server_uses_no_console_and_passes_extra_process_names(self):
         calls = []
         with tempfile.TemporaryDirectory() as temp:
@@ -230,6 +236,7 @@ class WindowsLauncherTests(unittest.TestCase):
         command, options = calls[0]
         self.assertEqual(command[:2], [str(executable), "--server"])
         self.assertTrue(options["creationflags"] & windows_launcher.CREATE_NO_WINDOW)
+        self.assertEqual(options["env"]["PYINSTALLER_RESET_ENVIRONMENT"], "1")
 
     def test_windows_installer_and_shortcut_assets_are_complete(self):
         root = Path(__file__).resolve().parents[1]

@@ -73,6 +73,19 @@ try {
     Pop-Location
 }
 
+# PyInstaller 6 place les fichiers de données du mode onedir dans _internal.
+# Les documents destinés au joueur doivent rester visibles à côté de l'exécutable.
+foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md")) {
+    $documentSource = Join-Path $projectRoot $documentName
+    if (-not (Test-Path -LiteralPath $documentSource -PathType Leaf)) {
+        Write-Error "Document de distribution manquant : $documentSource"
+        exit 1
+    }
+    Copy-Item -LiteralPath $documentSource `
+        -Destination (Join-Path $applicationDirectory $documentName) `
+        -Force
+}
+
 foreach ($required in @(
     $applicationExecutable,
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\JoyConDSU.exe"),

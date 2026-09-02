@@ -11,12 +11,16 @@ class WindowsPackageTests(unittest.TestCase):
 
     def test_pyinstaller_uses_one_folder_without_a_console(self):
         spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
+        entry = (self.root / "windows_entry.py").read_text(encoding="utf-8")
         self.assertIn("COLLECT(", spec)
         self.assertIn('name="BOTW Companion"', spec)
         self.assertIn("console=False", spec)
         self.assertIn("exclude_binaries=True", spec)
         self.assertIn("BOTW Companion.ico", spec)
         self.assertNotIn("onefile", spec.casefold())
+        self.assertIn("sys.stdout is None", entry)
+        self.assertIn("sys.stderr is None", entry)
+        self.assertIn("os.devnull", entry)
 
     def test_every_required_offline_resource_is_collected(self):
         spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
@@ -26,7 +30,6 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("SDL3.dll", spec)
         self.assertIn("manifest.json", spec)
         self.assertIn("SDL3-LICENSE.txt", spec)
-        self.assertIn("THIRD_PARTY_NOTICES.md", spec)
 
     def test_installer_is_per_user_and_preserves_personal_data(self):
         installer = (self.windows / "BOTW Companion.iss").read_text(encoding="utf-8")
@@ -60,6 +63,11 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("JoyConDSU.exe", script)
         self.assertIn("SDL3.dll", script)
         self.assertIn("ISCC", script)
+        self.assertIn('foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md"))', script)
+        self.assertIn("Copy-Item -LiteralPath $documentSource", script)
+        self.assertNotIn('project_root / "LICENSE"', (
+            self.windows / "BOTW Companion.spec"
+        ).read_text(encoding="utf-8"))
 
     def test_inno_setup_ci_reuses_the_runner_installation(self):
         script = (self.root / "tools" / "install_inno_setup_ci.ps1").read_text(
@@ -84,6 +92,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("--list-controllers", validation)
         self.assertIn("/api/version", validation)
         self.assertIn("/api/shutdown", validation)
+        self.assertIn('$applicationLicense = Join-Path $installRoot "LICENSE"', validation)
+        self.assertIn('$thirdPartyNotices = Join-Path $installRoot "THIRD_PARTY_NOTICES.md"', validation)
 
     def test_clean_machine_validation_removes_development_tools_from_path(self):
         script = (self.root / "tools" / "test_windows_installation.ps1").read_text(

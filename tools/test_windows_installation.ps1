@@ -47,6 +47,8 @@ $dsuExecutable = Join-Path $dsuRoot "JoyConDSU.exe"
 $sdlLibrary = Join-Path $dsuRoot "SDL3.dll"
 $dsuManifest = Join-Path $dsuRoot "manifest.json"
 $sdlLicense = Join-Path $dsuRoot "SDL3-LICENSE.txt"
+$applicationLicense = Join-Path $installRoot "LICENSE"
+$thirdPartyNotices = Join-Path $installRoot "THIRD_PARTY_NOTICES.md"
 $desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"
 $startMenuShortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\BOTW Companion\BOTW Companion.lnk"
 foreach ($required in @(
@@ -56,6 +58,8 @@ foreach ($required in @(
     $sdlLibrary,
     $dsuManifest,
     $sdlLicense,
+    $applicationLicense,
+    $thirdPartyNotices,
     $desktopShortcut,
     $startMenuShortcut
 )) {

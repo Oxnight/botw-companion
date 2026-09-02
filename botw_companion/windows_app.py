@@ -13,6 +13,12 @@ def packaged_resource_errors() -> list[str]:
     return [*offline_resource_errors(windows_dsu=True), *remote_runtime_dependencies()]
 
 
+def _console_print(message: str, *, error: bool = False) -> None:
+    stream = sys.stderr if error else sys.stdout
+    if stream is not None:
+        print(message, file=stream)
+
+
 def _server_arguments(argv: list[str]) -> list[str]:
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--server", action="store_true")
@@ -34,11 +40,11 @@ def _server_arguments(argv: list[str]) -> list[str]:
 def package_self_test() -> int:
     missing = packaged_resource_errors()
     if missing:
-        print("Ressources absentes :", file=sys.stderr)
+        _console_print("Ressources absentes :", error=True)
         for path in missing:
-            print(path, file=sys.stderr)
+            _console_print(path, error=True)
         return 1
-    print(f"BOTW Companion {__version__} : paquet Windows complet")
+    _console_print(f"BOTW Companion {__version__} : paquet Windows complet")
     return 0
 
 

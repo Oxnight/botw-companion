@@ -1,3 +1,14 @@
+import os
+import sys
+
+
+# Le bootloader Windows sans console de PyInstaller expose ces flux à None.
+# Plusieurs chemins CLI restent partagés avec l'application autonome.
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w", encoding="utf-8")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w", encoding="utf-8")
+
 from botw_companion.windows_app import main
 
 
