@@ -20,6 +20,14 @@ def fake_file(path: Path, timestamp: int) -> None:
     path.write_bytes(marker + struct.pack(">Ii", HASH, timestamp) + b"\xff\xff\xff\xff")
 
 
+def rewrite_fake_file(path: Path, timestamp: int) -> None:
+    """Rewrite an existing fixture and guarantee a distinct stat signature."""
+    previous = path.stat()
+    fake_file(path, timestamp)
+    changed_time_ns = previous.st_mtime_ns + 5_000_000_000
+    os.utime(path, ns=(previous.st_atime_ns, changed_time_ns))
+
+
 def fake_slot(root: Path, name: str, timestamp: int) -> Path:
     slot = root / name
     slot.mkdir()
@@ -212,10 +220,7 @@ class ReliableSaveSyncTests(unittest.TestCase):
                                     stability_delay=0)
             sync.report()
             game_data = slot / "game_data.sav"
-            previous = game_data.stat()
-            fake_file(game_data, 11)
-            changed_time_ns = previous.st_mtime_ns + 5_000_000_000
-            os.utime(game_data, ns=(previous.st_atime_ns, changed_time_ns))
+            rewrite_fake_file(game_data, 11)
             result = sync.check()
         self.assertTrue(result["changed"])
         self.assertEqual(result["report"]["result"], 2)
@@ -251,7 +256,7 @@ class ReliableSaveSyncTests(unittest.TestCase):
             sync = ReliableSaveSync(root, factory, stability_delay=0)
             sync.report()
             fail["value"] = True
-            fake_file(slot / "game_data.sav", 12)
+            rewrite_fake_file(slot / "game_data.sav", 12)
             result = sync.check(include_report=True)
         self.assertTrue(result["report"]["safe"])
         self.assertEqual(result["synchronisation"]["status"], "erreur_analyse")
