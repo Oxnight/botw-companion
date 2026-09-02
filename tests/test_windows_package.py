@@ -101,6 +101,7 @@ class WindowsPackageTests(unittest.TestCase):
 
     def test_browser_suite_covers_the_complete_user_path(self):
         script = (self.root / "tools" / "browser_smoke.js").read_text(encoding="utf-8")
+        markup = (self.root / "botw_companion" / "web" / "index.html").read_text(encoding="utf-8")
         for selector in (
             "#bloodMoonCountdown", "#syncStatus", "#zoomIn", "#mapReset",
             "#manualComplete", "#detailRoute", "#closeDetails", "#toggleRoute",
@@ -109,6 +110,11 @@ class WindowsPackageTests(unittest.TestCase):
         ):
             self.assertIn(selector, script)
         self.assertIn("width: 390", script)
+        self.assertIn('getByRole("complementary")', script)
+        self.assertIn('getByRole("main")', script)
+        self.assertNotIn('querySelector(".sidebar")', script)
+        self.assertIn("<aside>", markup)
+        self.assertIn("<main>", markup)
 
 
 if __name__ == "__main__":

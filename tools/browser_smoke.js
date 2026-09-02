@@ -147,12 +147,22 @@ async function runResponsive(browser, baseUrl) {
   const page = await context.newPage();
   page.baseUrl = baseUrl;
   await waitForApplication(page);
-  const measurements = await page.evaluate(() => ({
-    viewport: document.documentElement.clientWidth,
-    body: document.body.scrollWidth,
-    sidebar: document.querySelector(".sidebar").getBoundingClientRect().width,
-    main: document.querySelector("main").getBoundingClientRect().width
-  }));
+  const sidebar = page.getByRole("complementary");
+  const content = page.getByRole("main");
+  await Promise.all([sidebar.waitFor(), content.waitFor()]);
+  const [sidebarBox, contentBox, viewportMeasurements] = await Promise.all([
+    sidebar.boundingBox(),
+    content.boundingBox(),
+    page.evaluate(() => ({
+      viewport: document.documentElement.clientWidth,
+      body: document.body.scrollWidth
+    }))
+  ]);
+  const measurements = {
+    ...viewportMeasurements,
+    sidebar: sidebarBox?.width ?? 0,
+    main: contentBox?.width ?? 0
+  };
   assert(measurements.body <= measurements.viewport + 2,
     `Débordement horizontal responsive : ${measurements.body}px pour ${measurements.viewport}px`);
   assert(measurements.sidebar > 0 && measurements.main > 0,

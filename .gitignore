@@ -11,6 +11,9 @@ htmlcov/
 venv/
 env/
 
+# Dépendances Node utilisées uniquement par les tests navigateur
+node_modules/
+
 # PyCharm
 .idea/
 *.iml
