@@ -139,6 +139,9 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("AbortController", script)
         self.assertIn("closeWithTimeout", script)
         self.assertIn('status: "progress"', script)
+        self.assertIn('page.waitForEvent("dialog"', script)
+        self.assertIn("manualCheckbox.evaluate(element => element.click())", script)
+        self.assertNotIn('.uncheck();', script)
         self.assertIn("<aside>", markup)
         self.assertIn("<main>", markup)
 

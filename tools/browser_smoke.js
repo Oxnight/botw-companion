@@ -181,8 +181,25 @@ async function runDesktop(browser, baseUrl, browserName) {
     "L'ouverture d'une fiche depuis les validations manuelles a échoué");
   await page.locator("#closeDetails").click();
   await page.locator("#toggleManualReview").click();
-  page.once("dialog", dialog => dialog.accept());
-  await page.locator(`[data-manual-uncheck="${selectedTrackingId}"]`).uncheck();
+  progress(browserName, "bureau:annulation-manuelle");
+  const manualCheckbox = page.locator(
+    `[data-manual-uncheck="${selectedTrackingId}"]`
+  );
+  const dialogPromise = page.waitForEvent("dialog", {timeout: ACTION_TIMEOUT_MS});
+  // locator.uncheck() attend implicitement une éventuelle navigation. Firefox
+  // peut conserver cette attente après la boîte confirm(), bien qu'aucune
+  // navigation n'existe. Le clic DOM conserve le vrai événement utilisateur et
+  // la vraie confirmation, sans ajouter cette attente de navigation étrangère.
+  const clickPromise = manualCheckbox.evaluate(element => element.click());
+  const dialog = await dialogPromise;
+  const dialogMessage = dialog.message();
+  await dialog.accept();
+  await clickPromise;
+  assert(
+    dialog.type() === "confirm" &&
+      dialogMessage.includes("Annuler la validation manuelle"),
+    `Confirmation inattendue : ${dialogMessage}`
+  );
   await page.waitForFunction(id => manualTracking.entries[id]?.completed === false,
     selectedTrackingId);
   const preservedNote = await page.evaluate(id => manualTracking.entries[id]?.note,
