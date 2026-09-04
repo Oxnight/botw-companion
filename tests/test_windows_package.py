@@ -134,6 +134,11 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertNotIn('querySelector(".sidebar")', script)
         self.assertIn("conteneurs suspects", script)
         self.assertIn("Le planificateur déborde", script)
+        self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS", script)
+        self.assertIn("context.setDefaultTimeout", script)
+        self.assertIn("AbortController", script)
+        self.assertIn("closeWithTimeout", script)
+        self.assertIn('status: "progress"', script)
         self.assertIn("<aside>", markup)
         self.assertIn("<main>", markup)
 

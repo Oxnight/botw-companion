@@ -74,6 +74,10 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn('test "$(uname -m)" = "arm64"', workflow)
         self.assertIn("./tools/build_macos_app.sh", workflow)
         self.assertIn("./tools/test_macos_installation.sh", workflow)
+        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS=120000", workflow)
+        self.assertIn('browser-test-$browser.log', workflow)
+        self.assertIn("stop_server", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
         self.assertIn("gh release create", workflow)
 

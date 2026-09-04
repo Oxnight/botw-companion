@@ -3,6 +3,44 @@
 
 const {chromium, firefox, webkit} = require("playwright");
 
+const ACTION_TIMEOUT_MS = 20000;
+const NAVIGATION_TIMEOUT_MS = 30000;
+const FETCH_TIMEOUT_MS = 10000;
+const RUN_TIMEOUT_MS = Number(process.env.BOTW_BROWSER_TEST_TIMEOUT_MS || 120000);
+let currentStage = "initialisation";
+
+function progress(browserName, stage) {
+  currentStage = stage;
+  console.log(JSON.stringify({status: "progress", browser: browserName, stage}));
+}
+
+async function closeWithTimeout(resource, label, timeout = 10000) {
+  let timer;
+  try {
+    await Promise.race([
+      resource.close(),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`Délai dépassé pendant ${label}`)), timeout);
+      })
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJson(page, url, options = {}) {
+  return page.evaluate(async ({requestUrl, requestOptions, timeout}) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(requestUrl, {...requestOptions, signal: controller.signal});
+      return {ok: response.ok, body: await response.json()};
+    } finally {
+      clearTimeout(timer);
+    }
+  }, {requestUrl: url, requestOptions: options, timeout: FETCH_TIMEOUT_MS});
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -15,8 +53,10 @@ async function waitForApplication(page) {
   null, {timeout: 45000});
 }
 
-async function runDesktop(browser, baseUrl) {
+async function runDesktop(browser, baseUrl, browserName) {
   const context = await browser.newContext({viewport: {width: 1440, height: 900}, acceptDownloads: true});
+  context.setDefaultTimeout(ACTION_TIMEOUT_MS);
+  context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
   const page = await context.newPage();
   page.baseUrl = baseUrl;
   const errors = [];
@@ -24,7 +64,9 @@ async function runDesktop(browser, baseUrl) {
   page.on("response", response => {
     if (response.status() >= 500) errors.push(`${response.status()} ${response.url()}`);
   });
+  progress(browserName, "bureau:chargement");
   await waitForApplication(page);
+  progress(browserName, "bureau:carte");
 
   assert(await page.locator("#routeBody").getAttribute("hidden") !== null,
     "Le planificateur doit être masqué au lancement");
@@ -65,10 +107,9 @@ async function runDesktop(browser, baseUrl) {
   await page.locator("#manualNoteInput").fill("Note conservée après annulation");
   await page.locator("#manualComplete").check();
   await page.waitForFunction(id => Boolean(manualTracking.entries[id]?.completed), selectedTrackingId);
-  const persistedManual = await page.evaluate(async id => {
-    const response = await fetch("/api/manual");
-    return (await response.json()).entries[id]?.completed;
-  }, selectedTrackingId);
+  progress(browserName, "bureau:suivi-manuel");
+  const manualResponse = await fetchJson(page, "/api/manual");
+  const persistedManual = manualResponse.body.entries[selectedTrackingId]?.completed;
   assert(persistedManual === true, "Le suivi manuel n'est pas persisté par l'API");
 
   await page.locator("#detailRoute").click();
@@ -85,19 +126,29 @@ async function runDesktop(browser, baseUrl) {
   await page.locator("#newRouteSession").click();
   await page.waitForFunction(previous =>
     document.querySelectorAll("#routeSessionSelect option").length === previous + 1, sessionCount);
-  const routesRoundTrip = await page.evaluate(async () => {
-    const exported = await (await fetch("/api/routes/export")).json();
+  progress(browserName, "bureau:itineraires");
+  const routesRoundTrip = await page.evaluate(async timeout => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const exportedResponse = await fetch("/api/routes/export", {signal: controller.signal});
+      const exported = await exportedResponse.json();
     const active = exported.sessions[exported.active_session_id];
     const response = await fetch("/api/routes/import", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({session: active, expected_revision: exported.revision})
+        body: JSON.stringify({session: active, expected_revision: exported.revision}),
+        signal: controller.signal
     });
     return response.ok && Object.keys((await response.json()).sessions).length ===
       Object.keys(exported.sessions).length + 1;
-  });
+    } finally {
+      clearTimeout(timer);
+    }
+  }, FETCH_TIMEOUT_MS);
   assert(routesRoundTrip, "L'export/import d'itinéraire ne reproduit pas la session");
 
+  progress(browserName, "bureau:dsu");
   await page.waitForFunction(() => !document.querySelector("#toggleDsu").disabled);
   await page.locator("#toggleDsu").click();
   await page.waitForFunction(() => document.querySelector("#dsuStatus").textContent.includes("prêt"));
@@ -110,6 +161,7 @@ async function runDesktop(browser, baseUrl) {
   await page.locator("#toggleDsu").click();
   await page.waitForFunction(() => document.querySelector("#dsuStatus").textContent === "Désactivé");
 
+  progress(browserName, "bureau:rechargement");
   await page.reload({waitUntil: "domcontentloaded"});
   await page.waitForFunction(id =>
     document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
@@ -138,14 +190,18 @@ async function runDesktop(browser, baseUrl) {
   assert(preservedNote === "Note conservée après annulation",
     "L'annulation centralisée a supprimé la note personnelle");
   if (errors.length) throw new Error(errors.join("\n"));
-  await context.close();
+  progress(browserName, "bureau:fermeture");
+  await closeWithTimeout(context, "la fermeture du contexte bureau");
   return {rendered, manual: true, routes: true, dsu: true};
 }
 
-async function runResponsive(browser, baseUrl) {
+async function runResponsive(browser, baseUrl, browserName) {
   const context = await browser.newContext({viewport: {width: 390, height: 844}});
+  context.setDefaultTimeout(ACTION_TIMEOUT_MS);
+  context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
   const page = await context.newPage();
   page.baseUrl = baseUrl;
+  progress(browserName, "responsive:chargement");
   await waitForApplication(page);
   const sidebar = page.getByRole("complementary");
   const content = page.getByRole("main");
@@ -196,7 +252,8 @@ async function runResponsive(browser, baseUrl) {
   const routeWidth = await page.evaluate(() => document.body.scrollWidth);
   assert(routeWidth <= measurements.viewport + 2,
     `Le planificateur déborde en affichage étroit : ${routeWidth}px`);
-  await context.close();
+  progress(browserName, "responsive:fermeture");
+  await closeWithTimeout(context, "la fermeture du contexte responsive");
 }
 
 (async () => {
@@ -214,12 +271,24 @@ async function runResponsive(browser, baseUrl) {
     webkit: () => webkit.launch({headless: true})
   };
   if (!launchers[target]) throw new Error(`Navigateur inconnu : ${target}`);
+  const watchdog = setTimeout(() => {
+    console.error(JSON.stringify({
+      status: "timeout",
+      browser: target,
+      stage: currentStage,
+      timeout_ms: RUN_TIMEOUT_MS
+    }));
+    process.exit(124);
+  }, RUN_TIMEOUT_MS);
+  progress(target, "lancement");
   const browser = await launchers[target]();
   try {
-    const desktop = await runDesktop(browser, url);
-    await runResponsive(browser, url);
+    const desktop = await runDesktop(browser, url, target);
+    await runResponsive(browser, url, target);
     console.log(JSON.stringify({status: "ok", browser: target, ...desktop, responsive: true}));
   } finally {
-    await browser.close();
+    progress(target, "navigateur:fermeture");
+    await closeWithTimeout(browser, "la fermeture du navigateur");
+    clearTimeout(watchdog);
   }
 })().catch(error => { console.error(error); process.exit(1); });
