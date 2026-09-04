@@ -65,10 +65,10 @@ app = BUNDLE(
     name="BOTW Companion.app",
     icon=str(project_root / "macos" / "BOTW Companion.icns"),
     bundle_identifier="fr.oxnight.botw-companion",
-    version="0.40.0-alpha.24",
+    version="0.40.0",
     info_plist={
         "CFBundleDisplayName": "BOTW Companion",
-        "CFBundleShortVersionString": "0.40.0-alpha.24",
+        "CFBundleShortVersionString": "0.40.0",
         "CFBundleVersion": "24",
         "LSMinimumSystemVersion": "14.0",
         "LSArchitecturePriority": ["arm64"],

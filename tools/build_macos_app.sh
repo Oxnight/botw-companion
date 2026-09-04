@@ -54,14 +54,35 @@ cd "$PROJECT_ROOT"
 
 [[ -d "$APPLICATION" ]] || { echo "L'application macOS n'a pas été produite." >&2; exit 1; }
 PACKAGED_DSU="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/JoyConDSU' -type f -print -quit)"
+PACKAGED_SDL="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/libSDL3.0.dylib' -type f -print -quit)"
 PACKAGED_LAUNCHER="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/launch_managed.sh' -type f -print -quit)"
-[[ -n "$PACKAGED_DSU" && -n "$PACKAGED_LAUNCHER" ]] || {
+PACKAGED_MANIFEST="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/manifest.json' -type f -print -quit)"
+[[ -n "$PACKAGED_DSU" && -n "$PACKAGED_SDL" && -n "$PACKAGED_LAUNCHER" \
+  && -n "$PACKAGED_MANIFEST" ]] || {
   echo "Le moteur DSU n'est pas présent dans l'application." >&2
   exit 1
 }
 /bin/chmod 755 "$PACKAGED_DSU" "$PACKAGED_LAUNCHER"
 
-/usr/bin/codesign --force --deep --sign - "$APPLICATION"
+# PyInstaller signe déjà ses binaires en mode ad hoc. Le moteur ajouté au paquet
+# est néanmoins signé explicitement, de l'intérieur vers l'extérieur. Ne pas
+# utiliser --deep pour signer : --force --deep modifierait à nouveau les binaires
+# après le calcul de leurs empreintes dans le manifeste.
+/usr/bin/codesign --force --sign - "$PACKAGED_SDL"
+/usr/bin/codesign --force --sign - "$PACKAGED_DSU"
+python3 - "$PACKAGED_MANIFEST" "$PACKAGED_DSU" "$PACKAGED_SDL" <<'PY'
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+manifest_path, executable_path, sdl_path = map(Path, sys.argv[1:])
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+manifest["executable_sha256"] = hashlib.sha256(executable_path.read_bytes()).hexdigest()
+manifest["sdl_sha256"] = hashlib.sha256(sdl_path.read_bytes()).hexdigest()
+manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+PY
+/usr/bin/codesign --force --sign - "$APPLICATION"
 /usr/bin/codesign --verify --deep --strict --verbose=2 "$APPLICATION"
 "$APPLICATION/Contents/MacOS/BOTW Companion" --package-self-test
 

@@ -7,6 +7,16 @@ from pathlib import Path
 
 
 class NativeDsuTests(unittest.TestCase):
+    def run_compiler(self, command):
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            self.fail(
+                "Échec du compilateur natif.\n"
+                f"Commande : {' '.join(command)}\n"
+                f"stdout :\n{result.stdout}\n"
+                f"stderr :\n{result.stderr}"
+            )
+
     def compile_and_run(self, test_name, sources):
         compiler = shutil.which("cc") or shutil.which("clang")
         if compiler is None:
@@ -16,17 +26,26 @@ class NativeDsuTests(unittest.TestCase):
         source_root = root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU"
         with tempfile.TemporaryDirectory() as directory:
             executable = Path(directory) / test_name
-            subprocess.run(
-                [
-                    compiler, "-std=c17", "-Wall", "-Wextra", "-Wpedantic",
-                    "-Wconversion", "-Wshadow", "-Werror", f"-I{source_root}",
-                    str(root / "tests" / "native" / f"{test_name}.c"),
-                    *[str(source_root / source) for source in sources],
-                    "-lm", "-lz", "-o", str(executable),
-                ],
-                check=True, capture_output=True, text=True,
-            )
+            self.run_compiler([
+                compiler, "-std=c17", "-Wall", "-Wextra", "-Wpedantic",
+                "-Wconversion", "-Wshadow", "-Werror", f"-I{source_root}",
+                str(root / "tests" / "native" / f"{test_name}.c"),
+                *[str(source_root / source) for source in sources],
+                "-lm", "-lz", "-o", str(executable),
+            ])
             subprocess.run([str(executable)], check=True)
+
+    def test_native_sources_end_with_a_portable_newline(self):
+        root = Path(__file__).resolve().parents[1]
+        paths = [
+            *list((root / "tests" / "native").rglob("*.c")),
+            *list((root / "tests" / "native").rglob("*.h")),
+            *list((root / "third_party" / "JoyConDSU").rglob("*.c")),
+            *list((root / "third_party" / "JoyConDSU").rglob("*.h")),
+        ]
+        missing = [str(path.relative_to(root)) for path in paths
+                   if not path.read_bytes().endswith(b"\n")]
+        self.assertEqual(missing, [])
 
     def test_timestamped_motion_pipeline(self):
         self.compile_and_run("test_motion_pipeline", ["motion_pipeline.c"])
@@ -61,28 +80,23 @@ class NativeDsuTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         source_root = root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU"
         stubs = root / "tests" / "native" / "windows_stubs"
-        subprocess.run(
-            [
-                compiler,
-                "-std=c17",
-                "-Wall",
-                "-Wextra",
-                "-Wpedantic",
-                "-Wconversion",
-                "-Wshadow",
-                "-Werror",
-                "-D_WIN32",
-                f"-I{stubs}",
-                f"-I{source_root}",
-                "-fsyntax-only",
-                str(source_root / "platform_socket_windows.c"),
-                str(source_root / "platform_runtime_windows.c"),
-                str(source_root / "dsu_clients.c"),
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        self.run_compiler([
+            compiler,
+            "-std=c17",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wshadow",
+            "-Werror",
+            "-D_WIN32",
+            f"-I{stubs}",
+            f"-I{source_root}",
+            "-fsyntax-only",
+            str(source_root / "platform_socket_windows.c"),
+            str(source_root / "platform_runtime_windows.c"),
+            str(source_root / "dsu_clients.c"),
+        ])
 
     def test_complete_windows_engine_is_c17_syntax_valid(self):
         compiler = shutil.which("cc") or shutil.which("clang")
@@ -100,26 +114,21 @@ class NativeDsuTests(unittest.TestCase):
                 "platform_runtime_posix.c",
             }
         ]
-        subprocess.run(
-            [
-                compiler,
-                "-std=c17",
-                "-Wall",
-                "-Wextra",
-                "-Wpedantic",
-                "-Wconversion",
-                "-Wshadow",
-                "-Werror",
-                "-D_WIN32",
-                f"-I{stubs}",
-                f"-I{source_root}",
-                "-fsyntax-only",
-                *sources,
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        self.run_compiler([
+            compiler,
+            "-std=c17",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wshadow",
+            "-Werror",
+            "-D_WIN32",
+            f"-I{stubs}",
+            f"-I{source_root}",
+            "-fsyntax-only",
+            *sources,
+        ])
 
 
 if __name__ == "__main__":

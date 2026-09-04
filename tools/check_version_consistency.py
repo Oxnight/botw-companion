@@ -13,6 +13,7 @@ NUMERIC_VERSION = "0.40.0.24"
 RELEASE_TAG = f"v{DISPLAY_VERSION}"
 INSTALLER_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_Setup.exe"
 DMG_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_macOS_arm64.dmg"
+MACOS_BUNDLE_VERSION = "0.40.0"
 
 
 def require(path: Path, pattern: str, description: str) -> str | None:
@@ -34,7 +35,8 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
         (root / "tools" / "build_windows_app.ps1", re.escape(INSTALLER_NAME), "construction Windows"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(INSTALLER_NAME), "test d'installation"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(PEP440_VERSION), "test du serveur installé"),
-        (root / "macos" / "BOTW Companion.spec", re.escape(DISPLAY_VERSION), "application macOS"),
+        (root / "macos" / "BOTW Companion.spec", rf'version="{re.escape(MACOS_BUNDLE_VERSION)}"', "version courte macOS"),
+        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "24"', "numéro de build macOS"),
         (root / "tools" / "build_macos_app.sh", re.escape(DMG_NAME), "construction macOS"),
         (root / "tools" / "test_macos_installation.sh", re.escape(PEP440_VERSION), "test macOS"),
         (root / ".github" / "workflows" / "release.yml", re.escape(RELEASE_TAG), "workflow de publication"),
