@@ -1,0 +1,195 @@
+name: Versions Windows et macOS
+
+on:
+  push:
+    branches: [master]
+    tags: ["v0.40.0-alpha.24"]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Compiler et tester Windows x64
+    runs-on: windows-2022
+    timeout-minutes: 75
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Récupérer les sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Installer Python 3.12 x64
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          architecture: x64
+          cache: pip
+
+      - name: Vérifier la version
+        shell: pwsh
+        run: |
+          $arguments = @("tools/check_version_consistency.py")
+          if ("${{ github.ref }}" -like "refs/tags/*") {
+            $arguments += @("--tag", "${{ github.ref_name }}")
+          }
+          python @arguments
+
+      - name: Tester le code Python et le paquet
+        run: python -m unittest discover -s tests -v
+
+      - name: Préparer les navigateurs
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install firefox
+
+      - name: Tester Chrome, Edge et Firefox
+        shell: pwsh
+        run: ./tools/run_browser_smoke.ps1
+
+      - name: Installer Inno Setup officiel vérifié
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./tools/install_inno_setup_ci.ps1
+
+      - name: Construire l'application et l'installateur
+        shell: pwsh
+        run: ./tools/build_windows_app.ps1
+
+      - name: Tester l'installation autonome
+        shell: pwsh
+        run: ./tools/test_windows_installation.ps1
+
+      - name: Conserver l'installateur Windows
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: BOTW-Companion-0.40.0-alpha.24-Windows-x64
+          path: dist/installer/BOTW_Companion_0.40.0-alpha.24_Setup.exe
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  macos:
+    name: Compiler et tester macOS Apple Silicon
+    runs-on: macos-14
+    timeout-minutes: 75
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+      MACOSX_DEPLOYMENT_TARGET: "14.0"
+    steps:
+      - name: Récupérer les sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Vérifier le runner Apple Silicon
+        shell: bash
+        run: test "$(uname -m)" = "arm64"
+
+      - name: Installer Python 3.12 arm64
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          architecture: arm64
+          cache: pip
+
+      - name: Vérifier la version
+        shell: bash
+        run: |
+          arguments=(tools/check_version_consistency.py)
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            arguments+=(--tag "${{ github.ref_name }}")
+          fi
+          python3 "${arguments[@]}"
+
+      - name: Tester le code Python et le paquet
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Préparer Chromium, Firefox et WebKit
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install chromium firefox webkit
+
+      - name: Tester le site dans les trois moteurs
+        shell: bash
+        run: |
+          python3 tools/browser_test_server.py --port 18765 >browser-test.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in {1..120}; do
+            if curl --silent --fail --max-time 1 http://127.0.0.1:18765/api/version >/dev/null; then
+              ready=1
+              break
+            fi
+            kill -0 "$server_pid"
+            sleep 0.25
+          done
+          if [[ "$ready" != "1" ]]; then
+            cat browser-test.log
+            exit 1
+          fi
+          for browser in chromium firefox webkit; do
+            node tools/browser_smoke.js http://127.0.0.1:18765 "$browser"
+          done
+
+      - name: Construire l'application et le DMG
+        shell: bash
+        run: ./tools/build_macos_app.sh
+
+      - name: Tester le DMG autonome
+        shell: bash
+        run: ./tools/test_macos_installation.sh
+
+      - name: Conserver le DMG Apple Silicon
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: BOTW-Companion-0.40.0-alpha.24-macOS-arm64
+          path: dist/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  publish:
+    name: Publier la préversion GitHub
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Récupérer les sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Télécharger les installateurs validés
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: BOTW-Companion-0.40.0-alpha.24-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Vérifier les deux plateformes
+        shell: bash
+        run: |
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.24_Setup.exe
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg
+
+      - name: Créer la GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${{ github.ref_name }}"
+          release-assets/BOTW_Companion_0.40.0-alpha.24_Setup.exe
+          release-assets/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg
+          --verify-tag
+          --prerelease
+          --title "BOTW Companion v0.40.0-alpha.24"
+          --notes-file RELEASE_NOTES_0.40.0-alpha.24.md

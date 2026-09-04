@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-const {chromium, firefox} = require("playwright");
+const {chromium, firefox, webkit} = require("playwright");
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -210,7 +210,8 @@ async function runResponsive(browser, baseUrl) {
     }),
     chrome: () => chromium.launch({headless: true, channel: "chrome"}),
     edge: () => chromium.launch({headless: true, channel: "msedge"}),
-    firefox: () => firefox.launch({headless: true})
+    firefox: () => firefox.launch({headless: true}),
+    webkit: () => webkit.launch({headless: true})
   };
   if (!launchers[target]) throw new Error(`Navigateur inconnu : ${target}`);
   const browser = await launchers[target]();

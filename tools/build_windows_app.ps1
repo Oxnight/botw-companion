@@ -20,8 +20,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.23_Setup.exe"
-$checksumsPath = Join-Path $installerDirectory "SHA256SUMS.txt"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.24_Setup.exe"
 
 foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
     if (Test-Path -LiteralPath $stalePath) {
@@ -130,12 +129,6 @@ if (-not $SkipInstaller) {
         Write-Error "L'installateur Windows n'a pas été produit."
         exit 1
     }
-    $installerHash = (Get-FileHash -Algorithm SHA256 $installerPath).Hash.ToLowerInvariant()
-    [IO.File]::WriteAllText(
-        $checksumsPath,
-        "$installerHash  $(Split-Path -Leaf $installerPath)`n",
-        [Text.UTF8Encoding]::new($false)
-    )
 }
 
 if (-not $KeepBuildEnvironment -and (Test-Path -LiteralPath $environmentRoot)) {
@@ -145,5 +138,4 @@ if (-not $KeepBuildEnvironment -and (Test-Path -LiteralPath $environmentRoot)) {
 Write-Host "Application autonome : $applicationDirectory" -ForegroundColor Green
 if (-not $SkipInstaller) {
     Write-Host "Installateur : $installerPath" -ForegroundColor Green
-    Write-Host "Empreinte : $checksumsPath" -ForegroundColor Green
 }

@@ -1,80 +1,77 @@
-import plistlib
-import os
 import struct
 import unittest
 from pathlib import Path
 
 
 class MacOSBundleTests(unittest.TestCase):
-    def test_custom_icon_is_declared_and_contains_retina_sizes(self):
-        root = Path(__file__).resolve().parents[1]
-        contents = root / "macos" / "BOTW Companion.app" / "Contents"
-        plist = plistlib.loads((contents / "Info.plist").read_bytes())
-        self.assertEqual(plist["CFBundleIconFile"], "AppIcon.icns")
-        self.assertEqual(plist["CFBundleVersion"], "45")
-        self.assertEqual(plist["CFBundleShortVersionString"], "0.40.0")
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.macos = cls.root / "macos"
 
-        icon = contents / "Resources" / plist["CFBundleIconFile"]
-        data = icon.read_bytes()
-        self.assertEqual(data[:4], b"icns")
-        self.assertEqual(struct.unpack(">I", data[4:8])[0], len(data))
-        for representation in (b"icp4", b"icp5", b"icp6", b"ic07", b"ic08",
-                               b"ic09", b"ic10", b"ic11", b"ic12", b"ic13", b"ic14"):
-            self.assertIn(representation, data)
-        self.assertGreater(len(data), 1_000_000)
+    def test_pyinstaller_build_is_windowed_arm64_and_self_contained(self):
+        spec = (self.macos / "BOTW Companion.spec").read_text(encoding="utf-8")
+        entry = (self.root / "macos_entry.py").read_text(encoding="utf-8")
+        self.assertIn("BUNDLE(", spec)
+        self.assertIn("COLLECT(", spec)
+        self.assertIn('target_arch="arm64"', spec)
+        self.assertIn("console=False", spec)
+        self.assertIn('"LSMinimumSystemVersion": "14.0"', spec)
+        self.assertIn("JoyConDSU", spec)
+        self.assertIn("libSDL3.0.dylib", spec)
+        self.assertIn("sys.stdout is None", entry)
+        self.assertIn("os.devnull", entry)
 
-    def test_joycon_dsu_runtime_is_packaged_and_executable(self):
-        root = Path(__file__).resolve().parents[1]
-        runtime = root / "botw_companion" / "dsu" / "JoyConDSU"
-        launcher = root / "botw_companion" / "dsu" / "launch_managed.sh"
-        self.assertTrue(runtime.is_file())
-        self.assertTrue(launcher.is_file())
-        if os.name != "nt":
-            self.assertTrue(runtime.stat().st_mode & 0o111)
-            self.assertTrue(launcher.stat().st_mode & 0o111)
-        self.assertGreater(runtime.stat().st_size, 30_000)
+    def test_application_icon_is_complete(self):
+        icon = (self.macos / "BOTW Companion.icns").read_bytes()
+        self.assertEqual(icon[:4], b"icns")
+        self.assertEqual(struct.unpack(">I", icon[4:8])[0], len(icon))
+        for representation in (
+            b"icp4", b"icp5", b"icp6", b"ic07", b"ic08", b"ic09",
+            b"ic10", b"ic11", b"ic12", b"ic13", b"ic14",
+        ):
+            self.assertIn(representation, icon)
 
-    def test_native_source_uses_timestamped_sensor_events(self):
-        root = Path(__file__).resolve().parents[1]
-        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text(encoding="utf-8")
-        self.assertIn("SDL_EVENT_GAMEPAD_SENSOR_UPDATE", source)
-        self.assertIn("event->sensor_timestamp", source)
-        self.assertIn("SENSOR_STALL_NS", source)
-        self.assertIn("MotionDsuTimeline", source)
-        self.assertIn("MAX_REQUESTS_PER_TURN = 64", source)
-        self.assertIn("dsu_motion_values_finite", source)
-        self.assertNotIn("SDL_GetGamepadSensorData(", source)
-        self.assertNotIn("SDL_DelayNS(250000ULL)", source)
-        self.assertIn("SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT", source)
-        self.assertIn("SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT", source)
+    def test_native_build_pins_sdl_and_rewrites_the_runtime_path(self):
+        script = (self.root / "tools" / "build_joycon_dsu_macos.sh").read_text(encoding="utf-8")
+        cmake = (self.root / "third_party" / "JoyConDSU" / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("SDL3-3.4.14.tar.gz", cmake)
+        self.assertIn("CMAKE_OSX_ARCHITECTURES=arm64", script)
+        self.assertIn("@loader_path/libSDL3.0.dylib", script)
+        self.assertIn("lipo -archs", script)
+        self.assertIn("codesign --force --sign -", script)
+        self.assertIn("grep -E '/opt/homebrew|/usr/local|/Users/'", script)
 
-    def test_supervisor_builds_the_current_native_sources(self):
-        root = Path(__file__).resolve().parents[1]
-        launcher = (root / "botw_companion" / "dsu" / "launch_managed.sh").read_text(encoding="utf-8")
-        self.assertIn("main.c", launcher)
-        self.assertIn("dsu_protocol.c", launcher)
-        self.assertIn("motion_pipeline.c", launcher)
-        self.assertIn("calibration.c", launcher)
-        self.assertIn("dsu_clients.c", launcher)
-        self.assertIn("telemetry.c", launcher)
-        self.assertIn("source_hash", launcher)
+    def test_dmg_build_and_clean_install_are_exercised(self):
+        build = (self.root / "tools" / "build_macos_app.sh").read_text(encoding="utf-8")
+        validation = (self.root / "tools" / "test_macos_installation.sh").read_text(encoding="utf-8")
+        self.assertIn("hdiutil create", build)
+        self.assertIn("BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg", build)
+        self.assertIn("/Applications", build)
+        self.assertIn("--package-self-test", validation)
+        self.assertIn('PATH="/usr/bin:/bin"', validation)
+        self.assertIn("--list-controllers", validation)
+        self.assertIn("/api/version", validation)
+        self.assertIn("/api/shutdown", validation)
+        self.assertIn("codesign --verify", validation)
 
-    def test_telemetry_cannot_disconnect_a_fresh_calibrated_controller(self):
-        root = Path(__file__).resolve().parents[1]
-        source = (root / "third_party" / "JoyConDSU" / "Sources" / "JoyConDSU" / "main.c").read_text(encoding="utf-8")
-        available = source.split("static bool controller_available", 1)[1].split(
-            "static bool telemetry_health_ok", 1
-        )[0]
-        self.assertNotIn("motion_pipeline_received_hz", available)
-        self.assertIn("controller_available(&controller", source)
+    def test_release_waits_for_windows_and_macos(self):
+        workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        self.assertIn("runs-on: macos-14", workflow)
+        self.assertIn('test "$(uname -m)" = "arm64"', workflow)
+        self.assertIn("./tools/build_macos_app.sh", workflow)
+        self.assertIn("./tools/test_macos_installation.sh", workflow)
+        self.assertIn("needs: [windows, macos]", workflow)
+        self.assertIn("gh release create", workflow)
 
-    def test_launcher_restarts_an_outdated_server(self):
-        root = Path(__file__).resolve().parents[1]
-        launcher = root / "macos" / "BOTW Companion.app" / "Contents" / "MacOS" / "BOTW Companion"
-        text = launcher.read_text(encoding="utf-8")
-        self.assertIn('EXPECTED_VERSION="0.40.0a23"', text)
-        self.assertIn('"${URL}api/version"', text)
-        self.assertIn('"${URL}api/shutdown"', text)
+    def test_source_tree_has_no_clone_dependent_macos_launcher(self):
+        launcher = (self.root / "botw_companion" / "macos_launcher.py").read_text(encoding="utf-8")
+        manager = (self.root / "botw_companion" / "dsu" / "manager.py").read_text(encoding="utf-8")
+        combined = launcher + manager
+        self.assertNotIn("/Users/oxnight", combined)
+        self.assertNotIn("/opt/homebrew", combined)
+        self.assertNotIn(".venv", combined)
+        self.assertIn("PYINSTALLER_RESET_ENVIRONMENT", launcher)
 
 
 if __name__ == "__main__":

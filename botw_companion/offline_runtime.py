@@ -73,7 +73,54 @@ def windows_dsu_errors(dsu_root) -> list[str]:
     return errors
 
 
-def offline_resource_errors(*, windows_dsu: bool = False) -> list[str]:
+def macos_dsu_errors(dsu_root) -> list[str]:
+    """Valide le moteur DSU Apple Silicon livré dans l'application."""
+    errors = []
+    required = (
+        "JoyConDSU",
+        "libSDL3.0.dylib",
+        "launch_managed.sh",
+        "manifest.json",
+        "SDL3-LICENSE.txt",
+    )
+    for name in required:
+        if not dsu_root.joinpath(name).is_file():
+            errors.append(f"Ressource DSU macOS absente : {name}")
+    manifest_path = dsu_root.joinpath("manifest.json")
+    if not manifest_path.is_file():
+        return errors
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        errors.append(f"Manifeste DSU macOS invalide : {exc}")
+        return errors
+    expected = {
+        "schema_version": 1,
+        "architecture": "arm64",
+        "protocol": 1001,
+        "port": 26760,
+    }
+    for key, value in expected.items():
+        if manifest.get(key) != value:
+            errors.append(
+                f"Manifeste DSU macOS incohérent : {key}={manifest.get(key)!r}"
+            )
+    for name, key in (
+        ("JoyConDSU", "executable_sha256"),
+        ("libSDL3.0.dylib", "sdl_sha256"),
+    ):
+        resource = dsu_root.joinpath(name)
+        if not resource.is_file():
+            continue
+        actual = hashlib.sha256(resource.read_bytes()).hexdigest()
+        expected_hash = str(manifest.get(key, "")).casefold()
+        if actual != expected_hash:
+            errors.append(f"Empreinte DSU macOS invalide : {name}")
+    return errors
+
+
+def offline_resource_errors(*, windows_dsu: bool = False,
+                            macos_dsu: bool = False) -> list[str]:
     """Valide toutes les ressources nécessaires sans effectuer d'accès réseau."""
     data_root = files("botw_companion.data")
     web_root = files("botw_companion.web")
@@ -98,6 +145,9 @@ def offline_resource_errors(*, windows_dsu: bool = False) -> list[str]:
     if windows_dsu:
         dsu_root = files("botw_companion.dsu").joinpath("windows")
         errors.extend(windows_dsu_errors(dsu_root))
+    if macos_dsu:
+        dsu_root = files("botw_companion.dsu").joinpath("macos")
+        errors.extend(macos_dsu_errors(dsu_root))
     return errors
 
 

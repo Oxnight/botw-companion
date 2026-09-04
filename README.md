@@ -2,20 +2,19 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 23**. Cette révision ne modifie ni l’interface, ni les données de jeu, ni le moteur DSU : elle transforme la version Windows en application autonome distribuable par GitHub Releases. Elle conserve les 1 913 fiches de niveau 3, les stratégies des 13 boss scénarisés, des 84 mini-boss persistants et des 284 points de combat ou de farm, ainsi que toutes les fonctions de l’alpha 22. L’application fonctionne hors ligne après l’installation ; les liens de sources proposés dans les fiches restent naturellement soumis à une connexion Internet.
+La version actuelle est **0.40.0 alpha 24**. Elle ajoute une application autonome pour les Mac Apple Silicon sans modifier l’interface, les données de jeu ou les fonctions du site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
 
 ## Sommaire
 
 * [Fonctions principales](#fonctions-principales).
 * [Configuration prise en charge](#configuration-prise-en-charge).
+* [Installer l’application](#installer-lapplication).
 * [Installation depuis un clone Git](#installation-depuis-un-clone-git).
 
   * [1. Cloner le dépôt](#1-cloner-le-dépôt).
   * [2. Installer les prérequis macOS](#2-installer-les-prérequis-macos).
   * [3. Créer l’environnement Python](#3-créer-lenvironnement-python).
   * [4. Premier lancement dans le terminal](#4-premier-lancement-dans-le-terminal).
-* [Installer le lanceur macOS](#installer-le-lanceur-macos).
-* [Installer le lanceur Windows](#installer-le-lanceur-windows).
 * [Configurer le gyroscope universel dans Ryujinx ou Cemu](#configurer-le-gyroscope-universel-dans-ryujinx-ou-cemu).
 * [Utilisation en ligne de commande](#utilisation-en-ligne-de-commande).
 * [Données locales et confidentialité](#données-locales-et-confidentialité).
@@ -43,11 +42,10 @@ La version actuelle est **0.40.0 alpha 23**. Cette révision ne modifie ni l’i
 ## Configuration prise en charge
 
 * Mac Apple Silicon : M1, M2, M3, M4 ou génération ultérieure.
-* macOS 12 ou plus récent.
+* macOS 14 ou plus récent, Apple Silicon uniquement.
 * Windows 10/11 : détection de Ryujinx standard/portable et de Cemu standard/portable, avec lecture du `mlc_path` de Cemu lorsqu’il est personnalisé.
-* Python 3.10 ou plus récent, Python 3.12 recommandé pour un clone ; aucun Python requis par l'application Windows installée.
+* Python 3.10 ou plus récent, Python 3.12 recommandé pour un clone ; aucun Python requis par les applications installées.
 * Sur macOS, Ryujinx et Cemu sont détectés comme processus ; l’arrêt automatique fonctionne avec l’un ou l’autre après qu’il a été observé actif.
-* Homebrew, SDL3 et les outils en ligne de commande Xcode pour compiler le serveur JoyConDSU sur le Mac cible.
 
 ### État du socle Windows
 
@@ -60,7 +58,7 @@ Deux variables permettent de forcer un emplacement particulier sans modifier le 
 
 Le cœur du cycle de vie Windows reconnaît `Ryujinx.exe`, `Ryujinx.Ava.exe` et `Cemu.exe`, empêche une seconde instance du serveur pour le même utilisateur et ne dépend jamais du heartbeat d’un onglet. La surveillance ne déclenche un arrêt qu’après avoir réellement vu un émulateur supporté actif puis confirmé sa fermeture après un délai de grâce. Une reprise après veille réinitialise cette confirmation afin d’éviter un faux arrêt.
 
-L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Le lanceur graphique Windows active automatiquement la surveillance de Ryujinx ou Cemu. Le moteur JoyConDSU se construit nativement sous Windows avec Winsock 2.2 et SDL3, puis le bouton **Activer** le lance directement sans fenêtre de console. Les états de calibration, d'attente, de disponibilité et d'erreur restent identiques à ceux de macOS. Le comportement macOS existant reste inchangé.
+L’interface affiche automatiquement **Windows** ou **macOS**, utilise la consigne de relance adaptée et indique le nom ainsi que l’emplacement du journal du moteur natif correspondant. Les lanceurs graphiques activent automatiquement la surveillance de Ryujinx ou Cemu. Le bouton **Activer** lance le moteur JoyConDSU embarqué sans terminal ; les états de calibration, d'attente, de disponibilité et d'erreur sont identiques sur les deux plateformes.
 
 Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 
@@ -68,8 +66,6 @@ Pour préparer le lanceur Windows depuis un clone, utiliser PowerShell :
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
-
-La partie JoyConDSU inclut aussi un binaire Apple Silicon de secours. Une compilation locale reste préférable afin d’utiliser le SDK et la version de SDL3 présents sur la machine. La procédure de construction Windows du moteur est décrite dans `third_party/JoyConDSU/README_WINDOWS.md`.
 
 Dans un clone Windows, construire une fois le moteur avant d'utiliser le bouton du gyroscope :
 
@@ -81,6 +77,17 @@ Le script place automatiquement `JoyConDSU.exe`, `SDL3.dll` et leur manifeste da
 
 La chaîne de distribution Windows produit maintenant un paquet autonome. Elle utilise PyInstaller en mode one-folder afin d'éviter l'extraction temporaire et le ralentissement initial du mode one-file. L'installateur Inno Setup place l'application dans `%LOCALAPPDATA%\Programs\BOTW Companion`, crée le raccourci du menu Démarrer et propose celui du Bureau. Les données personnelles restent dans `%LOCALAPPDATA%\BOTW Companion` et ne font pas partie des fichiers désinstallés.
 
+## Installer l’application
+
+Télécharger le fichier correspondant depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases) :
+
+* Windows x64 : `BOTW_Companion_0.40.0-alpha.24_Setup.exe` ;
+* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg`.
+
+Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
+
+Ces versions alpha ne sont pas signées avec un certificat commercial. Windows SmartScreen ou macOS Gatekeeper peuvent donc demander une confirmation. Télécharger uniquement depuis la page Releases officielle ; sous macOS, utiliser **Réglages Système > Confidentialité et sécurité > Ouvrir quand même** si nécessaire.
+
 ## Installation depuis un clone Git
 
 ### 1. Cloner le dépôt
@@ -90,7 +97,7 @@ git clone https://github.com/Oxnight/botw-companion.git
 cd botw-companion
 ```
 
-### 2. Installer les prérequis macOS
+### 2. Installer les prérequis macOS de développement
 
 ```bash
 xcode-select --install
@@ -125,46 +132,11 @@ BOTW Companion cherche automatiquement les emplacements habituels des sauvegarde
 .venv/bin/python -m botw_companion interface "/chemin/vers/la/sauvegarde"
 ```
 
-## Installer le lanceur macOS
-
-Le lanceur ne copie pas tout le projet dans l’application : il démarre le clone avec le Python de `.venv`. Le clone et son environnement doivent donc rester présents sur le Mac.
-
-Depuis le Finder, double-cliquer sur :
-
-```text
-macos/Installer BOTW Companion.command
-```
-
-Si macOS ne l’autorise pas encore à s’exécuter :
-
-```bash
-chmod +x "macos/Installer BOTW Companion.command"
-"macos/Installer BOTW Companion.command"
-```
-
-L’installeur copie `BOTW Companion.app` dans `~/Applications`. Au premier lancement, si le projet n’est pas trouvé automatiquement, l’application demande de sélectionner le dossier cloné contenant `pyproject.toml` et `.venv`.
-
-L’application n’est pas signée avec un certificat Apple. Si Gatekeeper la bloque après le téléchargement, utiliser **Réglages Système > Confidentialité et sécurité > Ouvrir quand même**, ou faire un clic droit sur l’application puis **Ouvrir**. Il n’existe pas de réinstallation périodique tous les sept jours pour cette application locale.
-
-## Installer le lanceur Windows
-
-### Application autonome recommandée
-
-Télécharger l’installateur depuis la page [GitHub Releases](https://github.com/Oxnight/botw-companion/releases), puis lancer :
-
-```text
-BOTW_Companion_0.40.0-alpha.23_Setup.exe
-```
-
-L'installation se fait pour l'utilisateur courant et ne nécessite normalement pas de droits administrateur. Python, Git, le clone du dépôt, Visual Studio, CMake, Inno Setup et une installation séparée de SDL3 ne sont pas requis. Le runtime Python, les données hors ligne, `JoyConDSU.exe`, `SDL3.dll`, le manifeste DSU, la carte et les icônes sont inclus. L'application apparaît dans le menu Démarrer, dans les applications installées et, par défaut, sur le Bureau.
-
-Cette version alpha n'est pas encore signée. Windows SmartScreen peut donc afficher **Windows a protégé votre ordinateur** : vérifier que le fichier vient bien de la page Releases officielle, comparer son SHA-256 avec `SHA256SUMS.txt`, puis choisir **Informations complémentaires > Exécuter quand même** si vous acceptez ce risque.
-
-### Lanceur depuis un clone de développement
+## Lanceur Windows depuis un clone de développement
 
 Après avoir créé `.venv` avec les commandes PowerShell ci-dessus, ouvrir le dossier `windows` et double-cliquer sur `Installer BOTW Companion.cmd`. L’installeur ne demande pas de droits administrateur. Il crée un raccourci sur le Bureau et dans le menu Démarrer, puis conserve les réglages dans `%LOCALAPPDATA%\BOTW Companion`.
 
-Le raccourci utilise `wscript.exe` et `pythonw.exe` : aucune fenêtre de terminal n’apparaît. Un runtime autonome placé dans `runtime\pythonw.exe` est utilisé en priorité lorsqu’il est fourni par un futur paquet ; un clone de développement utilise `.venv\Scripts\pythonw.exe`.
+Le raccourci utilise `wscript.exe` et `pythonw.exe` : aucune fenêtre de terminal n’apparaît. Un clone de développement utilise `.venv\Scripts\pythonw.exe`.
 
 À chaque double-clic, le lanceur vérifie d’abord le serveur local. S’il fonctionne déjà, il tente de remettre la fenêtre BOTW Companion au premier plan ; Windows peut refuser cette opération selon ses règles de sécurité, auquel cas le navigateur par défaut ouvre ou réactive la page. Sinon, le serveur démarre puis le navigateur s’ouvre une seule fois. Après avoir vu Ryujinx actif, la surveillance vérifie son état toutes les 15 secondes et demande un arrêt propre après 30 secondes d’absence confirmée.
 
@@ -252,7 +224,7 @@ node tools/browser_smoke.js http://127.0.0.1:18765 edge
 node tools/browser_smoke.js http://127.0.0.1:18765 firefox
 ```
 
-Chrome et Microsoft Edge doivent être installés sur la machine de test ; Firefox peut être installé par `npx playwright install firefox`. Le parcours vérifie le chargement, les filtres, la carte, le zoom, les fiches, la désélection, la liste centralisée des validations manuelles et la conservation des notes après annulation, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU, son diagnostic détaillé et l’affichage responsive. Ces parcours se lancent localement sur la machine utilisée pour la validation.
+Chrome et Microsoft Edge doivent être installés sur la machine de test Windows. Le workflow teste Chrome, Edge et Firefox sous Windows, puis Chromium, Firefox et WebKit sur Apple Silicon. Le parcours vérifie le chargement, les filtres, la carte, le zoom, les fiches, la désélection, la liste centralisée des validations manuelles et la conservation des notes après annulation, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU, son diagnostic détaillé et l’affichage responsive.
 
 ## Mise à jour du clone
 

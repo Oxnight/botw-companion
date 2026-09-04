@@ -254,18 +254,14 @@ class DsuManagerTests(unittest.TestCase):
         )
         self.assertEqual(manager.status()["state"], "off")
 
-    def test_supervisor_explicitly_launches_the_arm64_binary(self):
-        launcher = Path(__file__).resolve().parents[1] / "botw_companion" / "dsu" / "launch_managed.sh"
+    def test_supervisor_launches_only_the_packaged_arm64_binary(self):
+        launcher = Path(__file__).resolve().parents[1] / "botw_companion" / "dsu" / "macos" / "launch_managed.sh"
         text = launcher.read_text(encoding="utf-8")
-        self.assertIn('/usr/bin/arch -arm64 "$RUNTIME"', text)
-        self.assertIn("motion_pipeline.c", text)
-        self.assertIn("/usr/bin/xcrun --sdk macosx --find clang", text)
-        self.assertIn("/usr/bin/xcrun --sdk macosx --show-sdk-path", text)
-        self.assertIn('-isysroot "$sdk_path"', text)
-        self.assertIn('SDKROOT="$sdk_path"', text)
-        self.assertIn('RUNTIME="$BINARY"', text)
-        self.assertIn("JoyConDSU-$source_hash", text)
-        self.assertNotIn('wait "$child_pid"\nchild_pid=""', text)
+        self.assertIn('"$(/usr/bin/uname -m)" != "arm64"', text)
+        self.assertIn('exec "$BINARY" "${EXTRA_ARGS[@]}"', text)
+        self.assertNotIn("xcrun", text)
+        self.assertNotIn("brew", text)
+        self.assertNotIn("clang", text)
 
     def test_start_waits_for_controller_and_stop_terminates_process(self):
         manager = self.manager()

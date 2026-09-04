@@ -106,7 +106,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertNotIn("RunAs", script)
 
     def test_release_workflow_builds_tests_and_publishes_only_a_tag(self):
-        workflow = (self.root / ".github" / "workflows" / "windows-release.yml").read_text(
+        workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(
             encoding="utf-8"
         )
         self.assertIn("windows-2022", workflow)
@@ -116,7 +116,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("refs/tags/", workflow)
         self.assertIn("gh release create", workflow)
         self.assertIn("--verify-tag", workflow)
-        self.assertIn("SHA256SUMS.txt", workflow)
+        self.assertIn("needs: [windows, macos]", workflow)
 
     def test_browser_suite_covers_the_complete_user_path(self):
         script = (self.root / "tools" / "browser_smoke.js").read_text(encoding="utf-8")

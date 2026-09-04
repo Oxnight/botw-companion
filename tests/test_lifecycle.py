@@ -80,10 +80,10 @@ class ServerProbeTests(unittest.TestCase):
 
         def opener(url, timeout):
             calls.append((url, timeout))
-            return FakeResponse(b'{"application":"BOTW Companion","version":"0.40.0a23"}')
+            return FakeResponse(b'{"application":"BOTW Companion","version":"0.40.0a24"}')
 
         result = probe_companion_server(9876, timeout=0.25, opener=opener)
-        self.assertEqual(result["version"], "0.40.0a23")
+        self.assertEqual(result["version"], "0.40.0a24")
         self.assertEqual(calls, [("http://127.0.0.1:9876/api/version", 0.25)])
 
     def test_probe_rejects_an_unrelated_service_on_the_same_port(self):

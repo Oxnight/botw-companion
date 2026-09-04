@@ -118,13 +118,15 @@ class DsuManager:
             )
             self.executable = executable or self.runtime_dir / "JoyConDSU.exe"
             self.sdl_library = sdl_library or self.executable.parent / "SDL3.dll"
+        elif self.system == "Darwin":
+            self.runtime_dir = resource_root / "macos"
+            self.executable = executable or self.runtime_dir / "JoyConDSU"
+            self.sdl_library = sdl_library or self.runtime_dir / "libSDL3.0.dylib"
         else:
             self.runtime_dir = resource_root
             self.executable = executable or resource_root / "JoyConDSU"
-            self.sdl_library = sdl_library or Path(
-                "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib"
-            )
-        self.launcher = launcher or resource_root / "launch_managed.sh"
+            self.sdl_library = sdl_library or resource_root / "libSDL3.0.dylib"
+        self.launcher = launcher or self.runtime_dir / "launch_managed.sh"
         self.support_dir = support_dir or companion_data_dir(system=self.system)
         self.log_path = self.support_dir / "joycon-dsu.log"
         self._probe = probe
@@ -154,7 +156,7 @@ class DsuManager:
         if not self.launcher.is_file():
             return "Le lanceur supervisé JoyConDSU est absent du paquet."
         if not self.sdl_library.is_file():
-            return "SDL3 est requis : installe-le avec « brew install sdl3 »."
+            return "La bibliothèque SDL3 intégrée est absente du paquet."
         return None
 
     def _rotate_log(self) -> None:
