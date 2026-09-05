@@ -23,6 +23,7 @@ jobs:
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
     steps:
       - name: Récupérer les sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -88,6 +89,7 @@ jobs:
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
       MACOSX_DEPLOYMENT_TARGET: "14.0"
     steps:
       - name: Récupérer les sources
@@ -125,6 +127,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
 
       - name: Préparer Chromium, Firefox et WebKit
+        timeout-minutes: 15
         run: |
           npm ci --ignore-scripts
           npx playwright install chromium firefox webkit
@@ -173,10 +176,12 @@ jobs:
 
       - name: Construire l'application et le DMG
         shell: bash
+        timeout-minutes: 35
         run: ./tools/build_macos_app.sh
 
       - name: Tester le DMG autonome
         shell: bash
+        timeout-minutes: 10
         run: ./tools/test_macos_installation.sh
 
       - name: Conserver le DMG Apple Silicon

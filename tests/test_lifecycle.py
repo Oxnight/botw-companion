@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 from urllib.error import URLError
 from urllib.request import Request
 
@@ -306,6 +307,15 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
                     self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
                     self.assertEqual(response.read(), content)
             self.assertFalse(thread.is_alive())
+
+    def test_server_startup_never_requires_reverse_dns(self):
+        with patch("socket.getfqdn", side_effect=AssertionError("reverse DNS interdit")):
+            with self.running_server(
+                lambda: {},
+                instance_guard=FakeInstanceGuard(),
+                dsu_manager=FakeDsuManager(),
+            ) as (_thread, port):
+                self.assertIsNotNone(probe_companion_server(port, timeout=1))
 
     def test_second_server_is_rejected_before_binding_a_port(self):
         guard = FakeInstanceGuard(False)

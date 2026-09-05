@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
+from socketserver import TCPServer
 import gzip
 import json
 import re
@@ -29,6 +30,20 @@ from .report_views import ReportViewCache, report_revision_key
 from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
 from . import __version__
+
+
+class LoopbackThreadingHTTPServer(ThreadingHTTPServer):
+    """Serveur local sans résolution DNS inverse pendant l'ouverture du socket."""
+
+    def server_bind(self) -> None:
+        # HTTPServer.server_bind() appelle socket.getfqdn() après le bind. Cette
+        # résolution est inutile pour un serveur strictement lié à 127.0.0.1 et
+        # peut rester bloquée sur certains runners macOS. TCPServer effectue le
+        # même bind sans accès DNS; on conserve les attributs publics HTTPServer.
+        TCPServer.server_bind(self)
+        host, port = self.server_address[:2]
+        self.server_name = str(host)
+        self.server_port = int(port)
 
 
 def serve(payload_factory, port: int = 8765, open_browser: bool = True,
@@ -341,7 +356,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     if not guard.acquire():
         raise OSError("Une instance de BOTW Companion fonctionne déjà pour cet utilisateur")
     try:
-        server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+        server = LoopbackThreadingHTTPServer(("127.0.0.1", port), Handler)
     except Exception:
         guard.close()
         raise
