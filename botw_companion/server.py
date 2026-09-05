@@ -45,7 +45,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           emulator_running=None,
           running_emulators_provider=None,
           instance_guard=None,
-          shutdown_notifier_factory=None) -> None:
+          shutdown_notifier_factory=None,
+          server_ready=None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -389,7 +390,10 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             if signum is not None:
                 previous_signals[signum] = signal.getsignal(signum)
                 signal.signal(signum, handle_signal)
-    url = f"http://127.0.0.1:{port}"
+    bound_port = int(server.server_address[1])
+    url = f"http://127.0.0.1:{bound_port}"
+    if server_ready is not None:
+        server_ready(bound_port)
     if sys.stdout is not None:
         print(f"Interface BOTW Companion : {url}")
         print("Laisse ce terminal ouvert. Ctrl+C pour arrêter.")

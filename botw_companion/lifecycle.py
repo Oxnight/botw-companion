@@ -5,14 +5,20 @@ import threading
 import time
 from typing import Callable
 from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.request import ProxyHandler, build_opener
 
 
 APPLICATION_NAME = "BOTW Companion"
+_LOOPBACK_OPENER = build_opener(ProxyHandler({}))
+
+
+def open_loopback(request, timeout: float = 0.8):
+    """Ouvre une URL locale sans consulter les proxys système ou d'environnement."""
+    return _LOOPBACK_OPENER.open(request, timeout=timeout)
 
 
 def probe_companion_server(port: int = 8765, timeout: float = 0.8,
-                           opener=urlopen) -> dict | None:
+                           opener=open_loopback) -> dict | None:
     """Identifie le serveur local au lieu de faire confiance au seul port."""
     try:
         with opener(f"http://127.0.0.1:{port}/api/version", timeout=timeout) as response:

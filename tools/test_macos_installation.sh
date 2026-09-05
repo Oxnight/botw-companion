@@ -114,7 +114,7 @@ for _attempt in {1..120}; do
     echo "Le serveur installé s'est arrêté prématurément." >&2
     exit 1
   fi
-  if /usr/bin/curl --silent --fail --max-time 1 \
+  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
       "http://127.0.0.1:$TEST_PORT/api/version" | \
       /usr/bin/grep -F '"version": "0.40.0a24"' >/dev/null; then
     ready=1
@@ -128,10 +128,10 @@ if [[ "$ready" != "1" ]]; then
   exit 1
 fi
 
-/usr/bin/curl --silent --fail --max-time 2 \
+/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
   "http://127.0.0.1:$TEST_PORT/" | \
   /usr/bin/grep -F '<title>BOTW Companion</title>' >/dev/null
-/usr/bin/curl --silent --fail --max-time 2 \
+/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
   -X POST "http://127.0.0.1:$TEST_PORT/api/shutdown" >/dev/null
 wait "$SERVER_PID"
 SERVER_PID=""

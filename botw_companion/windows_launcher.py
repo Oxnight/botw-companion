@@ -11,11 +11,11 @@ import subprocess
 import sys
 import time
 from typing import Callable, Mapping
-from urllib.request import Request, urlopen
+from urllib.request import Request
 import webbrowser
 
 from . import __version__
-from .lifecycle import probe_companion_server
+from .lifecycle import open_loopback, probe_companion_server
 from .platforms import companion_data_dir
 
 
@@ -137,7 +137,7 @@ def open_default_browser(url: str) -> bool:
     return bool(webbrowser.open(url, new=0, autoraise=True))
 
 
-def request_shutdown(port: int, *, opener=urlopen) -> bool:
+def request_shutdown(port: int, *, opener=open_loopback) -> bool:
     try:
         with opener(Request(
             f"http://127.0.0.1:{port}/api/shutdown",

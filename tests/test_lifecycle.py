@@ -1,16 +1,15 @@
-import socket
 from contextlib import contextmanager
 from pathlib import Path
 import tempfile
 import threading
-import time
 import unittest
 from urllib.error import URLError
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 from botw_companion.lifecycle import (
     RyujinxLifecycleWatcher,
     WebLifecycle,
+    open_loopback,
     probe_companion_server,
 )
 from botw_companion.server import serve
@@ -183,25 +182,9 @@ class FakeDsuManager:
 
 class ServerLifecycleIntegrationTests(unittest.TestCase):
     @staticmethod
-    def free_port() -> int:
-        with socket.socket() as listener:
-            listener.bind(("127.0.0.1", 0))
-            return listener.getsockname()[1]
-
-    @staticmethod
-    def wait_until_ready(port: int) -> dict | None:
-        deadline = time.monotonic() + 5
-        while time.monotonic() < deadline:
-            identity = probe_companion_server(port, timeout=0.25)
-            if identity is not None:
-                return identity
-            time.sleep(0.02)
-        return None
-
-    @staticmethod
     def request_shutdown(port: int) -> None:
         try:
-            with urlopen(Request(
+            with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
                 method="POST",
@@ -213,27 +196,36 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             pass
 
     @contextmanager
-    def running_server(self, payload_factory, *, port: int, **kwargs):
+    def running_server(self, payload_factory, **kwargs):
+        ready = threading.Event()
+        bound_port = []
+
+        def report_ready(port: int) -> None:
+            bound_port.append(port)
+            ready.set()
+
         thread = threading.Thread(
             target=serve,
             args=(payload_factory,),
             kwargs={
-                "port": port,
+                "port": 0,
                 "open_browser": False,
                 "running_emulators_provider": lambda: [],
+                "server_ready": report_ready,
                 **kwargs,
             },
             daemon=True,
         )
         thread.start()
         try:
-            yield thread
+            self.assertTrue(ready.wait(5), "Le serveur local ne s'est pas lié dans les 5 secondes")
+            yield thread, bound_port[0]
         finally:
-            self.request_shutdown(port)
+            if bound_port:
+                self.request_shutdown(bound_port[0])
             thread.join(timeout=3)
 
     def test_version_probe_shutdown_and_cleanup_form_one_lifecycle(self):
-        port = self.free_port()
         guard = FakeInstanceGuard()
         dsu = FakeDsuManager()
         provider_calls = []
@@ -244,15 +236,14 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
 
         with self.running_server(
             lambda: {},
-            port=port,
             instance_guard=guard,
             dsu_manager=dsu,
             running_emulators_provider=no_running_emulators,
-        ) as thread:
-            identity = self.wait_until_ready(port)
+        ) as (thread, port):
+            identity = probe_companion_server(port, timeout=1)
             self.assertIsNotNone(identity)
             self.assertEqual(identity["application"], "BOTW Companion")
-            with urlopen(Request(
+            with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
                 method="POST",
@@ -266,30 +257,28 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
         self.assertTrue(guard.closed)
 
     def test_existing_dsu_api_controls_the_platform_manager(self):
-        port = self.free_port()
         dsu = FakeDsuManager()
         with self.running_server(
             lambda: {},
-            port=port,
             instance_guard=FakeInstanceGuard(),
             dsu_manager=dsu,
-        ) as thread:
-            self.assertIsNotNone(self.wait_until_ready(port))
-            with urlopen(Request(
+        ) as (thread, port):
+            self.assertIsNotNone(probe_companion_server(port, timeout=1))
+            with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/dsu/start",
                 data=b"",
                 method="POST",
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
             self.assertTrue(dsu.started)
-            with urlopen(Request(
+            with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/dsu/stop",
                 data=b"",
                 method="POST",
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
             self.assertTrue(dsu.stopped)
-            with urlopen(Request(
+            with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
                 method="POST",
@@ -304,15 +293,13 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             slot.mkdir()
             content = b"\xff\xd8\xff\xe0" + b"slot preview".ljust(124, b"\0") + b"\xff\xd9"
             (slot / "caption.jpg").write_bytes(content)
-            port = self.free_port()
             with self.running_server(
                 lambda: {"sauvegarde": {"chemin": str(slot)}},
-                port=port,
                 instance_guard=FakeInstanceGuard(),
                 dsu_manager=FakeDsuManager(),
-            ) as thread:
-                self.assertIsNotNone(self.wait_until_ready(port))
-                with urlopen(f"http://127.0.0.1:{port}/api/save-caption", timeout=1) as response:
+            ) as (thread, port):
+                self.assertIsNotNone(probe_companion_server(port, timeout=1))
+                with open_loopback(f"http://127.0.0.1:{port}/api/save-caption", timeout=1) as response:
                     self.assertEqual(response.status, 200)
                     self.assertEqual(response.headers["Content-Type"], "image/jpeg")
                     self.assertEqual(response.headers["Cache-Control"], "no-store")
@@ -325,7 +312,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
         with self.assertRaisesRegex(OSError, "fonctionne déjà"):
             serve(
                 lambda: {},
-                port=self.free_port(),
+                port=0,
                 open_browser=False,
                 instance_guard=guard,
                 dsu_manager=FakeDsuManager(),
