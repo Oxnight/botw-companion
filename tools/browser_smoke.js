@@ -45,6 +45,17 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function isExpectedWebKitNavigationError(browserName, message) {
+  // WebKit can expose an aborted fetch from the document being replaced as a
+  // page error during reload.  Keep this exception deliberately narrow: only
+  // the cache-busted DSU status poll is allowed, and the new document probes
+  // the same endpoint explicitly immediately after the reload.
+  return browserName === "webkit" &&
+    message.includes("Fetch API cannot load") &&
+    message.includes("/api/dsu?t=") &&
+    message.includes("due to access control checks");
+}
+
 async function waitForApplication(page) {
   await page.goto(page.baseUrl, {waitUntil: "domcontentloaded"});
   await page.waitForFunction(() =>
@@ -60,7 +71,12 @@ async function runDesktop(browser, baseUrl, browserName) {
   const page = await context.newPage();
   page.baseUrl = baseUrl;
   const errors = [];
-  page.on("pageerror", error => errors.push(String(error)));
+  let documentReloadStarted = false;
+  page.on("pageerror", error => {
+    const message = String(error);
+    if (!(documentReloadStarted &&
+      isExpectedWebKitNavigationError(browserName, message))) errors.push(message);
+  });
   page.on("response", response => {
     if (response.status() >= 500) errors.push(`${response.status()} ${response.url()}`);
   });
@@ -162,10 +178,14 @@ async function runDesktop(browser, baseUrl, browserName) {
   await page.waitForFunction(() => document.querySelector("#dsuStatus").textContent === "Désactivé");
 
   progress(browserName, "bureau:rechargement");
+  documentReloadStarted = true;
   await page.reload({waitUntil: "domcontentloaded"});
   await page.waitForFunction(id =>
     document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
     Boolean(manualTracking.entries[id]?.completed), selectedTrackingId, {timeout: 45000});
+  const dsuAfterReload = await fetchJson(page, "/api/dsu");
+  assert(dsuAfterReload.ok && typeof dsuAfterReload.body?.state === "string",
+    "L'API DSU n'est pas accessible depuis le document rechargé");
   assert(await page.locator("#categories input[type=checkbox]:checked").count() === 0,
     "Un rechargement doit conserver une carte vide par défaut");
   await page.locator("#toggleManualReview").click();

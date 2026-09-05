@@ -138,6 +138,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("context.setDefaultTimeout", script)
         self.assertIn("AbortController", script)
         self.assertIn("closeWithTimeout", script)
+        self.assertIn("isExpectedWebKitNavigationError", script)
+        self.assertIn("dsuAfterReload", script)
         self.assertIn('status: "progress"', script)
         self.assertIn('page.waitForEvent("dialog"', script)
         self.assertIn("manualCheckbox.evaluate(element => element.click())", script)
