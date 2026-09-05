@@ -80,7 +80,9 @@ jobs:
 
   macos:
     name: Compiler et tester macOS Apple Silicon
-    runs-on: macos-14
+    # Playwright >= 1.59 ne prend plus WebKit en charge sur macOS 14.
+    # Le label macos-15 de GitHub Actions est un runner Apple Silicon arm64.
+    runs-on: macos-15
     timeout-minutes: 75
     env:
       PYTHONUTF8: "1"
@@ -90,9 +92,16 @@ jobs:
       - name: Récupérer les sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Vérifier le runner Apple Silicon
+      - name: Vérifier le runner Apple Silicon et macOS
         shell: bash
-        run: test "$(uname -m)" = "arm64"
+        run: |
+          architecture="$(uname -m)"
+          macos_version="$(sw_vers -productVersion)"
+          macos_major="${macos_version%%.*}"
+          echo "Architecture : $architecture"
+          echo "macOS : $macos_version"
+          test "$architecture" = "arm64"
+          test "$macos_major" -ge 15
 
       - name: Installer Python 3.12 arm64
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
@@ -131,7 +140,9 @@ jobs:
             server_pid=""
           }
           trap stop_server EXIT
-          for browser in chromium firefox webkit; do
+          # WebKit dépend directement de la version de macOS. On le lance en
+          # premier pour détecter immédiatement une image de runner incompatible.
+          for browser in webkit chromium firefox; do
             echo "::group::Parcours $browser"
             python3 tools/browser_test_server.py --port 18765 >"browser-test-$browser.log" 2>&1 &
             server_pid=$!

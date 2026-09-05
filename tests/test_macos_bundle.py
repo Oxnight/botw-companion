@@ -70,12 +70,16 @@ class MacOSBundleTests(unittest.TestCase):
 
     def test_release_waits_for_windows_and_macos(self):
         workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
-        self.assertIn("runs-on: macos-14", workflow)
-        self.assertIn('test "$(uname -m)" = "arm64"', workflow)
+        self.assertIn("runs-on: macos-15", workflow)
+        self.assertNotIn("runs-on: macos-14", workflow)
+        self.assertIn('test "$architecture" = "arm64"', workflow)
+        self.assertIn('test "$macos_major" -ge 15', workflow)
+        self.assertIn("MACOSX_DEPLOYMENT_TARGET: \"14.0\"", workflow)
         self.assertIn("./tools/build_macos_app.sh", workflow)
         self.assertIn("./tools/test_macos_installation.sh", workflow)
         self.assertIn("timeout-minutes: 10", workflow)
         self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS=120000", workflow)
+        self.assertIn("for browser in webkit chromium firefox", workflow)
         self.assertIn('browser-test-$browser.log', workflow)
         self.assertIn("stop_server", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
