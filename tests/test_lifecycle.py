@@ -1,9 +1,11 @@
 import socket
+from contextlib import contextmanager
 from pathlib import Path
 import tempfile
 import threading
 import time
 import unittest
+from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 from botw_companion.lifecycle import (
@@ -186,37 +188,79 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             listener.bind(("127.0.0.1", 0))
             return listener.getsockname()[1]
 
+    @staticmethod
+    def wait_until_ready(port: int) -> dict | None:
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            identity = probe_companion_server(port, timeout=0.25)
+            if identity is not None:
+                return identity
+            time.sleep(0.02)
+        return None
+
+    @staticmethod
+    def request_shutdown(port: int) -> None:
+        try:
+            with urlopen(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                method="POST",
+            ), timeout=0.5):
+                pass
+        except (OSError, URLError):
+            # Une assertion de démarrage peut échouer avant que le socket existe.
+            # Le thread daemon garantit alors que la suite rend quand même la main.
+            pass
+
+    @contextmanager
+    def running_server(self, payload_factory, *, port: int, **kwargs):
+        thread = threading.Thread(
+            target=serve,
+            args=(payload_factory,),
+            kwargs={
+                "port": port,
+                "open_browser": False,
+                "running_emulators_provider": lambda: [],
+                **kwargs,
+            },
+            daemon=True,
+        )
+        thread.start()
+        try:
+            yield thread
+        finally:
+            self.request_shutdown(port)
+            thread.join(timeout=3)
+
     def test_version_probe_shutdown_and_cleanup_form_one_lifecycle(self):
         port = self.free_port()
         guard = FakeInstanceGuard()
         dsu = FakeDsuManager()
-        thread = threading.Thread(
-            target=serve,
-            args=(lambda: {},),
-            kwargs={
-                "port": port,
-                "open_browser": False,
-                "instance_guard": guard,
-                "dsu_manager": dsu,
-            },
-        )
-        thread.start()
-        identity = None
-        for _attempt in range(50):
-            identity = probe_companion_server(port, timeout=0.1)
-            if identity is not None:
-                break
-            time.sleep(0.02)
-        self.assertIsNotNone(identity)
-        self.assertEqual(identity["application"], "BOTW Companion")
-        with urlopen(Request(
-            f"http://127.0.0.1:{port}/api/shutdown",
-            data=b"",
-            method="POST",
-        ), timeout=1) as response:
-            self.assertEqual(response.status, 200)
-        thread.join(timeout=3)
-        self.assertFalse(thread.is_alive())
+        provider_calls = []
+
+        def no_running_emulators():
+            provider_calls.append(True)
+            return []
+
+        with self.running_server(
+            lambda: {},
+            port=port,
+            instance_guard=guard,
+            dsu_manager=dsu,
+            running_emulators_provider=no_running_emulators,
+        ) as thread:
+            identity = self.wait_until_ready(port)
+            self.assertIsNotNone(identity)
+            self.assertEqual(identity["application"], "BOTW Companion")
+            with urlopen(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
+        self.assertTrue(provider_calls)
         self.assertTrue(dsu.stopped)
         self.assertTrue(dsu.closed)
         self.assertTrue(guard.closed)
@@ -224,43 +268,35 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
     def test_existing_dsu_api_controls_the_platform_manager(self):
         port = self.free_port()
         dsu = FakeDsuManager()
-        thread = threading.Thread(
-            target=serve,
-            args=(lambda: {},),
-            kwargs={
-                "port": port,
-                "open_browser": False,
-                "instance_guard": FakeInstanceGuard(),
-                "dsu_manager": dsu,
-            },
-        )
-        thread.start()
-        for _attempt in range(50):
-            if probe_companion_server(port, timeout=0.1) is not None:
-                break
-            time.sleep(0.02)
-        with urlopen(Request(
-            f"http://127.0.0.1:{port}/api/dsu/start",
-            data=b"",
-            method="POST",
-        ), timeout=1) as response:
-            self.assertEqual(response.status, 200)
-        self.assertTrue(dsu.started)
-        with urlopen(Request(
-            f"http://127.0.0.1:{port}/api/dsu/stop",
-            data=b"",
-            method="POST",
-        ), timeout=1) as response:
-            self.assertEqual(response.status, 200)
-        self.assertTrue(dsu.stopped)
-        with urlopen(Request(
-            f"http://127.0.0.1:{port}/api/shutdown",
-            data=b"",
-            method="POST",
-        ), timeout=1):
-            pass
-        thread.join(timeout=3)
-        self.assertFalse(thread.is_alive())
+        with self.running_server(
+            lambda: {},
+            port=port,
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=dsu,
+        ) as thread:
+            self.assertIsNotNone(self.wait_until_ready(port))
+            with urlopen(Request(
+                f"http://127.0.0.1:{port}/api/dsu/start",
+                data=b"",
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            self.assertTrue(dsu.started)
+            with urlopen(Request(
+                f"http://127.0.0.1:{port}/api/dsu/stop",
+                data=b"",
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            self.assertTrue(dsu.stopped)
+            with urlopen(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                method="POST",
+            ), timeout=1):
+                pass
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
 
     def test_selected_save_caption_is_served_as_a_private_jpeg(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -269,36 +305,19 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             content = b"\xff\xd8\xff\xe0" + b"slot preview".ljust(124, b"\0") + b"\xff\xd9"
             (slot / "caption.jpg").write_bytes(content)
             port = self.free_port()
-            thread = threading.Thread(
-                target=serve,
-                args=(lambda: {"sauvegarde": {"chemin": str(slot)}},),
-                kwargs={
-                    "port": port,
-                    "open_browser": False,
-                    "instance_guard": FakeInstanceGuard(),
-                    "dsu_manager": FakeDsuManager(),
-                },
-            )
-            thread.start()
-            for _attempt in range(50):
-                if probe_companion_server(port, timeout=0.1) is not None:
-                    break
-                time.sleep(0.02)
-            try:
+            with self.running_server(
+                lambda: {"sauvegarde": {"chemin": str(slot)}},
+                port=port,
+                instance_guard=FakeInstanceGuard(),
+                dsu_manager=FakeDsuManager(),
+            ) as thread:
+                self.assertIsNotNone(self.wait_until_ready(port))
                 with urlopen(f"http://127.0.0.1:{port}/api/save-caption", timeout=1) as response:
                     self.assertEqual(response.status, 200)
                     self.assertEqual(response.headers["Content-Type"], "image/jpeg")
                     self.assertEqual(response.headers["Cache-Control"], "no-store")
                     self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
                     self.assertEqual(response.read(), content)
-            finally:
-                with urlopen(Request(
-                    f"http://127.0.0.1:{port}/api/shutdown",
-                    data=b"",
-                    method="POST",
-                ), timeout=1):
-                    pass
-                thread.join(timeout=3)
             self.assertFalse(thread.is_alive())
 
     def test_second_server_is_rejected_before_binding_a_port(self):

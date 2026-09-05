@@ -44,6 +44,7 @@ jobs:
           python @arguments
 
       - name: Tester le code Python et le paquet
+        timeout-minutes: 5
         run: python -m unittest discover -s tests -v
 
       - name: Préparer les navigateurs
@@ -120,6 +121,7 @@ jobs:
           python3 "${arguments[@]}"
 
       - name: Tester le code Python et le paquet
+        timeout-minutes: 5
         run: python3 -m unittest discover -s tests -v
 
       - name: Préparer Chromium, Firefox et WebKit

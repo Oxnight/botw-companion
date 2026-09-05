@@ -75,6 +75,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn('test "$architecture" = "arm64"', workflow)
         self.assertIn('test "$macos_major" -ge 15', workflow)
         self.assertIn("MACOSX_DEPLOYMENT_TARGET: \"14.0\"", workflow)
+        self.assertGreaterEqual(workflow.count("timeout-minutes: 5"), 2)
         self.assertIn("./tools/build_macos_app.sh", workflow)
         self.assertIn("./tools/test_macos_installation.sh", workflow)
         self.assertIn("timeout-minutes: 10", workflow)

@@ -43,6 +43,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           ryujinx_running=None,
           monitor_emulator: bool = False,
           emulator_running=None,
+          running_emulators_provider=None,
           instance_guard=None,
           shutdown_notifier_factory=None) -> None:
     web_root = files("botw_companion.web")
@@ -54,6 +55,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     report_views = ReportViewCache()
     lifecycle = WebLifecycle(inactivity_seconds)
     dsu_manager = dsu_manager or DsuManager()
+    if running_emulators_provider is None:
+        running_emulators_provider = running_emulators
 
     def remember_sync(synchronization: object) -> None:
         try:
@@ -163,7 +166,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     "platform": platform_metadata(),
                     "emulators": {
                         "supported": ["Ryujinx", "Cemu"],
-                        "running": [backend.label for backend in running_emulators()],
+                        "running": [backend.label for backend in running_emulators_provider()],
                     },
                     "lifecycle": {
                         "monitoring_emulator": bool(monitor_emulator or monitor_ryujinx),

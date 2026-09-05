@@ -189,6 +189,7 @@ def main() -> None:
             inactivity_seconds=3600,
             dsu_manager=BrowserTestDsu(),
             monitor_ryujinx=False,
+            running_emulators_provider=lambda: [],
             instance_guard=BrowserTestGuard(),
             shutdown_notifier_factory=lambda _callback: BrowserTestNotifier(),
         )
