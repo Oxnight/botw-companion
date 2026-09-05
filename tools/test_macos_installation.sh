@@ -84,7 +84,7 @@ while IFS= read -r -d '' binary; do
     exit 1
   }
   /usr/bin/codesign --verify --strict --verbose=2 "$binary"
-  if /usr/bin/otool -L "$binary" | \
+  if { /usr/bin/otool -L "$binary"; /usr/bin/otool -l "$binary"; } | \
       /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' >/dev/null; then
     echo "Dépendance propre à la machine de construction : $binary" >&2
     exit 1

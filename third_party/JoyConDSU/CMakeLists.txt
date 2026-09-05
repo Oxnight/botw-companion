@@ -23,6 +23,13 @@ if(JOYCON_DSU_FETCH_SDL)
     set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
     set(SDL_TESTS OFF CACHE BOOL "" FORCE)
     set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+    if(APPLE)
+        # SDL has a native HIDAPI backend on macOS.  Do not auto-detect the
+        # runner's Homebrew libusb: that would make the packaged dylib depend
+        # on /opt/homebrew and break on a clean player's Mac.
+        set(SDL_HIDAPI_LIBUSB OFF CACHE BOOL "" FORCE)
+        set(SDL_HIDAPI_LIBUSB_SHARED OFF CACHE BOOL "" FORCE)
+    endif()
     FetchContent_Declare(
         SDL3
         URL https://github.com/libsdl-org/SDL/releases/download/release-3.4.14/SDL3-3.4.14.tar.gz

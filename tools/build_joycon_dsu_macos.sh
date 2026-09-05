@@ -27,6 +27,9 @@ cmake \
   -DJOYCON_DSU_FETCH_SDL=ON \
   -DSDL_SHARED=ON \
   -DSDL_STATIC=OFF \
+  -DSDL_HIDAPI_LIBUSB=OFF \
+  -DSDL_HIDAPI_LIBUSB_SHARED=OFF \
+  -DCMAKE_DISABLE_FIND_PACKAGE_LibUSB=TRUE \
   -DSDL_TESTS=OFF \
   -DSDL_EXAMPLES=OFF
 cmake --build "$BUILD_DIR" --config Release --parallel
@@ -71,11 +74,13 @@ for binary in "$PACKAGE_DIR/JoyConDSU" "$PACKAGE_DIR/libSDL3.0.dylib"; do
     exit 1
   fi
 done
-if /usr/bin/otool -L "$PACKAGE_DIR/JoyConDSU" | \
-    /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' >/dev/null; then
-  echo "JoyConDSU conserve une dépendance propre à la machine de construction." >&2
-  exit 1
-fi
+for binary in "$PACKAGE_DIR/JoyConDSU" "$PACKAGE_DIR/libSDL3.0.dylib"; do
+  if { /usr/bin/otool -L "$binary"; /usr/bin/otool -l "$binary"; } | \
+      /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' >/dev/null; then
+    echo "Dépendance propre à la machine de construction : $binary" >&2
+    exit 1
+  fi
+done
 
 python3 - "$PACKAGE_DIR" <<'PY'
 import hashlib
