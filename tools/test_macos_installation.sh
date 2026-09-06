@@ -75,6 +75,20 @@ for binary in "$DSU_EXECUTABLE" "$SDL_LIBRARY"; do
   }
 done
 
+list_macho_dependencies() {
+  /usr/bin/otool -L "$1" | /usr/bin/awk 'NR > 1 { print $1 }'
+}
+
+list_macho_rpaths() {
+  /usr/bin/otool -l "$1" | /usr/bin/awk '
+    $1 == "cmd" && $2 == "LC_RPATH" { reading_rpath = 1; next }
+    reading_rpath && $1 == "path" {
+      if (!seen[$2]++) print $2
+      reading_rpath = 0
+    }
+  '
+}
+
 # Tous les exécutables et bibliothèques doivent être Apple Silicon, signés et
 # indépendants de la machine GitHub qui a construit le DMG.
 while IFS= read -r -d '' binary; do
@@ -84,9 +98,11 @@ while IFS= read -r -d '' binary; do
     exit 1
   }
   /usr/bin/codesign --verify --strict --verbose=2 "$binary"
-  if { /usr/bin/otool -L "$binary"; /usr/bin/otool -l "$binary"; } | \
-      /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' >/dev/null; then
+  unsafe_metadata="$({ list_macho_dependencies "$binary"; list_macho_rpaths "$binary"; } | \
+    /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' || true)"
+  if [[ -n "$unsafe_metadata" ]]; then
     echo "Dépendance propre à la machine de construction : $binary" >&2
+    printf '%s\n' "$unsafe_metadata" >&2
     exit 1
   fi
 done < <(/usr/bin/find "$APPLICATION" -type f -print0)
