@@ -27,6 +27,7 @@ if(JOYCON_DSU_FETCH_SDL)
         # The packaged executable is relocated next to SDL after compilation.
         # Never embed the temporary GitHub runner build directory in Mach-O.
         set(CMAKE_SKIP_BUILD_RPATH ON CACHE BOOL "" FORCE)
+        set(CMAKE_SKIP_RPATH ON CACHE BOOL "" FORCE)
         # SDL has a native HIDAPI backend on macOS.  Do not auto-detect the
         # runner's Homebrew libusb: that would make the packaged dylib depend
         # on /opt/homebrew and break on a clean player's Mac.
