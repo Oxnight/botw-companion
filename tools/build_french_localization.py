@@ -100,6 +100,21 @@ FIXED = {
     "Akkala Ancient Tech Lab": "Laboratoire antique d'Akkala",
     "Hateno Ancient Tech Lab": "Laboratoire antique d'Elimith",
     "Shrine of Resurrection": "Sanctuaire de la Renaissance",
+    "Guardian Sword": "Glaive de Gardien 1.0",
+    "Guardian Sword+": "Glaive de Gardien 2.0",
+    "Guardian Spear": "Lance de Gardien 1.0",
+    "Guardian Spear+": "Lance de Gardien 2.0",
+    "Guardian Shield": "Bouclier de Gardien 1.0",
+    "Guardian Shield+": "Bouclier de Gardien 2.0",
+    "Speak to Symin after completing the Hyrule Compendium":
+        "Parler à Canel après avoir complété l'encyclopédie d'Hyrule",
+    "Speak to Hestu after collecting all 900 Korok Seeds":
+        "Parler à Noïa après avoir trouvé les 900 noix Korogus",
+    "Revive Great Fairy Cotera": "Réveiller la grande fée Cotura",
+    "Revive Great Fairy Kaysa": "Réveiller la grande fée Caesa",
+    "Revive Great Fairy Mija": "Réveiller la grande fée Mijah",
+    "Revive Great Fairy Tera": "Réveiller la grande fée Tera",
+    "Revive Horse God Malanya": "Réveiller Marlon",
 }
 
 # Noms de personnages de la version française européenne. Ces graphies sont

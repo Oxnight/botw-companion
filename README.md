@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 25**. Elle fiabilise le profil de complétion sans retirer de fonction au site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
+La version actuelle est **0.40.0 alpha 26**. Elle termine la localisation française des recettes, objectifs annexes et variantes du compendium, sans retirer de fonction au site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
 
 ## Sommaire
 
@@ -91,8 +91,8 @@ La chaîne de distribution Windows produit maintenant un paquet autonome. Elle u
 
 Télécharger le fichier correspondant depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases) :
 
-* Windows x64 : `BOTW_Companion_0.40.0-alpha.25_Setup.exe` ;
-* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg`.
+* Windows x64 : `BOTW_Companion_0.40.0-alpha.26_Setup.exe` ;
+* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg`.
 
 Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
 

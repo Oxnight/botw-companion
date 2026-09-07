@@ -1334,7 +1334,7 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
 
 
 def _nomenclature_audit(items: list[dict], map_layers: list[dict]) -> dict:
-    """Contrôle récursivement les textes visibles, y compris l'intérieur des fiches."""
+    """Contrôle les textes visibles, les fiches et toutes les recettes d'armures."""
     reference = load_nomenclature_reference()
     visible_keys = {"name", "label", "region", "subtype", "content_origin_label",
                     "action", "completion_condition", "reward", "contenu"}
@@ -1353,6 +1353,11 @@ def _nomenclature_audit(items: list[dict], map_layers: list[dict]) -> dict:
                                "valeur": value, "motif": token})
 
     skipped_guide_keys = {"sources", "objective_key", "quest_evidence", "category"}
+    catalog_visible_keys = visible_keys | {
+        "trial", "nearby", "secteur", "body_part", "detection", "location",
+        "item", "title", "description", "warning", "warnings", "preparation",
+        "prerequisites", "rewards", "steps",
+    }
 
     def walk_guide(tracking_id: str | None, value: object, path: str = "guide") -> None:
         if isinstance(value, dict):
@@ -1365,6 +1370,16 @@ def _nomenclature_audit(items: list[dict], map_layers: list[dict]) -> dict:
         elif isinstance(value, str) and not value.startswith(("http://", "https://")):
             inspect_text(tracking_id, path, value)
 
+    def walk_catalog(value: object, path: str = "catalog", visible: bool = False) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                walk_catalog(child, f"{path}.{key}", visible or key in catalog_visible_keys)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                walk_catalog(child, f"{path}[{index}]", visible)
+        elif visible and isinstance(value, str) and not value.startswith(("http://", "https://")):
+            inspect_text(None, path, value)
+
     for item in items + map_layers:
         tracking_id = item.get("tracking_id")
         for key in visible_keys:
@@ -1372,14 +1387,57 @@ def _nomenclature_audit(items: list[dict], map_layers: list[dict]) -> dict:
             if isinstance(value, str):
                 inspect_text(tracking_id, key, value)
         walk_guide(tracking_id, item.get("guide", {}))
+
+    localized_catalog = load_catalog()
+    walk_catalog(localized_catalog)
+    recipe_reference = reference.get("armor_recipe_materials_by_id", {})
+    recipe_occurrences = 0
+    recipe_material_ids = set()
+    for armor in localized_catalog.get("armor_owned", []):
+        for level, recipe in armor.get("recettes", {}).items():
+            for material in recipe:
+                recipe_occurrences += 1
+                material_id = material.get("id")
+                recipe_material_ids.add(material_id)
+                expected = recipe_reference.get(material_id)
+                actual = material.get("name")
+                path = f"recettes.{level}.{material_id}"
+                if expected is None:
+                    issues.append({"tracking_id": armor.get("id"), "champ": path,
+                                   "valeur": actual, "motif": "matériau sans référence française"})
+                elif actual != expected:
+                    issues.append({"tracking_id": armor.get("id"), "champ": path,
+                                   "valeur": actual, "motif": f"nom attendu : {expected}"})
+                if isinstance(actual, str):
+                    inspect_text(armor.get("id"), path, actual)
+
+    compendium_reference = reference.get("compendium_overrides_by_id", {})
+    compendium_by_id = {item.get("id"): item for item in localized_catalog.get("compendium", [])}
+    for internal_id, expected in compendium_reference.items():
+        actual = compendium_by_id.get(internal_id)
+        if actual is None:
+            issues.append({"tracking_id": internal_id, "champ": "compendium",
+                           "valeur": None, "motif": "entrée du compendium absente"})
+            continue
+        for field, expected_value in expected.items():
+            if actual.get(field) != expected_value:
+                issues.append({"tracking_id": internal_id, "champ": f"compendium.{field}",
+                               "valeur": actual.get(field),
+                               "motif": f"valeur attendue : {expected_value}"})
+    for index, item in enumerate(localized_catalog.get("canonical", {}).get("other", [])):
+        inspect_text(None, f"canonical.other[{index}].name", item.get("name", ""))
     enemy_layers = [item for item in map_layers if item.get("layer_type", "").startswith("enemy_")]
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "locale": "fr-FR",
         "statut": "complet" if not issues else "à corriger",
         "elements_visibles_controles": len(items) + len(map_layers),
         "points_ennemis_controles": len(enemy_layers),
         "sous_types_ennemis": len({item.get("subtype") for item in enemy_layers}),
+        "recettes_armures_controlees": recipe_occurrences,
+        "materiaux_recettes_uniques": len(recipe_material_ids),
+        "variantes_gardien_controlees": len(compendium_reference),
+        "objectifs_annexes_controles": len(localized_catalog.get("canonical", {}).get("other", [])),
         "anomalies": issues,
         "reference_schema_version": reference.get("schema_version"),
         "champs_de_fiches_controles_recursivement": True,

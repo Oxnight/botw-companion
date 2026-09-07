@@ -3,7 +3,7 @@ name: Versions Windows et macOS
 on:
   push:
     branches: [master]
-    tags: ["v0.40.0-alpha.25"]
+    tags: ["v0.40.0-alpha.26"]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -74,8 +74,8 @@ jobs:
       - name: Conserver l'installateur Windows
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.25-Windows-x64
-          path: dist/installer/BOTW_Companion_0.40.0-alpha.25_Setup.exe
+          name: BOTW-Companion-0.40.0-alpha.26-Windows-x64
+          path: dist/installer/BOTW_Companion_0.40.0-alpha.26_Setup.exe
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -187,8 +187,8 @@ jobs:
       - name: Conserver le DMG Apple Silicon
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.25-macOS-arm64
-          path: dist/BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg
+          name: BOTW-Companion-0.40.0-alpha.26-macOS-arm64
+          path: dist/BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -207,24 +207,24 @@ jobs:
       - name: Télécharger les installateurs validés
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          pattern: BOTW-Companion-0.40.0-alpha.25-*
+          pattern: BOTW-Companion-0.40.0-alpha.26-*
           path: release-assets
           merge-multiple: true
 
       - name: Vérifier les deux plateformes
         shell: bash
         run: |
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.25_Setup.exe
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.26_Setup.exe
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg
 
       - name: Créer la GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh release create "${{ github.ref_name }}"
-          release-assets/BOTW_Companion_0.40.0-alpha.25_Setup.exe
-          release-assets/BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg
+          release-assets/BOTW_Companion_0.40.0-alpha.26_Setup.exe
+          release-assets/BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg
           --verify-tag
           --prerelease
-          --title "BOTW Companion v0.40.0-alpha.25"
-          --notes-file RELEASE_NOTES_0.40.0-alpha.25.md
+          --title "BOTW Companion v0.40.0-alpha.26"
+          --notes-file RELEASE_NOTES_0.40.0-alpha.26.md

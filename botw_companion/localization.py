@@ -34,10 +34,37 @@ def _translate_text(value: str, translations: dict[str, str]) -> str:
 
 
 @lru_cache(maxsize=1)
-def _editorial_exact() -> dict[str, str]:
+def _nomenclature_reference() -> dict:
     import json
-    raw = json.loads(files("botw_companion.data").joinpath("nomenclature_fr_reference.json").read_text(encoding="utf-8"))
-    return raw["exact"]
+    return json.loads(
+        files("botw_companion.data")
+        .joinpath("nomenclature_fr_reference.json")
+        .read_text(encoding="utf-8")
+    )
+
+
+def _editorial_exact() -> dict[str, str]:
+    return _nomenclature_reference()["exact"]
+
+
+def _localize_armor_recipe_materials(catalog: dict) -> None:
+    """Applique les noms officiels aux recettes via leurs identifiants stables."""
+    reference = _nomenclature_reference()["armor_recipe_materials_by_id"]
+    for armor in catalog.get("armor_owned", []):
+        for recipe in armor.get("recettes", {}).values():
+            for material in recipe:
+                french_name = reference.get(material.get("id"))
+                if french_name:
+                    material["name"] = french_name
+
+
+def _correct_compendium_variants(catalog: dict) -> None:
+    """Distingue les variantes de Gardien que la table anglaise fusionne."""
+    overrides = _nomenclature_reference()["compendium_overrides_by_id"]
+    for item in catalog.get("compendium", []):
+        override = overrides.get(item.get("id"))
+        if override:
+            item.update(override)
 
 
 def localize_editorial_text(value: str) -> str:
@@ -120,4 +147,7 @@ def localize_catalog(catalog: dict) -> dict:
             return _translate_text(value, translations)
         return value
 
-    return normalize_catalog(walk(data))
+    localized = normalize_catalog(walk(data))
+    _localize_armor_recipe_materials(localized)
+    _correct_compendium_variants(localized)
+    return localized

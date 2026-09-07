@@ -50,9 +50,11 @@ class FrenchLocalizationTests(unittest.TestCase):
 
     def test_corrective_step_six_has_an_independent_french_reference(self):
         reference = load_nomenclature_reference()
-        self.assertEqual(reference["schema_version"], 1)
+        self.assertEqual(reference["schema_version"], 2)
         self.assertEqual(reference["locale"], "fr-FR")
         self.assertGreaterEqual(len(reference["exact"]), 100)
+        self.assertEqual(len(reference["armor_recipe_materials_by_id"]), 81)
+        self.assertEqual(len(reference["compendium_overrides_by_id"]), 9)
         self.assertTrue(reference["forbidden_visible_tokens"])
         self.assertTrue(reference["sources"])
 
@@ -107,10 +109,43 @@ class FrenchLocalizationTests(unittest.TestCase):
 
     def test_corrective_step_six_audit_is_recursive_and_clean(self):
         audit = analyze({})["audit_nomenclature"]
-        self.assertEqual(audit["schema_version"], 2)
+        self.assertEqual(audit["schema_version"], 3)
         self.assertTrue(audit["champs_de_fiches_controles_recursivement"])
+        self.assertEqual(audit["recettes_armures_controlees"], 514)
+        self.assertEqual(audit["materiaux_recettes_uniques"], 81)
+        self.assertEqual(audit["variantes_gardien_controlees"], 9)
         self.assertEqual(audit["statut"], "complet")
         self.assertEqual(audit["anomalies"], [])
+
+    def test_all_armor_recipe_materials_use_the_official_french_reference(self):
+        catalog = load_catalog()
+        expected = load_nomenclature_reference()["armor_recipe_materials_by_id"]
+        occurrences = []
+        for armor in catalog["armor_owned"]:
+            for recipe in armor.get("recettes", {}).values():
+                occurrences.extend(recipe)
+        self.assertEqual(len(occurrences), 514)
+        self.assertEqual({material["id"] for material in occurrences}, set(expected))
+        for material in occurrences:
+            self.assertEqual(material["name"], expected[material["id"]])
+
+    def test_remaining_compendium_and_completion_labels_are_french(self):
+        catalog = load_catalog()
+        names = {item["name"] for item in catalog["compendium"]}
+        self.assertIn("Glaive de Gardien 1.0", names)
+        self.assertIn("Lance de Gardien 2.0", names)
+        self.assertIn("Bouclier de Gardien 1.0", names)
+        other = {item["name"] for item in catalog["canonical"]["other"]}
+        self.assertIn("Parler à Canel après avoir complété l'encyclopédie d'Hyrule", other)
+        self.assertIn("Parler à Noïa après avoir trouvé les 900 noix Korogus", other)
+        self.assertIn("Réveiller la grande fée Cotura", other)
+        self.assertIn("Réveiller Marlon", other)
+        forbidden = load_nomenclature_reference()["forbidden_visible_tokens"]
+        self.assertFalse(any(token.lower() in name.lower()
+                             for token in forbidden for name in names | other))
+        by_id = {item["id"]: item for item in catalog["compendium"]}
+        for internal_id, expected in load_nomenclature_reference()["compendium_overrides_by_id"].items():
+            self.assertEqual({field: by_id[internal_id][field] for field in expected}, expected)
 
     def test_corrective_step_six_replaces_numbered_persistent_boss_names(self):
         report = analyze({})
