@@ -86,6 +86,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn('list_macho_dependencies "$binary"', validation)
         self.assertIn('list_macho_rpaths "$binary"', validation)
         self.assertIn("CFBundleShortVersionString", validation)
+        self.assertIn('[[ "$ACTUAL_BUNDLE_VERSION" == "25" ]]', validation)
+        self.assertNotIn('[[ "$ACTUAL_BUNDLE_VERSION" == "24" ]]', validation)
         self.assertIn("find \"$APPLICATION\" -type f -print0", validation)
         self.assertIn("Binaire non arm64 dans l'application", validation)
 

@@ -38,6 +38,11 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
         (root / "tools" / "test_windows_installation.ps1", re.escape(PEP440_VERSION), "test du serveur installé"),
         (root / "macos" / "BOTW Companion.spec", rf'version="{re.escape(MACOS_BUNDLE_VERSION)}"', "version courte macOS"),
         (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "25"', "numéro de build macOS"),
+        (
+            root / "tools" / "test_macos_installation.sh",
+            r'\[\[ "\$ACTUAL_BUNDLE_VERSION" == "25" \]\]',
+            "numéro de build attendu par le test DMG macOS",
+        ),
         (root / "tools" / "build_macos_app.sh", re.escape(DMG_NAME), "construction macOS"),
         (root / "tools" / "test_macos_installation.sh", re.escape(PEP440_VERSION), "test macOS"),
         (root / ".github" / "workflows" / "release.yml", re.escape(RELEASE_TAG), "workflow de publication"),

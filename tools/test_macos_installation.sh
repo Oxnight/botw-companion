@@ -52,9 +52,10 @@ readonly EXECUTABLE="$APPLICATION/Contents/MacOS/BOTW Companion"
   echo "CFBundleShortVersionString est invalide." >&2
   exit 1
 }
-[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
-    "$APPLICATION/Contents/Info.plist")" == "24" ]] || {
-  echo "CFBundleVersion est invalide." >&2
+readonly ACTUAL_BUNDLE_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
+    "$APPLICATION/Contents/Info.plist")"
+[[ "$ACTUAL_BUNDLE_VERSION" == "25" ]] || {
+  echo "CFBundleVersion est invalide : attendu 25, obtenu $ACTUAL_BUNDLE_VERSION." >&2
   exit 1
 }
 
