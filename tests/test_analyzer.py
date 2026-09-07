@@ -7,11 +7,11 @@ from botw_companion.resources import load_catalog, load_completion_standard
 
 
 class AnalyzerTests(unittest.TestCase):
-    def test_quest_completion_uses_journal_finish_flags(self):
+    def test_quest_completion_uses_persistent_finish_flags(self):
         catalog = load_catalog()
         expected = {
             "findthefairyfountain": "FairyFountain_Finish",
-            "destroyganon": "GanonQuest_Finished",
+            "destroyganon": "GameClear",
             "thegutcheckchallenge": "GoronCamp_Finish",
             "thetestofwood": "ShieldofKolog_Finish",
         }
@@ -19,6 +19,43 @@ class AnalyzerTests(unittest.TestCase):
                   for item in catalog[key]}
         for name, flag in expected.items():
             self.assertEqual(quests[name]["rule"], [{"flag": flag, "value": True}])
+
+    def test_game_clear_completes_destroy_ganon_after_the_journal_resets(self):
+        report = analyze({"GameClear": True, "GanonQuest_Finished": False})
+        quest = next(
+            item for item in report["categories"]["quetes_principales"]["elements"]
+            if item["id"] == "destroyganon"
+        )
+        self.assertTrue(quest["termine"])
+        self.assertEqual(quest["statut"], "terminé")
+
+    def test_journal_finish_flag_alone_is_not_persistent_proof_of_victory(self):
+        report = analyze({"GameClear": False, "GanonQuest_Finished": True})
+        quest = next(
+            item for item in report["categories"]["quetes_principales"]["elements"]
+            if item["id"] == "destroyganon"
+        )
+        self.assertFalse(quest["termine"])
+
+    def test_game_clear_also_completes_the_scripted_ganon_entry(self):
+        report = analyze({"GameClear": True, "GanonQuest_Finished": False})
+        ganon = next(
+            item for item in report["categories"]["bosses_scenarises"]["elements"]
+            if item["id"] == "ganon"
+        )
+        self.assertTrue(ganon["termine"])
+
+    def test_game_clear_allows_the_main_quest_counter_to_reach_twenty_of_twenty(self):
+        catalog = load_catalog()
+        flags = {
+            entry["flag"]: entry.get("value", True)
+            for quest in catalog["main_quests"]
+            for entry in quest["rule"]
+        }
+        flags["GanonQuest_Finished"] = False
+        report = analyze(flags)["categories"]["quetes_principales"]
+        self.assertEqual((report["faits"], report["total"]), (20, 20))
+        self.assertEqual(report["restants"], [])
 
     def test_evaluates_flags_without_confusing_false_and_missing(self):
         catalog = {
@@ -82,6 +119,16 @@ class AnalyzerTests(unittest.TestCase):
         flags.update({f"Location_Dungeon{i:03d}": True for i in range(120, 137)})
         dlc = _official_map(catalog, flags)
         self.assertEqual((dlc["faits"], dlc["total"], dlc["pourcentage"]), (1224, 1224, 100.0))
+
+    def test_game_clear_unlocks_map_percentage_without_adding_a_map_marker(self):
+        hidden = _official_map(load_catalog(), {})
+        visible = _official_map(load_catalog(), {"GameClear": True})
+        self.assertFalse(hidden["visible_dans_le_jeu"])
+        self.assertTrue(visible["visible_dans_le_jeu"])
+        self.assertEqual(
+            (visible["faits"], visible["total"], visible["pourcentage"]),
+            (hidden["faits"], hidden["total"], hidden["pourcentage"]),
+        )
 
     def test_all_quests_and_memories_have_structured_coordinates(self):
         catalog = load_catalog()

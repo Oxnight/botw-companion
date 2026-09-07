@@ -181,6 +181,16 @@ def main() -> None:
             quest["rule"] = journal_finish_rule(quest["name"])
             quest["detection"] = "flag exact du journal"
 
+    # BOTW recharge la sauvegarde juste avant le combat final. Le journal remet
+    # alors GanonQuest_Finished à faux, tandis que GameClear reste vrai et
+    # commande notamment l'étoile du fichier et le compteur de carte. C'est
+    # donc la seule preuve persistante fiable d'une première victoire.
+    destroy_ganon = next(
+        quest for quest in catalog["main_quests"] if quest["id"] == "destroyganon"
+    )
+    destroy_ganon["rule"] = [{"flag": "GameClear", "value": True}]
+    destroy_ganon["detection"] = "victoire finale persistante"
+
     memory_lookup = {norm(name): name for name in catalog["canonical"]["memories"]}
     dlc_memory_names = {
         "championdaruk": "EX Souvenir de Daruk", "championmipha": "EX Souvenir de Mipha",

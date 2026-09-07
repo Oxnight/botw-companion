@@ -6,7 +6,7 @@ La chaîne de publication teste désormais l’installation complète sur Window
 
 ## Téléchargements
 
-- **Windows 10/11 x64** — télécharger le fichier `Setup.exe` puis lancer l’installation.
-- **macOS 14 ou plus récent, Apple Silicon** — télécharger le DMG puis glisser BOTW Companion dans Applications.
+- **Windows 10/11 x64** - télécharger le fichier `Setup.exe` puis lancer l’installation.
+- **macOS 14 ou plus récent, Apple Silicon** - télécharger le DMG puis glisser BOTW Companion dans Applications.
 
 Les paquets ne sont pas signés avec un certificat commercial. SmartScreen ou Gatekeeper peut demander une confirmation au premier lancement.

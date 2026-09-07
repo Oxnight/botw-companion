@@ -986,7 +986,7 @@ def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
         "dlc_detecte": dlc_evidence,
         "detection_dlc": "progression DLC présente dans la sauvegarde" if dlc_evidence else
                          "aucune progression DLC détectée ; formule jeu de base sélectionnée automatiquement",
-        "visible_dans_le_jeu": _done(flags.get("GanonQuest_Finished")),
+        "visible_dans_le_jeu": _done(flags.get("GameClear")),
         "condition_affichage": "Le jeu affiche ce compteur après la première victoire contre Ganon.",
         "note": "Compteur de carte officiel : chaque marqueur a le même poids. Les quêtes, coffres, souvenirs et le compendium n'y participent pas.",
     }

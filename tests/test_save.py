@@ -31,6 +31,15 @@ class SaveTests(unittest.TestCase):
             fake_save(path, 42)
             self.assertEqual(parse_data(path.read_bytes(), path), parse_file(path))
 
+    def test_parser_reads_the_persistent_game_clear_boolean(self):
+        marker = b"\x00\x00\x00\x01\xff\xff\xff\xff\x00\x00\x00\x01"
+        data = marker + struct.pack(">II", 280051862, 1) + b"\xff\xff\xff\xff"
+        with patch(
+            "botw_companion.save.load_hashes",
+            return_value={280051862: (1, "GameClear")},
+        ):
+            self.assertEqual(parse_data(data), {"GameClear": True})
+
     def test_parses_inventory_names_and_quantities(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "game_data.sav"

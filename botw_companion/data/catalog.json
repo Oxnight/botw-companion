@@ -16465,7 +16465,7 @@
       "id": "destroyganon",
       "rule": [
         {
-          "flag": "GanonQuest_Finished",
+          "flag": "GameClear",
           "value": true
         }
       ],
@@ -16475,7 +16475,7 @@
           "value": true
         }
       ],
-      "detection": "flag exact du journal",
+      "detection": "victoire finale persistante",
       "geo_points": [
         {
           "role": "depart",
@@ -56067,7 +56067,7 @@
     {
       "id": "ganon",
       "name": "Ganon, le Fléau",
-      "flag": "GanonQuest_Finished",
+      "flag": "GameClear",
       "x": -254.0,
       "z": -1063.0,
       "region": "Central",

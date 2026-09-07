@@ -556,7 +556,7 @@ def make_progress_categories(catalog: dict, object_map: dict) -> None:
         {"id": "ombre-feu", "name": "Ombre de feu de Ganon", "flag": "Die_PGanonFire", **{k: beasts["Location_RemainsFire"][k] for k in ("x", "z")}},
         {"id": "ombre-vent", "name": "Ombre de vent de Ganon", "flag": "Die_PGanonWind", **{k: beasts["Location_RemainsWind"][k] for k in ("x", "z")}},
         {"id": "ombre-foudre", "name": "Ombre de foudre de Ganon", "flag": "Die_PGanonElectric", **{k: beasts["Location_RemainsElectric"][k] for k in ("x", "z")}},
-        {"id": "ganon", "name": "Ganon, le Fléau", "flag": "GanonQuest_Finished", "x": -254.0, "z": -1063.0},
+        {"id": "ganon", "name": "Ganon, le Fléau", "flag": "GameClear", "x": -254.0, "z": -1063.0},
         {"id": "arquor-rex", "name": "Arquor Rex", "any_flags": ["MainField_IsDefeat_Enemy_SandwormR_1755179653", "BalladOfHeroGerudo_FirstKillSandwormR"], "x": arquor[0], "z": arquor[1], "dlc": True},
         {"id": "mega-magrok", "name": "Méga Magrok", "any_flags": ["MainField_IsDefeat_Enemy_Golem_Fire_R_667761767", "BalladOfHeroGoron_FirstKillGolemR", "BalladOfHeroGoron_KillGolemR"], "x": mega[0], "z": mega[1], "dlc": True},
         {"id": "miz-kyosia", "name": "Guide Miz'Kyosia", "flag": "Die_Boss_FinalTrial", "dlc": True, "region": "Épreuve finale"},
