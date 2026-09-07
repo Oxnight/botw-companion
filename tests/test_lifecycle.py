@@ -82,10 +82,10 @@ class ServerProbeTests(unittest.TestCase):
 
         def opener(url, timeout):
             calls.append((url, timeout))
-            return FakeResponse(b'{"application":"BOTW Companion","version":"0.40.0a26"}')
+            return FakeResponse(b'{"application":"BOTW Companion","version":"0.40.0a27"}')
 
         result = probe_companion_server(9876, timeout=0.25, opener=opener)
-        self.assertEqual(result["version"], "0.40.0a26")
+        self.assertEqual(result["version"], "0.40.0a27")
         self.assertEqual(calls, [("http://127.0.0.1:9876/api/version", 0.25)])
 
     def test_probe_rejects_an_unrelated_service_on_the_same_port(self):
@@ -182,12 +182,15 @@ class FakeDsuManager:
 
 
 class ServerLifecycleIntegrationTests(unittest.TestCase):
+    SESSION_TOKEN = "integration-test-session-token"
+
     @staticmethod
     def request_shutdown(port: int) -> None:
         try:
             with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
+                headers={"X-BOTW-Session-Token": ServerLifecycleIntegrationTests.SESSION_TOKEN},
                 method="POST",
             ), timeout=0.5):
                 pass
@@ -213,6 +216,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
                 "open_browser": False,
                 "running_emulators_provider": lambda: [],
                 "server_ready": report_ready,
+                "session_token": self.SESSION_TOKEN,
                 **kwargs,
             },
             daemon=True,
@@ -247,6 +251,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
                 method="POST",
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
@@ -268,6 +273,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/dsu/start",
                 data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
                 method="POST",
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
@@ -275,6 +281,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/dsu/stop",
                 data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
                 method="POST",
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
@@ -282,6 +289,7 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             with open_loopback(Request(
                 f"http://127.0.0.1:{port}/api/shutdown",
                 data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
                 method="POST",
             ), timeout=1):
                 pass

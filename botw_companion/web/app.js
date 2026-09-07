@@ -1,3 +1,24 @@
+const nativeFetch = window.fetch.bind(window);
+const launchFragment = new URLSearchParams(window.location.hash.slice(1));
+const sessionToken = launchFragment.get("session") ||
+    document.querySelector('meta[name="botw-session-token"]')?.content || "";
+
+if (window.location.hash) {
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+}
+
+window.fetch = (input, options = {}) => {
+    const requestUrl = new URL(input instanceof Request ? input.url : input, window.location.href);
+    if (requestUrl.origin !== window.location.origin || !requestUrl.pathname.startsWith("/api/")) {
+        return nativeFetch(input, options);
+    }
+    const headers = new Headers(
+        options.headers || (input instanceof Request ? input.headers : undefined)
+    );
+    headers.set("X-BOTW-Session-Token", sessionToken);
+    return nativeFetch(input, { ...options, headers });
+};
+
 let report = null, selectedId = null, filtersInitialized = false;
 let saveCaptionRevision = null;
 const detailCache = new Map();

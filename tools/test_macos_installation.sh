@@ -7,7 +7,7 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
 fi
 
 readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg}"
+readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg}"
 readonly TEST_ROOT="${RUNNER_TEMP:-/tmp}/BOTW Companion macOS installation test"
 readonly INSTALL_ROOT="$TEST_ROOT/Applications"
 readonly DATA_ROOT="$TEST_ROOT/User Data"
@@ -54,8 +54,8 @@ readonly EXECUTABLE="$APPLICATION/Contents/MacOS/BOTW Companion"
 }
 readonly ACTUAL_BUNDLE_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
     "$APPLICATION/Contents/Info.plist")"
-[[ "$ACTUAL_BUNDLE_VERSION" == "26" ]] || {
-  echo "CFBundleVersion est invalide : attendu 26, obtenu $ACTUAL_BUNDLE_VERSION." >&2
+[[ "$ACTUAL_BUNDLE_VERSION" == "27" ]] || {
+  echo "CFBundleVersion est invalide : attendu 27, obtenu $ACTUAL_BUNDLE_VERSION." >&2
   exit 1
 }
 
@@ -126,14 +126,16 @@ done < <(/usr/bin/find "$APPLICATION" -type f -print0)
 SERVER_PID=$!
 
 ready=0
+identity_json=""
 for _attempt in {1..120}; do
   if ! /bin/kill -0 "$SERVER_PID" 2>/dev/null; then
     echo "Le serveur installé s'est arrêté prématurément." >&2
     exit 1
   fi
-  if /usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
-      "http://127.0.0.1:$TEST_PORT/api/version" | \
-      /usr/bin/grep -F '"version": "0.40.0a26"' >/dev/null; then
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
+      "http://127.0.0.1:$TEST_PORT/api/version" || true)"
+  if printf '%s' "$identity_json" | \
+      /usr/bin/grep -F '"version": "0.40.0a27"' >/dev/null; then
     ready=1
     break
   fi
@@ -144,11 +146,18 @@ if [[ "$ready" != "1" ]]; then
   echo "Le serveur installé n'a pas répondu dans le délai prévu." >&2
   exit 1
 fi
+SESSION_TOKEN="$(printf '%s' "$identity_json" | python3 -c \
+  'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+if [[ -z "$SESSION_TOKEN" ]]; then
+  echo "Le serveur installé n'a pas fourni de jeton de session." >&2
+  exit 1
+fi
 
 /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
   "http://127.0.0.1:$TEST_PORT/" | \
   /usr/bin/grep -F '<title>BOTW Companion</title>' >/dev/null
 /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+  -H "X-BOTW-Session-Token: $SESSION_TOKEN" \
   -X POST "http://127.0.0.1:$TEST_PORT/api/shutdown" >/dev/null
 wait "$SERVER_PID"
 SERVER_PID=""

@@ -69,7 +69,7 @@ app = BUNDLE(
     info_plist={
         "CFBundleDisplayName": "BOTW Companion",
         "CFBundleShortVersionString": "0.40.0",
-        "CFBundleVersion": "26",
+        "CFBundleVersion": "27",
         "LSMinimumSystemVersion": "14.0",
         "LSArchitecturePriority": ["arm64"],
         "NSHighResolutionCapable": True,

@@ -15,6 +15,35 @@ class FakeProcess:
 
 
 class WindowsLauncherTests(unittest.TestCase):
+    def test_authenticated_url_and_shutdown_carry_the_session_token(self):
+        self.assertEqual(
+            windows_launcher.authenticated_browser_url(
+                8765, {"session_token": "token with spaces"}
+            ),
+            "http://127.0.0.1:8765/#session=token%20with%20spaces",
+        )
+        calls = []
+
+        class Response:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                pass
+
+        def opener(request, timeout):
+            calls.append((request, timeout))
+            return Response()
+
+        self.assertTrue(
+            windows_launcher.request_shutdown(8765, "secret", opener=opener)
+        )
+        request, timeout = calls[0]
+        self.assertEqual(request.get_header("X-botw-session-token"), "secret")
+        self.assertEqual(timeout, 1.5)
+
     def test_load_config_accepts_utf8_bom_and_rejects_non_object(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "launcher.json"

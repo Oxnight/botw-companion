@@ -2,7 +2,7 @@
 
 La version macOS cible uniquement les Mac Apple Silicon sous macOS 14 ou plus récent.
 
-Les joueurs téléchargent `BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg`, ouvrent l’image disque et glissent **BOTW Companion** dans **Applications**. Le paquet contient Python, toutes les ressources hors ligne, JoyConDSU arm64 et `libSDL3.0.dylib`. Il ne dépend ni du clone, ni de `.venv`, Homebrew ou Xcode.
+Les joueurs téléchargent `BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg`, ouvrent l’image disque et glissent **BOTW Companion** dans **Applications**. Le paquet contient Python, toutes les ressources hors ligne, JoyConDSU arm64 et `libSDL3.0.dylib`. Il ne dépend ni du clone, ni de `.venv`, Homebrew ou Xcode.
 
 ## Construction
 

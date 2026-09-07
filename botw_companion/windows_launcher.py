@@ -11,6 +11,7 @@ import subprocess
 import sys
 import time
 from typing import Callable, Mapping
+from urllib.parse import quote
 from urllib.request import Request
 import webbrowser
 
@@ -137,11 +138,20 @@ def open_default_browser(url: str) -> bool:
     return bool(webbrowser.open(url, new=0, autoraise=True))
 
 
-def request_shutdown(port: int, *, opener=open_loopback) -> bool:
+def authenticated_browser_url(port: int, identity: Mapping[str, object]) -> str:
+    url = f"http://127.0.0.1:{port}"
+    token = identity.get("session_token")
+    return f"{url}/#session={quote(token, safe='')}" if isinstance(token, str) and token else url
+
+
+def request_shutdown(port: int, session_token: str | None = None, *,
+                     opener=open_loopback) -> bool:
+    headers = {"X-BOTW-Session-Token": session_token} if session_token else {}
     try:
         with opener(Request(
             f"http://127.0.0.1:{port}/api/shutdown",
             data=b"",
+            headers=headers,
             method="POST",
         ), timeout=1.5) as response:
             return getattr(response, "status", 200) == 200
@@ -273,14 +283,16 @@ def run(*, explicit_project: str | None = None,
     port = int(config.get("port", DEFAULT_PORT))
     if not 1 <= port <= 65535:
         raise LauncherError("Le port configuré doit être compris entre 1 et 65535")
-    url = f"http://127.0.0.1:{port}"
     identity = probe(port, timeout=0.5)
     if identity is not None:
         if identity.get("version") == __version__:
             if not focus():
-                browser(url)
+                browser(authenticated_browser_url(port, identity))
             return 0
-        if not request_shutdown(port) or not wait_until_stopped(port, probe=probe):
+        token = identity.get("session_token")
+        if not request_shutdown(
+            port, token if isinstance(token, str) else None
+        ) or not wait_until_stopped(port, probe=probe):
             raise LauncherError(
                 "L’ancienne version du Companion n’a pas pu être arrêtée proprement"
             )
@@ -305,8 +317,8 @@ def run(*, explicit_project: str | None = None,
         popen=popen,
         frozen=packaged,
     )
-    wait_until_ready(port, __version__, process, probe=probe)
-    browser(url)
+    identity = wait_until_ready(port, __version__, process, probe=probe)
+    browser(authenticated_browser_url(port, identity))
     return 0
 
 

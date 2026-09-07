@@ -22,7 +22,7 @@ readonly BUILD_PYTHON="$BUILD_ROOT/venv/bin/python"
 readonly SPEC_PATH="$PROJECT_ROOT/macos/BOTW Companion.spec"
 readonly APPLICATION="$PROJECT_ROOT/dist/BOTW Companion.app"
 readonly DMG_ROOT="$BUILD_ROOT/dmg-root"
-readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg"
+readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg"
 
 if [[ $SKIP_NATIVE -eq 0 ]]; then
   "$PROJECT_ROOT/tools/build_joycon_dsu_macos.sh"

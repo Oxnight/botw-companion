@@ -2,7 +2,7 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 26**. Elle termine la localisation française des recettes, objectifs annexes et variantes du compendium, sans retirer de fonction au site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
+La version actuelle est **0.40.0 alpha 27**. Elle sécurise le serveur local et les actions sensibles sans retirer de fonction au site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
 
 ## Sommaire
 
@@ -19,6 +19,7 @@ La version actuelle est **0.40.0 alpha 26**. Elle termine la localisation franç
 * [Configurer le gyroscope universel dans Ryujinx ou Cemu](#configurer-le-gyroscope-universel-dans-ryujinx-ou-cemu).
 * [Utilisation en ligne de commande](#utilisation-en-ligne-de-commande).
 * [Données locales et confidentialité](#données-locales-et-confidentialité).
+* [Sécurité du serveur local](#sécurité-du-serveur-local).
 * [Mise à jour du clone](#mise-à-jour-du-clone).
 * [Remarques](#remarques).
 
@@ -91,8 +92,8 @@ La chaîne de distribution Windows produit maintenant un paquet autonome. Elle u
 
 Télécharger le fichier correspondant depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases) :
 
-* Windows x64 : `BOTW_Companion_0.40.0-alpha.26_Setup.exe` ;
-* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.26_macOS_arm64.dmg`.
+* Windows x64 : `BOTW_Companion_0.40.0-alpha.27_Setup.exe` ;
+* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg`.
 
 Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
 
@@ -216,6 +217,12 @@ Sous Windows, ils sont conservés dans :
 ```
 
 L’API locale `/api/version` fournit le chemin exact du dossier de données et du journal DSU à l’interface. Le survol de l’encadré DSU affiche également l’emplacement réellement utilisé.
+
+## Sécurité du serveur local
+
+Le serveur crée un jeton aléatoire à chaque démarrage. Le lanceur le transmet automatiquement à l’interface, qui l’ajoute aux requêtes capables de modifier les préférences, le suivi, les itinéraires, les imports, JoyConDSU ou l’état du serveur. Ce jeton n’est ni écrit sur disque ni réutilisé lors d’une autre session.
+
+Le serveur vérifie également l’hôte, l’origine et le contexte de navigation des requêtes. Il n’active pas CORS, refuse les prévols provenant d’un autre site et applique une politique de sécurité du contenu, l’interdiction d’être intégré dans une iframe, `nosniff` et une politique de référent restrictive.
 
 ## Validation des navigateurs
 
