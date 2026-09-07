@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import math
 import re
+from collections import Counter
 from collections.abc import Iterable
 
 from .guide_enrichment import build_map_guide
@@ -323,11 +324,30 @@ def _evaluate_inventory_items(items: Iterable[dict], inventory: list[dict] | Non
             "termines": completed, "elements": elements}
 
 
-def _evaluate_dlc_features(items: Iterable[dict], flags: dict[str, object]) -> dict:
-    dlc_available = any(_done(flags.get(flag)) for flag in (
+def _dlc_detection(flags: dict[str, object]) -> dict:
+    """Centralise les preuves persistantes de l'Expansion Pass dans la sauvegarde."""
+    evidence_flags = (
         "BalladOfHeroes_Activated", "100enemy_Activated", "IsGet_Obj_Motorcycle",
-        "IsGet_Obj_WarpDLC", "TreasureHunt_Aoc1_RunAutoOrder", "TreasureHunt_Aoc2_RunAutoOrder",
-    )) or int(flags.get("AoCVerAtLastPlay", 0) or 0) > 0
+        "IsGet_Obj_WarpDLC", "TreasureHunt_Aoc1_RunAutoOrder",
+        "TreasureHunt_Aoc2_RunAutoOrder", "AoC_HardMode_Enabled",
+    )
+    evidence = [flag for flag in evidence_flags if _done(flags.get(flag))]
+    evidence.extend(
+        f"Location_Dungeon{number:03d}"
+        for number in range(120, 137)
+        if _done(flags.get(f"Location_Dungeon{number:03d}"))
+    )
+    if int(flags.get("AoCVerAtLastPlay", 0) or 0) > 0:
+        evidence.append("AoCVerAtLastPlay")
+    return {
+        "detected": bool(evidence),
+        "evidence": evidence,
+        "method": "preuves persistantes de l'Expansion Pass dans la sauvegarde",
+    }
+
+
+def _evaluate_dlc_features(items: Iterable[dict], flags: dict[str, object]) -> dict:
+    dlc_available = _dlc_detection(flags)["detected"]
     elements, completed, remaining = [], [], []
     for source in items:
         item = dict(source)
@@ -934,12 +954,8 @@ def _cartography_quality_audit(items: list[dict], catalog_audit: dict) -> dict:
 
 def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
     """Reproduit le compteur de carte, séparé de l'indice de couverture."""
-    dlc_evidence = any(
-        _done(flags.get(f"Location_Dungeon{number:03d}")) for number in range(120, 137)
-    ) or any(_done(flags.get(flag)) for flag in (
-        "BalladOfHeroes_Activated", "100enemy_Activated", "IsGet_Obj_WarpDLC",
-        "IsGet_Obj_Motorcycle",
-    ))
+    dlc_detection = _dlc_detection(flags)
+    dlc_evidence = dlc_detection["detected"]
     base_components = {
         "korogus": {
             "faits": sum(_item_done(item, flags) for item in catalog["koroks"]),
@@ -984,6 +1000,7 @@ def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
         "scenarios": scenarios,
         "override_modes": ["automatique", "base", "dlc"],
         "dlc_detecte": dlc_evidence,
+        "preuves_dlc": dlc_detection["evidence"],
         "detection_dlc": "progression DLC présente dans la sauvegarde" if dlc_evidence else
                          "aucune progression DLC détectée ; formule jeu de base sélectionnée automatiquement",
         "visible_dans_le_jeu": _done(flags.get("GameClear")),
@@ -1023,6 +1040,11 @@ def _completion_reference(standard: dict, categories: dict, all_items: list[dict
         status: sum(item["current_status"] == status for item in resolved)
         for status in standard["statuses"]
     }
+    declared_scoring_categories = set(standard["global_score"]["scoring_categories"])
+    implemented_scoring_categories = {
+        category_id for category_id, category in categories.items()
+        if not category["score_excluded"]
+    }
     scored_items = [
         item for category in categories.values() if not category["score_excluded"]
         for item in category["elements"]
@@ -1030,53 +1052,72 @@ def _completion_reference(standard: dict, categories: dict, all_items: list[dict
     base_items = [item for item in scored_items if item.get("content_origin", "base") == "base"]
     dlc_origins = {"base", "expansion_bonus", "master_trials", "champions_ballad", "free_update"}
     dlc_items = [item for item in scored_items if item.get("content_origin", "base") in dlc_origins]
-    amiibo_items = [item for item in all_items if item.get("content_origin") == "amiibo"]
-    amiibo_done = sum(bool(item["termine"]) for item in amiibo_items)
+    amiibo_items = [item for item in scored_items if item.get("content_origin") == "amiibo"]
     detected_content = official_map["selected_mode"]
     detected_items = dlc_items if detected_content == "dlc" else base_items
     context = save_context or {}
     save_mode = context.get("mode") or ("expert" if _done(context.get("is_expert")) else "normal")
 
-    def progress(items: list[dict], *, manual: bool) -> dict:
+    profile_sets = {"base": base_items, "dlc": dlc_items, "amiibo": amiibo_items}
+    scored_item_ids = {id(item) for item in scored_items}
+    profile_item_ids = {
+        profile_id: {id(item) for item in profile_items}
+        for profile_id, profile_items in profile_sets.items()
+    }
+    for item in all_items:
+        item["score_included"] = id(item) in scored_item_ids
+        item["score_profiles"] = [
+            profile_id for profile_id, item_ids in profile_item_ids.items()
+            if id(item) in item_ids
+        ]
+
+    def progress(items: list[dict], effective_profile: str) -> dict:
         automatic_done = sum(bool(item["termine"]) for item in items)
-        result = {
-            "faits_automatiques": automatic_done,
-            "total_automatique": len(items),
-            "faits_manuels": None if manual else 0,
-            "total_manuel": len(manual_required) if manual else 0,
-            "total": len(items) + (len(manual_required) if manual else 0),
-            "mode": "automatique + suivi manuel local" if manual else "automatique uniquement",
+        remaining = [item for item in items if not item["termine"]]
+        by_category = {}
+        for item in remaining:
+            entry = by_category.setdefault(item["categorie"], {
+                "id": item["categorie"], "label": categories[item["categorie"]]["label"],
+                "remaining": 0, "examples": [],
+            })
+            entry["remaining"] += 1
+            if len(entry["examples"]) < 3:
+                entry["examples"].append({
+                    "tracking_id": item["tracking_id"],
+                    "name": item.get("name", item.get("id", "Objectif")),
+                })
+        return {
+            "faits": automatic_done, "total": len(items),
+            "pourcentage": round(100 * automatic_done / len(items), 2) if items else 0,
+            "mode": "validations automatiques persistantes uniquement",
+            "effective_profile": effective_profile, "remaining": len(remaining),
+            "blocking_categories": list(by_category.values()),
         }
-        result["pourcentage_automatique"] = round(100 * automatic_done / len(items), 2) if items else 0
-        return result
 
     profiles = []
     for profile in standard["profiles"]:
         value = dict(profile)
         if profile["id"] == "base":
-            value["progress"] = progress(base_items, manual=True)
+            value["progress"] = progress(base_items, "base")
             value["available"] = save_mode == "normal"
         elif profile["id"] == "dlc":
-            value["progress"] = progress(dlc_items, manual=True)
+            value["progress"] = progress(dlc_items, "dlc")
             value["available"] = save_mode == "normal"
         elif profile["id"] == "automatique":
-            selected = progress(detected_items, manual=False)
-            value["progress"] = {
-                "faits": selected["faits_automatiques"], "total": selected["total_automatique"],
-                "pourcentage": selected["pourcentage_automatique"], "mode": "automatique uniquement",
-            }
+            value["progress"] = progress(detected_items, detected_content)
             value["selected_content_profile"] = detected_content
             value["available"] = True
         elif profile["id"] == "amiibo":
-            value["progress"] = {"faits": amiibo_done, "total": len(amiibo_items), "mode": "optionnel"}
+            value["progress"] = progress(amiibo_items, "amiibo")
+            value["progress"]["mode"] = "extension optionnelle, hors du 100 % principal"
             value["available"] = True
         elif profile["id"] == "carte":
             value["progress"] = {**official_map, "mode": "officiel"}
             value["available"] = True
         elif profile["id"] == "expert":
             if save_mode == "expert":
-                value["progress"] = progress(detected_items, manual=True)
-                value["progress"]["mode"] = "slot Expert + suivi manuel local"
+                value["progress"] = progress(detected_items, detected_content)
+                value["progress"]["mode"] = "validations automatiques du slot Expert"
                 value["available"] = True
                 value["selected_content_profile"] = detected_content
             else:
@@ -1085,6 +1126,23 @@ def _completion_reference(standard: dict, categories: dict, all_items: list[dict
         profiles.append(value)
 
     selected_profile = "expert" if save_mode == "expert" else detected_content
+    scored_tracking_ids = [item["tracking_id"] for item in scored_items]
+    duplicate_scored_ids = [
+        tracking_id for tracking_id, count in Counter(scored_tracking_ids).items() if count > 1
+    ]
+    armor_owned_ids = {item["id"] for item in categories["armures"]["elements"]}
+    special_armor_ids = {item["id"] for item in categories["equipements_particuliers"]["elements"]}
+    all_armor_ids = armor_owned_ids | special_armor_ids
+    main_armor_ids = {
+        item["id"] for item in categories["armures"]["elements"]
+        + categories["equipements_particuliers"]["elements"]
+        if item.get("content_origin") != "amiibo"
+    }
+    amiibo_armor_ids = {
+        item["id"] for item in categories["armures"]["elements"]
+        + categories["equipements_particuliers"]["elements"]
+        if item.get("content_origin") == "amiibo"
+    }
 
     return {
         **standard,
@@ -1093,7 +1151,7 @@ def _completion_reference(standard: dict, categories: dict, all_items: list[dict
         "global_score": {
             **standard["global_score"],
             "available": required_incomplete == 0,
-            "reason": ("Référentiel entièrement implémenté ; chaque profil combine son périmètre automatique avec le suivi manuel local lorsqu'il s'applique."
+            "reason": ("Référentiel entièrement implémenté ; le score principal utilise uniquement des preuves automatiques persistantes."
                        if required_incomplete == 0 else
                        f"{required_incomplete} catégorie(s) obligatoire(s) restent incomplètes."),
             "profile": selected_profile,
@@ -1105,8 +1163,38 @@ def _completion_reference(standard: dict, categories: dict, all_items: list[dict
             "choices": ["automatique", "base", "dlc", "amiibo", "expert"],
             "detection": context.get("detection", "flag IsLastPlayHardMode" if save_mode == "expert" else "progression de la sauvegarde"),
         },
-        "audit": {"categories": len(resolved), "axes": len(standard["axes"]),
-                  "par_statut": status_counts, "obligatoires_incompletes": required_incomplete},
+        "formula": {
+            "expression": "100 × objectifs automatiques uniques validés / objectifs automatiques uniques du profil",
+            "unit": "un objectif persistant unique vaut un point",
+            "manual_tracking_included": False, "official_map_included": False,
+            "informational_categories_included": False, "amiibo_in_main_profile": False,
+        },
+        "inventory_constraints": {
+            "armor_inventory_limit": 100,
+            "main_non_amiibo_unique_armor": len(main_armor_ids),
+            "amiibo_unique_armor": len(amiibo_armor_ids),
+            "all_unique_armor": len(all_armor_ids),
+            "all_can_be_held_simultaneously": len(all_armor_ids) <= 100,
+            "policy": "L'extension amiibo reste séparée : une collection impossible à conserver simultanément ne bloque jamais le profil principal.",
+        },
+        "audit": {
+            "categories": len(resolved), "axes": len(standard["axes"]),
+            "par_statut": status_counts, "obligatoires_incompletes": required_incomplete,
+            "scored_objectives": len(scored_items),
+            "duplicate_scored_tracking_ids": sorted(duplicate_scored_ids),
+            "scoring_category_mismatches": sorted(declared_scoring_categories ^ implemented_scoring_categories),
+            "manual_objectives_excluded": len(manual_required),
+            "profile_partition": {
+                "base": len(base_items), "dlc_additions": len(dlc_items) - len(base_items),
+                "amiibo": len(amiibo_items),
+                "union": len({id(item) for item in base_items + dlc_items + amiibo_items}),
+                "disjoint": len({id(item) for item in base_items + dlc_items + amiibo_items}) == len(dlc_items) + len(amiibo_items),
+            },
+            "related_but_distinct_milestones": {
+                "armor_owned_then_max_level": len(armor_owned_ids),
+                "explanation": "Posséder une armure et l'améliorer à quatre étoiles sont deux objectifs successifs distincts.",
+            },
+        },
     }
 
 

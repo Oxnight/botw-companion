@@ -7,9 +7,9 @@ import re
 import sys
 
 
-DISPLAY_VERSION = "0.40.0-alpha.24"
-PEP440_VERSION = "0.40.0a24"
-NUMERIC_VERSION = "0.40.0.24"
+DISPLAY_VERSION = "0.40.0-alpha.25"
+PEP440_VERSION = "0.40.0a25"
+NUMERIC_VERSION = "0.40.0.25"
 RELEASE_TAG = f"v{DISPLAY_VERSION}"
 INSTALLER_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_Setup.exe"
 DMG_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_macOS_arm64.dmg"
@@ -30,13 +30,14 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
         (root / "botw_companion" / "__init__.py", rf'__version__ = "{re.escape(PEP440_VERSION)}"', "runtime"),
         (root / "windows" / "BOTW Companion.iss", rf'#define MyAppVersion "{re.escape(DISPLAY_VERSION)}"', "Inno Setup"),
         (root / "windows" / "BOTW Companion.iss", rf'VersionInfoVersion={re.escape(NUMERIC_VERSION)}', "version numérique Inno Setup"),
-        (root / "windows" / "version_info.txt", rf'filevers=\(0, 40, 0, 24\)', "ressource EXE"),
+        (root / "windows" / "BOTW Companion.iss", rf'VersionInfoProductVersion={re.escape(NUMERIC_VERSION)}', "version produit Inno Setup"),
+        (root / "windows" / "version_info.txt", rf'filevers=\(0, 40, 0, 25\)', "ressource EXE"),
         (root / "windows" / "version_info.txt", re.escape(DISPLAY_VERSION), "texte EXE"),
         (root / "tools" / "build_windows_app.ps1", re.escape(INSTALLER_NAME), "construction Windows"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(INSTALLER_NAME), "test d'installation"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(PEP440_VERSION), "test du serveur installé"),
         (root / "macos" / "BOTW Companion.spec", rf'version="{re.escape(MACOS_BUNDLE_VERSION)}"', "version courte macOS"),
-        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "24"', "numéro de build macOS"),
+        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "25"', "numéro de build macOS"),
         (root / "tools" / "build_macos_app.sh", re.escape(DMG_NAME), "construction macOS"),
         (root / "tools" / "test_macos_installation.sh", re.escape(PEP440_VERSION), "test macOS"),
         (root / ".github" / "workflows" / "release.yml", re.escape(RELEASE_TAG), "workflow de publication"),

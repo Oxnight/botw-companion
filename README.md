@@ -2,11 +2,12 @@
 
 BOTW Companion est une application locale qui détecte automatiquement Ryujinx ou Cemu, analyse la sauvegarde correspondante de *The Legend of Zelda: Breath of the Wild* et accompagne une progression complète du jeu.
 
-La version actuelle est **0.40.0 alpha 24**. Elle ajoute une application autonome pour les Mac Apple Silicon sans modifier l’interface, les données de jeu ou les fonctions du site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
+La version actuelle est **0.40.0 alpha 25**. Elle fiabilise le profil de complétion sans retirer de fonction au site. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
 
 ## Sommaire
 
 * [Fonctions principales](#fonctions-principales).
+* [Formules de complétion](#formules-de-complétion).
 * [Configuration prise en charge](#configuration-prise-en-charge).
 * [Installer l’application](#installer-lapplication).
 * [Installation depuis un clone Git](#installation-depuis-un-clone-git).
@@ -38,6 +39,15 @@ La version actuelle est **0.40.0 alpha 24**. Elle ajoute une application autonom
 * Diagnostic gyroscopique détaillé avec qualité globale, cadence, jitter, âge des échantillons, anomalies, réseau et historique de calibration.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
+
+## Formules de complétion
+
+BOTW Companion affiche deux mesures indépendantes :
+
+* le **pourcentage officiel de la carte**, où chaque marqueur vaut `100 / 1207` en jeu de base ou `100 / 1224` avec l’Expansion Pass ;
+* le **profil de complétion du compagnon**, calculé avec `100 × objectifs automatiques uniques validés / objectifs automatiques uniques du profil`.
+
+Le profil principal compte 3 400 objectifs en jeu de base et 3 565 avec les DLC. Les activités sans preuve persistante dans la sauvegarde, dont les 15 trésors indiqués par les chiens, restent suivies dans la section manuelle mais ne bloquent pas le 100 %. Les amiibo forment une extension séparée : ils ne sont jamais requis par le profil principal, notamment parce que les 107 pièces d’armure du catalogue complet ne tiennent pas simultanément dans les 100 emplacements du jeu. L’interface regroupe les objectifs manquants sous **Éléments empêchant le 100 %**.
 
 ## Configuration prise en charge
 
@@ -81,8 +91,8 @@ La chaîne de distribution Windows produit maintenant un paquet autonome. Elle u
 
 Télécharger le fichier correspondant depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases) :
 
-* Windows x64 : `BOTW_Companion_0.40.0-alpha.24_Setup.exe` ;
-* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg`.
+* Windows x64 : `BOTW_Companion_0.40.0-alpha.25_Setup.exe` ;
+* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg`.
 
 Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
 

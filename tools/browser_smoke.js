@@ -100,6 +100,10 @@ async function runDesktop(browser, baseUrl, browserName) {
     "La date du slot sélectionné n'est pas rendue");
   assert(await page.locator("#saveCaptionFallback").isVisible(),
     "Le remplacement accessible de caption.jpg doit rester visible lorsque l'image manque");
+  assert((await page.locator("#completionBlockerSummary").textContent()).includes("empêchent le 100 %"),
+    "La liste des éléments qui empêchent le 100 % n'est pas rendue");
+  assert(await page.locator("#completionBlockerList li").count() > 0,
+    "Le détail des catégories incomplètes est vide");
 
   const firstFilter = page.locator("#categories [data-filter-type]").first();
   await firstFilter.check();

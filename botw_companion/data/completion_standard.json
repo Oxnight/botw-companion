@@ -1,17 +1,19 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "locale": "fr-FR",
   "title": "Référentiel BOTW + DLC à 100 %",
   "definition": "Tous les objectifs finis et uniques du jeu de base et de l'Expansion Pass sont requis. Les activités répétables restent suivies sans pouvoir bloquer le 100 %. Les amiibo et le mode Expert sont des extensions séparées.",
   "rules": [
     "Le pourcentage de la carte reste le seul compteur officiel affiché par BOTW.",
-    "Le journal, les collections, les DLC et les activités manuelles ont des compteurs séparés.",
+    "Le journal, les collections, les DLC et les activités manuelles ont des compteurs séparés ; le suivi manuel ne bloque jamais le profil principal.",
     "Un objectif n'entre dans un score que si sa validation est explicite.",
     "Une absence de flag impose un suivi manuel et ne doit jamais être présentée comme automatique.",
     "Une réapparition après la lune de sang n'annule jamais une première validation.",
     "Les performances sans limite finie sont informatives et exclues du score global.",
     "Les amiibo et le mode Expert sont optionnels car ils exigent du matériel ou une sauvegarde distincte.",
-    "Le score global est calculé à partir des catégories vérifiables, sans double comptage des objets amiibo ni du mode Expert."
+    "Le score global est calculé à partir des objectifs automatiques persistants et uniques du profil, sans amiibo ni mode Expert.",
+    "Posséder une armure et l'améliorer à quatre étoiles sont deux étapes successives distinctes, pas un double comptage.",
+    "La collection amiibo reste une extension séparée : les 107 armures du catalogue complet dépassent la limite d'inventaire de 100."
   ],
   "axes": [
     {"id":"carte_officielle","label":"Carte officielle","kind":"officiel","description":"Pourcentage affiché sur la carte après Ganon."},
@@ -24,11 +26,11 @@
     {"id":"extensions","label":"Extensions optionnelles","kind":"optionnel","description":"Amiibo et mode Expert, séparés du 100 % principal."}
   ],
   "profiles": [
-    {"id":"base","label":"Jeu de base","required":true,"scope":"Objectifs permanents du jeu de base, sans Expansion Pass, Xenoblade, amiibo ni mode Expert.","axes":["carte_officielle","journal","collections","monde_persistant","manuel"]},
-    {"id":"dlc","label":"Jeu de base + DLC","required":true,"scope":"Jeu de base, Expansion Pass et mise à jour Xenoblade, sans amiibo ni mode Expert.","axes":["carte_officielle","journal","collections","dlc","monde_persistant","manuel"]},
+    {"id":"base","label":"Jeu de base","required":true,"scope":"Objectifs automatiques permanents du jeu de base, sans Expansion Pass, Xenoblade, amiibo, suivi manuel ni mode Expert.","axes":["journal","collections","monde_persistant"]},
+    {"id":"dlc","label":"Jeu de base + DLC","required":true,"scope":"Objectifs automatiques du jeu de base, de l'Expansion Pass et de la mise à jour Xenoblade, sans amiibo, suivi manuel ni mode Expert.","axes":["journal","collections","dlc","monde_persistant"]},
     {"id":"automatique","label":"Détection automatique","required":false,"scope":"Profil base ou DLC choisi depuis les preuves présentes dans la sauvegarde, limité aux validations automatiques.","axes":["carte_officielle","journal","collections","dlc","monde_persistant"]},
     {"id":"amiibo","label":"Extension amiibo","required":false,"scope":"Objets exclusifs soumis au matériel possédé et à l'aléatoire.","axes":["extensions"]},
-    {"id":"expert","label":"Mode Expert","required":false,"scope":"Progression du slot Expert, indépendante des six slots normaux.","axes":["carte_officielle","journal","collections","dlc","monde_persistant","manuel","extensions"]},
+    {"id":"expert","label":"Mode Expert","required":false,"scope":"Progression automatique du slot Expert, indépendante des six slots normaux et du suivi manuel.","axes":["journal","collections","dlc","monde_persistant","extensions"]},
     {"id":"carte","label":"100 % de la carte","required":false,"scope":"Compteur officiel, sans quêtes, coffres, souvenirs ni compendium.","axes":["carte_officielle"]}
   ],
   "official_map": {
@@ -60,7 +62,7 @@
     {"id":"compendium","label":"Compendium d'Hyrule","axis":"collections","scope":"mixed","total":394,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"compendium"},
     {"id":"armures_ameliorables","label":"Armures améliorables","axis":"collections","scope":"mixed","total":67,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"armures"},
     {"id":"armures_niveau_max","label":"Armures améliorables à quatre étoiles","axis":"collections","scope":"mixed","total":67,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"armures_max"},
-    {"id":"garde_robe_complete","label":"Garde-robe complète : armures et équipements particuliers","axis":"collections","scope":"mixed","total":107,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_categories":["armures","equipements_particuliers"]},
+    {"id":"garde_robe_complete","label":"Garde-robe complète : armures et équipements particuliers","axis":"collections","scope":"mixed","total":107,"finite":true,"repeatable":false,"validation":"derived_overview","inclusion":"informational","impossible_simultaneously":true,"report_categories":["armures","equipements_particuliers"]},
     {"id":"equipements_uniques","label":"Armes, arcs et boucliers uniques ou remplaçables","axis":"repetable","scope":"mixed","total":null,"finite":false,"repeatable":true,"validation":"informational","inclusion":"informational"},
     {"id":"harnachements","label":"Filets et selles obtenus","axis":"collections","scope":"mixed","total":12,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"harnachements"},
     {"id":"recompenses_uniques","label":"Objets-clés et récompenses de complétion","axis":"collections","scope":"mixed","total":2,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"recompenses_uniques"},
@@ -70,7 +72,7 @@
     {"id":"medailles_kilton","label":"Trois médailles de Kilton récupérées","axis":"collections","scope":"base","total":3,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"medailles_kilton"},
     {"id":"grandes_fees","label":"Libération des quatre Grandes Fées","axis":"monde_persistant","scope":"base","total":1,"objective_value_total":4,"finite":true,"repeatable":false,"validation":"automatic_counter","inclusion":"required","report_category":"grandes_fees"},
     {"id":"malanya","label":"Marlon libéré","axis":"monde_persistant","scope":"base","total":1,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"malanya"},
-    {"id":"tresors_chiens","label":"Trésors indiqués par les chiens","axis":"manuel","scope":"base","total":15,"finite":true,"repeatable":false,"validation":"manual","inclusion":"required","report_category":"tresors_chiens"},
+    {"id":"tresors_chiens","label":"Trésors indiqués par les chiens","axis":"manuel","scope":"base","total":15,"finite":true,"repeatable":false,"validation":"manual","inclusion":"informational","report_category":"tresors_chiens"},
     {"id":"epreuves_epee","label":"Trois niveaux des Épreuves de l'épée","axis":"dlc","scope":"dlc","total":3,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"epreuves_epee"},
     {"id":"salles_epreuves_epee","label":"Quarante-cinq salles de combat des Épreuves de l'épée","axis":"dlc","scope":"dlc","total":45,"finite":true,"repeatable":true,"validation":"session_only","inclusion":"informational"},
     {"id":"ballade_prodiges","label":"Ballade des Prodiges","axis":"dlc","scope":"dlc","total":5,"finite":true,"repeatable":false,"validation":"automatic","inclusion":"required","report_category":"quetes_principales"},
@@ -96,10 +98,16 @@
     "available":true,
     "reason":"Toutes les catégories obligatoires disposent désormais d'un catalogue et d'une validation explicites.",
     "activation_rule":"Toutes les catégories required doivent être complete avec une validation définie.",
-    "deduplication":"Un même objet peut participer à plusieurs axes, mais ne comptera qu'une fois dans le futur score global principal."
+    "deduplication":"Chaque identifiant de suivi n'entre qu'une fois dans un profil. Les vues informatives d'un objectif déjà compté sont exclues.",
+    "formula":"100 × objectifs automatiques uniques validés / objectifs automatiques uniques du profil",
+    "scoring_categories":["sanctuaires","coffres_sanctuaires","coffres_monde","coffres_donjons","quetes_principales","quetes_sanctuaires","quetes_secondaires","souvenirs","korogus","tours","lieux","hinox","talus","moldarquors","compendium","armures","armures_max","equipements_particuliers","harnachements","grandes_fees","malanya","epreuves_epee","medailles_kilton","recompenses_uniques","objets_speciaux"],
+    "manual_tracking":"Séparé et exclu du score principal.",
+    "official_map":"Compteur séparé, calculé avec la formule officielle de la carte.",
+    "amiibo":"Extension optionnelle séparée, exclue du score principal."
   },
   "sources": [
     {"id":"nintendo_expansion_pass","label":"Nintendo - contenu officiel de l'Expansion Pass","url":"https://ec.nintendo.com/AU/en/bundles/70070000000042"},
+    {"id":"nintendo_armor_inventory","label":"Assistance Nintendo - limite de 100 pièces d'armure","url":"https://www.nintendo.com/en-gb/Support/Purchases-Subscriptions/Games/Can-I-Add-Additional-Armor-Inventory-Spaces-Legend-of-Zelda-Breath-of-the-Wild--1357554.html"},
     {"id":"zeldamods_save_files","label":"ZeldaMods - structure des sauvegardes BOTW","url":"https://zeldamods.org/w_botw/index.php?title=Save_Files"},
     {"id":"botw_tools","label":"botw-tools - flags et marqueurs extraits du jeu","url":"https://github.com/MrCheeze/botw-tools"},
     {"id":"waypoint_map","label":"BOTW Waypoint Map - marqueurs cartographiques","url":"https://mrcheeze.github.io/botw-waypoint-map/"}

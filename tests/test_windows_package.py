@@ -126,6 +126,7 @@ class WindowsPackageTests(unittest.TestCase):
             "#manualComplete", "#detailRoute", "#closeDetails", "#toggleRoute",
             "#routeSessionSelect", "/api/routes/export", "/api/routes/import",
             "#toggleDsu",
+            "#completionBlockerSummary", "#completionBlockerList",
         ):
             self.assertIn(selector, script)
         self.assertIn("width: 390", script)

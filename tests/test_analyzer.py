@@ -7,6 +7,42 @@ from botw_companion.resources import load_catalog, load_completion_standard
 
 
 class AnalyzerTests(unittest.TestCase):
+    @staticmethod
+    def _complete_profile_fixture(origins):
+        catalog = load_catalog()
+        flags, inventory = {}, []
+        sources = (
+            "shrines", "shrine_chests", "world_chests", "dungeon_chests",
+            "main_quests", "shrine_quests", "side_quests", "memories", "koroks",
+            "towers", "locations", "hinoxes", "taluses", "moldugas", "compendium",
+            "horse_gear", "great_fairies", "malanya", "trial_of_the_sword",
+            "kilton_medals", "unique_rewards", "special_items",
+        )
+        def origin(item):
+            return item.get("content_origin", "amiibo" if item.get("amiibo") else
+                            ("master_trials" if item.get("dlc") else "base"))
+        for source in sources:
+            for item in catalog.get(source, []):
+                if origin(item) not in origins:
+                    continue
+                for rule in item.get("rule", []):
+                    flags[rule["flag"]] = rule.get("value", True)
+                if item.get("any_flags"):
+                    flags[item["any_flags"][0]] = True
+                if item.get("flag"):
+                    flags[item["flag"]] = item.get("min_value", item.get("target", True))
+        for item in catalog["official_map_locations"]:
+            flags[item["flag"]] = True
+        for number in range(137 if "champions_ballad" in origins else 120):
+            flags[f"Location_Dungeon{number:03d}"] = True
+        for item in catalog["armor_owned"]:
+            if origin(item) in origins:
+                inventory.append({"id": item["variants"][-1], "quantite": 1})
+        for item in catalog["special_armor"]:
+            if origin(item) in origins:
+                inventory.append({"id": item.get("variants", [item["id"]])[0], "quantite": 1})
+        return flags, inventory
+
     def test_quest_completion_uses_persistent_finish_flags(self):
         catalog = load_catalog()
         expected = {
@@ -436,7 +472,7 @@ class AnalyzerTests(unittest.TestCase):
 
     def test_completion_standard_is_explicit_and_fully_derived(self):
         reference = analyze({})["referentiel_100"]
-        self.assertEqual(reference["schema_version"], 3)
+        self.assertEqual(reference["schema_version"], 4)
         self.assertEqual(len(reference["axes"]), 8)
         self.assertGreaterEqual(len(reference["categories"]), 40)
         self.assertTrue(reference["global_score"]["available"])
@@ -685,9 +721,9 @@ class AnalyzerTests(unittest.TestCase):
         profiles = {item["id"]: item["progress"] for item in report["referentiel_100"]["profiles"]}
         self.assertEqual(profiles["automatique"]["total"], 3400)
         self.assertEqual(profiles["amiibo"]["total"], 44)
-        self.assertEqual(profiles["base"]["total_manuel"], 15)
-        self.assertEqual(profiles["base"]["total"], 3415)
-        self.assertEqual(profiles["dlc"]["total"], 3580)
+        self.assertEqual(profiles["base"]["total"], 3400)
+        self.assertEqual(profiles["dlc"]["total"], 3565)
+        self.assertEqual(report["referentiel_100"]["audit"]["manual_objectives_excluded"], 15)
 
     def test_automatic_profile_switches_to_dlc_only_with_save_evidence(self):
         base = analyze({})["referentiel_100"]
@@ -698,8 +734,8 @@ class AnalyzerTests(unittest.TestCase):
         self.assertEqual(dlc["selection"]["detected_content_profile"], "dlc")
         self.assertEqual(base_profiles["automatique"]["progress"]["total"], 3400)
         self.assertEqual(dlc_profiles["automatique"]["progress"]["total"], 3565)
-        self.assertEqual(base_profiles["base"]["progress"]["total"], 3415)
-        self.assertEqual(dlc_profiles["dlc"]["progress"]["total"], 3580)
+        self.assertEqual(base_profiles["base"]["progress"]["total"], 3400)
+        self.assertEqual(dlc_profiles["dlc"]["progress"]["total"], 3565)
 
     def test_expert_profile_is_separate_and_requires_expert_context(self):
         normal = analyze({})["referentiel_100"]
@@ -711,7 +747,56 @@ class AnalyzerTests(unittest.TestCase):
         self.assertTrue(expert_profiles["expert"]["available"])
         self.assertEqual(expert["selection"]["save_mode"], "expert")
         self.assertEqual(expert["selection"]["selected_profile"], "expert")
-        self.assertEqual(expert_profiles["expert"]["progress"]["total"], 3415)
+        self.assertEqual(expert_profiles["expert"]["progress"]["total"], 3400)
+
+    def test_complete_reference_profiles_reach_one_hundred_without_manual_checks(self):
+        base_origins = {"base"}
+        dlc_origins = {"base", "expansion_bonus", "master_trials", "champions_ballad", "free_update"}
+        for profile_id, origins, expected_total, map_total in (
+            ("base", base_origins, 3400, 1207), ("dlc", dlc_origins, 3565, 1224),
+        ):
+            flags, inventory = self._complete_profile_fixture(origins)
+            report = analyze(flags, inventory)
+            profile = next(item for item in report["referentiel_100"]["profiles"]
+                           if item["id"] == profile_id)["progress"]
+            official = report["carte_officielle"]["scenarios"][profile_id]
+            self.assertEqual((profile["faits"], profile["total"]), (expected_total, expected_total))
+            self.assertEqual(profile["pourcentage"], 100)
+            self.assertEqual(profile["blocking_categories"], [])
+            self.assertEqual((official["faits"], official["total"]), (map_total, map_total))
+        self.assertEqual(report["categories"]["quetes_principales"]["faits"], 20)
+
+    def test_completion_formula_has_no_duplicate_or_manual_objectives(self):
+        reference = analyze({})["referentiel_100"]
+        self.assertFalse(reference["formula"]["manual_tracking_included"])
+        self.assertFalse(reference["formula"]["official_map_included"])
+        self.assertEqual(reference["audit"]["duplicate_scored_tracking_ids"], [])
+        self.assertEqual(reference["audit"]["scoring_category_mismatches"], [])
+        self.assertEqual(reference["audit"]["profile_partition"], {
+            "base": 3400, "dlc_additions": 165, "amiibo": 44,
+            "union": 3609, "disjoint": True,
+        })
+        self.assertEqual(reference["audit"]["related_but_distinct_milestones"]
+                         ["armor_owned_then_max_level"], 67)
+
+    def test_amiibo_inventory_impossibility_never_blocks_main_profile(self):
+        limits = analyze({})["referentiel_100"]["inventory_constraints"]
+        self.assertEqual(limits["armor_inventory_limit"], 100)
+        self.assertEqual(limits["all_unique_armor"], 107)
+        self.assertFalse(limits["all_can_be_held_simultaneously"])
+
+    def test_every_supported_dlc_evidence_selects_the_dlc_profile(self):
+        evidences = {
+            "BalladOfHeroes_Activated": True, "100enemy_Activated": True,
+            "IsGet_Obj_Motorcycle": True, "IsGet_Obj_WarpDLC": True,
+            "TreasureHunt_Aoc1_RunAutoOrder": True, "TreasureHunt_Aoc2_RunAutoOrder": True,
+            "AoC_HardMode_Enabled": True, "AoCVerAtLastPlay": 768,
+            "Location_Dungeon120": True,
+        }
+        for flag, value in evidences.items():
+            with self.subTest(flag=flag):
+                reference = analyze({flag: value})["referentiel_100"]
+                self.assertEqual(reference["selection"]["detected_content_profile"], "dlc")
 
     def test_expert_flag_is_used_when_slot_context_is_unavailable(self):
         reference = analyze({"IsLastPlayHardMode": True})["referentiel_100"]

@@ -7,7 +7,7 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
 fi
 
 readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg}"
+readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.25_macOS_arm64.dmg}"
 readonly TEST_ROOT="${RUNNER_TEMP:-/tmp}/BOTW Companion macOS installation test"
 readonly INSTALL_ROOT="$TEST_ROOT/Applications"
 readonly DATA_ROOT="$TEST_ROOT/User Data"
@@ -132,7 +132,7 @@ for _attempt in {1..120}; do
   fi
   if /usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
       "http://127.0.0.1:$TEST_PORT/api/version" | \
-      /usr/bin/grep -F '"version": "0.40.0a24"' >/dev/null; then
+      /usr/bin/grep -F '"version": "0.40.0a25"' >/dev/null; then
     ready=1
     break
   fi

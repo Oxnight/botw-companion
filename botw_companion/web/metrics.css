@@ -59,6 +59,21 @@
     margin-top: 16px;
 }
 
+.completionBlockers {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.completionBlockers summary { cursor: pointer; color: var(--text); font-weight: 700; }
+.completionBlockers ul {
+    display: grid; gap: 6px; max-height: 190px; margin: 10px 0 0;
+    padding: 0 0 0 18px; overflow: auto;
+}
+.completionBlockers li span { display: block; color: var(--muted); font-size: 10px; }
+
 .quick span {
     padding: 5px 8px;
     font-size: 11px;

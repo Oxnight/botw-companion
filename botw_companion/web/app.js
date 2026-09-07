@@ -468,13 +468,6 @@ function selectedMapScore() {
     };
 }
 
-function requiredManualDone() {
-    return (report.elements || [])
-        .filter(item => item.categorie === "tresors_chiens")
-        .filter(manualDone)
-        .length
-}
-
 function refreshProfileSelect() {
     const select = $("#completionProfile"),
         profiles = report.referentiel_100.profiles.filter(
@@ -525,41 +518,43 @@ function selectedCompletionScore() {
         };
     }
 
-    if (p.faits != null && p.total != null) {
-        return {
-            available: true,
-            label: profile.label,
-            faits: p.faits,
-            total: p.total,
-            pourcentage: p.total
-                ? 100 * p.faits / p.total
-                : 0,
-            note: profile.scope
-        };
-    }
-
-    const manual = requiredManualDone(),
-        faits = (p.faits_automatiques || 0) + manual,
-        total =
-            p.total ||
-            (
-                (p.total_automatique || 0) +
-                (p.total_manuel || 0)
-            );
-
+    const formula = report.referentiel_100.formula.expression,
+        inventory = report.referentiel_100.inventory_constraints,
+        inventoryNote = profile.id === "amiibo"
+            ? ` Collection séparée : ${inventory.all_unique_armor} armures existent pour ${inventory.armor_inventory_limit} emplacements.`
+            : "";
     return {
         available: true,
         label: profile.label,
-        faits,
-        total,
-        pourcentage: total
-            ? 100 * faits / total
+        faits: p.faits || 0,
+        total: p.total || 0,
+        pourcentage: p.total
+            ? 100 * p.faits / p.total
             : 0,
-        note:
-            `${p.faits_automatiques || 0}/` +
-            `${p.total_automatique || 0} automatiques • ` +
-            `${manual}/${p.total_manuel || 0} manuels`
+        note: `${profile.scope} Formule : ${formula}.${inventoryNote}`,
+        blockers: p.blocking_categories || [], remaining: p.remaining || 0,
+        effectiveProfile: p.effective_profile || profile.id, profileId: profile.id
     };
+}
+
+function renderCompletionBlockers(score) {
+    const summary = $("#completionBlockerSummary"), list = $("#completionBlockerList"),
+        details = $("#completionBlockers");
+    if (!score.available) {
+        summary.textContent = "Profil indisponible pour cette sauvegarde";
+        list.innerHTML = ""; details.open = false; return;
+    }
+    if (!score.remaining) {
+        summary.textContent = "Aucun élément n’empêche le 100 %";
+        list.innerHTML = "<li>Ce profil est complet.</li>"; details.open = false; return;
+    }
+    summary.textContent = `${score.remaining.toLocaleString("fr-FR")} éléments empêchent le 100 %`;
+    list.innerHTML = score.blockers.map(category => {
+        const examples = category.examples.map(item => esc(item.name)).join(" • "),
+            more = Math.max(0, category.remaining - category.examples.length);
+        return `<li><b>${esc(category.label)} : ${category.remaining.toLocaleString("fr-FR")}</b>` +
+            `<span>${examples}${more ? ` • +${more.toLocaleString("fr-FR")} autres` : ""}</span></li>`;
+    }).join("");
 }
 
 function bloodMoonDuration(seconds) {
@@ -1332,19 +1327,21 @@ function renderAll() {
             : `${score.label} indisponible pour cette sauvegarde`;
 
     $("#scoreNote").textContent = score.note;
+    renderCompletionBlockers(score);
 
-    const pick = [
-        "sanctuaires",
-        "korogus",
-        "quetes_principales",
-        "compendium"
-    ];
+    const pick = score.effectiveProfile === "amiibo"
+        ? ["armures", "armures_max", "equipements_particuliers", "harnachements"]
+        : ["sanctuaires", "korogus", "quetes_principales", "compendium"];
 
     $("#quickStats").innerHTML =
         pick.map(k => {
-            let c = report.categories[k];
-
-            return `<span>${esc(c.label)} <b>${c.faits}/${c.total}</b></span>`
+            const c = report.categories[k],
+                scoped = report.elements.filter(item =>
+                    item.categorie === k && item.score_profiles.includes(score.effectiveProfile)
+                ),
+                done = scoped.filter(item => item.termine).length;
+            return scoped.length
+                ? `<span>${esc(c.label)} <b>${done}/${scoped.length}</b></span>` : "";
         }).join("");
 
     renderManualSummary();
