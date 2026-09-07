@@ -7,7 +7,7 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
 fi
 
 readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg}"
+readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg}"
 readonly TEST_ROOT="${RUNNER_TEMP:-/tmp}/BOTW Companion macOS installation test"
 readonly INSTALL_ROOT="$TEST_ROOT/Applications"
 readonly DATA_ROOT="$TEST_ROOT/User Data"
@@ -54,8 +54,8 @@ readonly EXECUTABLE="$APPLICATION/Contents/MacOS/BOTW Companion"
 }
 readonly ACTUAL_BUNDLE_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
     "$APPLICATION/Contents/Info.plist")"
-[[ "$ACTUAL_BUNDLE_VERSION" == "27" ]] || {
-  echo "CFBundleVersion est invalide : attendu 27, obtenu $ACTUAL_BUNDLE_VERSION." >&2
+[[ "$ACTUAL_BUNDLE_VERSION" == "28" ]] || {
+  echo "CFBundleVersion est invalide : attendu 28, obtenu $ACTUAL_BUNDLE_VERSION." >&2
   exit 1
 }
 
@@ -135,7 +135,7 @@ for _attempt in {1..120}; do
   identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
       "http://127.0.0.1:$TEST_PORT/api/version" || true)"
   if printf '%s' "$identity_json" | \
-      /usr/bin/grep -F '"version": "0.40.0a27"' >/dev/null; then
+      /usr/bin/grep -F '"version": "0.40.0a28"' >/dev/null; then
     ready=1
     break
   fi

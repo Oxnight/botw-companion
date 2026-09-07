@@ -30,11 +30,17 @@ try {
         throw "Le serveur de test navigateur ne répond pas."
     }
     foreach ($browser in @("chrome", "edge", "firefox")) {
+        if ($browser -eq "chrome") {
+            $env:BOTW_CAPTURE_BLOOD_MOON = "1"
+        } else {
+            Remove-Item Env:BOTW_CAPTURE_BLOOD_MOON -ErrorAction SilentlyContinue
+        }
         & node.exe "tools/browser_smoke.js" "http://127.0.0.1:$Port" $browser
         if ($LASTEXITCODE -ne 0) {
             throw "Le parcours $browser a échoué."
         }
     }
+    Remove-Item Env:BOTW_CAPTURE_BLOOD_MOON -ErrorAction SilentlyContinue
 } finally {
     if ($server -and -not $server.HasExited) {
         $server.Kill()

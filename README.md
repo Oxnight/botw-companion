@@ -92,8 +92,8 @@ La chaîne de distribution Windows produit maintenant un paquet autonome. Elle u
 
 Télécharger le fichier correspondant depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases) :
 
-* Windows x64 : `BOTW_Companion_0.40.0-alpha.27_Setup.exe` ;
-* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.27_macOS_arm64.dmg`.
+* Windows x64 : `BOTW_Companion_0.40.0-alpha.28_Setup.exe` ;
+* Mac Apple Silicon : `BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg`.
 
 Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
 

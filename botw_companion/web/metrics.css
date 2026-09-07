@@ -914,6 +914,230 @@
     }
 }
 
+/*
+ * Illustration « Éclipse de malice ».
+ *
+ * Les formes sont intégralement locales et vectorielles. Les textures ne
+ * bougent pas : seules les couches de décor utilisent transform et opacity,
+ * afin de rester sur le compositeur des navigateurs modernes.
+ */
+.bloodMoonArtwork {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.bloodMoonArtwork * {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.bloodMoonCorona {
+    fill: #a7192d;
+    opacity: var(--moon-halo-opacity, .06);
+    transform: scale(.91);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+.bloodMoonCorona path:nth-child(2) {
+    fill: #5f0b1b;
+    transform: rotate(13deg) scale(.95);
+}
+
+.bloodMoonCorona path:nth-child(3) {
+    fill: #cf2639;
+    opacity: .48;
+    transform: rotate(-9deg) scale(.94);
+}
+
+.bloodMoonMoon {
+    transform: translateY(var(--moon-rise, 9px)) scale(var(--moon-scale, .82));
+    transition: transform .85s cubic-bezier(.22, .8, .24, 1);
+}
+
+.bloodMoonRim {
+    fill: #13070b;
+    stroke: #a92e38;
+    stroke-width: 1.4;
+}
+
+.bloodMoonDisk {
+    fill: url(#bloodMoonDisk);
+}
+
+.bloodMoonTexture {
+    fill: #24070e;
+    opacity: .53;
+}
+
+.bloodMoonTexture path:nth-child(2) {
+    fill: #bd3a40;
+    opacity: .2;
+}
+
+.bloodMoonTexture circle {
+    fill: #1a060b;
+    opacity: .62;
+}
+
+.bloodMoonTexture circle:nth-of-type(2),
+.bloodMoonTexture circle:nth-of-type(4) {
+    fill: none;
+    stroke: #d04a4d;
+    stroke-width: 1.2;
+    opacity: .3;
+}
+
+.bloodMoonFissures {
+    fill: none;
+    stroke: #d45151;
+    stroke-width: .75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .08;
+}
+
+.bloodMoonCloud {
+    fill: #080e11;
+}
+
+.bloodMoonCloud--far {
+    opacity: .84;
+    transform: translateX(-3px);
+    animation: bloodMoonCloudFar 13s ease-in-out infinite alternate;
+}
+
+.bloodMoonCloud--near {
+    fill: #05090b;
+    opacity: .98;
+    transform: translateX(2px);
+    animation: bloodMoonCloudNear 17s ease-in-out infinite alternate;
+}
+
+.bloodMoonMist {
+    fill: #5d1320;
+    opacity: var(--moon-malice-opacity, 0);
+    transform: translateY(3px) scaleX(1.04);
+    transition: opacity .8s ease;
+    animation: bloodMoonMistDrift 11s ease-in-out infinite alternate;
+}
+
+.bloodMoonWisps {
+    fill: none;
+    stroke: #bc273b;
+    stroke-width: 2.1;
+    stroke-linecap: round;
+    opacity: var(--moon-malice-opacity, 0);
+    transition: opacity .8s ease;
+    animation: bloodMoonWispDrift 7s ease-in-out infinite alternate;
+}
+
+.bloodMoonEmbers {
+    fill: #e55655;
+    opacity: var(--moon-ember-opacity, 0);
+    transition: opacity .7s ease;
+}
+
+.bloodMoonEmbers circle:nth-child(odd) {
+    animation: bloodMoonAshRise 5.6s ease-out infinite;
+}
+
+.bloodMoonEmbers circle:nth-child(even) {
+    animation: bloodMoonAshRise 7.1s ease-out -2.8s infinite;
+}
+
+.bloodMoonBar.moon-at-least-70 .bloodMoonCorona {
+    transform: scale(.97);
+    animation: bloodMoonCoronaBreath 7s ease-in-out infinite;
+}
+
+.bloodMoonBar.moon-at-least-70 .bloodMoonFissures {
+    opacity: .22;
+}
+
+.bloodMoonBar.moon-at-least-90 .bloodMoonMoon {
+    animation: bloodMoonEclipsePulse 6.4s ease-in-out infinite;
+}
+
+.bloodMoonBar.moon-at-least-90 .bloodMoonFissures {
+    opacity: .34;
+}
+
+.bloodMoonBar.scheduled .bloodMoonMoon,
+.bloodMoonBar.moon-at-least-100 .bloodMoonMoon {
+    animation: bloodMoonEclipseScheduled 5.2s ease-in-out infinite;
+}
+
+.bloodMoonBar.just-occurred .bloodMoonCorona {
+    opacity: .18;
+    transform: scale(1.04);
+}
+
+.bloodMoonBar.just-occurred .bloodMoonMist,
+.bloodMoonBar.just-occurred .bloodMoonWisps,
+.bloodMoonBar.just-occurred .bloodMoonEmbers {
+    opacity: .08;
+    animation-duration: 10s;
+}
+
+.bloodMoonBar.unavailable .bloodMoonArtwork {
+    opacity: .48;
+}
+
+.bloodMoonBar.unavailable .bloodMoonCorona,
+.bloodMoonBar.unavailable .bloodMoonMist,
+.bloodMoonBar.unavailable .bloodMoonWisps,
+.bloodMoonBar.unavailable .bloodMoonEmbers {
+    opacity: 0;
+}
+
+.bloodMoonBar.unavailable .bloodMoonArtwork * {
+    animation: none !important;
+}
+
+@keyframes bloodMoonCloudFar {
+    from { transform: translate3d(-4px, 0, 0); }
+    to { transform: translate3d(3px, 0, 0); }
+}
+
+@keyframes bloodMoonCloudNear {
+    from { transform: translate3d(3px, 0, 0); }
+    to { transform: translate3d(-5px, 0, 0); }
+}
+
+@keyframes bloodMoonMistDrift {
+    from { transform: translate3d(-2px, 3px, 0) scaleX(1.04); }
+    to { transform: translate3d(3px, 1px, 0) scaleX(.98); }
+}
+
+@keyframes bloodMoonWispDrift {
+    from { transform: translate3d(-1px, 2px, 0) scaleY(.95); }
+    to { transform: translate3d(2px, -2px, 0) scaleY(1.05); }
+}
+
+@keyframes bloodMoonAshRise {
+    0% { opacity: 0; transform: translate3d(0, 4px, 0) scale(.7); }
+    22% { opacity: .9; }
+    100% { opacity: 0; transform: translate3d(-3px, -28px, 0) scale(.35); }
+}
+
+@keyframes bloodMoonCoronaBreath {
+    0%, 100% { opacity: var(--moon-halo-opacity, .7); transform: scale(.97); }
+    50% { opacity: calc(var(--moon-halo-opacity, .7) * .82); transform: scale(1.015); }
+}
+
+@keyframes bloodMoonEclipsePulse {
+    0%, 100% { transform: translateY(var(--moon-rise, 2px)) scale(var(--moon-scale, .96)); }
+    50% { transform: translateY(var(--moon-rise, 2px)) scale(.995); }
+}
+
+@keyframes bloodMoonEclipseScheduled {
+    0%, 68%, 100% { transform: translateY(var(--moon-rise, 2px)) scale(var(--moon-scale, .98)); }
+    76% { transform: translateY(1px) scale(1.015); }
+    84% { transform: translateY(var(--moon-rise, 2px)) scale(.993); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .bloodMoonScene *,
     .bloodMoonScene *::before,

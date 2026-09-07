@@ -20,7 +20,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.27_Setup.exe"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.28_Setup.exe"
 
 foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
     if (Test-Path -LiteralPath $stalePath) {

@@ -21,6 +21,7 @@ node_modules/
 # Construction et distributions
 build/
 dist/
+test-results/
 *.egg-info/
 deliverables/
 *.zip

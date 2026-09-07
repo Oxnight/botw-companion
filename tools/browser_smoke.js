@@ -2,6 +2,7 @@
 "use strict";
 
 const {chromium, firefox, webkit} = require("playwright");
+const {mkdir} = require("node:fs/promises");
 
 const ACTION_TIMEOUT_MS = 20000;
 const NAVIGATION_TIMEOUT_MS = 30000;
@@ -43,6 +44,41 @@ async function fetchJson(page, url, options = {}) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+async function captureBloodMoonReferences(page, browserName) {
+  if (process.env.BOTW_CAPTURE_BLOOD_MOON !== "1") return;
+
+  const outputDirectory = "test-results/blood-moon";
+  await mkdir(outputDirectory, {recursive: true});
+  const states = [
+    {name: "unavailable", progress: 0, available: false},
+    {name: "early", progress: 35, available: true},
+    {name: "warning", progress: 75, available: true},
+    {name: "critical", progress: 95, available: true},
+    {name: "scheduled", progress: 100, available: true, scheduled: true},
+    {name: "just-occurred", progress: 4, available: true, justOccurred: true}
+  ];
+
+  for (const state of states) {
+    await page.evaluate(reference => {
+      const panel = document.querySelector("#bloodMoonPanel");
+      panel.classList.remove("scheduled", "unavailable", "just-occurred");
+      panel.classList.toggle("scheduled", Boolean(reference.scheduled));
+      panel.classList.toggle("unavailable", !reference.available);
+      panel.classList.toggle("just-occurred", Boolean(reference.justOccurred));
+      updateBloodMoonVisual(panel, {
+        available: reference.available,
+        scheduled: reference.scheduled,
+        status: reference.justOccurred ? "just_occurred" : undefined,
+        timer_progress_percent: reference.progress
+      });
+    }, state);
+    await page.locator("#bloodMoonPanel").screenshot({
+      animations: "disabled",
+      path: `${outputDirectory}/${browserName}-${state.name}.png`
+    });
+  }
 }
 
 function isExpectedWebKitNavigationError(browserName, message) {
@@ -230,6 +266,7 @@ async function runDesktop(browser, baseUrl, browserName) {
     selectedTrackingId);
   assert(preservedNote === "Note conservée après annulation",
     "L'annulation centralisée a supprimé la note personnelle");
+  await captureBloodMoonReferences(page, browserName);
   if (errors.length) throw new Error(errors.join("\n"));
   progress(browserName, "bureau:fermeture");
   await closeWithTimeout(context, "la fermeture du contexte bureau");

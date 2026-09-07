@@ -632,7 +632,9 @@ function updateBloodMoonVisual(panel, moon) {
 
         normalized = visualProgress / 100,
 
-        rise = 100 - visualProgress,
+        rise = 9 - (7 * normalized),
+
+        scale = .82 + (.16 * normalized),
 
         haloOpacity =
             .06 + (.84 * normalized),
@@ -668,7 +670,12 @@ function updateBloodMoonVisual(panel, moon) {
 
     panel.style.setProperty(
         "--moon-rise",
-        `${rise.toFixed(2)}%`
+        `${rise.toFixed(2)}px`
+    );
+
+    panel.style.setProperty(
+        "--moon-scale",
+        scale.toFixed(3)
     );
 
     panel.style.setProperty(
@@ -719,6 +726,11 @@ function renderBloodMoon() {
     panel.classList.toggle(
         "unavailable",
         !moon.available
+    );
+
+    panel.classList.toggle(
+        "just-occurred",
+        moon.status === "just_occurred"
     );
 
     updateBloodMoonVisual(panel, moon);

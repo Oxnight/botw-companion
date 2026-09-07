@@ -7,9 +7,9 @@ import re
 import sys
 
 
-DISPLAY_VERSION = "0.40.0-alpha.27"
-PEP440_VERSION = "0.40.0a27"
-NUMERIC_VERSION = "0.40.0.27"
+DISPLAY_VERSION = "0.40.0-alpha.28"
+PEP440_VERSION = "0.40.0a28"
+NUMERIC_VERSION = "0.40.0.28"
 RELEASE_TAG = f"v{DISPLAY_VERSION}"
 INSTALLER_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_Setup.exe"
 DMG_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_macOS_arm64.dmg"
@@ -31,16 +31,16 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
         (root / "windows" / "BOTW Companion.iss", rf'#define MyAppVersion "{re.escape(DISPLAY_VERSION)}"', "Inno Setup"),
         (root / "windows" / "BOTW Companion.iss", rf'VersionInfoVersion={re.escape(NUMERIC_VERSION)}', "version numérique Inno Setup"),
         (root / "windows" / "BOTW Companion.iss", rf'VersionInfoProductVersion={re.escape(NUMERIC_VERSION)}', "version produit Inno Setup"),
-        (root / "windows" / "version_info.txt", rf'filevers=\(0, 40, 0, 27\)', "ressource EXE"),
+        (root / "windows" / "version_info.txt", rf'filevers=\(0, 40, 0, 28\)', "ressource EXE"),
         (root / "windows" / "version_info.txt", re.escape(DISPLAY_VERSION), "texte EXE"),
         (root / "tools" / "build_windows_app.ps1", re.escape(INSTALLER_NAME), "construction Windows"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(INSTALLER_NAME), "test d'installation"),
         (root / "tools" / "test_windows_installation.ps1", re.escape(PEP440_VERSION), "test du serveur installé"),
         (root / "macos" / "BOTW Companion.spec", rf'version="{re.escape(MACOS_BUNDLE_VERSION)}"', "version courte macOS"),
-        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "27"', "numéro de build macOS"),
+        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "28"', "numéro de build macOS"),
         (
             root / "tools" / "test_macos_installation.sh",
-            r'\[\[ "\$ACTUAL_BUNDLE_VERSION" == "27" \]\]',
+            r'\[\[ "\$ACTUAL_BUNDLE_VERSION" == "28" \]\]',
             "numéro de build attendu par le test DMG macOS",
         ),
         (root / "tools" / "build_macos_app.sh", re.escape(DMG_NAME), "construction macOS"),

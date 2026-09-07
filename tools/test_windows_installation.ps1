@@ -1,5 +1,5 @@
 param(
-    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.27_Setup.exe"
+    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.28_Setup.exe"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,7 +16,7 @@ $testRoot = Join-Path $temporaryRoot "BOTW Companion installation test"
 $installRoot = Join-Path $testRoot "Programme autonome"
 $dataRoot = Join-Path $testRoot "Données utilisateur"
 $sentinel = Join-Path $dataRoot "donnees-a-conserver.json"
-$expectedVersion = "0.40.0a27"
+$expectedVersion = "0.40.0a28"
 $testPort = 18766
 
 if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
