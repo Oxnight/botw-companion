@@ -13,7 +13,9 @@
 </head>
 
 <body>
-    <aside>
+    <a class="skipLink" href="#mainContent">Aller au contenu principal</a>
+
+    <aside aria-label="Navigation des catégories">
         <div class="brand">
             <span class="triforce">▲</span>
 
@@ -25,7 +27,7 @@
 
         <nav id="categories"></nav>
 
-        <div class="legend">
+        <div class="legend" aria-label="Légende des états">
             <p>
                 <i class="dot todo"></i>
                 À faire
@@ -48,7 +50,7 @@
         </div>
     </aside>
 
-    <main>
+    <main id="mainContent" tabindex="-1">
         <header>
             <div>
                 <p class="eyebrow">SAUVEGARDE <span id="runtimeEmulator">ÉMULATEUR</span> • <span id="runtimePlatform">CHARGEMENT…</span></p>
@@ -200,6 +202,10 @@
 
                 <button id="refresh">
                     ↻ Lire maintenant
+                </button>
+
+                <button id="openHelp" type="button">
+                    Aide
                 </button>
 
                 <button id="quitCompanion" class="dangerButton">
@@ -516,6 +522,7 @@
                 <input
                     id="manualReviewSearch"
                     type="search"
+                    aria-label="Rechercher dans les validations manuelles"
                     placeholder="Rechercher un objectif, une note, une région…"
                 >
 
@@ -539,10 +546,11 @@
             <input
                 id="search"
                 type="search"
+                aria-label="Rechercher un objectif"
                 placeholder="Rechercher un sanctuaire, une quête, une région…"
             >
 
-            <select id="status">
+            <select id="status" aria-label="Filtrer par état de progression">
                 <option value="todo">
                     À faire, en cours et infos
                 </option>
@@ -572,7 +580,7 @@
                 </option>
             </select>
 
-            <select id="dlc">
+            <select id="dlc" aria-label="Filtrer par contenu additionnel">
                 <option value="all">
                     Tous les contenus
                 </option>
@@ -610,7 +618,7 @@
                 </option>
             </select>
 
-            <select id="gameMode">
+            <select id="gameMode" aria-label="Filtrer par mode de jeu">
                 <option value="save">
                     Mode de la sauvegarde
                 </option>
@@ -628,7 +636,7 @@
                 </option>
             </select>
 
-            <select id="location">
+            <select id="location" aria-label="Filtrer par type de localisation">
                 <option value="all">
                     Toutes les localisations
                 </option>
@@ -654,13 +662,13 @@
                 </option>
             </select>
 
-            <select id="variant">
+            <select id="variant" aria-label="Filtrer par variante">
                 <option value="all">
                     Toutes les variantes
                 </option>
             </select>
 
-            <select id="region">
+            <select id="region" aria-label="Filtrer par région">
                 <option value="all">
                     Toutes les régions
                 </option>
@@ -695,6 +703,7 @@
                 <button
                     id="toggleRoute"
                     aria-expanded="false"
+                    aria-controls="routeBody"
                 >
                     Afficher
                 </button>
@@ -882,6 +891,7 @@
                         <button
                             id="zoomOut"
                             title="Dézoomer"
+                            aria-label="Dézoomer la carte"
                         >
                             −
                         </button>
@@ -889,6 +899,7 @@
                         <button
                             id="mapReset"
                             title="Voir toute la carte"
+                            aria-label="Afficher toute la carte"
                         >
                             ⌂
                         </button>
@@ -896,6 +907,7 @@
                         <button
                             id="zoomIn"
                             title="Zoomer"
+                            aria-label="Zoomer la carte"
                         >
                             +
                         </button>
@@ -938,7 +950,7 @@
                         Éléments restants
                     </h3>
 
-                    <span id="resultCount"></span>
+                    <span id="resultCount" role="status" aria-live="polite"></span>
                 </div>
 
                 <div id="list"></div>
@@ -950,7 +962,10 @@
     <div
         id="itemDetails"
         class="detailDrawer"
+        role="dialog"
+        aria-labelledby="detailTitle"
         aria-hidden="true"
+        inert
     >
         <button
             id="closeDetails"
@@ -963,7 +978,30 @@
         <div id="detailContent"></div>
     </div>
 
-    <div id="toast"></div>
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <dialog
+        id="onboardingDialog"
+        class="onboardingDialog"
+        aria-labelledby="onboardingTitle"
+        aria-describedby="onboardingDescription"
+    >
+        <div class="onboardingProgress" aria-live="polite">
+            <span id="onboardingStepLabel">Étape 1 sur 3</span>
+            <span class="onboardingProgressTrack" aria-hidden="true">
+                <i id="onboardingProgressBar"></i>
+            </span>
+        </div>
+
+        <section id="onboardingContent" class="onboardingContent"></section>
+
+        <div class="onboardingActions">
+            <button id="skipOnboarding" type="button">Passer</button>
+            <span></span>
+            <button id="previousOnboarding" type="button">Précédent</button>
+            <button id="nextOnboarding" type="button">Suivant</button>
+        </div>
+    </dialog>
 
     <script src="/route_planner.js"></script>
     <script src="/app.js"></script>

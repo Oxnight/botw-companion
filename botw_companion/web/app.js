@@ -25,6 +25,8 @@ const detailCache = new Map();
 let manualTracking = { schema_version: 2, revision: 0, updated_at: null, entries: {} };
 let preferencesData = { schema_version: 1, revision: 0, updated_at: null, values: {} };
 let preferenceSaveQueue = Promise.resolve();
+let onboardingStep = 0, onboardingShown = false, onboardingReopened = false;
+let detailReturnTarget = null, manualReviewReturnFocus = null;
 const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
 const PROFILE_KEY = "botw-companion-completion-profile";
@@ -100,6 +102,68 @@ function savePreference(name, value) {
         })
         .catch(error => toast(error.message, true));
     return preferenceSaveQueue;
+}
+
+const ONBOARDING_STEPS = [
+    {
+        title: "Bienvenue dans BOTW Companion",
+        description: "L’application analyse ta sauvegarde directement sur cet appareil. Rien n’est envoyé sur Internet.",
+        detail: "La carte, les guides et tes validations personnelles restent disponibles hors ligne."
+    },
+    {
+        title: "Ta sauvegarde est prête",
+        description: "BOTW Companion détecte automatiquement le dernier slot pris en charge et actualise la progression pendant que tu joues.",
+        detail: () => {
+            const save = report?.sauvegarde || {};
+            return `${save.emulateur || "Émulateur"} • ${save.plateforme || runtimePlatform.label || "Système local"} • slot ${save.slot || "-"}`;
+        }
+    },
+    {
+        title: "Gyroscope facultatif",
+        description: "Le moteur JoyConDSU est déjà inclus. Active-le seulement si ton émulateur doit recevoir les mouvements d’une manette compatible.",
+        detail: "Il reste désactivé par défaut et utilise uniquement le serveur local 127.0.0.1:26760."
+    }
+];
+
+function renderOnboardingStep() {
+    const step = ONBOARDING_STEPS[onboardingStep],
+        detail = typeof step.detail === "function" ? step.detail() : step.detail,
+        last = onboardingStep === ONBOARDING_STEPS.length - 1;
+
+    $("#onboardingStepLabel").textContent =
+        `Étape ${onboardingStep + 1} sur ${ONBOARDING_STEPS.length}`;
+    $("#onboardingProgressBar").style.width =
+        `${(onboardingStep + 1) / ONBOARDING_STEPS.length * 100}%`;
+    $("#onboardingContent").innerHTML =
+        `<p class="eyebrow">PREMIER LANCEMENT</p>` +
+        `<h2 id="onboardingTitle" tabindex="-1">${esc(step.title)}</h2>` +
+        `<p id="onboardingDescription">${esc(step.description)}</p>` +
+        `<p class="onboardingDetail">${esc(detail)}</p>`;
+    $("#previousOnboarding").hidden = onboardingStep === 0;
+    $("#nextOnboarding").textContent = last ? "Commencer" : "Suivant";
+    requestAnimationFrame(() => $("#onboardingTitle").focus());
+}
+
+function showOnboarding(force = false) {
+    const dialog = $("#onboardingDialog");
+    if (dialog.open) return;
+    onboardingStep = 0;
+    onboardingShown = true;
+    onboardingReopened = force;
+    renderOnboardingStep();
+    dialog.showModal();
+}
+
+async function closeOnboarding(persist = true) {
+    const dialog = $("#onboardingDialog");
+    if (!dialog.open) return;
+    if (persist && preferencesData.values.onboarding_completed !== true) {
+        await savePreference("onboarding_completed", true);
+    }
+    dialog.close();
+    if (!onboardingReopened) {
+        $("#mainContent").focus();
+    }
 }
 
 async function migrateBrowserPreferences() {
@@ -1113,6 +1177,21 @@ async function load(showToast = false) {
             routes = await routesResponse.json(),
             preferences = await preferencesResponse.json();
 
+        if (!preferencesResponse.ok) {
+            throw Error(
+                preferences.erreur ||
+                "Préférences inaccessibles"
+            );
+        }
+
+        preferencesData = preferences;
+        if (
+            preferencesData.values.onboarding_completed !== true &&
+            !onboardingShown
+        ) {
+            showOnboarding();
+        }
+
         if (!reportResponse.ok) {
             throw Error(
                 data.erreur ||
@@ -1131,13 +1210,6 @@ async function load(showToast = false) {
             throw Error(
                 routes.erreur ||
                 "Itinéraires inaccessibles"
-            );
-        }
-
-        if (!preferencesResponse.ok) {
-            throw Error(
-                preferences.erreur ||
-                "Préférences inaccessibles"
             );
         }
 
@@ -1181,7 +1253,6 @@ async function load(showToast = false) {
 
         manualTracking = manual;
         routesData = routes;
-        preferencesData = preferences;
         await migrateBrowserPreferences();
         syncInterval = Number(
             preferenceValue("sync_interval", SYNC_INTERVAL_KEY, 30)
@@ -1940,7 +2011,7 @@ function renderItems() {
             ? visibleItems
                 .map(
                     x =>
-                        `<div class="item" data-id="${esc(itemId(x))}"><i class="dot ${stateClass(x)}"></i><div><h4>${esc(x.name || x.display_name || x.id)}</h4><div class="trackingBadge ${trackingMode(x)}">${esc(trackingLabel(x))}</div><p>${esc([
+                        `<div class="item" data-id="${esc(itemId(x))}"><button type="button" class="itemOpen" data-item-open="${esc(itemId(x))}"><i class="dot ${stateClass(x)}" aria-hidden="true"></i><span class="itemText"><strong>${esc(x.name || x.display_name || x.id)}</strong><span class="trackingBadge ${trackingMode(x)}">${esc(trackingLabel(x))}</span><span class="itemMeta">${esc([
                             armorLine(x),
                             x.subtype,
                             x.region,
@@ -1957,7 +2028,7 @@ function renderItems() {
                             x.content_origin !== "base"
                                 ? x.content_origin_label
                                 : null
-                        ].filter(Boolean).join(" • "))}</p>${x.raison ? `<p>${esc(x.raison)}</p>` : ""}</div><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span>${x.x != null ? `<button class="routeAdd ${planned.has(itemId(x)) ? 'active' : ''}" data-route-add="${esc(itemId(x))}" title="${planned.has(itemId(x)) ? 'Retirer de' : 'Ajouter à'} l’itinéraire">${planned.has(itemId(x)) ? '✓' : '+'}</button>` : ""}</div>`
+                        ].filter(Boolean).join(" • "))}</span>${x.raison ? `<span class="itemMeta">${esc(x.raison)}</span>` : ""}</span><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span></button>${x.x != null ? `<button type="button" class="routeAdd ${planned.has(itemId(x)) ? 'active' : ''}" data-route-add="${esc(itemId(x))}" aria-label="${planned.has(itemId(x)) ? 'Retirer' : 'Ajouter'} ${esc(x.name || x.display_name || x.id)} ${planned.has(itemId(x)) ? 'de' : 'à'} l’itinéraire" title="${planned.has(itemId(x)) ? 'Retirer de' : 'Ajouter à'} l’itinéraire">${planned.has(itemId(x)) ? '✓' : '+'}</button>` : ""}</div>`
                 )
                 .join("") +
 
@@ -1972,14 +2043,14 @@ function renderItems() {
 
     document
         .querySelectorAll(
-            "#list [data-id]"
+            "#list [data-item-open]"
         )
         .forEach(
             el =>
                 el.onclick =
                     () =>
                         select(
-                            el.dataset.id,
+                            el.dataset.itemOpen,
                             true
                         )
         );
@@ -2061,6 +2132,11 @@ function renderFilterScopeNotice(items) {
 }
 
 async function select(id, fromList = false) {
+    detailReturnTarget = {
+        id,
+        fromList,
+        manualReview: !$("#manualReview").hidden
+    };
     selectedId = id;
     renderItems();
 
@@ -2091,14 +2167,17 @@ async function select(id, fromList = false) {
     const drawer = $("#itemDetails");
 
     drawer.classList.add("open");
+    drawer.inert = false;
 
     drawer.setAttribute(
         "aria-hidden",
         "false"
     );
 
+    $("#closeDetails").focus();
+
     $("#detailContent").innerHTML =
-        '<div class="detailLoading"><b>Chargement de la fiche…</b><small>Les détails sont récupérés localement à la demande.</small></div>';
+        '<div class="detailLoading"><b id="detailTitle">Chargement de la fiche…</b><small>Les détails sont récupérés localement à la demande.</small></div>';
 
     try {
         let detailed =
@@ -2525,7 +2604,7 @@ function renderMap(items) {
                     p = worldPoint(x),
                     id = itemId(x);
 
-                return `<button title="${esc(x.name)}" data-map-id="${esc(id)}" class="marker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></button>`
+                return `<button type="button" title="${esc(x.name)}" aria-label="Ouvrir ${esc(x.name || x.id)} sur la carte" data-map-id="${esc(id)}" class="marker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></button>`
             }
 
             const points =
@@ -2547,7 +2626,7 @@ function renderMap(items) {
                         points.length
                 };
 
-            return `<button title="Zoomer sur ${group.length} éléments" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${group.length}</button>`;
+            return `<button type="button" title="Zoomer sur ${group.length} éléments" aria-label="Zoomer sur ${group.length} éléments" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${group.length}</button>`;
         }).join("");
 
     const selected =
@@ -2572,7 +2651,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button title="${esc(point.label)}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return `<button type="button" title="${esc(point.label)}" aria-label="Étape ${index + 1} : ${esc(point.label)}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
             }
         ).join("");
 
@@ -2587,7 +2666,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button title="Étape ${index + 1} - ${esc(point.name)}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? 'locked' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return `<button type="button" title="Étape ${index + 1} - ${esc(point.name)}" aria-label="Étape planifiée ${index + 1} : ${esc(point.name)}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? 'locked' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
             }
         ).join("");
 
@@ -2597,7 +2676,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(start);
 
-                return `<button title="Départ - ${esc(start.label || 'point personnalisé')}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">D</button>`
+                return `<button type="button" title="Départ - ${esc(start.label || 'point personnalisé')}" aria-label="Point de départ : ${esc(start.label || 'point personnalisé')}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">D</button>`
             })()
             : "";
 
@@ -2996,7 +3075,7 @@ function renderDetails(x) {
         routeIds().has(itemId(x));
 
     $("#detailContent").innerHTML =
-        `<p class="detailEyebrow">${esc(category)}</p><h2>${esc(x.name || x.id)}</h2><p class="detailMeta">${esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))}</p><span class="detailStatus"><i class="dot ${stateClass(x)}"></i>${esc(trackingLabel(x))}</span>${facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""}${scopeBlock}${manualBlock}${guideBlock}${geoBlock}${interiorBlock}${recipe}${coords && !geo.length ? `<div class="detailSection"><h3>Coordonnées BOTW</h3><p>X ${x.x.toFixed(2)} • Z ${x.z.toFixed(2)}</p></div>` : ""}<div class="detailActions">${coords ? `<button id="detailRoute">${inRoute ? 'Retirer de' : 'Ajouter à'} l’itinéraire</button><button id="detailCenter">Centrer sur la carte</button><button id="copyCoords">Copier le point principal</button><a href="${objmap}" target="_blank" rel="noreferrer">ObjMap ↗</a>` : ""}<a href="${search}" target="_blank" rel="noreferrer">Chercher un guide ↗</a></div>`;
+        `<p class="detailEyebrow">${esc(category)}</p><h2 id="detailTitle">${esc(x.name || x.id)}</h2><p class="detailMeta">${esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))}</p><span class="detailStatus"><i class="dot ${stateClass(x)}" aria-hidden="true"></i>${esc(trackingLabel(x))}</span>${facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""}${scopeBlock}${manualBlock}${guideBlock}${geoBlock}${interiorBlock}${recipe}${coords && !geo.length ? `<div class="detailSection"><h3>Coordonnées BOTW</h3><p>X ${x.x.toFixed(2)} • Z ${x.z.toFixed(2)}</p></div>` : ""}<div class="detailActions">${coords ? `<button id="detailRoute">${inRoute ? 'Retirer de' : 'Ajouter à'} l’itinéraire</button><button id="detailCenter">Centrer sur la carte</button><button id="copyCoords">Copier le point principal</button><a href="${objmap}" target="_blank" rel="noreferrer">ObjMap ↗</a>` : ""}<a href="${search}" target="_blank" rel="noreferrer">Chercher un guide ↗</a></div>`;
 
     const drawer =
         $("#itemDetails");
@@ -3288,7 +3367,7 @@ function renderManualReview() {
 
     list.querySelectorAll("[data-manual-open]").forEach(button => {
         button.onclick = () => {
-            closeManualReview();
+            closeManualReview(false);
             select(button.dataset.manualOpen, true);
         };
     });
@@ -3302,15 +3381,22 @@ function renderManualReview() {
 }
 
 function openManualReview() {
+    manualReviewReturnFocus = document.activeElement;
     $("#manualReview").hidden = false;
     $("#toggleManualReview").setAttribute("aria-expanded", "true");
     renderManualReview();
     $("#manualReviewSearch").focus();
 }
 
-function closeManualReview() {
+function closeManualReview(restoreFocus = true) {
+    if ($("#manualReview").hidden) return;
     $("#manualReview").hidden = true;
     $("#toggleManualReview").setAttribute("aria-expanded", "false");
+    if (restoreFocus) {
+        const target = manualReviewReturnFocus || $("#toggleManualReview");
+        requestAnimationFrame(() => target?.focus());
+    }
+    manualReviewReturnFocus = null;
 }
 
 async function uncheckManualFromReview(trackingId, checkbox) {
@@ -3848,7 +3934,7 @@ function renderRoute() {
                                 snapshot.region ||
                                 "Région inconnue";
 
-                        return `<article class="routeStep ${value.item ? '' : 'unavailable'}" data-route-step="${stateIndex}"><span>${index + 1}</span><div><b>${esc(name)}</b><small>${value.item ? `${esc(region)} • ${leg.index === 1 && !routeState.start ? "départ" : `+ ${formatDistance(leg.distance)}`} • cumul ${formatDistance(leg.cumulative)}` : `Étape indisponible dans le catalogue actuel • conservée avec ses anciennes informations`}</small></div><div class="routeStepActions">${value.item ? `<button data-route-focus="${esc(entry.tracking_id)}" title="Voir sur la carte">⌖</button>` : ""}<button data-route-up="${stateIndex}" title="Monter">↑</button><button data-route-down="${stateIndex}" title="Descendre">↓</button><button data-route-lock="${stateIndex}" class="${entry.locked ? 'active' : ''}" title="Verrouiller cette position">${entry.locked ? '🔒' : '○'}</button><button data-route-remove="${esc(entry.tracking_id)}" title="Retirer">×</button></div></article>`
+                        return `<article class="routeStep ${value.item ? '' : 'unavailable'}" data-route-step="${stateIndex}"><span>${index + 1}</span><div><b>${esc(name)}</b><small>${value.item ? `${esc(region)} • ${leg.index === 1 && !routeState.start ? "départ" : `+ ${formatDistance(leg.distance)}`} • cumul ${formatDistance(leg.cumulative)}` : `Étape indisponible dans le catalogue actuel • conservée avec ses anciennes informations`}</small></div><div class="routeStepActions">${value.item ? `<button data-route-focus="${esc(entry.tracking_id)}" title="Voir sur la carte" aria-label="Voir ${esc(name)} sur la carte">⌖</button>` : ""}<button data-route-up="${stateIndex}" title="Monter" aria-label="Monter ${esc(name)}">↑</button><button data-route-down="${stateIndex}" title="Descendre" aria-label="Descendre ${esc(name)}">↓</button><button data-route-lock="${stateIndex}" class="${entry.locked ? 'active' : ''}" title="Verrouiller cette position" aria-label="${entry.locked ? 'Déverrouiller' : 'Verrouiller'} la position de ${esc(name)}">${entry.locked ? '🔒' : '○'}</button><button data-route-remove="${esc(entry.tracking_id)}" title="Retirer" aria-label="Retirer ${esc(name)} de l’itinéraire">×</button></div></article>`
                     }
                 )
                 .join("")
@@ -4351,7 +4437,10 @@ function closeDetails() {
     const d =
         $("#itemDetails");
 
+    if (!d.classList.contains("open")) return;
+
     d.classList.remove("open");
+    d.inert = true;
 
     d.setAttribute(
         "aria-hidden",
@@ -4365,6 +4454,17 @@ function closeDetails() {
             renderMap(filtered());
         }
     }
+
+    const target = detailReturnTarget;
+    detailReturnTarget = null;
+    if (target) {
+        const selector = target.manualReview
+            ? `[data-manual-open="${CSS.escape(target.id)}"]`
+            : target.fromList
+                ? `[data-item-open="${CSS.escape(target.id)}"]`
+                : `[data-map-id="${CSS.escape(target.id)}"]`;
+        requestAnimationFrame(() => document.querySelector(selector)?.focus());
+    }
 }
 
 function toast(
@@ -4375,6 +4475,11 @@ function toast(
         $("#toast");
 
     t.textContent = text;
+
+    t.setAttribute(
+        "role",
+        error ? "alert" : "status"
+    );
 
     t.style.background =
         error
@@ -4647,7 +4752,7 @@ $("#manualReviewCategory").onchange =
 document.addEventListener(
     "keydown",
     e => {
-        if (e.key === "Escape") {
+        if (e.key === "Escape" && !$("#onboardingDialog").open) {
             closeDetails();
             closeManualReview()
         }
@@ -4803,6 +4908,36 @@ $("#dsuSource").onchange =
 
 $("#toggleDsu").onclick =
     toggleDsu;
+
+$("#openHelp").onclick =
+    () => showOnboarding(true);
+
+$("#skipOnboarding").onclick =
+    () => closeOnboarding(true);
+
+$("#previousOnboarding").onclick =
+    () => {
+        onboardingStep = Math.max(0, onboardingStep - 1);
+        renderOnboardingStep();
+    };
+
+$("#nextOnboarding").onclick =
+    () => {
+        if (onboardingStep < ONBOARDING_STEPS.length - 1) {
+            onboardingStep += 1;
+            renderOnboardingStep();
+        } else {
+            closeOnboarding(true);
+        }
+    };
+
+$("#onboardingDialog").addEventListener(
+    "cancel",
+    event => {
+        event.preventDefault();
+        closeOnboarding(true);
+    }
+);
 
 document.addEventListener(
     "visibilitychange",

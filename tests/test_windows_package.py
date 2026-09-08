@@ -176,8 +176,11 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('page.waitForEvent("dialog"', script)
         self.assertIn("manualCheckbox.evaluate(element => element.click())", script)
         self.assertNotIn('.uncheck();', script)
-        self.assertIn("<aside>", markup)
-        self.assertIn("<main>", markup)
+        self.assertIn('<aside aria-label="Navigation des catégories">', markup)
+        self.assertIn('<main id="mainContent" tabindex="-1">', markup)
+        self.assertIn('require("axe-core")', script)
+        self.assertIn("wcag22aa", script)
+        self.assertIn("exerciseOnboarding", script)
 
     def test_narrow_layout_cannot_restore_wide_grids(self):
         styles = (self.root / "botw_companion" / "web" / "armor.css").read_text(

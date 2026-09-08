@@ -82,6 +82,7 @@ class PreferenceStoreTests(unittest.TestCase):
             "completion_profile": "expert",
             "game_mode_filter": "save",
             "dsu_mode": "integrated",
+            "onboarding_completed": True,
         }, 0)
         restored = PreferenceStore(self.path).load()
         self.assertEqual(restored, saved)
@@ -94,6 +95,18 @@ class PreferenceStoreTests(unittest.TestCase):
         with self.assertRaisesRegex(ManualTrackingError, "Préférence invalide"):
             self.store.update({"sync_interval": 1}, before["revision"])
         self.assertEqual(self.store.load(), before)
+
+    def test_onboarding_state_requires_a_real_boolean(self):
+        saved = self.store.update({"onboarding_completed": True}, 0)
+        self.assertTrue(saved["values"]["onboarding_completed"])
+        for invalid in (1, 0, "true", None):
+            with self.subTest(value=invalid):
+                with self.assertRaisesRegex(ManualTrackingError, "Préférence invalide"):
+                    self.store.update(
+                        {"onboarding_completed": invalid},
+                        saved["revision"],
+                    )
+        self.assertEqual(self.store.load(), saved)
 
     def test_corrupted_primary_uses_the_last_valid_backup(self):
         first = self.store.update({"sync_interval": 15}, 0)

@@ -2,6 +2,7 @@
 "use strict";
 
 const {chromium, firefox, webkit} = require("playwright");
+const {source: axeSource} = require("axe-core");
 const {mkdir} = require("node:fs/promises");
 
 const ACTION_TIMEOUT_MS = 20000;
@@ -44,6 +45,53 @@ async function fetchJson(page, url, options = {}) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+async function assertAccessible(page, context) {
+  // L’injection par le protocole du navigateur ne relâche pas la politique CSP
+  // stricte de l’application (script-src 'self').
+  await page.evaluate(axeSource);
+  const result = await page.evaluate(async () => window.axe.run(document, {
+    runOnly: {
+      type: "tag",
+      values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]
+    }
+  }));
+  if (!result.violations.length) return;
+  const summary = result.violations.map(violation => {
+    const nodes = violation.nodes.slice(0, 3)
+      .map(node => `${node.target.join(" ")}: ${node.failureSummary}`)
+      .join(" | ");
+    return `${violation.id} (${violation.impact || "impact inconnu"}) — ${nodes}`;
+  }).join("\n");
+  throw new Error(`Audit d’accessibilité échoué (${context})\n${summary}`);
+}
+
+async function exerciseOnboarding(page) {
+  const dialog = page.locator("#onboardingDialog");
+  if (await dialog.isVisible()) {
+    assert((await page.locator("#onboardingStepLabel").textContent()).includes("1 sur 3"),
+      "L’assistant de premier lancement ne commence pas à la première étape");
+    await assertAccessible(page, "assistant de premier lancement");
+    await page.locator("#nextOnboarding").click();
+    assert((await page.locator("#onboardingTitle").textContent()).includes("sauvegarde"),
+      "La deuxième étape du premier lancement est absente");
+    await page.locator("#nextOnboarding").click();
+    assert((await page.locator("#onboardingTitle").textContent()).includes("Gyroscope"),
+      "La présentation facultative du gyroscope est absente");
+    await page.locator("#nextOnboarding").click();
+    await dialog.waitFor({state: "hidden"});
+    const preferences = await fetchJson(page, "/api/preferences");
+    assert(preferences.body.values.onboarding_completed === true,
+      "La fin du premier lancement n’est pas conservée");
+  }
+
+  await page.locator("#openHelp").click();
+  await dialog.waitFor({state: "visible"});
+  await page.keyboard.press("Escape");
+  await dialog.waitFor({state: "hidden"});
+  assert(await page.locator("#openHelp").evaluate(element => element === document.activeElement),
+    "Le focus ne revient pas au bouton Aide après la fermeture de l’assistant");
 }
 
 async function captureBloodMoonReferences(page, browserName) {
@@ -144,6 +192,8 @@ async function runDesktop(browser, baseUrl, browserName) {
   });
   progress(browserName, "bureau:chargement");
   await waitForApplication(page, browserName);
+  await exerciseOnboarding(page);
+  await assertAccessible(page, "tableau de bord");
   progress(browserName, "bureau:carte");
 
   assert(await page.locator("#routeBody").getAttribute("hidden") !== null,
@@ -181,8 +231,9 @@ async function runDesktop(browser, baseUrl, browserName) {
   await page.locator("#mapReset").click();
   await page.waitForFunction(() => Math.abs(mapState.scale - mapState.minScale) < 0.000001);
 
-  await page.locator("#list .item").first().click();
+  await page.locator("#list .itemOpen").first().click();
   await page.locator("#detailContent h2").waitFor({timeout: 10000});
+  await assertAccessible(page, "fiche d’objectif");
   assert(await page.evaluate(() => selectedId !== null),
     "La fiche ouverte n'a pas conservé sa sélection cartographique");
   const selectedTrackingId = await page.evaluate(() => selectedId);
@@ -307,6 +358,7 @@ async function runResponsive(browser, baseUrl, browserName) {
   page.baseUrl = baseUrl;
   progress(browserName, "responsive:chargement");
   await waitForApplication(page, browserName);
+  await assertAccessible(page, "affichage mobile");
   const sidebar = page.getByRole("complementary");
   const content = page.getByRole("main");
   await Promise.all([sidebar.waitFor(), content.waitFor()]);

@@ -39,6 +39,7 @@ La version actuelle est indiquée sur la page [GitHub Releases](https://github.c
 * Serveur gyroscopique universel compatible Cemuhook/DSU pour Ryujinx et Cemu sur macOS et Windows, avec sélection de la source SDL3.
 * Diagnostic gyroscopique détaillé avec qualité globale, cadence, jitter, âge des échantillons, anomalies, réseau et historique de calibration.
 * Interface Web locale accessible sur `http://127.0.0.1:8765`.
+* Guide de premier lancement persistant, navigation complète au clavier, focus visible, annonces adaptées aux lecteurs d’écran et réduction des animations selon le réglage du système.
 * Lanceurs macOS et Windows pour démarrer le serveur sans terminal et ouvrir automatiquement le navigateur.
 
 ## Formules de complétion
@@ -96,6 +97,8 @@ Télécharger le fichier correspondant depuis [GitHub Releases](https://github.c
 * Mac Apple Silicon : le fichier dont le nom se termine par `_macOS_arm64.dmg`.
 
 Sous Windows, lancer l’installateur. Sous macOS, ouvrir le DMG puis glisser **BOTW Companion** dans **Applications**. Les deux paquets incluent Python, toutes les données et cartes hors ligne, le moteur JoyConDSU, SDL3, les icônes et le lanceur. Git, Python, Homebrew, Xcode, Visual Studio et un clone du dépôt ne sont pas nécessaires.
+
+Au premier démarrage, un guide en trois étapes confirme la sauvegarde détectée et explique le gyroscope facultatif. Le choix est conservé dans les préférences locales ; le bouton **Aide** permet de revoir ce guide sans réinitialiser les données. La touche Tab parcourt les commandes, Échap ferme le guide ou une fiche, et le lien **Aller au contenu principal** apparaît dès qu’il reçoit le focus.
 
 Ces versions alpha ne sont pas signées avec un certificat commercial. Windows SmartScreen ou macOS Gatekeeper peuvent donc demander une confirmation. Télécharger uniquement depuis la page Releases officielle ; sous macOS, utiliser **Réglages Système > Confidentialité et sécurité > Ouvrir quand même** si nécessaire.
 
@@ -241,7 +244,7 @@ node tools/browser_smoke.js http://127.0.0.1:18765 edge
 node tools/browser_smoke.js http://127.0.0.1:18765 firefox
 ```
 
-Chrome et Microsoft Edge doivent être installés sur la machine de test Windows. Le workflow teste Chrome, Edge et Firefox sous Windows, puis Chromium, Firefox et WebKit sur Apple Silicon. Le parcours vérifie le chargement, les filtres, la carte, le zoom, les fiches, la désélection, la liste centralisée des validations manuelles et la conservation des notes après annulation, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU, son diagnostic détaillé et l’affichage responsive.
+Chrome et Microsoft Edge doivent être installés sur la machine de test Windows. Le workflow teste Chrome, Edge et Firefox sous Windows, puis Chromium, Firefox et WebKit sur Apple Silicon. Le parcours vérifie le premier lancement, le chargement, les filtres, la carte, le zoom, les fiches, la désélection, la liste centralisée des validations manuelles et la conservation des notes après annulation, le planificateur, l’import/export, la lune de sang, la synchronisation, le bouton DSU, son diagnostic détaillé et l’affichage responsive. Axe-core contrôle en plus les critères automatisables WCAG 2.2 niveau AA sur le guide, le tableau de bord, une fiche et la vue mobile.
 
 ## Mise à jour du clone
 

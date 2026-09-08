@@ -1,9 +1,11 @@
 ## Changements
 
-- Les commits et les pull requests lancent les tests sans construire d’installateur.
-- Un tag de version construit et teste automatiquement les applications Windows et macOS avant leur publication.
-- Les noms des fichiers, le titre de la release et son statut stable ou préversion sont maintenant déduits du tag.
-- Les mises à niveau depuis la première version Windows/macOS commune restent testées sans perte de données.
+- Un guide en trois étapes présente la sauvegarde détectée, le fonctionnement hors ligne et le gyroscope au premier lancement.
+- Le bouton Aide permet de rouvrir ce guide à tout moment.
+- La navigation au clavier couvre maintenant les filtres, les résultats, la carte, les fiches et les panneaux secondaires avec un focus clairement visible.
+- Les contrôles et les messages dynamiques ont des libellés adaptés aux lecteurs d’écran.
+- Les animations sont réduites lorsque l’option correspondante est activée dans le système.
+- Le parcours navigateur inclut désormais un audit automatique WCAG 2.2 AA.
 
 ## Installation
 

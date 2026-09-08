@@ -18,6 +18,7 @@ ALLOWED_VALUES = {
     "game_mode_filter": {"save", "all", "normal", "expert"},
     "dsu_mode": {"integrated", "external", "disabled"},
 }
+BOOLEAN_PREFERENCES = {"onboarding_completed"}
 
 
 def default_preferences_path() -> Path:
@@ -46,7 +47,10 @@ class PreferenceStore:
             raise ManualTrackingError("Révision des préférences invalide")
         values = {}
         for key, value in payload.get("values", {}).items():
-            if key not in ALLOWED_VALUES or value not in ALLOWED_VALUES[key]:
+            if key in BOOLEAN_PREFERENCES:
+                if type(value) is not bool:
+                    raise ManualTrackingError(f"Préférence invalide : {key}")
+            elif key not in ALLOWED_VALUES or value not in ALLOWED_VALUES[key]:
                 raise ManualTrackingError(f"Préférence invalide : {key}")
             values[key] = value
         return {
