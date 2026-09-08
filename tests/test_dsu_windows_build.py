@@ -43,6 +43,9 @@ class WindowsDsuBuildTests(unittest.TestCase):
         for filename in ("JoyConDSU.exe", "SDL3.dll", "manifest.json", "SDL3-LICENSE.txt"):
             self.assertIn(filename, script)
         self.assertIn("Get-FileHash -Algorithm SHA256", script)
+        self.assertIn('Get-Content -LiteralPath $sdlLicense -Raw -Encoding UTF8', script)
+        self.assertIn('-replace "`r`n", "`n"', script)
+        self.assertIn('$generatedSdlLicenseText -cne $auditedSdlLicenseText', script)
         self.assertIn("-NoNewline", script)
         self.assertIn('botw_companion\\dsu\\windows', script)
 

@@ -36,9 +36,22 @@ if (-not (Test-Path -LiteralPath $executable -PathType Leaf) -or
     exit 1
 }
 $auditedSdlLicense = Join-Path $projectRoot "licenses\SDL3-3.4.14.txt"
-if (-not (Test-Path -LiteralPath $auditedSdlLicense -PathType Leaf) -or
-    (Get-FileHash -Algorithm SHA256 $sdlLicense).Hash -ne
-    (Get-FileHash -Algorithm SHA256 $auditedSdlLicense).Hash) {
+if (-not (Test-Path -LiteralPath $auditedSdlLicense -PathType Leaf)) {
+    Write-Error "La licence SDL3 auditée est absente."
+    exit 1
+}
+
+# Git convertit les fins de ligne du fichier suivi en CRLF sur les runners
+# Windows, tandis que l'archive SDL téléchargée conserve ses LF. Comparer le
+# texte normalisé valide le contenu sans confondre ce formatage avec une
+# modification de licence.
+$generatedSdlLicenseText = (
+    Get-Content -LiteralPath $sdlLicense -Raw -Encoding UTF8
+) -replace "`r`n", "`n" -replace "`r", "`n"
+$auditedSdlLicenseText = (
+    Get-Content -LiteralPath $auditedSdlLicense -Raw -Encoding UTF8
+) -replace "`r`n", "`n" -replace "`r", "`n"
+if ($generatedSdlLicenseText -cne $auditedSdlLicenseText) {
     Write-Error "La licence SDL3 générée ne correspond pas au texte audité."
     exit 1
 }
