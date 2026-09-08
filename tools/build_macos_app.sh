@@ -21,8 +21,10 @@ readonly BUILD_ROOT="$PROJECT_ROOT/build/macos-package"
 readonly BUILD_PYTHON="$BUILD_ROOT/venv/bin/python"
 readonly SPEC_PATH="$PROJECT_ROOT/macos/BOTW Companion.spec"
 readonly APPLICATION="$PROJECT_ROOT/dist/BOTW Companion.app"
-readonly DMG_ROOT="$BUILD_ROOT/dmg-root"
 readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg"
+readonly DMG_WORK_ROOT="${RUNNER_TEMP:-/tmp}/botw-companion-dmg-$$"
+readonly DMG_ROOT="$DMG_WORK_ROOT/root"
+readonly TEMP_DMG_PATH="$DMG_WORK_ROOT/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg"
 
 if [[ $SKIP_NATIVE -eq 0 ]]; then
   "$PROJECT_ROOT/tools/build_joycon_dsu_macos.sh"
@@ -38,7 +40,7 @@ for required in \
 done
 
 cmake -E remove_directory "$PROJECT_ROOT/dist"
-cmake -E remove_directory "$DMG_ROOT"
+cmake -E remove_directory "$DMG_WORK_ROOT"
 mkdir -p "$BUILD_ROOT" "$DMG_ROOT"
 
 if [[ ! -x "$BUILD_PYTHON" ]]; then
@@ -91,12 +93,29 @@ PY
 
 /usr/bin/ditto "$APPLICATION" "$DMG_ROOT/BOTW Companion.app"
 /bin/ln -s /Applications "$DMG_ROOT/Applications"
-/usr/bin/hdiutil create \
-  -volname "BOTW Companion" \
-  -srcfolder "$DMG_ROOT" \
-  -ov \
-  -format UDZO \
-  "$DMG_PATH"
+
+# hdiutil peut répondre transitoirement « Resource busy » sur les runners macOS
+# hébergés. La source et l'image temporaire restent hors du dépôt, chaque essai
+# repart d'un fichier absent et le résultat est vérifié avant publication.
+dmg_created=0
+for attempt in 1 2 3 4; do
+  cmake -E rm -f "$TEMP_DMG_PATH"
+  if /usr/bin/hdiutil create \
+      -volname "BOTW Companion" \
+      -srcfolder "$DMG_ROOT" \
+      -ov \
+      -format UDZO \
+      "$TEMP_DMG_PATH"; then
+    dmg_created=1
+    break
+  fi
+  echo "Création du DMG indisponible (essai $attempt/4), nouvelle tentative." >&2
+  /bin/sleep $((attempt * 2))
+done
+[[ $dmg_created -eq 1 ]] || { echo "Impossible de créer le DMG après 4 essais." >&2; exit 1; }
+/usr/bin/hdiutil verify "$TEMP_DMG_PATH"
+/bin/mv -f "$TEMP_DMG_PATH" "$DMG_PATH"
+cmake -E remove_directory "$DMG_WORK_ROOT"
 
 if [[ $KEEP_BUILD_ENVIRONMENT -eq 0 ]]; then
   cmake -E remove_directory "$BUILD_ROOT/venv"

@@ -101,6 +101,9 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("PreviousInstallerPath", validation)
         self.assertIn("Conservé depuis alpha.24", validation)
         self.assertIn("WScript.Shell", validation)
+        self.assertNotIn('"--sans-navigateur"', validation)
+        self.assertIn("RedirectStandardError", validation)
+        self.assertIn("-WorkingDirectory $InstallRoot", validation)
 
     def test_clean_machine_validation_removes_development_tools_from_path(self):
         script = (self.root / "tools" / "test_windows_installation.ps1").read_text(

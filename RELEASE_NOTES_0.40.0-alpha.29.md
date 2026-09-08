@@ -5,6 +5,8 @@
 - Les raccourcis Windows sont vérifiés après remplacement de l’ancienne version.
 - Le remplacement de l’application dans le dossier Applications est testé sur macOS Apple Silicon.
 - Les fichiers de localisation et de nomenclature françaises font maintenant partie des contrôles explicites du paquet hors ligne.
+- Le test Windows conserve les journaux du serveur installé en cas d’échec pour faciliter le diagnostic.
+- La création du DMG résiste aux indisponibilités temporaires de macOS et vérifie l’image avant sa publication.
 
 ## Téléchargements
 

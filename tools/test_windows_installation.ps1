@@ -75,12 +75,22 @@ function Test-InstalledRuntime([string]$InstallRoot, [string]$DataRoot, [int]$Po
             throw "Le moteur JoyConDSU installé ne charge pas SDL3 de manière autonome."
         }
 
+        $serverOutput = Join-Path $testRoot "server-$Port.stdout.log"
+        $serverError = Join-Path $testRoot "server-$Port.stderr.log"
         $server = Start-Process -FilePath $application -ArgumentList @(
-            "--server", "--port", "$Port", "--sans-navigateur"
-        ) -PassThru
+            "--server", "--port", "$Port"
+        ) -WorkingDirectory $InstallRoot -RedirectStandardOutput $serverOutput `
+            -RedirectStandardError $serverError -PassThru
         $identity = $null
         for ($attempt = 0; $attempt -lt 120; $attempt++) {
-            if ($server.HasExited) { throw "Le serveur installé s'est arrêté avant de répondre." }
+            if ($server.HasExited) {
+                $diagnostics = @(
+                    "Le serveur installé s'est arrêté avant de répondre (code $($server.ExitCode))."
+                    "Sortie standard : $serverOutput"
+                    "Sortie d'erreur : $serverError"
+                ) -join [Environment]::NewLine
+                throw $diagnostics
+            }
             try {
                 $identity = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/version" -TimeoutSec 1
                 break
