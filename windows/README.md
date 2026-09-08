@@ -1,6 +1,6 @@
 # Distribution Windows
 
-Les joueurs téléchargent uniquement `BOTW_Companion_0.40.0-alpha.28_Setup.exe` depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases). L’installateur x64 embarque le runtime Python, les ressources hors ligne, JoyConDSU et SDL3, puis crée les raccourcis Bureau et menu Démarrer.
+Les joueurs téléchargent uniquement `BOTW_Companion_0.40.0-alpha.29_Setup.exe` depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases). L’installateur x64 embarque le runtime Python, les ressources hors ligne, JoyConDSU et SDL3, puis crée les raccourcis Bureau et menu Démarrer.
 
 ## Construction
 
@@ -14,7 +14,7 @@ La construction officielle s’exécute sur le runner `windows-2022` du workflow
 Le résultat se trouve dans :
 
 ```text
-dist\installer\BOTW_Companion_0.40.0-alpha.28_Setup.exe
+dist\installer\BOTW_Companion_0.40.0-alpha.29_Setup.exe
 ```
 
 L’installateur est installé par utilisateur dans `%LOCALAPPDATA%\Programs\BOTW Companion`. Les données personnelles restent séparées dans `%LOCALAPPDATA%\BOTW Companion`.

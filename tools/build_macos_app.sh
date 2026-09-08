@@ -22,7 +22,7 @@ readonly BUILD_PYTHON="$BUILD_ROOT/venv/bin/python"
 readonly SPEC_PATH="$PROJECT_ROOT/macos/BOTW Companion.spec"
 readonly APPLICATION="$PROJECT_ROOT/dist/BOTW Companion.app"
 readonly DMG_ROOT="$BUILD_ROOT/dmg-root"
-readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg"
+readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg"
 
 if [[ $SKIP_NATIVE -eq 0 ]]; then
   "$PROJECT_ROOT/tools/build_joycon_dsu_macos.sh"
@@ -57,8 +57,11 @@ PACKAGED_DSU="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/JoyConDSU'
 PACKAGED_SDL="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/libSDL3.0.dylib' -type f -print -quit)"
 PACKAGED_LAUNCHER="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/launch_managed.sh' -type f -print -quit)"
 PACKAGED_MANIFEST="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/manifest.json' -type f -print -quit)"
+PACKAGED_LOCALIZATION="$(find "$APPLICATION" -path '*/botw_companion/data/localization_fr.json' -type f -print -quit)"
+PACKAGED_NOMENCLATURE="$(find "$APPLICATION" -path '*/botw_companion/data/nomenclature_fr_reference.json' -type f -print -quit)"
 [[ -n "$PACKAGED_DSU" && -n "$PACKAGED_SDL" && -n "$PACKAGED_LAUNCHER" \
-  && -n "$PACKAGED_MANIFEST" ]] || {
+  && -n "$PACKAGED_MANIFEST" && -n "$PACKAGED_LOCALIZATION" \
+  && -n "$PACKAGED_NOMENCLATURE" ]] || {
   echo "Le moteur DSU n'est pas présent dans l'application." >&2
   exit 1
 }

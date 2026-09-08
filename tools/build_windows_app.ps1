@@ -20,7 +20,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.28_Setup.exe"
+$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.29_Setup.exe"
 
 foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
     if (Test-Path -LiteralPath $stalePath) {
@@ -90,6 +90,8 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\JoyConDSU.exe"),
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3.dll"),
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3-LICENSE.txt"),
+    (Join-Path $applicationDirectory "_internal\botw_companion\data\localization_fr.json"),
+    (Join-Path $applicationDirectory "_internal\botw_companion\data\nomenclature_fr_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\catalog_fr_compiled.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\cartography_reference_fr_compiled.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\korok_reference.json"),

@@ -3,7 +3,7 @@ name: Versions Windows et macOS
 on:
   push:
     branches: [master]
-    tags: ["v0.40.0-alpha.28"]
+    tags: ["v0.40.0-alpha.29"]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -60,7 +60,7 @@ jobs:
       - name: Conserver les références visuelles de la lune de sang
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: blood-moon-reference-0.40.0-alpha.28
+          name: blood-moon-reference-0.40.0-alpha.29
           path: test-results/blood-moon/*.png
           if-no-files-found: error
           retention-days: 14
@@ -75,15 +75,31 @@ jobs:
         shell: pwsh
         run: ./tools/build_windows_app.ps1
 
-      - name: Tester l'installation autonome
+      - name: Télécharger l'installateur alpha.24 de référence
         shell: pwsh
-        run: ./tools/test_windows_installation.ps1
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Force -Path build/upgrade-reference | Out-Null
+          gh release download v0.40.0-alpha.24 `
+            --repo "${{ github.repository }}" `
+            --pattern "BOTW_Companion_0.40.0-alpha.24_Setup.exe" `
+            --dir build/upgrade-reference `
+            --clobber
+
+      - name: Tester l'installation autonome et la mise à niveau
+        shell: pwsh
+        run: >-
+          ./tools/test_windows_installation.ps1
+          -PreviousInstallerPath
+          build/upgrade-reference/BOTW_Companion_0.40.0-alpha.24_Setup.exe
 
       - name: Conserver l'installateur Windows
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.28-Windows-x64
-          path: dist/installer/BOTW_Companion_0.40.0-alpha.28_Setup.exe
+          name: BOTW-Companion-0.40.0-alpha.29-Windows-x64
+          path: dist/installer/BOTW_Companion_0.40.0-alpha.29_Setup.exe
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -187,16 +203,32 @@ jobs:
         timeout-minutes: 35
         run: ./tools/build_macos_app.sh
 
-      - name: Tester le DMG autonome
+      - name: Télécharger le DMG alpha.24 de référence
+        shell: bash
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/upgrade-reference
+          gh release download v0.40.0-alpha.24 \
+            --repo "${{ github.repository }}" \
+            --pattern "BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg" \
+            --dir build/upgrade-reference \
+            --clobber
+
+      - name: Tester le DMG autonome et le remplacement alpha.24
         shell: bash
         timeout-minutes: 10
-        run: ./tools/test_macos_installation.sh
+        run: >-
+          ./tools/test_macos_installation.sh
+          dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
+          build/upgrade-reference/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg
 
       - name: Conserver le DMG Apple Silicon
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.28-macOS-arm64
-          path: dist/BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg
+          name: BOTW-Companion-0.40.0-alpha.29-macOS-arm64
+          path: dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -215,24 +247,24 @@ jobs:
       - name: Télécharger les installateurs validés
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          pattern: BOTW-Companion-0.40.0-alpha.28-*
+          pattern: BOTW-Companion-0.40.0-alpha.29-*
           path: release-assets
           merge-multiple: true
 
       - name: Vérifier les deux plateformes
         shell: bash
         run: |
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.28_Setup.exe
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.29_Setup.exe
+          test -f release-assets/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
 
       - name: Créer la GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh release create "${{ github.ref_name }}"
-          release-assets/BOTW_Companion_0.40.0-alpha.28_Setup.exe
-          release-assets/BOTW_Companion_0.40.0-alpha.28_macOS_arm64.dmg
+          release-assets/BOTW_Companion_0.40.0-alpha.29_Setup.exe
+          release-assets/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
           --verify-tag
           --prerelease
-          --title "BOTW Companion v0.40.0-alpha.28"
-          --notes-file RELEASE_NOTES_0.40.0-alpha.28.md
+          --title "BOTW Companion v0.40.0-alpha.29"
+          --notes-file RELEASE_NOTES_0.40.0-alpha.29.md

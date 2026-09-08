@@ -7,6 +7,8 @@ import re
 
 
 DATA_FILES = (
+    "localization_fr.json",
+    "nomenclature_fr_reference.json",
     "catalog_fr_compiled.json",
     "cartography_reference_fr_compiled.json",
     "nomenclature_audit_compiled.json",

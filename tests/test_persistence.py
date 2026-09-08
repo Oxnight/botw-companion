@@ -151,6 +151,66 @@ class CompleteBackupTests(unittest.TestCase):
         restored = self.backup.restore(exported)
         self.assertEqual(restored["preferences"]["values"], {})
 
+    def test_alpha24_backup_restores_tracking_routes_and_preferences(self):
+        timestamp = "2026-09-06T12:00:00+00:00"
+        alpha24 = {
+            "schema_version": 2,
+            "application": "BOTW Companion",
+            "exported_at": timestamp,
+            "manual_tracking": {
+                "schema_version": 2,
+                "revision": 7,
+                "updated_at": timestamp,
+                "entries": {
+                    "korogus:alpha24": {
+                        "completed": True,
+                        "note": "Export alpha.24",
+                        "updated_at": timestamp,
+                    }
+                },
+            },
+            "route_sessions": {
+                "schema_version": 3,
+                "revision": 4,
+                "updated_at": timestamp,
+                "active_session_id": "session-alpha24",
+                "sessions": {
+                    "session-alpha24": {
+                        "id": "session-alpha24",
+                        "name": "Route alpha.24",
+                        "start": {"x": 1, "z": 2, "label": "Départ"},
+                        "strategy": "region",
+                        "entries": [{
+                            "tracking_id": "sanctuaires:alpha24",
+                            "locked": True,
+                            "snapshot": {"name": "Sanctuaire", "x": 3, "z": 4},
+                        }],
+                        "created_at": timestamp,
+                        "updated_at": timestamp,
+                    }
+                },
+            },
+            "preferences": {
+                "schema_version": 1,
+                "revision": 3,
+                "updated_at": timestamp,
+                "values": {
+                    "map_content_mode": "dlc",
+                    "sync_interval": 15,
+                    "dsu_mode": "integrated",
+                },
+            },
+        }
+        restored = self.backup.restore(alpha24)
+        self.assertTrue(
+            restored["manual_tracking"]["entries"]["korogus:alpha24"]["completed"]
+        )
+        routes = restored["route_sessions"]
+        session = routes["sessions"][routes["active_session_id"]]
+        self.assertEqual(session["name"], "Route alpha.24")
+        self.assertTrue(session["entries"][0]["locked"])
+        self.assertEqual(restored["preferences"]["values"]["map_content_mode"], "dlc")
+
     def test_failure_rolls_back_every_primary_file(self):
         self._populate()
         exported = self.backup.export()

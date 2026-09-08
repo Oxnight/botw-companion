@@ -38,6 +38,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("{group}\\BOTW Companion", installer)
         self.assertIn("{autodesktop}\\BOTW Companion", installer)
         self.assertIn("Tasks: desktopicon", installer)
+        self.assertIn("UsePreviousAppDir=yes", installer)
+        self.assertIn("UsePreviousTasks=yes", installer)
         self.assertIn("UninstallDisplayIcon={app}", installer)
         self.assertNotIn("[UninstallDelete]", installer)
         self.assertNotIn("{localappdata}\\BOTW Companion\\manual", installer)
@@ -60,6 +62,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('"pyinstaller==6.22.2"', script)
         self.assertIn("--package-self-test", script)
         self.assertIn("cartography_reference_fr_compiled.json", script)
+        self.assertIn("localization_fr.json", script)
+        self.assertIn("nomenclature_fr_reference.json", script)
         self.assertIn("JoyConDSU.exe", script)
         self.assertIn("SDL3.dll", script)
         self.assertIn("ISCC", script)
@@ -92,8 +96,11 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("--list-controllers", validation)
         self.assertIn("/api/version", validation)
         self.assertIn("/api/shutdown", validation)
-        self.assertIn('$applicationLicense = Join-Path $installRoot "LICENSE"', validation)
-        self.assertIn('$thirdPartyNotices = Join-Path $installRoot "THIRD_PARTY_NOTICES.md"', validation)
+        self.assertIn('(Join-Path $InstallRoot "LICENSE")', validation)
+        self.assertIn('(Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md")', validation)
+        self.assertIn("PreviousInstallerPath", validation)
+        self.assertIn("Conservé depuis alpha.24", validation)
+        self.assertIn("WScript.Shell", validation)
 
     def test_clean_machine_validation_removes_development_tools_from_path(self):
         script = (self.root / "tools" / "test_windows_installation.ps1").read_text(
@@ -115,6 +122,10 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("tools/check_version_consistency.py", workflow)
         self.assertIn("refs/tags/", workflow)
         self.assertIn("gh release create", workflow)
+        self.assertIn("gh release download v0.40.0-alpha.24", workflow)
+        self.assertNotIn("SHA256" + "SUMS", workflow)
+        self.assertNotIn("sha256" + "sum", workflow.casefold())
+        self.assertEqual(workflow.count("release-assets/BOTW_Companion_0.40.0-alpha.29_"), 4)
         self.assertIn("--verify-tag", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
 
