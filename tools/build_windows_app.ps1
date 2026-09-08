@@ -83,7 +83,7 @@ try {
 
 # PyInstaller 6 place les fichiers de données du mode onedir dans _internal.
 # Les documents destinés au joueur doivent rester visibles à côté de l'exécutable.
-foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md")) {
+foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md")) {
     $documentSource = Join-Path $projectRoot $documentName
     if (-not (Test-Path -LiteralPath $documentSource -PathType Leaf)) {
         Write-Error "Document de distribution manquant : $documentSource"
@@ -93,6 +93,8 @@ foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md")) {
         -Destination (Join-Path $applicationDirectory $documentName) `
         -Force
 }
+Copy-Item -LiteralPath (Join-Path $projectRoot "licenses") `
+    -Destination (Join-Path $applicationDirectory "licenses") -Recurse -Force
 
 foreach ($required in @(
     $applicationExecutable,
@@ -109,7 +111,12 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "_internal\botw_companion\web\index.html"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp"),
     (Join-Path $applicationDirectory "LICENSE"),
-    (Join-Path $applicationDirectory "THIRD_PARTY_NOTICES.md")
+    (Join-Path $applicationDirectory "THIRD_PARTY_NOTICES.md"),
+    (Join-Path $applicationDirectory "DATA_SOURCES.md"),
+    (Join-Path $applicationDirectory "PRIVACY.md"),
+    (Join-Path $applicationDirectory "SECURITY.md"),
+    (Join-Path $applicationDirectory "licenses\PYTHON-3.12.txt"),
+    (Join-Path $applicationDirectory "licenses\SDL3-3.4.14.txt")
 )) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         Write-Error "Paquet incomplet : $required"

@@ -47,6 +47,10 @@ for required in "$EXECUTABLE" "$SDL_LIBRARY" "$SDL_LICENSE"; do
     exit 1
   fi
 done
+cmp -s "$SDL_LICENSE" "$PROJECT_ROOT/licenses/SDL3-3.4.14.txt" || {
+  echo "La licence SDL3 téléchargée ne correspond pas au texte audité." >&2
+  exit 1
+}
 
 /bin/cp "$EXECUTABLE" "$PACKAGE_DIR/JoyConDSU"
 /bin/cp "$SDL_LIBRARY" "$PACKAGE_DIR/libSDL3.0.dylib"

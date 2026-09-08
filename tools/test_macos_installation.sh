@@ -91,6 +91,12 @@ assert_current_application() {
     echo "Le paquet macOS ne contient pas toutes ses ressources hors ligne." >&2
     exit 1
   }
+  for document in LICENSE THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
+    licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt; do
+    find "$application" -path "*/$document" -type f -print -quit | grep -q . || {
+      echo "Document absent de l'application installée : $document" >&2; exit 1;
+    }
+  done
   for binary in "$dsu_executable" "$sdl_library"; do
     [[ "$(/usr/bin/lipo -archs "$binary")" == "arm64" ]] || {
       echo "Architecture DSU inattendue : $binary" >&2

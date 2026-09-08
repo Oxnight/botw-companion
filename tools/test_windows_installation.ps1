@@ -52,7 +52,12 @@ function Assert-InstalledLayout([string]$InstallRoot) {
         (Join-Path $InstallRoot "_internal\botw_companion\data\localization_fr.json"),
         (Join-Path $InstallRoot "_internal\botw_companion\data\nomenclature_fr_reference.json"),
         (Join-Path $InstallRoot "LICENSE"),
-        (Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md")
+        (Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md"),
+        (Join-Path $InstallRoot "DATA_SOURCES.md"),
+        (Join-Path $InstallRoot "PRIVACY.md"),
+        (Join-Path $InstallRoot "SECURITY.md"),
+        (Join-Path $InstallRoot "licenses\PYTHON-3.12.txt"),
+        (Join-Path $InstallRoot "licenses\SDL3-3.4.14.txt")
     )
     foreach ($path in $required) {
         if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {

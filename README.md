@@ -4,6 +4,10 @@ BOTW Companion est une application locale qui détecte automatiquement Ryujinx o
 
 La version actuelle est indiquée sur la page [GitHub Releases](https://github.com/Oxnight/botw-companion/releases). Les mises à niveau sont validées sans perte de suivi, d’itinéraires ni de préférences. Les applications Windows et macOS fonctionnent hors ligne après l’installation ; seuls les liens externes des fiches nécessitent une connexion Internet.
 
+Ce projet de fans est non officiel et n'est ni affilié à Nintendo, ni approuvé,
+sponsorisé ou soutenu par Nintendo. Les droits sur *The Legend of Zelda*,
+*Breath of the Wild* et les ressources du jeu appartiennent à leurs titulaires.
+
 ## Sommaire
 
 * [Fonctions principales](#fonctions-principales).
@@ -20,6 +24,7 @@ La version actuelle est indiquée sur la page [GitHub Releases](https://github.c
 * [Utilisation en ligne de commande](#utilisation-en-ligne-de-commande).
 * [Données locales et confidentialité](#données-locales-et-confidentialité).
 * [Sécurité du serveur local](#sécurité-du-serveur-local).
+* [Licences, sources et sécurité](#licences-sources-et-sécurité).
 * [Mise à jour du clone](#mise-à-jour-du-clone).
 * [Remarques](#remarques).
 
@@ -226,6 +231,23 @@ L’API locale `/api/version` fournit le chemin exact du dossier de données et 
 Le serveur crée un jeton aléatoire à chaque démarrage. Le lanceur le transmet automatiquement à l’interface, qui l’ajoute aux requêtes capables de modifier les préférences, le suivi, les itinéraires, les imports, JoyConDSU ou l’état du serveur. Ce jeton n’est ni écrit sur disque ni réutilisé lors d’une autre session.
 
 Le serveur vérifie également l’hôte, l’origine et le contexte de navigation des requêtes. Il n’active pas CORS, refuse les prévols provenant d’un autre site et applique une politique de sécurité du contenu, l’interdiction d’être intégré dans une iframe, `nosniff` et une politique de référent restrictive.
+
+## Licences, sources et sécurité
+
+Le code propre au projet est sous licence MIT. Les documents suivants
+accompagnent les applications installées :
+
+* [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) pour Python, SDL3 et les
+  outils de construction ;
+* [`DATA_SOURCES.md`](DATA_SOURCES.md) pour la provenance des données et de la
+  carte, ainsi que le point de droits restant avant la version 1.0 ;
+* [`PRIVACY.md`](PRIVACY.md) pour les données locales et les accès réseau ;
+* [`SECURITY.md`](SECURITY.md) pour signaler une vulnérabilité sans publier de
+  donnée sensible.
+
+La licence MIT ne s'étend pas aux marques ou ressources de Nintendo ni aux
+contenus de tiers. Les textes complets exigés par les composants redistribués se
+trouvent dans le dossier [`licenses`](licenses/).
 
 ## Validation des navigateurs
 

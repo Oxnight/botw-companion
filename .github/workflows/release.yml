@@ -56,6 +56,9 @@ jobs:
           python @arguments
           python tools/check_version_consistency.py
 
+      - name: Auditer licences et contenu distribué
+        run: python tools/audit_distribution.py
+
       - name: Tester le code Python et le paquet
         timeout-minutes: 5
         run: python -m unittest discover -s tests -v
@@ -168,6 +171,9 @@ jobs:
           fi
           python3 tools/release_metadata.py "${arguments[@]}"
           python3 tools/check_version_consistency.py
+
+      - name: Auditer licences et contenu distribué
+        run: python3 tools/audit_distribution.py
 
       - name: Tester le code Python et le paquet
         timeout-minutes: 5
@@ -285,6 +291,9 @@ jobs:
             --tag "$BUILD_REF_NAME"
           python3 tools/check_version_consistency.py
 
+      - name: Auditer licences et contenu distribué
+        run: python3 tools/audit_distribution.py
+
       - name: Télécharger les installateurs validés
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -297,6 +306,7 @@ jobs:
         run: |
           test -f "release-assets/${{ steps.version.outputs.installer_name }}"
           test -f "release-assets/${{ steps.version.outputs.dmg_name }}"
+          test "$(find release-assets -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
 
       - name: Créer la GitHub Release
         shell: bash

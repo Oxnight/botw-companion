@@ -35,6 +35,13 @@ if (-not (Test-Path -LiteralPath $executable -PathType Leaf) -or
     Write-Error "La construction n'a pas produit le moteur, SDL3 et sa licence."
     exit 1
 }
+$auditedSdlLicense = Join-Path $projectRoot "licenses\SDL3-3.4.14.txt"
+if (-not (Test-Path -LiteralPath $auditedSdlLicense -PathType Leaf) -or
+    (Get-FileHash -Algorithm SHA256 $sdlLicense).Hash -ne
+    (Get-FileHash -Algorithm SHA256 $auditedSdlLicense).Hash) {
+    Write-Error "La licence SDL3 générée ne correspond pas au texte audité."
+    exit 1
+}
 
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 New-Item -ItemType Directory -Force -Path $packageDirectory | Out-Null

@@ -72,8 +72,10 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("ISCC", script)
         self.assertIn("tools\\release_metadata.py", script)
         self.assertIn("tools\\render_windows_version_info.py", script)
-        self.assertIn('foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md"))', script)
+        self.assertIn('"LICENSE", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md"', script)
         self.assertIn("Copy-Item -LiteralPath $documentSource", script)
+        self.assertIn('"licenses\\PYTHON-3.12.txt"', script)
+        self.assertIn('"licenses\\SDL3-3.4.14.txt"', script)
         self.assertNotIn('project_root / "LICENSE"', (
             self.windows / "BOTW Companion.spec"
         ).read_text(encoding="utf-8"))
@@ -103,6 +105,9 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("/api/shutdown", validation)
         self.assertIn('(Join-Path $InstallRoot "LICENSE")', validation)
         self.assertIn('(Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "DATA_SOURCES.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "PRIVACY.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "SECURITY.md")', validation)
         self.assertIn("PreviousInstallerPath", validation)
         self.assertIn("Conservé depuis la version précédente", validation)
         self.assertIn("WScript.Shell", validation)

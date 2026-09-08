@@ -1,3 +1,10 @@
-Carte BOTW 24000x20000 utilisée par le projet open source ZeldaMods Object Map.
-Source : https://static.zeldamods.org/botw_map.png
-Projet : https://github.com/zeldamods/objmap
+Fond de carte BOTW 24000x20000, découpé et converti en tuiles WebP hors ligne.
+
+Fichier source : https://static.zeldamods.org/botw_map.png
+Contexte : https://github.com/zeldamods/objmap
+
+Ce fichier source a été extrait des fichiers de The Legend of Zelda: Breath of
+the Wild. Les droits sur la carte appartiennent à Nintendo et/ou à leurs
+titulaires respectifs. La licence GPL-3.0 du code de BOTW Object Map ne concède
+pas de droit sur cette ressource issue du jeu. Aucune autorisation écrite de
+redistribution n'est fournie dans ce dépôt ; voir DATA_SOURCES.md.

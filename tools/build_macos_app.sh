@@ -39,6 +39,11 @@ for required in \
   "$PROJECT_ROOT/botw_companion/dsu/macos/SDL3-LICENSE.txt"; do
   [[ -f "$required" ]] || { echo "Ressource macOS manquante : $required" >&2; exit 1; }
 done
+cmp -s "$PROJECT_ROOT/botw_companion/dsu/macos/SDL3-LICENSE.txt" \
+  "$PROJECT_ROOT/licenses/SDL3-3.4.14.txt" || {
+  echo "La licence SDL3 générée ne correspond pas au texte audité." >&2
+  exit 1
+}
 
 cmake -E remove_directory "$PROJECT_ROOT/dist"
 cmake -E remove_directory "$DMG_WORK_ROOT"
@@ -68,6 +73,12 @@ PACKAGED_NOMENCLATURE="$(find "$APPLICATION" -path '*/botw_companion/data/nomenc
   echo "Le moteur DSU n'est pas présent dans l'application." >&2
   exit 1
 }
+for document in LICENSE THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
+  licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt; do
+  find "$APPLICATION" -path "*/$document" -type f -print -quit | grep -q . || {
+    echo "Document absent de l'application macOS : $document" >&2; exit 1;
+  }
+done
 /bin/chmod 755 "$PACKAGED_DSU" "$PACKAGED_LAUNCHER"
 
 # PyInstaller signe déjà ses binaires en mode ad hoc. Le moteur ajouté au paquet
