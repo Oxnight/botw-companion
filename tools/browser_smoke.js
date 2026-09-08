@@ -90,8 +90,7 @@ async function exerciseOnboarding(page) {
   await dialog.waitFor({state: "visible"});
   await page.keyboard.press("Escape");
   await dialog.waitFor({state: "hidden"});
-  assert(await page.locator("#openHelp").evaluate(element => element === document.activeElement),
-    "Le focus ne revient pas au bouton Aide après la fermeture de l’assistant");
+  await page.waitForFunction(() => document.activeElement?.id === "openHelp");
 }
 
 async function captureBloodMoonReferences(page, browserName) {
@@ -224,6 +223,15 @@ async function runDesktop(browser, baseUrl, browserName) {
   assert(rendered <= 300, `La liste rend ${rendered} lignes au lieu de 300 maximum`);
   assert(await page.locator("#markers .marker").count() > 0,
     "Le filtre sélectionné n'affiche aucun marqueur");
+  const baseMarkerBox = await page.locator("#markers .baseMapMarker").first().boundingBox();
+  assert(baseMarkerBox?.width >= 24 && baseMarkerBox?.height >= 24,
+    `La cible d’un marqueur mesure ${baseMarkerBox?.width ?? 0} × ${baseMarkerBox?.height ?? 0}px`);
+  const baseMarkerSemantics = await page.locator("#markers .baseMapMarker").first()
+    .evaluate(element => ({tag: element.tagName, hidden: element.getAttribute("aria-hidden")}));
+  assert(baseMarkerSemantics.tag === "SPAN" && baseMarkerSemantics.hidden === "true",
+    "Un point dense ne doit pas dupliquer son bouton accessible de la liste");
+  assert(await page.locator("#list .itemOpen").first().getAttribute("type") === "button",
+    "La liste ne fournit pas le contrôle clavier équivalent au point cartographique");
 
   const zoomBefore = await page.evaluate(() => mapState.scale);
   await page.locator("#zoomIn").click();

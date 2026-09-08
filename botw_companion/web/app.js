@@ -160,10 +160,11 @@ async function closeOnboarding(persist = true) {
     if (persist && preferencesData.values.onboarding_completed !== true) {
         await savePreference("onboarding_completed", true);
     }
+    const focusTarget = onboardingReopened
+        ? $("#openHelp")
+        : $("#mainContent");
     dialog.close();
-    if (!onboardingReopened) {
-        $("#mainContent").focus();
-    }
+    focusTarget.focus({ preventScroll: true });
 }
 
 async function migrateBrowserPreferences() {
@@ -2604,7 +2605,10 @@ function renderMap(items) {
                     p = worldPoint(x),
                     id = itemId(x);
 
-                return `<button type="button" title="${esc(x.name)}" aria-label="Ouvrir ${esc(x.name || x.id)} sur la carte" data-map-id="${esc(id)}" class="marker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></button>`
+                // Les points denses restent cliquables à la souris. Leur bouton
+                // clavier équivalent est la ligne complète de la liste filtrée,
+                // ce qui évite aussi des centaines d’arrêts Tab redondants.
+                return `<span aria-hidden="true" title="${esc(x.name)}" data-map-id="${esc(id)}" class="marker baseMapMarker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></span>`
             }
 
             const points =

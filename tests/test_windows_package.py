@@ -181,6 +181,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('require("axe-core")', script)
         self.assertIn("wcag22aa", script)
         self.assertIn("exerciseOnboarding", script)
+        self.assertIn("baseMarkerBox?.width >= 24", script)
 
     def test_narrow_layout_cannot_restore_wide_grids(self):
         styles = (self.root / "botw_companion" / "web" / "armor.css").read_text(
