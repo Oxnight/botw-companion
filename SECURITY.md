@@ -11,6 +11,10 @@ Ne pas publier de secret, de sauvegarde ni de détail exploitable dans une issue
 publique. Utiliser **Report a vulnerability** dans l'onglet **Security** :
 <https://github.com/Oxnight/botw-companion/security/advisories/new>.
 
+Si ce bouton n'est pas disponible, ouvrir une issue sans détail sensible pour
+demander un canal privé. Ne publier l'explication technique qu'après avoir reçu
+ce canal.
+
 Indiquer la version, le système, les étapes minimales de reproduction et
 l'impact attendu. Préférer un exemple synthétique sans donnée personnelle.
 

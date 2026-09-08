@@ -73,7 +73,7 @@ PACKAGED_NOMENCLATURE="$(find "$APPLICATION" -path '*/botw_companion/data/nomenc
   echo "Le moteur DSU n'est pas présent dans l'application." >&2
   exit 1
 }
-for document in LICENSE THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
+for document in LICENSE CHANGELOG.md THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
   licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt; do
   find "$APPLICATION" -path "*/$document" -type f -print -quit | grep -q . || {
     echo "Document absent de l'application macOS : $document" >&2; exit 1;

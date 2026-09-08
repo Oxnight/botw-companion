@@ -19,6 +19,7 @@ datas = collect_data_files(
 )
 datas.extend([
     (str(project_root / "LICENSE"), "."),
+    (str(project_root / "CHANGELOG.md"), "."),
     (str(project_root / "THIRD_PARTY_NOTICES.md"), "."),
     (str(project_root / "DATA_SOURCES.md"), "."),
     (str(project_root / "PRIVACY.md"), "."),

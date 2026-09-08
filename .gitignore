@@ -25,6 +25,10 @@ test-results/
 *.egg-info/
 deliverables/
 *.zip
+*.dmg
+*.msi
+*.rtf
+*.rtfd/
 
 # Sauvegardes BOTW / Ryujinx
 *.sav

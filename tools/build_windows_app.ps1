@@ -83,7 +83,7 @@ try {
 
 # PyInstaller 6 place les fichiers de données du mode onedir dans _internal.
 # Les documents destinés au joueur doivent rester visibles à côté de l'exécutable.
-foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md")) {
+foreach ($documentName in @("LICENSE", "CHANGELOG.md", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md")) {
     $documentSource = Join-Path $projectRoot $documentName
     if (-not (Test-Path -LiteralPath $documentSource -PathType Leaf)) {
         Write-Error "Document de distribution manquant : $documentSource"
@@ -111,6 +111,7 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "_internal\botw_companion\web\index.html"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp"),
     (Join-Path $applicationDirectory "LICENSE"),
+    (Join-Path $applicationDirectory "CHANGELOG.md"),
     (Join-Path $applicationDirectory "THIRD_PARTY_NOTICES.md"),
     (Join-Path $applicationDirectory "DATA_SOURCES.md"),
     (Join-Path $applicationDirectory "PRIVACY.md"),

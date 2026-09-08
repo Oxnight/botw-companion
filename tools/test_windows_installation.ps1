@@ -52,6 +52,7 @@ function Assert-InstalledLayout([string]$InstallRoot) {
         (Join-Path $InstallRoot "_internal\botw_companion\data\localization_fr.json"),
         (Join-Path $InstallRoot "_internal\botw_companion\data\nomenclature_fr_reference.json"),
         (Join-Path $InstallRoot "LICENSE"),
+        (Join-Path $InstallRoot "CHANGELOG.md"),
         (Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md"),
         (Join-Path $InstallRoot "DATA_SOURCES.md"),
         (Join-Path $InstallRoot "PRIVACY.md"),

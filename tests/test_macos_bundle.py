@@ -100,7 +100,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("localization_fr.json", validation)
         self.assertIn("nomenclature_fr_reference.json", validation)
         for document in (
-            "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md",
+            "CHANGELOG.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md",
             "PYTHON-3.12.txt", "SDL3-3.4.14.txt",
         ):
             self.assertIn(document, build)

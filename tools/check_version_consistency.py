@@ -64,6 +64,9 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
     # La version courante ne doit exister littéralement que dans sa source.
     excluded = {
         root / "botw_companion" / "VERSION",
+        # Le journal mentionne volontairement chaque version publiée. Il ne
+        # sert jamais de source aux scripts de construction.
+        root / "CHANGELOG.md",
         root / ".git",
     }
     for path in root.rglob("*"):

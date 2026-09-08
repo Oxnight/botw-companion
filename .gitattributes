@@ -1,0 +1,15 @@
+* text=auto
+
+# Les scripts POSIX et les licences auditées doivent garder leurs octets sur
+# Windows comme sur macOS.
+*.sh text eol=lf
+licenses/*.txt text eol=lf
+
+# Ressources binaires.
+*.dll binary
+*.dmg binary
+*.exe binary
+*.icns binary
+*.ico binary
+*.png binary
+*.webp binary
