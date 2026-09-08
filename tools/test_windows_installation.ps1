@@ -1,5 +1,5 @@
 param(
-    [string]$InstallerPath = "dist\installer\BOTW_Companion_0.40.0-alpha.29_Setup.exe",
+    [string]$InstallerPath = "",
     [string]$PreviousInstallerPath = ""
 )
 
@@ -12,7 +12,12 @@ if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
 $projectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $temporaryRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { [IO.Path]::GetTempPath() }
 $testRoot = Join-Path $temporaryRoot "BOTW Companion installation test"
-$expectedVersion = "0.40.0a29"
+$metadata = (& python (Join-Path $projectRoot "tools\release_metadata.py") | ConvertFrom-Json)
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+if (-not $InstallerPath) {
+    $InstallerPath = Join-Path "dist\installer" $metadata.installer_name
+}
+$expectedVersion = $metadata.pep440_version
 
 function Resolve-TestPath([string]$Path) {
     if ([IO.Path]::IsPathRooted($Path)) { return $Path }
@@ -107,11 +112,11 @@ function Test-InstalledRuntime([string]$InstallRoot, [string]$DataRoot, [int]$Po
             $manual = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/manual" -TimeoutSec 2
             $routes = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/routes" -TimeoutSec 2
             $preferences = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/preferences" -TimeoutSec 2
-            $entry = $manual.entries.PSObject.Properties["korogus:alpha24"].Value
-            $session = $routes.sessions.PSObject.Properties["session-alpha24"].Value
-            if (-not $entry.completed -or $entry.note -ne "Conservé depuis alpha.24" -or
-                $routes.active_session_id -ne "session-alpha24" -or
-                $session.entries[0].tracking_id -ne "sanctuaires:alpha24" -or
+            $entry = $manual.entries.PSObject.Properties["korogus:reference"].Value
+            $session = $routes.sessions.PSObject.Properties["session-reference"].Value
+            if (-not $entry.completed -or $entry.note -ne "Conservé depuis la version précédente" -or
+                $routes.active_session_id -ne "session-reference" -or
+                $session.entries[0].tracking_id -ne "sanctuaires:reference" -or
                 -not $session.entries[0].locked -or
                 $preferences.values.map_content_mode -ne "dlc" -or
                 $preferences.values.dsu_mode -ne "integrated") {
@@ -159,10 +164,10 @@ if (-not (Test-Path -LiteralPath $cleanSentinel -PathType Leaf)) {
 if ($PreviousInstallerPath) {
     $resolvedPreviousInstaller = Resolve-TestPath $PreviousInstallerPath
     if (-not (Test-Path -LiteralPath $resolvedPreviousInstaller -PathType Leaf)) {
-        throw "Installateur alpha.24 introuvable : $resolvedPreviousInstaller"
+        throw "Installateur de référence introuvable : $resolvedPreviousInstaller"
     }
     $upgradeInstallRoot = Join-Path $testRoot "Installation mise à niveau"
-    $upgradeDataRoot = Join-Path $testRoot "Données alpha.24"
+    $upgradeDataRoot = Join-Path $testRoot "Données version précédente"
     New-Item -ItemType Directory -Force -Path $upgradeDataRoot | Out-Null
     Invoke-Installer $resolvedPreviousInstaller @(
         "/DIR=`"$upgradeInstallRoot`"", "/TASKS=`"desktopicon`""
@@ -172,20 +177,20 @@ if ($PreviousInstallerPath) {
     [ordered]@{
         schema_version = 2; revision = 7; updated_at = $timestamp
         entries = [ordered]@{
-            "korogus:alpha24" = [ordered]@{
-                completed = $true; note = "Conservé depuis alpha.24"; updated_at = $timestamp
+            "korogus:reference" = [ordered]@{
+                completed = $true; note = "Conservé depuis la version précédente"; updated_at = $timestamp
             }
         }
     } | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $upgradeDataRoot "manual_tracking.json") -Encoding UTF8
     [ordered]@{
         schema_version = 3; revision = 4; updated_at = $timestamp
-        active_session_id = "session-alpha24"
+        active_session_id = "session-reference"
         sessions = [ordered]@{
-            "session-alpha24" = [ordered]@{
-                id = "session-alpha24"; name = "Route conservée"; start = $null
+            "session-reference" = [ordered]@{
+                id = "session-reference"; name = "Route conservée"; start = $null
                 strategy = "region"; created_at = $timestamp; updated_at = $timestamp
                 entries = @([ordered]@{
-                    tracking_id = "sanctuaires:alpha24"; locked = $true
+                    tracking_id = "sanctuaires:reference"; locked = $true
                     snapshot = [ordered]@{ name = "Sanctuaire conservé"; x = 12.5; z = -8.25 }
                 })
             }
@@ -195,11 +200,11 @@ if ($PreviousInstallerPath) {
         schema_version = 1; revision = 3; updated_at = $timestamp
         values = [ordered]@{ map_content_mode = "dlc"; sync_interval = 15; dsu_mode = "integrated" }
     } | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $upgradeDataRoot "preferences.json") -Encoding UTF8
-    Set-Content -LiteralPath (Join-Path $upgradeDataRoot "export-alpha24.json") `
-        -Value '{"application":"BOTW Companion","schema_version":2,"origine":"alpha.24"}' `
+    Set-Content -LiteralPath (Join-Path $upgradeDataRoot "export-reference.json") `
+        -Value '{"application":"BOTW Companion","schema_version":2,"origine":"version précédente"}' `
         -Encoding UTF8 -NoNewline
 
-    # Aucun /DIR ni /TASKS : Inno doit retrouver l'installation et les choix alpha.24.
+    # Aucun /DIR ni /TASKS : Inno doit retrouver l'installation et ses choix.
     Invoke-Installer $resolvedInstaller
     Assert-InstalledLayout $upgradeInstallRoot
     $desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"
@@ -215,11 +220,11 @@ if ($PreviousInstallerPath) {
     }
     Test-InstalledRuntime $upgradeInstallRoot $upgradeDataRoot 18768 -ValidateUpgradeData
     Invoke-Uninstaller (Join-Path $upgradeInstallRoot "unins000.exe")
-    foreach ($name in @("manual_tracking.json", "route_sessions.json", "preferences.json", "export-alpha24.json")) {
+    foreach ($name in @("manual_tracking.json", "route_sessions.json", "preferences.json", "export-reference.json")) {
         if (-not (Test-Path -LiteralPath (Join-Path $upgradeDataRoot $name) -PathType Leaf)) {
-            throw "La désinstallation a supprimé une donnée alpha.24 : $name"
+            throw "La désinstallation a supprimé une donnée de la version précédente : $name"
         }
     }
 }
 
-Write-Host "Installation propre, mise à niveau alpha.24, raccourcis, données, runtime et DSU validés." -ForegroundColor Green
+Write-Host "Installation propre, mise à niveau, raccourcis, données, runtime et DSU validés." -ForegroundColor Green

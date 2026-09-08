@@ -1,12 +1,18 @@
-name: Versions Windows et macOS
+name: Tests et versions Windows/macOS
 
 on:
   push:
     branches: [master]
-    tags: ["v0.40.0-alpha.29"]
+    tags: ["v*"]
   pull_request:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      validate_packages:
+        description: Construire et tester les installateurs sans publier de release
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: release-${{ github.workflow }}-${{ github.ref }}
@@ -17,13 +23,14 @@ permissions:
 
 jobs:
   windows:
-    name: Compiler et tester Windows x64
+    name: Tester Windows x64
     runs-on: windows-2022
     timeout-minutes: 75
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
       PYTHONUNBUFFERED: "1"
+      BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
     steps:
       - name: Récupérer les sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -35,14 +42,19 @@ jobs:
           architecture: x64
           cache: pip
 
-      - name: Vérifier la version
+      - name: Lire et vérifier la version
+        id: version
         shell: pwsh
+        env:
+          BUILD_REF: ${{ github.ref }}
+          BUILD_REF_NAME: ${{ github.ref_name }}
         run: |
-          $arguments = @("tools/check_version_consistency.py")
-          if ("${{ github.ref }}" -like "refs/tags/*") {
-            $arguments += @("--tag", "${{ github.ref_name }}")
+          $arguments = @("tools/release_metadata.py", "--github-output", $env:GITHUB_OUTPUT)
+          if ($env:BUILD_REF -like "refs/tags/*") {
+            $arguments += @("--tag", $env:BUILD_REF_NAME)
           }
           python @arguments
+          python tools/check_version_consistency.py
 
       - name: Tester le code Python et le paquet
         timeout-minutes: 5
@@ -60,52 +72,57 @@ jobs:
       - name: Conserver les références visuelles de la lune de sang
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: blood-moon-reference-0.40.0-alpha.29
+          name: blood-moon-reference-${{ github.run_id }}-windows
           path: test-results/blood-moon/*.png
           if-no-files-found: error
           retention-days: 14
 
       - name: Installer Inno Setup officiel vérifié
+        if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./tools/install_inno_setup_ci.ps1
 
       - name: Construire l'application et l'installateur
+        if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         run: ./tools/build_windows_app.ps1
 
-      - name: Télécharger l'installateur alpha.24 de référence
+      - name: Télécharger l'installateur de référence
+        if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         timeout-minutes: 5
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           New-Item -ItemType Directory -Force -Path build/upgrade-reference | Out-Null
-          gh release download v0.40.0-alpha.24 `
+          gh release download "${{ steps.version.outputs.upgrade_tag }}" `
             --repo "${{ github.repository }}" `
-            --pattern "BOTW_Companion_0.40.0-alpha.24_Setup.exe" `
+            --pattern "${{ steps.version.outputs.upgrade_installer_name }}" `
             --dir build/upgrade-reference `
             --clobber
 
       - name: Tester l'installation autonome et la mise à niveau
+        if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
-        run: >-
-          ./tools/test_windows_installation.ps1
-          -PreviousInstallerPath
-          build/upgrade-reference/BOTW_Companion_0.40.0-alpha.24_Setup.exe
+        run: |
+          ./tools/test_windows_installation.ps1 `
+            -InstallerPath "dist/installer/${{ steps.version.outputs.installer_name }}" `
+            -PreviousInstallerPath "build/upgrade-reference/${{ steps.version.outputs.upgrade_installer_name }}"
 
       - name: Conserver l'installateur Windows
+        if: env.BUILD_PACKAGES == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.29-Windows-x64
-          path: dist/installer/BOTW_Companion_0.40.0-alpha.29_Setup.exe
+          name: ${{ steps.version.outputs.windows_artifact }}
+          path: dist/installer/${{ steps.version.outputs.installer_name }}
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
 
   macos:
-    name: Compiler et tester macOS Apple Silicon
+    name: Tester macOS Apple Silicon
     # Playwright >= 1.59 ne prend plus WebKit en charge sur macOS 14.
     # Le label macos-15 de GitHub Actions est un runner Apple Silicon arm64.
     runs-on: macos-15
@@ -115,6 +132,7 @@ jobs:
       PYTHONIOENCODING: utf-8
       PYTHONUNBUFFERED: "1"
       MACOSX_DEPLOYMENT_TARGET: "14.0"
+      BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
     steps:
       - name: Récupérer les sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -137,14 +155,19 @@ jobs:
           architecture: arm64
           cache: pip
 
-      - name: Vérifier la version
+      - name: Lire et vérifier la version
+        id: version
         shell: bash
+        env:
+          BUILD_REF: ${{ github.ref }}
+          BUILD_REF_NAME: ${{ github.ref_name }}
         run: |
-          arguments=(tools/check_version_consistency.py)
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            arguments+=(--tag "${{ github.ref_name }}")
+          arguments=(--github-output "$GITHUB_OUTPUT")
+          if [[ "$BUILD_REF" == refs/tags/* ]]; then
+            arguments+=(--tag "$BUILD_REF_NAME")
           fi
-          python3 "${arguments[@]}"
+          python3 tools/release_metadata.py "${arguments[@]}"
+          python3 tools/check_version_consistency.py
 
       - name: Tester le code Python et le paquet
         timeout-minutes: 5
@@ -169,8 +192,6 @@ jobs:
             server_pid=""
           }
           trap stop_server EXIT
-          # WebKit dépend directement de la version de macOS. On le lance en
-          # premier pour détecter immédiatement une image de runner incompatible.
           for browser in webkit chromium firefox; do
             echo "::group::Parcours $browser"
             python3 tools/browser_test_server.py --port 18765 >"browser-test-$browser.log" 2>&1 &
@@ -199,43 +220,47 @@ jobs:
           done
 
       - name: Construire l'application et le DMG
+        if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 35
         run: ./tools/build_macos_app.sh
 
-      - name: Télécharger le DMG alpha.24 de référence
+      - name: Télécharger le DMG de référence
+        if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 5
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p build/upgrade-reference
-          gh release download v0.40.0-alpha.24 \
+          gh release download "${{ steps.version.outputs.upgrade_tag }}" \
             --repo "${{ github.repository }}" \
-            --pattern "BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg" \
+            --pattern "${{ steps.version.outputs.upgrade_dmg_name }}" \
             --dir build/upgrade-reference \
             --clobber
 
-      - name: Tester le DMG autonome et le remplacement alpha.24
+      - name: Tester le DMG autonome et la mise à niveau
+        if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 10
-        run: >-
-          ./tools/test_macos_installation.sh
-          dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
-          build/upgrade-reference/BOTW_Companion_0.40.0-alpha.24_macOS_arm64.dmg
+        run: |
+          ./tools/test_macos_installation.sh \
+            "dist/${{ steps.version.outputs.dmg_name }}" \
+            "build/upgrade-reference/${{ steps.version.outputs.upgrade_dmg_name }}"
 
       - name: Conserver le DMG Apple Silicon
+        if: env.BUILD_PACKAGES == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: BOTW-Companion-0.40.0-alpha.29-macOS-arm64
-          path: dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
+          name: ${{ steps.version.outputs.macos_artifact }}
+          path: dist/${{ steps.version.outputs.dmg_name }}
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
 
   publish:
-    name: Publier la préversion GitHub
-    if: startsWith(github.ref, 'refs/tags/')
+    name: Publier la version GitHub
+    if: startsWith(github.ref, 'refs/tags/v')
     needs: [windows, macos]
     runs-on: ubuntu-latest
     permissions:
@@ -244,27 +269,48 @@ jobs:
       - name: Récupérer les sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - name: Installer Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Lire et vérifier la version
+        id: version
+        shell: bash
+        env:
+          BUILD_REF_NAME: ${{ github.ref_name }}
+        run: |
+          python3 tools/release_metadata.py \
+            --github-output "$GITHUB_OUTPUT" \
+            --tag "$BUILD_REF_NAME"
+          python3 tools/check_version_consistency.py
+
       - name: Télécharger les installateurs validés
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
-          pattern: BOTW-Companion-0.40.0-alpha.29-*
+          pattern: BOTW-Companion-${{ steps.version.outputs.display_version }}-*
           path: release-assets
           merge-multiple: true
 
       - name: Vérifier les deux plateformes
         shell: bash
         run: |
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.29_Setup.exe
-          test -f release-assets/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
+          test -f "release-assets/${{ steps.version.outputs.installer_name }}"
+          test -f "release-assets/${{ steps.version.outputs.dmg_name }}"
 
       - name: Créer la GitHub Release
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create "${{ github.ref_name }}"
-          release-assets/BOTW_Companion_0.40.0-alpha.29_Setup.exe
-          release-assets/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg
-          --verify-tag
-          --prerelease
-          --title "BOTW Companion v0.40.0-alpha.29"
-          --notes-file RELEASE_NOTES_0.40.0-alpha.29.md
+        run: |
+          release_type=(--latest)
+          if [[ "${{ steps.version.outputs.prerelease }}" == "true" ]]; then
+            release_type=(--prerelease)
+          fi
+          gh release create "${{ steps.version.outputs.tag }}" \
+            "release-assets/${{ steps.version.outputs.installer_name }}" \
+            "release-assets/${{ steps.version.outputs.dmg_name }}" \
+            --verify-tag \
+            "${release_type[@]}" \
+            --title "${{ steps.version.outputs.release_title }}" \
+            --notes-file RELEASE_NOTES.md

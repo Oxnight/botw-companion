@@ -1,6 +1,14 @@
 #define MyAppName "BOTW Companion"
-#define MyAppVersion "0.40.0-alpha.29"
 #define MyAppExeName "BOTW Companion.exe"
+#define MyAppVersion GetEnv("BOTW_APP_VERSION")
+#define MyAppNumericVersion GetEnv("BOTW_APP_NUMERIC_VERSION")
+
+#if MyAppVersion == ""
+  #error MyAppVersion doit être fourni par le script de construction
+#endif
+#if MyAppNumericVersion == ""
+  #error MyAppNumericVersion doit être fourni par le script de construction
+#endif
 
 [Setup]
 AppId={{CE150634-F42B-4815-BE57-F0729FC71365}
@@ -13,7 +21,7 @@ DefaultGroupName=BOTW Companion
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=..\dist\installer
-OutputBaseFilename=BOTW_Companion_0.40.0-alpha.29_Setup
+OutputBaseFilename=BOTW_Companion_{#MyAppVersion}_Setup
 SetupIconFile=BOTW Companion.ico
 LicenseFile=..\LICENSE
 UninstallDisplayIcon={app}\{#MyAppExeName}
@@ -28,8 +36,8 @@ CloseApplications=force
 RestartApplications=no
 UsePreviousAppDir=yes
 UsePreviousTasks=yes
-VersionInfoVersion=0.40.0.29
-VersionInfoProductVersion=0.40.0.29
+VersionInfoVersion={#MyAppNumericVersion}
+VersionInfoProductVersion={#MyAppNumericVersion}
 VersionInfoDescription=Installateur BOTW Companion
 
 [Languages]

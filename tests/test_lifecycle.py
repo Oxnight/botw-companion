@@ -7,6 +7,7 @@ from unittest.mock import patch
 from urllib.error import URLError
 from urllib.request import Request
 
+from botw_companion import __version__
 from botw_companion.lifecycle import (
     RyujinxLifecycleWatcher,
     WebLifecycle,
@@ -82,10 +83,12 @@ class ServerProbeTests(unittest.TestCase):
 
         def opener(url, timeout):
             calls.append((url, timeout))
-            return FakeResponse(b'{"application":"BOTW Companion","version":"0.40.0a29"}')
+            return FakeResponse(
+                f'{{"application":"BOTW Companion","version":"{__version__}"}}'.encode()
+            )
 
         result = probe_companion_server(9876, timeout=0.25, opener=opener)
-        self.assertEqual(result["version"], "0.40.0a29")
+        self.assertEqual(result["version"], __version__)
         self.assertEqual(calls, [("http://127.0.0.1:9876/api/version", 0.25)])
 
     def test_probe_rejects_an_unrelated_service_on_the_same_port(self):

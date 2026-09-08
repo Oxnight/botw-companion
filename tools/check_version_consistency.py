@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Vérifie que toutes les plateformes consomment la source de version unique."""
+
 from __future__ import annotations
 
 import argparse
@@ -7,57 +10,78 @@ import re
 import sys
 
 
-DISPLAY_VERSION = "0.40.0-alpha.29"
-PEP440_VERSION = "0.40.0a29"
-NUMERIC_VERSION = "0.40.0.29"
-RELEASE_TAG = f"v{DISPLAY_VERSION}"
-INSTALLER_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_Setup.exe"
-DMG_NAME = f"BOTW_Companion_{DISPLAY_VERSION}_macOS_arm64.dmg"
-MACOS_BUNDLE_VERSION = "0.40.0"
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from botw_companion.versioning import CURRENT_VERSION, ReleaseVersion  # noqa: E402
 
 
-def require(path: Path, pattern: str, description: str) -> str | None:
+def require(path: Path, needle: str, description: str) -> str | None:
     text = path.read_text(encoding="utf-8")
-    if re.search(pattern, text, re.MULTILINE) is None:
-        return f"{path}: version incohérente pour {description}"
+    if needle not in text:
+        return f"{path}: configuration manquante pour {description}"
     return None
 
 
 def errors(root: Path, tag: str | None = None) -> list[str]:
+    version = CURRENT_VERSION
+    findings: list[str] = []
     checks = (
-        (root / "pyproject.toml", rf'^version = "{re.escape(PEP440_VERSION)}"$', "pyproject"),
-        (root / "uv.lock", rf'^version = "{re.escape(PEP440_VERSION)}"$', "verrou uv"),
-        (root / "botw_companion" / "__init__.py", rf'__version__ = "{re.escape(PEP440_VERSION)}"', "runtime"),
-        (root / "windows" / "BOTW Companion.iss", rf'#define MyAppVersion "{re.escape(DISPLAY_VERSION)}"', "Inno Setup"),
-        (root / "windows" / "BOTW Companion.iss", rf'VersionInfoVersion={re.escape(NUMERIC_VERSION)}', "version numérique Inno Setup"),
-        (root / "windows" / "BOTW Companion.iss", rf'VersionInfoProductVersion={re.escape(NUMERIC_VERSION)}', "version produit Inno Setup"),
-        (root / "windows" / "version_info.txt", rf'filevers=\(0, 40, 0, 29\)', "ressource EXE"),
-        (root / "windows" / "version_info.txt", re.escape(DISPLAY_VERSION), "texte EXE"),
-        (root / "tools" / "build_windows_app.ps1", re.escape(INSTALLER_NAME), "construction Windows"),
-        (root / "tools" / "test_windows_installation.ps1", re.escape(INSTALLER_NAME), "test d'installation"),
-        (root / "tools" / "test_windows_installation.ps1", re.escape(PEP440_VERSION), "test du serveur installé"),
-        (root / "macos" / "BOTW Companion.spec", rf'version="{re.escape(MACOS_BUNDLE_VERSION)}"', "version courte macOS"),
-        (root / "macos" / "BOTW Companion.spec", r'"CFBundleVersion": "29"', "numéro de build macOS"),
-        (
-            root / "tools" / "test_macos_installation.sh",
-            r'\[\[ "\$actual_bundle_version" == "29" \]\]',
-            "numéro de build attendu par le test DMG macOS",
-        ),
-        (root / "tools" / "build_macos_app.sh", re.escape(DMG_NAME), "construction macOS"),
-        (root / "tools" / "test_macos_installation.sh", re.escape(PEP440_VERSION), "test macOS"),
-        (root / ".github" / "workflows" / "release.yml", re.escape(RELEASE_TAG), "workflow de publication"),
-        (root / "README.md", re.escape(DISPLAY_VERSION), "README"),
-        (root / "windows" / "README.md", re.escape(INSTALLER_NAME), "documentation Windows"),
-        (root / "macos" / "README.md", re.escape(DMG_NAME), "documentation macOS"),
+        (root / "pyproject.toml", 'dynamic = ["version"]', "la version Python dynamique"),
+        (root / "pyproject.toml", 'version = {file = ["botw_companion/VERSION"]}', "la source Python"),
+        (root / "botw_companion" / "__init__.py", "CURRENT_VERSION.pep440", "le runtime"),
+        (root / "windows" / "BOTW Companion.spec", "BOTW_WINDOWS_VERSION_FILE", "PyInstaller Windows"),
+        (root / "windows" / "BOTW Companion.iss", "{#MyAppVersion}", "Inno Setup"),
+        (root / "tools" / "build_windows_app.ps1", "tools\\release_metadata.py", "la construction Windows"),
+        (root / "macos" / "BOTW Companion.spec", "CURRENT_VERSION.macos_bundle", "le bundle macOS"),
+        (root / "tools" / "build_macos_app.sh", "--field dmg_name", "la construction macOS"),
+        (root / ".github" / "workflows" / "release.yml", 'tags: ["v*"]', "les tags génériques"),
+        (root / ".github" / "workflows" / "release.yml", "steps.version.outputs.installer_name", "l'asset Windows dynamique"),
+        (root / ".github" / "workflows" / "release.yml", "steps.version.outputs.dmg_name", "l'asset macOS dynamique"),
+        (root / ".github" / "workflows" / "release.yml", "RELEASE_NOTES.md", "les notes humaines"),
     )
-    findings = [result for item in checks if (result := require(*item))]
+    findings.extend(result for item in checks if (result := require(*item)))
+
     package = json.loads((root / "package.json").read_text(encoding="utf-8"))
-    if package.get("version") != DISPLAY_VERSION:
-        findings.append("package.json: version incohérente")
-    if tag is not None and tag != RELEASE_TAG:
-        findings.append(
-            f"Tag de publication invalide : {tag!r}, attendu {RELEASE_TAG!r}"
+    lock = json.loads((root / "package-lock.json").read_text(encoding="utf-8"))
+    if "version" in package or "version" in lock or "version" in lock.get("packages", {}).get("", {}):
+        findings.append("package.json/package-lock.json: version applicative dupliquée")
+
+    baseline = ReleaseVersion.parse(
+        (root / "packaging" / "UPGRADE_BASELINE").read_text(encoding="utf-8")
+    )
+    if baseline.precedence >= version.precedence:
+        findings.append("UPGRADE_BASELINE doit désigner une version publiée antérieure")
+    if tag is not None and tag != version.tag:
+        findings.append(f"Tag invalide : {tag!r}, attendu {version.tag!r}")
+
+    workflow = (root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    if "SHA256" + "SUMS" in workflow or "sha256" + "sum" in workflow.casefold():
+        findings.append("Le workflow ne doit publier aucun fichier de sommes de contrôle")
+    if not (root / "RELEASE_NOTES.md").is_file():
+        findings.append("RELEASE_NOTES.md est absent")
+
+    # La version courante ne doit exister littéralement que dans sa source.
+    excluded = {
+        root / "botw_companion" / "VERSION",
+        root / ".git",
+    }
+    for path in root.rglob("*"):
+        generated = any(
+            part in {"build", "dist", "__pycache__", ".pytest_cache"}
+            or part.endswith(".egg-info")
+            for part in path.parts
         )
+        if generated or not path.is_file() or path in excluded or any(parent in excluded for parent in path.parents):
+            continue
+        if path.suffix.lower() in {".png", ".webp", ".ico", ".icns", ".zip", ".dmg", ".exe", ".dll"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        if version.display in text or re.search(rf"(?<![\w.]){re.escape(version.pep440)}(?![\w.])", text):
+            findings.append(f"{path}: version courante dupliquée hors de botw_companion/VERSION")
     return findings
 
 
@@ -65,12 +89,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag")
     args = parser.parse_args(argv)
-    root = Path(__file__).resolve().parents[1]
-    findings = errors(root, args.tag)
+    findings = errors(ROOT, args.tag)
     if findings:
         print("\n".join(findings), file=sys.stderr)
         return 1
-    print(f"Versions cohérentes : {DISPLAY_VERSION}")
+    print(f"Version cohérente depuis une source unique : {CURRENT_VERSION.display}")
     return 0
 
 

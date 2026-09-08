@@ -20,7 +20,7 @@ $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
-$installerPath = Join-Path $installerDirectory "BOTW_Companion_0.40.0-alpha.29_Setup.exe"
+$versionInfoPath = Join-Path $buildRoot "version_info.txt"
 
 foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
     if (Test-Path -LiteralPath $stalePath) {
@@ -63,6 +63,15 @@ if (-not (Test-Path -LiteralPath $environmentPython -PathType Leaf)) {
 
 & $environmentPython -m pip install --disable-pip-version-check --quiet "pyinstaller==6.22.2"
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+$metadata = (& $environmentPython (Join-Path $projectRoot "tools\release_metadata.py") | ConvertFrom-Json)
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+$installerPath = Join-Path $installerDirectory $metadata.installer_name
+& $environmentPython (Join-Path $projectRoot "tools\render_windows_version_info.py") $versionInfoPath
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+$env:BOTW_WINDOWS_VERSION_FILE = $versionInfoPath
+$env:BOTW_APP_VERSION = $metadata.display_version
+$env:BOTW_APP_NUMERIC_VERSION = $metadata.numeric_version
 
 Push-Location $projectRoot
 try {

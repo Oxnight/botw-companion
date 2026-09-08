@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_data_files
@@ -6,6 +7,7 @@ from PyInstaller.utils.hooks import collect_data_files
 project_root = Path(SPECPATH).parent
 package_root = project_root / "botw_companion"
 dsu_root = package_root / "dsu" / "windows"
+version_file = Path(os.environ["BOTW_WINDOWS_VERSION_FILE"])
 datas = collect_data_files(
     "botw_companion",
     excludes=[
@@ -49,7 +51,7 @@ exe = EXE(
     console=False,
     disable_windowed_traceback=False,
     icon=str(project_root / "windows" / "BOTW Companion.ico"),
-    version=str(project_root / "windows" / "version_info.txt"),
+    version=str(version_file),
 )
 coll = COLLECT(
     exe,

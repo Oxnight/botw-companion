@@ -2,6 +2,8 @@ import struct
 import unittest
 from pathlib import Path
 
+from botw_companion.versioning import CURRENT_VERSION
+
 
 class MacOSBundleTests(unittest.TestCase):
     @classmethod
@@ -17,10 +19,9 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn('target_arch="arm64"', spec)
         self.assertIn("console=False", spec)
         self.assertIn('"LSMinimumSystemVersion": "14.0"', spec)
-        self.assertIn('version="0.40.0"', spec)
-        self.assertIn('"CFBundleShortVersionString": "0.40.0"', spec)
-        self.assertIn('"CFBundleVersion": "29"', spec)
-        self.assertNotIn('CFBundleShortVersionString": "0.40.0-alpha.29"', spec)
+        self.assertIn("CURRENT_VERSION.macos_short", spec)
+        self.assertIn("CURRENT_VERSION.macos_bundle", spec)
+        self.assertNotIn(CURRENT_VERSION.display, spec)
         self.assertIn("JoyConDSU", spec)
         self.assertIn("libSDL3.0.dylib", spec)
         self.assertIn("sys.stdout is None", entry)
@@ -69,7 +70,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("hdiutil verify", build)
         self.assertIn("for attempt in 1 2 3 4", build)
         self.assertIn('DMG_WORK_ROOT="${RUNNER_TEMP:-/tmp}', build)
-        self.assertIn("BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg", build)
+        self.assertIn("--field dmg_name", build)
+        self.assertNotIn(CURRENT_VERSION.display, build)
         self.assertIn("/Applications", build)
         self.assertIn('codesign --force --sign - "$PACKAGED_SDL"', build)
         self.assertIn('codesign --force --sign - "$PACKAGED_DSU"', build)
@@ -89,13 +91,12 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn('/usr/bin/otool -L "$binary"', validation)
         self.assertIn('/usr/bin/otool -l "$binary"', validation)
         self.assertIn("CFBundleShortVersionString", validation)
-        self.assertIn('[[ "$actual_bundle_version" == "29" ]]', validation)
-        self.assertNotIn('[[ "$ACTUAL_BUNDLE_VERSION" == "24" ]]', validation)
+        self.assertIn('[[ "$actual_bundle_version" == "$EXPECTED_MACOS_BUNDLE" ]]', validation)
         self.assertIn("find \"$application\" -type f -print0", validation)
         self.assertIn("Binaire non arm64 dans l'application", validation)
         self.assertIn("PREVIOUS_DMG_PATH", validation)
         self.assertIn("Application Support/BOTW Companion", validation)
-        self.assertIn("Conservé depuis alpha.24", validation)
+        self.assertIn("Conservé depuis la version précédente", validation)
         self.assertIn("localization_fr.json", validation)
         self.assertIn("nomenclature_fr_reference.json", validation)
 
@@ -116,7 +117,9 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("stop_server", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
         self.assertIn("gh release create", workflow)
-        self.assertIn("gh release download v0.40.0-alpha.24", workflow)
+        self.assertIn("steps.version.outputs.upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.upgrade_dmg_name", workflow)
+        self.assertNotIn(CURRENT_VERSION.display, workflow)
 
     def test_source_tree_has_no_clone_dependent_macos_launcher(self):
         launcher = (self.root / "botw_companion" / "macos_launcher.py").read_text(encoding="utf-8")

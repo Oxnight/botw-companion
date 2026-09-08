@@ -151,9 +151,9 @@ class CompleteBackupTests(unittest.TestCase):
         restored = self.backup.restore(exported)
         self.assertEqual(restored["preferences"]["values"], {})
 
-    def test_alpha24_backup_restores_tracking_routes_and_preferences(self):
+    def test_previous_backup_restores_tracking_routes_and_preferences(self):
         timestamp = "2026-09-06T12:00:00+00:00"
-        alpha24 = {
+        previous = {
             "schema_version": 2,
             "application": "BOTW Companion",
             "exported_at": timestamp,
@@ -162,9 +162,9 @@ class CompleteBackupTests(unittest.TestCase):
                 "revision": 7,
                 "updated_at": timestamp,
                 "entries": {
-                    "korogus:alpha24": {
+                    "korogus:reference": {
                         "completed": True,
-                        "note": "Export alpha.24",
+                        "note": "Export précédent",
                         "updated_at": timestamp,
                     }
                 },
@@ -173,15 +173,15 @@ class CompleteBackupTests(unittest.TestCase):
                 "schema_version": 3,
                 "revision": 4,
                 "updated_at": timestamp,
-                "active_session_id": "session-alpha24",
+                "active_session_id": "session-reference",
                 "sessions": {
-                    "session-alpha24": {
-                        "id": "session-alpha24",
-                        "name": "Route alpha.24",
+                    "session-reference": {
+                        "id": "session-reference",
+                        "name": "Route précédente",
                         "start": {"x": 1, "z": 2, "label": "Départ"},
                         "strategy": "region",
                         "entries": [{
-                            "tracking_id": "sanctuaires:alpha24",
+                            "tracking_id": "sanctuaires:reference",
                             "locked": True,
                             "snapshot": {"name": "Sanctuaire", "x": 3, "z": 4},
                         }],
@@ -201,13 +201,13 @@ class CompleteBackupTests(unittest.TestCase):
                 },
             },
         }
-        restored = self.backup.restore(alpha24)
+        restored = self.backup.restore(previous)
         self.assertTrue(
-            restored["manual_tracking"]["entries"]["korogus:alpha24"]["completed"]
+            restored["manual_tracking"]["entries"]["korogus:reference"]["completed"]
         )
         routes = restored["route_sessions"]
         session = routes["sessions"][routes["active_session_id"]]
-        self.assertEqual(session["name"], "Route alpha.24")
+        self.assertEqual(session["name"], "Route précédente")
         self.assertTrue(session["entries"][0]["locked"])
         self.assertEqual(restored["preferences"]["values"]["map_content_mode"], "dlc")
 

@@ -2,6 +2,8 @@ from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_data_files
 
+from botw_companion.versioning import CURRENT_VERSION
+
 
 project_root = Path(SPECPATH).parent
 package_root = project_root / "botw_companion"
@@ -65,11 +67,11 @@ app = BUNDLE(
     name="BOTW Companion.app",
     icon=str(project_root / "macos" / "BOTW Companion.icns"),
     bundle_identifier="fr.oxnight.botw-companion",
-    version="0.40.0",
+    version=CURRENT_VERSION.macos_short,
     info_plist={
         "CFBundleDisplayName": "BOTW Companion",
-        "CFBundleShortVersionString": "0.40.0",
-        "CFBundleVersion": "29",
+        "CFBundleShortVersionString": CURRENT_VERSION.macos_short,
+        "CFBundleVersion": CURRENT_VERSION.macos_bundle,
         "LSMinimumSystemVersion": "14.0",
         "LSArchitecturePriority": ["arm64"],
         "NSHighResolutionCapable": True,

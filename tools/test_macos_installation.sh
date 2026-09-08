@@ -7,7 +7,11 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
 fi
 
 readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg}"
+readonly CURRENT_DMG_NAME="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field dmg_name)"
+readonly EXPECTED_PEP440="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field pep440_version)"
+readonly EXPECTED_MACOS_SHORT="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_short_version)"
+readonly EXPECTED_MACOS_BUNDLE="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_bundle_version)"
+readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/$CURRENT_DMG_NAME}"
 readonly PREVIOUS_DMG_PATH="${2:-}"
 readonly TEST_ROOT="${RUNNER_TEMP:-/tmp}/BOTW Companion macOS installation test"
 readonly CLEAN_APPLICATION="$TEST_ROOT/Applications clean/BOTW Companion.app"
@@ -66,11 +70,11 @@ assert_current_application() {
   [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$application/Contents/Info.plist")" == \
     "fr.oxnight.botw-companion" ]] || { echo "Identifiant du bundle invalide." >&2; exit 1; }
   [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$application/Contents/Info.plist")" == \
-    "0.40.0" ]] || { echo "CFBundleShortVersionString est invalide." >&2; exit 1; }
+    "$EXPECTED_MACOS_SHORT" ]] || { echo "CFBundleShortVersionString est invalide." >&2; exit 1; }
   local actual_bundle_version
   actual_bundle_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$application/Contents/Info.plist")"
-  [[ "$actual_bundle_version" == "29" ]] || {
-    echo "CFBundleVersion est invalide : attendu 29, obtenu $actual_bundle_version." >&2
+  [[ "$actual_bundle_version" == "$EXPECTED_MACOS_BUNDLE" ]] || {
+    echo "CFBundleVersion est invalide : attendu $EXPECTED_MACOS_BUNDLE, obtenu $actual_bundle_version." >&2
     exit 1
   }
   [[ "$(/usr/bin/lipo -archs "$executable")" == "arm64" ]] || {
@@ -146,7 +150,7 @@ run_current_application() {
     fi
     identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
       "http://127.0.0.1:$port/api/version" || true)"
-    if printf '%s' "$identity_json" | /usr/bin/grep -F '"version": "0.40.0a29"' >/dev/null; then
+    if printf '%s' "$identity_json" | /usr/bin/grep -F "\"version\": \"$EXPECTED_PEP440\"" >/dev/null; then
       ready=1
       break
     fi
@@ -173,11 +177,11 @@ import sys
 manual, routes, preferences = (
     json.loads(Path(path).read_text(encoding="utf-8")) for path in sys.argv[1:]
 )
-entry = manual["entries"]["korogus:alpha24"]
-session = routes["sessions"]["session-alpha24"]
-assert entry["completed"] and entry["note"] == "Conservé depuis alpha.24"
-assert routes["active_session_id"] == "session-alpha24"
-assert session["entries"][0]["tracking_id"] == "sanctuaires:alpha24"
+entry = manual["entries"]["korogus:reference"]
+session = routes["sessions"]["session-reference"]
+assert entry["completed"] and entry["note"] == "Conservé depuis la version précédente"
+assert routes["active_session_id"] == "session-reference"
+assert session["entries"][0]["tracking_id"] == "sanctuaires:reference"
 assert session["entries"][0]["locked"] is True
 assert preferences["values"]["map_content_mode"] == "dlc"
 assert preferences["values"]["dsu_mode"] == "integrated"
@@ -204,18 +208,13 @@ copy_application_from_dmg "$DMG_PATH" "$CLEAN_APPLICATION"
 assert_current_application "$CLEAN_APPLICATION"
 run_current_application "$CLEAN_APPLICATION" "$CLEAN_HOME_ROOT" "$CLEAN_DATA_ROOT" 18767 no
 
-# Remplacement réel de l'alpha.24 dans Applications, sans toucher à Application Support.
+# Remplacement réel de la version de référence, sans toucher à Application Support.
 if [[ -n "$PREVIOUS_DMG_PATH" ]]; then
-  [[ -f "$PREVIOUS_DMG_PATH" ]] || { echo "DMG alpha.24 introuvable : $PREVIOUS_DMG_PATH" >&2; exit 1; }
+  [[ -f "$PREVIOUS_DMG_PATH" ]] || { echo "DMG de référence introuvable : $PREVIOUS_DMG_PATH" >&2; exit 1; }
   copy_application_from_dmg "$PREVIOUS_DMG_PATH" "$UPGRADE_APPLICATION"
   [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' \
     "$UPGRADE_APPLICATION/Contents/Info.plist")" == "fr.oxnight.botw-companion" ]] || {
-    echo "L'alpha.24 n'utilise pas le même identifiant de bundle." >&2
-    exit 1
-  }
-  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' \
-    "$UPGRADE_APPLICATION/Contents/Info.plist")" == "24" ]] || {
-    echo "Le DMG de référence n'est pas l'alpha.24." >&2
+    echo "La version de référence n'utilise pas le même identifiant de bundle." >&2
     exit 1
   }
 
@@ -230,18 +229,18 @@ timestamp = "2026-09-06T12:00:00+00:00"
 payloads = {
     "manual_tracking.json": {
         "schema_version": 2, "revision": 7, "updated_at": timestamp,
-        "entries": {"korogus:alpha24": {
-            "completed": True, "note": "Conservé depuis alpha.24", "updated_at": timestamp,
+        "entries": {"korogus:reference": {
+            "completed": True, "note": "Conservé depuis la version précédente", "updated_at": timestamp,
         }},
     },
     "route_sessions.json": {
         "schema_version": 3, "revision": 4, "updated_at": timestamp,
-        "active_session_id": "session-alpha24",
-        "sessions": {"session-alpha24": {
-            "id": "session-alpha24", "name": "Route conservée", "start": None,
+        "active_session_id": "session-reference",
+        "sessions": {"session-reference": {
+            "id": "session-reference", "name": "Route conservée", "start": None,
             "strategy": "region", "created_at": timestamp, "updated_at": timestamp,
             "entries": [{
-                "tracking_id": "sanctuaires:alpha24", "locked": True,
+                "tracking_id": "sanctuaires:reference", "locked": True,
                 "snapshot": {"name": "Sanctuaire conservé", "x": 12.5, "z": -8.25},
             }],
         }},
@@ -250,8 +249,8 @@ payloads = {
         "schema_version": 1, "revision": 3, "updated_at": timestamp,
         "values": {"map_content_mode": "dlc", "sync_interval": 15, "dsu_mode": "integrated"},
     },
-    "export-alpha24.json": {
-        "application": "BOTW Companion", "schema_version": 2, "origine": "alpha.24",
+    "export-reference.json": {
+        "application": "BOTW Companion", "schema_version": 2, "origine": "version précédente",
     },
 }
 for name, payload in payloads.items():
@@ -267,12 +266,12 @@ PY
   # Sur macOS, désinstaller revient à retirer le bundle de Applications.
   cmake -E remove_directory "$UPGRADE_APPLICATION"
   [[ ! -e "$UPGRADE_APPLICATION" ]] || { echo "Le bundle n'a pas été supprimé." >&2; exit 1; }
-  for name in manual_tracking.json route_sessions.json preferences.json export-alpha24.json; do
+  for name in manual_tracking.json route_sessions.json preferences.json export-reference.json; do
     [[ -f "$UPGRADE_DATA_ROOT/$name" ]] || {
-      echo "La suppression du bundle a supprimé une donnée alpha.24 : $name" >&2
+      echo "La suppression du bundle a supprimé une donnée de référence : $name" >&2
       exit 1
     }
   done
 fi
 
-echo "DMG propre, remplacement alpha.24, données, runtime Python, serveur et DSU arm64 validés."
+echo "DMG propre, mise à niveau, données, runtime Python, serveur et DSU arm64 validés."

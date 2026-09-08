@@ -2,6 +2,8 @@ import struct
 import unittest
 from pathlib import Path
 
+from botw_companion.versioning import CURRENT_VERSION
+
 
 class WindowsPackageTests(unittest.TestCase):
     @classmethod
@@ -17,6 +19,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("console=False", spec)
         self.assertIn("exclude_binaries=True", spec)
         self.assertIn("BOTW Companion.ico", spec)
+        self.assertIn("BOTW_WINDOWS_VERSION_FILE", spec)
         self.assertNotIn("onefile", spec.casefold())
         self.assertIn("sys.stdout is None", entry)
         self.assertIn("sys.stderr is None", entry)
@@ -67,6 +70,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("JoyConDSU.exe", script)
         self.assertIn("SDL3.dll", script)
         self.assertIn("ISCC", script)
+        self.assertIn("tools\\release_metadata.py", script)
+        self.assertIn("tools\\render_windows_version_info.py", script)
         self.assertIn('foreach ($documentName in @("LICENSE", "THIRD_PARTY_NOTICES.md"))', script)
         self.assertIn("Copy-Item -LiteralPath $documentSource", script)
         self.assertNotIn('project_root / "LICENSE"', (
@@ -91,7 +96,7 @@ class WindowsPackageTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("BOTW Companion.spec", build)
         self.assertIn("BOTW Companion.exe", validation)
-        self.assertIn("Setup.exe", validation)
+        self.assertIn("$metadata.installer_name", validation)
         self.assertIn("--package-self-test", validation)
         self.assertIn("--list-controllers", validation)
         self.assertIn("/api/version", validation)
@@ -99,7 +104,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('(Join-Path $InstallRoot "LICENSE")', validation)
         self.assertIn('(Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md")', validation)
         self.assertIn("PreviousInstallerPath", validation)
-        self.assertIn("Conservé depuis alpha.24", validation)
+        self.assertIn("Conservé depuis la version précédente", validation)
         self.assertIn("WScript.Shell", validation)
         self.assertNotIn('"--sans-navigateur"', validation)
         self.assertIn("RedirectStandardError", validation)
@@ -125,10 +130,19 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("tools/check_version_consistency.py", workflow)
         self.assertIn("refs/tags/", workflow)
         self.assertIn("gh release create", workflow)
-        self.assertIn("gh release download v0.40.0-alpha.24", workflow)
+        self.assertIn('tags: ["v*"]', workflow)
+        self.assertIn("steps.version.outputs.upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.installer_name", workflow)
+        self.assertIn("steps.version.outputs.dmg_name", workflow)
+        self.assertIn("RELEASE_NOTES.md", workflow)
+        self.assertIn('release_type=(--latest)', workflow)
+        self.assertIn('release_type=(--prerelease)', workflow)
+        self.assertIn("validate_packages:", workflow)
+        self.assertGreaterEqual(workflow.count("if: env.BUILD_PACKAGES == 'true'"), 9)
+        self.assertIn("if: startsWith(github.ref, 'refs/tags/v')", workflow)
         self.assertNotIn("SHA256" + "SUMS", workflow)
         self.assertNotIn("sha256" + "sum", workflow.casefold())
-        self.assertEqual(workflow.count("release-assets/BOTW_Companion_0.40.0-alpha.29_"), 4)
+        self.assertNotIn(CURRENT_VERSION.display, workflow)
         self.assertIn("--verify-tag", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
 

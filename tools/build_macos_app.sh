@@ -21,10 +21,11 @@ readonly BUILD_ROOT="$PROJECT_ROOT/build/macos-package"
 readonly BUILD_PYTHON="$BUILD_ROOT/venv/bin/python"
 readonly SPEC_PATH="$PROJECT_ROOT/macos/BOTW Companion.spec"
 readonly APPLICATION="$PROJECT_ROOT/dist/BOTW Companion.app"
-readonly DMG_PATH="$PROJECT_ROOT/dist/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg"
+readonly DMG_NAME="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field dmg_name)"
+readonly DMG_PATH="$PROJECT_ROOT/dist/$DMG_NAME"
 readonly DMG_WORK_ROOT="${RUNNER_TEMP:-/tmp}/botw-companion-dmg-$$"
 readonly DMG_ROOT="$DMG_WORK_ROOT/root"
-readonly TEMP_DMG_PATH="$DMG_WORK_ROOT/BOTW_Companion_0.40.0-alpha.29_macOS_arm64.dmg"
+readonly TEMP_DMG_PATH="$DMG_WORK_ROOT/$DMG_NAME"
 
 if [[ $SKIP_NATIVE -eq 0 ]]; then
   "$PROJECT_ROOT/tools/build_joycon_dsu_macos.sh"
