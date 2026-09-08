@@ -92,8 +92,34 @@ function isExpectedWebKitNavigationError(browserName, message) {
     message.includes("due to access control checks");
 }
 
-async function waitForApplication(page) {
-  await page.goto(page.baseUrl, {waitUntil: "domcontentloaded"});
+async function navigateToApplication(page, browserName) {
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      // The application readiness probe below is the authoritative signal.
+      // Waiting for DOMContentLoaded here is redundant and Firefox can keep
+      // that lifecycle event pending on a fresh context even after the
+      // document has committed and the local server is healthy.
+      const response = await page.goto(page.baseUrl, {waitUntil: "commit"});
+      assert(response?.ok(),
+        `La navigation a répondu avec le statut HTTP ${response?.status() ?? "inconnu"}`);
+      return;
+    } catch (error) {
+      const navigationTimedOut = error?.name === "TimeoutError";
+      if (!navigationTimedOut || attempt === 2) throw error;
+      console.log(JSON.stringify({
+        status: "retry",
+        browser: browserName,
+        stage: currentStage,
+        reason: "navigation_timeout",
+        attempt: attempt + 1
+      }));
+      await page.waitForTimeout(250);
+    }
+  }
+}
+
+async function waitForApplication(page, browserName) {
+  await navigateToApplication(page, browserName);
   await page.waitForFunction(() =>
     document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
     document.querySelectorAll("#categories [data-filter-type]").length > 0,
@@ -117,7 +143,7 @@ async function runDesktop(browser, baseUrl, browserName) {
     if (response.status() >= 500) errors.push(`${response.status()} ${response.url()}`);
   });
   progress(browserName, "bureau:chargement");
-  await waitForApplication(page);
+  await waitForApplication(page, browserName);
   progress(browserName, "bureau:carte");
 
   assert(await page.locator("#routeBody").getAttribute("hidden") !== null,
@@ -280,7 +306,7 @@ async function runResponsive(browser, baseUrl, browserName) {
   const page = await context.newPage();
   page.baseUrl = baseUrl;
   progress(browserName, "responsive:chargement");
-  await waitForApplication(page);
+  await waitForApplication(page, browserName);
   const sidebar = page.getByRole("complementary");
   const content = page.getByRole("main");
   await Promise.all([sidebar.waitFor(), content.waitFor()]);
