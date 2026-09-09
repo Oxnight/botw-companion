@@ -173,6 +173,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("context.setDefaultTimeout", script)
         self.assertIn("AbortController", script)
         self.assertIn("closeWithTimeout", script)
+        self.assertIn("if (!(await downloadUpdate.isDisabled()))", script)
         self.assertIn('waitUntil: "commit"', script)
         self.assertIn('reason: "navigation_timeout"', script)
         self.assertIn("response?.ok()", script)

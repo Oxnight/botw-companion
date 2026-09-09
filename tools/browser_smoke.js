@@ -278,9 +278,12 @@ async function runDesktop(browser, baseUrl, browserName) {
   await waitForApplication(page, browserName);
   await exerciseOnboarding(page);
   await page.locator("#updateBanner").waitFor({state: "visible"});
-  assert(await page.locator("#downloadUpdate").getAttribute("href") === null,
+  const downloadUpdate = page.locator("#downloadUpdate");
+  assert(await downloadUpdate.getAttribute("href") === null,
     "Le navigateur ne doit jamais recevoir un lien direct d'installation");
-  await page.locator("#downloadUpdate").click();
+  // Windows exercises several browsers against one long-lived test server.
+  // Later browsers therefore inherit the legitimate verified-download state.
+  if (!(await downloadUpdate.isDisabled())) await downloadUpdate.click();
   await page.locator("#updateProgressText").filter({hasText: "terminé et vérifié"}).waitFor();
   assert(await page.locator("#updateProgressBar").evaluate(element => element.value) === 100,
     "Le téléchargement vérifié doit atteindre 100 %");
