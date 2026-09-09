@@ -47,6 +47,19 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+async function saveDiagnosticScreenshot(page, browserName, name) {
+  try {
+    await mkdir("test-results/browser", {recursive: true});
+    await page.screenshot({
+      path: `test-results/browser/${browserName}-${name}.png`,
+      animations: "disabled",
+      fullPage: false
+    });
+  } catch (error) {
+    console.warn(`Capture de diagnostic impossible (${name}) : ${error.message}`);
+  }
+}
+
 async function assertAccessible(page, context) {
   // L’injection par le protocole du navigateur ne relâche pas la politique CSP
   // stricte de l’application (script-src 'self').
@@ -547,20 +560,35 @@ async function runResponsive(browser, baseUrl, browserName) {
 
   await page.locator("#openHelp").click();
   await page.locator("#helpDialog").waitFor({state: "visible"});
+  await saveDiagnosticScreenshot(page, browserName, "responsive-help");
   const helpBounds = await page.locator("#helpDialog").boundingBox();
   assert(helpBounds && helpBounds.width <= 390 && helpBounds.height <= 844,
     "Le centre d’aide dépasse de l’affichage mobile");
+  const helpLayout = await page.locator("#helpDialog").evaluate(dialog => {
+    const regions = {
+      header: dialog.querySelector(".helpHeader"),
+      workspace: dialog.querySelector(".helpWorkspace"),
+      navigation: dialog.querySelector(".helpNavigation"),
+      content: dialog.querySelector(".helpContent"),
+      actions: dialog.querySelector(".helpActions")
+    };
+    return Object.fromEntries(Object.entries(regions).map(([name, element]) => [name, {
+      display: getComputedStyle(element).display,
+      width: element.clientWidth,
+      height: element.clientHeight,
+      scrollHeight: element.scrollHeight
+    }]));
+  });
+  const collapsedHelpRegion = Object.entries(helpLayout).find(([, region]) =>
+    region.display === "none" || region.width === 0 || region.height === 0);
+  assert(!collapsedHelpRegion,
+    `Une zone du centre d’aide mobile est masquée : ${JSON.stringify(helpLayout)}`);
   assert(await page.locator("[data-help-chapter]").count() === 12,
     "Le sommaire mobile ne contient pas les douze chapitres");
   const applicationChapter = page.locator('[data-help-chapter="application"]');
   const mobileNavigation = page.locator(".helpNavigation");
-  const navigationMeasurements = await mobileNavigation.evaluate(element => ({
-    clientHeight: element.clientHeight,
-    scrollHeight: element.scrollHeight
-  }));
-  assert(navigationMeasurements.clientHeight > 0 &&
-    navigationMeasurements.scrollHeight > navigationMeasurements.clientHeight,
-  `La navigation mobile n’est pas défilable : ${JSON.stringify(navigationMeasurements)}`);
+  assert(helpLayout.navigation.scrollHeight > helpLayout.navigation.height,
+    `La navigation mobile n’est pas défilable : ${JSON.stringify(helpLayout.navigation)}`);
   await mobileNavigation.evaluate(element => { element.scrollTop = element.scrollHeight; });
   await applicationChapter.waitFor({state: "visible"});
   await applicationChapter.focus();

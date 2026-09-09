@@ -1679,7 +1679,7 @@ aside {
 
 @media(max-width: 900px) {
 
-    header {
+    main > header {
         align-items: stretch;
         flex-direction: column;
     }
@@ -1700,15 +1700,15 @@ aside {
 
 @media(max-width: 600px) {
 
-    header,
-    header > div:first-child,
+    main > header,
+    main > header > div:first-child,
     #saveInfo,
     .hero,
     .metric {
         width: 100%;
     }
 
-    header > div:first-child,
+    main > header > div:first-child,
     #saveInfo,
     .hero,
     .hero > *,
@@ -2090,8 +2090,8 @@ aside {
 }
 
 .helpDialog[open] {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .helpDialog::backdrop {
@@ -2100,6 +2100,7 @@ aside {
 }
 
 .helpHeader {
+    flex: 0 0 auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 24px;
@@ -2137,8 +2138,10 @@ aside {
 
 .helpWorkspace {
     display: grid;
+    flex: 1 1 auto;
     grid-template-columns: minmax(230px, 285px) minmax(0, 1fr);
     min-height: 0;
+    overflow: hidden;
 }
 
 .helpNavigation,
@@ -2277,6 +2280,7 @@ aside {
 
 .helpActions {
     display: flex;
+    flex: 0 0 auto;
     justify-content: flex-end;
     gap: 10px;
     padding: 15px 28px 19px;

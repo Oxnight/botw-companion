@@ -1,5 +1,6 @@
 import unittest
 from importlib.resources import files
+from pathlib import Path
 
 
 class WebAssetsTests(unittest.TestCase):
@@ -12,6 +13,9 @@ class WebAssetsTests(unittest.TestCase):
         html = root.joinpath("index.html").read_text(encoding="utf-8")
         script = root.joinpath("app.js").read_text(encoding="utf-8")
         css = root.joinpath("metrics.css").read_text(encoding="utf-8")
+        style = root.joinpath("style.css").read_text(encoding="utf-8")
+        armor = root.joinpath("armor.css").read_text(encoding="utf-8")
+        smoke = Path(__file__).parents[1].joinpath("tools", "browser_smoke.js").read_text(encoding="utf-8")
         self.assertIn('id="mapStage"', html)
         self.assertIn('id="runtimePlatform"', html)
         self.assertIn('id="savePreview"', html)
@@ -55,6 +59,14 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn('event.key !== "Escape"', script)
         self.assertIn("event.stopPropagation()", script)
         self.assertIn("scrollIntoView", script)
+        self.assertIn("#categories button", style)
+        self.assertIn("#categories,\n    .legend", style)
+        self.assertNotIn("\nnav button", style)
+        self.assertNotIn("    nav,\n    .legend", style)
+        self.assertIn(".helpDialog[open] {\n    display: flex;", armor)
+        self.assertIn("height: min(150px, 25vh);", armor)
+        self.assertIn("test-results/browser", smoke)
+        self.assertIn("responsive-help", smoke)
         self.assertEqual(script.count('id: "privacy"'), 1)
         self.assertEqual(script.count('id: "application"'), 1)
         for chapter in (
