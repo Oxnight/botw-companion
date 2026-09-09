@@ -1,23 +1,14 @@
-## Corrections
+## Interface
 
-- La victoire contre Ganon est maintenant lue depuis le marqueur persistant du
-  slot. « Abattre Ganon » reste donc validée après le retour avant le combat.
-- Le dernier marqueur de l’Ode aux Prodiges est reconnu même lorsque
-  `Location_Dungeon136` reste à zéro dans la sauvegarde.
-- Les trois filaments sous la lune de sang ont été retirés. Le reste de
-  l’animation est inchangé.
+- Les commandes liées à la sauvegarde sont maintenant regroupées dans la zone
+  de synchronisation.
+- Aide, Vérifier les mises à jour et Quitter disposent d’une zone Application
+  distincte.
+- Les deux anneaux de progression sont plus grands et leurs valeurs restent
+  lisibles, y compris lorsque la carte atteint 100.00 %.
 
-## Mises à jour
-
-BOTW Companion vérifie désormais les nouvelles versions au démarrage. La
-vérification ne bloque jamais l’application : sans connexion, toutes les
-fonctions hors ligne continuent normalement. Lorsqu’une version compatible est
-disponible, un bandeau permet de télécharger directement le bon installateur
-Windows ou le DMG Apple Silicon.
-
-Une vérification manuelle reste disponible dans la barre de synchronisation.
-L’installation de la nouvelle version par-dessus l’ancienne conserve le suivi,
-les itinéraires et les préférences.
+Ces changements n’altèrent ni l’analyse de la sauvegarde, ni les calculs de
+progression, ni la carte, les guides, la lune de sang ou JoyConDSU.
 
 ## Installation
 

@@ -6,6 +6,15 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [À venir]
 
+## [0.40.0-alpha.35] - 2026-09-09
+
+### Modifié
+
+- Séparation des commandes de synchronisation et des actions générales de
+  l’application dans le panneau de sauvegarde.
+- Agrandissement des anneaux de progression et adaptation de leur typographie
+  aux valeurs longues et aux écrans étroits.
+
 ## [0.40.0-alpha.34] - 2026-09-09
 
 ### Ajouté
@@ -119,7 +128,8 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 - Raccourcis Bureau et menu Démarrer et conservation des données à la mise à
   niveau.
 
-[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.34...HEAD
+[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.35...HEAD
+[0.40.0-alpha.35]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.34...v0.40.0-alpha.35
 [0.40.0-alpha.34]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.33...v0.40.0-alpha.34
 [0.40.0-alpha.33]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.32...v0.40.0-alpha.33
 [0.40.0-alpha.32]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.31...v0.40.0-alpha.32

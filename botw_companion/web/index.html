@@ -164,57 +164,65 @@
             </div>
         </header>
 
-        <section class="panel syncBar">
-            <div class="syncState">
-                <i id="syncDot"></i>
+        <section class="panel syncBar" aria-label="Synchronisation et application">
+            <div class="syncSaveArea">
+                <div class="syncState">
+                    <i id="syncDot"></i>
 
-                <div>
-                    <p class="metricLabel">
-                        SYNCHRONISATION RYUJINX
-                    </p>
+                    <div>
+                        <p class="metricLabel">
+                            SYNCHRONISATION RYUJINX
+                        </p>
 
-                    <h2 id="syncStatus">
-                        Première lecture en attente
-                    </h2>
+                        <h2 id="syncStatus">
+                            Première lecture en attente
+                        </h2>
 
-                    <p id="syncTimes">
-                        Vérification de la sauvegarde…
-                    </p>
+                        <p id="syncTimes">
+                            Vérification de la sauvegarde…
+                        </p>
+                    </div>
+                </div>
+
+                <div class="syncControls" aria-label="Commandes de synchronisation">
+                    <label>
+                        Vérifier toutes les
+
+                        <select id="syncInterval">
+                            <option value="5">5 s</option>
+                            <option value="10">10 s</option>
+                            <option value="15">15 s</option>
+                            <option value="30" selected>30 s</option>
+                            <option value="60">60 s</option>
+                        </select>
+                    </label>
+
+                    <button id="pauseSync">
+                        Pause
+                    </button>
+
+                    <button id="refresh">
+                        ↻ Lire maintenant
+                    </button>
                 </div>
             </div>
 
-            <div class="syncControls">
-                <label>
-                    Vérifier toutes les
+            <div class="appActions" aria-labelledby="appActionsTitle">
+                <p id="appActionsTitle" class="metricLabel">APPLICATION</p>
 
-                    <select id="syncInterval">
-                        <option value="5">5 s</option>
-                        <option value="10">10 s</option>
-                        <option value="15">15 s</option>
-                        <option value="30" selected>30 s</option>
-                        <option value="60">60 s</option>
-                    </select>
-                </label>
+                <div class="appActionButtons">
+                    <button id="openHelp" type="button">
+                        Aide
+                    </button>
 
-                <button id="pauseSync">
-                    Pause
-                </button>
+                    <button id="checkUpdates" type="button">
+                        Vérifier les mises à jour
+                    </button>
 
-                <button id="refresh">
-                    ↻ Lire maintenant
-                </button>
-
-                <button id="openHelp" type="button">
-                    Aide
-                </button>
-
-                <button id="checkUpdates" type="button">
-                    Vérifier les mises à jour
-                </button>
-
-                <button id="quitCompanion" class="dangerButton">
-                    Quitter
-                </button>
+                    <button id="quitCompanion" class="dangerButton">
+                        Quitter
+                    </button>
+                </div>
             </div>
 
             <details class="syncHistory">

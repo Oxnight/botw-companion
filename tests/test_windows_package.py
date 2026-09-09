@@ -197,7 +197,8 @@ class WindowsPackageTests(unittest.TestCase):
         narrow_breakpoint = styles.index("@media(max-width:600px)", wide_breakpoint)
         narrow_rules = styles[narrow_breakpoint:]
         self.assertIn("grid-template-columns: minmax(0, 1fr);", narrow_rules)
-        self.assertIn("grid-template-columns: 82px minmax(0, 1fr);", narrow_rules)
+        self.assertIn("grid-template-columns: 126px minmax(0, 1fr);", narrow_rules)
+        self.assertIn("@media(max-width: 420px)", narrow_rules)
         self.assertIn("header > div:first-child", narrow_rules)
         self.assertIn("overflow-wrap: anywhere;", narrow_rules)
         self.assertIn(".toolbar > *", narrow_rules)

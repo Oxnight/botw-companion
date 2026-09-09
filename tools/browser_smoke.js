@@ -196,7 +196,7 @@ async function runDesktop(browser, baseUrl, browserName) {
   const updateHref = await page.locator("#downloadUpdate").getAttribute("href");
   assert(updateHref ===
     "https://github.com/Oxnight/botw-companion/releases/download/" +
-    "v0.40.0-alpha.35/BOTW_Companion_0.40.0-alpha.35_Setup.exe",
+    "v0.40.0-alpha.36/BOTW_Companion_0.40.0-alpha.36_Setup.exe",
     "La mise à jour ne cible pas exactement l’installateur Windows attendu");
   await page.locator("#dismissUpdate").click();
   await page.locator("#updateBanner").waitFor({state: "hidden"});
@@ -215,6 +215,43 @@ async function runDesktop(browser, baseUrl, browserName) {
     "Le compteur de lune de sang n'est pas rendu");
   assert((await page.locator("#syncStatus").textContent()).includes("À jour"),
     "L'état de synchronisation n'est pas rendu");
+  const controlLayout = await page.evaluate(() => {
+    const saveArea = document.querySelector(".syncSaveArea").getBoundingClientRect();
+    const appArea = document.querySelector(".appActions").getBoundingClientRect();
+    return {
+      saveRight: saveArea.right,
+      appLeft: appArea.left,
+      refreshInSaveArea: Boolean(document.querySelector(".syncSaveArea #refresh")),
+      helpInAppArea: Boolean(document.querySelector(".appActions #openHelp")),
+      updatesInAppArea: Boolean(document.querySelector(".appActions #checkUpdates")),
+      quitInAppArea: Boolean(document.querySelector(".appActions #quitCompanion"))
+    };
+  });
+  assert(controlLayout.appLeft >= controlLayout.saveRight - 1,
+    "Les zones Synchronisation et Application ne sont pas séparées sur bureau");
+  assert(controlLayout.refreshInSaveArea && controlLayout.helpInAppArea &&
+    controlLayout.updatesInAppArea && controlLayout.quitInAppArea,
+  "Les commandes ne sont pas rangées dans leur zone fonctionnelle");
+  const ringMeasurements = await page.evaluate(() => {
+    const values = [
+      [document.querySelector(".officialRing"), document.querySelector("#mapPercent"), "100.00 %"],
+      [document.querySelector(".companionRing"), document.querySelector("#percent"), "100.0 %"]
+    ];
+    return values.map(([ring, value, sample]) => {
+      const original = value.textContent;
+      value.textContent = sample;
+      const result = {
+        ringWidth: ring.getBoundingClientRect().width,
+        valueClientWidth: value.clientWidth,
+        valueScrollWidth: value.scrollWidth
+      };
+      value.textContent = original;
+      return result;
+    });
+  });
+  assert(ringMeasurements.every(value =>
+    value.ringWidth >= 136 && value.valueScrollWidth <= value.valueClientWidth + 1),
+  `Valeur trop large pour un anneau : ${JSON.stringify(ringMeasurements)}`);
   assert((await page.locator("#saveSlotTitle").textContent()).includes("Slot 1 • Mode normal"),
     "Les informations du slot sélectionné ne sont pas rendues");
   assert((await page.locator("#saveSlotDate").textContent()).includes("15/08/2026"),
@@ -407,6 +444,21 @@ async function runResponsive(browser, baseUrl, browserName) {
     `conteneurs suspects : ${overflowCandidates.join(", ") || "aucun"}`);
   assert(measurements.sidebar > 0 && measurements.main > 0,
     "Les zones principales disparaissent en affichage étroit");
+
+  const stackedControls = await page.evaluate(() => {
+    const saveArea = document.querySelector(".syncSaveArea").getBoundingClientRect();
+    const appArea = document.querySelector(".appActions").getBoundingClientRect();
+    return {
+      saveBottom: saveArea.bottom,
+      appTop: appArea.top,
+      buttons: Array.from(document.querySelectorAll(".appActionButtons button"))
+        .map(button => button.getBoundingClientRect().height)
+    };
+  });
+  assert(stackedControls.appTop >= stackedControls.saveBottom - 1,
+    "Les zones Synchronisation et Application ne s'empilent pas sur mobile");
+  assert(stackedControls.buttons.every(height => height >= 44),
+    `Une action Application mesure moins de 44 px : ${stackedControls.buttons.join(", ")}`);
 
   const narrowRegions = await page.locator("header, .hero").evaluateAll(elements =>
     elements.map(element => ({

@@ -141,17 +141,17 @@ class BrowserTestUpdateChecker:
             "status": "update_available",
             "update_available": True,
             "current_version": CURRENT_VERSION.display,
-            "latest_version": "0.40.0-alpha.35",
-            "title": "BOTW Companion 0.40.0 alpha 35",
+            "latest_version": "0.40.0-alpha.36",
+            "title": "BOTW Companion 0.40.0 alpha 36",
             "platform": "windows",
-            "filename": "BOTW_Companion_0.40.0-alpha.35_Setup.exe",
+            "filename": "BOTW_Companion_0.40.0-alpha.36_Setup.exe",
             "download_url": (
                 "https://github.com/Oxnight/botw-companion/releases/download/"
-                "v0.40.0-alpha.35/BOTW_Companion_0.40.0-alpha.35_Setup.exe"
+                "v0.40.0-alpha.36/BOTW_Companion_0.40.0-alpha.36_Setup.exe"
             ),
             "release_url": (
                 "https://github.com/Oxnight/botw-companion/releases/tag/"
-                "v0.40.0-alpha.35"
+                "v0.40.0-alpha.36"
             ),
             "prerelease": True,
         }
