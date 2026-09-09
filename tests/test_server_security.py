@@ -175,29 +175,31 @@ class ServerSecurityTests(unittest.TestCase):
             self.assertTrue(thread.is_alive())
 
     def test_every_sensitive_family_requires_the_ephemeral_token(self):
+        # Keep this test focused on authorization. The server intentionally
+        # rejects an invalid token before parsing a request body. Leaving such
+        # a body unread while returning HTTP 403 can make Windows reset the
+        # HTTP/1.0 connection before urllib receives the response.
         cases = (
-            ("POST", "/api/shutdown", None),
-            ("POST", "/api/dsu/start", None),
-            ("POST", "/api/dsu/stop", None),
-            ("PUT", "/api/preferences", {"values": {"sync_interval": 30}}),
-            ("PUT", "/api/manual/test", {"completed": True}),
-            ("PUT", "/api/routes", {"routes": {}}),
-            ("POST", "/api/routes/import", {"session": {}}),
-            ("POST", "/api/manual/import", {"tracking": {}}),
-            ("POST", "/api/backup/import", {"backup": {}}),
-            ("GET", "/api/sync?force=1", None),
-            ("GET", "/api/update?force=1", None),
-            ("GET", "/api/update/download", None),
-            ("POST", "/api/update/download/start", None),
-            ("POST", "/api/update/download/retry", None),
-            ("POST", "/api/update/download/cancel", None),
+            ("POST", "/api/shutdown"),
+            ("POST", "/api/dsu/start"),
+            ("POST", "/api/dsu/stop"),
+            ("PUT", "/api/preferences"),
+            ("PUT", "/api/manual/test"),
+            ("PUT", "/api/routes"),
+            ("POST", "/api/routes/import"),
+            ("POST", "/api/manual/import"),
+            ("POST", "/api/backup/import"),
+            ("GET", "/api/sync?force=1"),
+            ("GET", "/api/update?force=1"),
+            ("GET", "/api/update/download"),
+            ("POST", "/api/update/download/start"),
+            ("POST", "/api/update/download/retry"),
+            ("POST", "/api/update/download/cancel"),
         )
         with self.running_server() as (thread, port, dsu):
-            for method, path, body in cases:
+            for method, path in cases:
                 with self.subTest(path=path):
-                    status, _response, _headers = self.request(
-                        port, method, path, body=body
-                    )
+                    status, _response, _headers = self.request(port, method, path)
                     self.assertEqual(status, 403)
             self.assertFalse(dsu.started)
             self.assertFalse(dsu.stopped)
