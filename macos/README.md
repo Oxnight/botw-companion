@@ -1,18 +1,27 @@
-# Distribution macOS
+# macOS distribution
 
-La version macOS cible uniquement les Mac Apple Silicon sous macOS 14 ou plus récent.
+The macOS application supports Apple Silicon Macs running macOS 14 or later.
 
-Les joueurs téléchargent le fichier dont le nom se termine par `_macOS_arm64.dmg`, ouvrent l’image disque et glissent **BOTW Companion** dans **Applications**. Le paquet contient Python, toutes les ressources hors ligne, JoyConDSU arm64 et `libSDL3.0.dylib`. Il ne dépend ni du clone, ni de `.venv`, Homebrew ou Xcode.
+Players download the file ending in `_macOS_arm64.dmg`, open it, and drag
+**BOTW Companion** to **Applications**. The package includes Python, all offline
+resources, arm64 JoyConDSU, and `libSDL3.0.dylib`. It does not depend on the
+source checkout, `.venv`, Homebrew, or Xcode.
 
-## Construction
+## Building
 
-La construction officielle s’exécute sur un runner GitHub Actions Apple Silicon :
+The official build runs on an Apple Silicon GitHub Actions runner:
 
 ```bash
 ./tools/build_macos_app.sh
 ./tools/test_macos_installation.sh
 ```
 
-Le premier script compile JoyConDSU et SDL3 pour arm64, construit l’application PyInstaller, applique une signature ad hoc puis crée le DMG. Le second monte le DMG, copie l’application comme le ferait un joueur, vérifie les architectures et dépendances, puis remplace aussi la version définie dans `packaging/UPGRADE_BASELINE` et confirme que les données d’Application Support sont conservées.
+The first script builds arm64 JoyConDSU and SDL3, packages the application with
+PyInstaller, applies an ad hoc signature, and creates the DMG. The second mounts
+the DMG, copies the application as a player would, checks architectures and
+dependencies, upgrades the version in `packaging/UPGRADE_BASELINE`, and verifies
+that Application Support data survives.
 
-Cette alpha n’est ni Developer ID signée ni notariée. Au premier lancement, macOS peut demander d’autoriser l’application dans **Réglages Système > Confidentialité et sécurité > Ouvrir quand même**.
+This prerelease is not signed with a Developer ID certificate or notarized.
+macOS may require the user to allow it through **System Settings > Privacy &
+Security > Open Anyway** after the first launch attempt.

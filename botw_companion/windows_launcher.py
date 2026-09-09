@@ -238,7 +238,7 @@ def launch_server(python: Path, project_root: Path, port: int,
             if cleaned:
                 environment[env_key] = ";".join(cleaned)
     if frozen:
-        # Le serveur est une nouvelle instance autonome du même exécutable.
+        # The server is a new self-contained instance of the same executable.
         environment["PYINSTALLER_RESET_ENVIRONMENT"] = "1"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("ab", buffering=0) as log:

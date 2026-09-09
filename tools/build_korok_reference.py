@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit la référence hors ligne des 900 énigmes Korogus vérifiées."""
+"""Build the offline reference for 900 verified Korok puzzles."""
 from __future__ import annotations
 
 import argparse

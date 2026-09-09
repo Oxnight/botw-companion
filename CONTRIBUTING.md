@@ -1,51 +1,48 @@
-# Contribuer à BOTW Companion
+# Contributing to BOTW Companion
 
-Les corrections, tests, améliorations de documentation et retours sur des
-sauvegardes réelles sont bienvenus.
+Bug fixes, tests, documentation improvements, and reports based on real saves
+are welcome.
 
-## Avant de commencer
+## Before you start
 
-- Rechercher d'abord si une issue traite déjà du même problème.
-- Utiliser une issue distincte par problème et fournir des étapes de
-  reproduction minimales.
-- Ne jamais joindre une sauvegarde personnelle, un journal contenant un chemin
-  privé ou une donnée provenant du jeu. Préférer un exemple synthétique.
-- Signaler une vulnérabilité selon [`SECURITY.md`](SECURITY.md), jamais dans une
-  issue publique.
-- Pour un changement important, ouvrir une issue avant d'écrire beaucoup de
-  code afin de valider le périmètre.
+- Search existing issues before opening a new one.
+- Use one issue per problem and include minimal reproduction steps.
+- Never attach a personal save, a log containing private paths, or game data.
+  Use a small synthetic example instead.
+- Follow [`SECURITY.md`](SECURITY.md) for vulnerabilities. Do not report them in
+  a public issue.
+- Open an issue before starting a large change so its scope can be agreed on.
 
-## Préparer le projet
+## Set up the project
 
-Les prérequis, commandes et constructions natives se trouvent dans le
-[guide de développement](docs/DEVELOPMENT.md).
+Requirements and build instructions are in the
+[development guide](docs/DEVELOPMENT.md).
 
-Créer une branche courte depuis `master` :
+Create a focused branch from `master`:
 
 ```bash
-git switch -c type/description-courte
+git switch -c type/short-description
 ```
 
-Exemples : `fix/detection-cemu`, `docs/installation-windows` ou
-`test/sauvegarde-dlc`.
+Examples include `fix/cemu-detection`, `docs/windows-installation`, and
+`test/dlc-save`.
 
-## Règles de modification
+## Change requirements
 
-- Ne pas modifier `botw_companion/VERSION` ni `RELEASE_NOTES.md` dans une pull
-  request ordinaire : ces fichiers sont préparés au moment d'une release.
-- Ajouter ou adapter les tests avec tout changement de comportement.
-- Ne pas ajouter de dépendance d'exécution sans expliquer son utilité et mettre
-  à jour les licences et `THIRD_PARTY_NOTICES.md`.
-- Garder toutes les fonctions principales utilisables hors ligne.
-- Ne pas committer de dossier `build`, `dist`, `.venv`, `node_modules`, de
-  sauvegarde, de journal ou d'archive locale.
-- Conserver les données utilisateur hors du dossier de l'application.
-- Mettre à jour le présent journal lorsqu'un changement est notable pour les
-  joueurs, sous la section **À venir** de `CHANGELOG.md`.
+- Do not edit `botw_companion/VERSION` or `RELEASE_NOTES.md` in an ordinary
+  pull request. The maintainer updates them when preparing a release.
+- Add or update tests for every behavior change.
+- Explain every new runtime dependency and update the applicable license and
+  `THIRD_PARTY_NOTICES.md` entries.
+- Keep all core features usable offline.
+- Do not commit build output, virtual environments, `node_modules`, saves,
+  logs, or local archives.
+- Keep user data outside the application directory.
+- Record player-visible changes under **Unreleased** in `CHANGELOG.md`.
 
-## Vérifier la contribution
+## Verify your changes
 
-Contrôles rapides obligatoires :
+Run the required checks:
 
 ```bash
 python3 tools/audit_distribution.py
@@ -53,23 +50,23 @@ python3 tools/check_version_consistency.py
 python3 -m unittest discover -s tests
 ```
 
-Pour une modification de l'interface, exécuter également les parcours décrits
-dans le [guide de développement](docs/DEVELOPMENT.md#tests-navigateur).
+For interface changes, also run the browser tests described in
+[the development guide](docs/DEVELOPMENT.md#browser-tests).
 
-Une modification Windows doit rester compatible Windows 10/11 x64. Une
-modification macOS doit cibler macOS 14 ou ultérieur sur Apple Silicon. Les
-installateurs natifs sont construits et testés par le workflow GitHub.
+Windows changes must remain compatible with Windows 10/11 x64. macOS changes
+must target macOS 14 or later on Apple Silicon. GitHub Actions builds and tests
+the native installers.
 
-## Pull request
+## Pull requests
 
-La description doit expliquer le problème, la solution et les vérifications
-effectuées. Avant l'envoi, contrôler que :
+Explain the problem, the proposed change, and the checks you ran. Before
+submitting, confirm that:
 
-- les tests passent ;
-- aucun fichier généré ou personnel n'est présent ;
-- la documentation correspond au comportement réel ;
-- les changements Windows et macOS ont été envisagés ;
-- les licences ont été vérifiées si une ressource ou un outil a été ajouté.
+- all tests pass;
+- the commit contains no generated or personal files;
+- the documentation matches the behavior;
+- both supported platforms were considered;
+- licenses were reviewed when a resource or tool was added.
 
-En proposant une contribution, son auteur confirme avoir le droit de la fournir
-au projet sous la licence MIT présente dans [`LICENSE`](LICENSE).
+By contributing, you confirm that you have the right to provide the change
+under the MIT License in [`LICENSE`](LICENSE).

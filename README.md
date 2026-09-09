@@ -1,107 +1,98 @@
 # BOTW Companion
 
-BOTW Companion analyse localement les sauvegardes de *The Legend of Zelda:
-Breath of the Wild* utilisées par Ryujinx ou Cemu et accompagne une progression
-complète du jeu.
+BOTW Companion reads local *The Legend of Zelda: Breath of the Wild* save
+files from Ryujinx or Cemu and helps players track a complete playthrough.
 
-Le projet est non officiel et n'est ni affilié à Nintendo, ni approuvé,
-sponsorisé ou soutenu par Nintendo.
+This is an unofficial fan project. It is not affiliated with, endorsed by,
+sponsored by, or supported by Nintendo.
 
-## Télécharger
+## Download
 
-La version actuelle est disponible dans
+Download the current version from
 [GitHub Releases](https://github.com/Oxnight/botw-companion/releases).
 
-| Système | Fichier à télécharger |
+| Platform | Download |
 | --- | --- |
-| Windows 10/11 x64 | le fichier se terminant par `_Setup.exe` |
-| macOS 14 ou ultérieur, Apple Silicon | le fichier se terminant par `_macOS_arm64.dmg` |
+| Windows 10/11 x64 | the file ending in `_Setup.exe` |
+| macOS 14 or later on Apple Silicon | the file ending in `_macOS_arm64.dmg` |
 
-Les deux applications sont autonomes : Python, les données et cartes hors
-ligne, JoyConDSU, SDL3, les icônes et le lanceur sont inclus. Aucun clone, outil
-de développement ou téléchargement supplémentaire n'est nécessaire.
+Both packages are self-contained. They include Python, the offline data and
+map, JoyConDSU, SDL3, icons, and the launcher. Players do not need to clone the
+repository or install development tools.
 
-Consulter le [guide d'installation et de mise à jour](docs/INSTALLATION.md) pour
-les étapes détaillées et les avertissements SmartScreen ou Gatekeeper.
+See the [installation and update guide](docs/INSTALLATION.md) for complete
+instructions, including SmartScreen and Gatekeeper warnings.
 
-## Fonctions principales
+## Features
 
-- Détection automatique de Ryujinx ou Cemu et de leur sauvegarde BOTW la plus
-  récente.
-- Aperçu du slot sélectionné avec mode, date, émulateur et plateforme.
-- Suivi de la carte officielle, des sanctuaires, quêtes, Korogus, équipements,
-  boss, DLC et autres objectifs.
-- Solutions hors ligne des 152 quêtes, des 900 Korogus, des coffres, des
-  sanctuaires et des boss.
-- Filtres et marqueurs sur une carte haute définition utilisable hors ligne.
-- Suivi manuel, notes et planificateur d'itinéraire persistants.
-- Import, export et sauvegardes de sécurité des données du Companion.
-- Détection facultative des nouvelles versions avec téléchargement guidé du
-  paquet correspondant au système.
-- Estimation de la prochaine lune de sang depuis le compteur de la sauvegarde.
-- Serveur gyroscopique Cemuhook/DSU pour Ryujinx et Cemu avec diagnostic de
-  calibration et de qualité.
-- Interface locale accessible, navigation au clavier et réduction des
-  animations selon le réglage du système.
+- Automatic discovery of the newest BOTW save from Ryujinx or Cemu.
+- Save-slot summary with mode, date, emulator, and platform.
+- Tracking for the official map percentage, shrines, quests, Koroks, gear,
+  bosses, DLC, and other objectives.
+- Offline solutions for 152 quests, 900 Koroks, chests, shrines, and bosses.
+- Filters and markers on a high-resolution offline map.
+- Persistent manual tracking, notes, and route planning.
+- Import, export, and local backups of Companion data.
+- Optional release checks with a guided download for the current platform.
+- Blood Moon timing estimated from the save counter.
+- A Cemuhook/DSU motion server for Ryujinx and Cemu, with calibration and
+  signal-quality diagnostics.
+- Keyboard navigation, local help, and reduced-motion support.
 
-## Complétion
+## Completion metrics
 
-Deux mesures indépendantes sont affichées :
+The interface shows two independent metrics:
 
-- le **pourcentage officiel de la carte**, où chaque marqueur vaut
-  `100 / 1207` en jeu de base ou `100 / 1224` avec l'Expansion Pass ;
-- le **profil de complétion du compagnon**, calculé avec
-  `100 × objectifs automatiques uniques validés / objectifs automatiques uniques du profil`.
+- the **official map percentage**, where every marker is worth `100 / 1207`
+  in the base game or `100 / 1224` with the Expansion Pass;
+- the **Companion completion profile**, calculated as
+  `100 × unique automatic objectives completed / unique automatic objectives in the profile`.
 
-Le profil principal contient 3 400 objectifs en jeu de base et 3 565 avec les
-DLC. Les activités sans preuve persistante dans la sauvegarde restent dans le
-suivi manuel mais ne bloquent pas le 100 %. Les amiibo sont séparés du profil
-principal. L'interface liste les **Éléments empêchant le 100 %**.
+The main profile contains 3,400 objectives for the base game and 3,565 with
+the DLC. Activities without durable evidence in the save remain available for
+manual tracking but do not block 100%. Amiibo are kept outside the main
+profile. The interface lists every item that still prevents 100% completion.
 
-La victoire contre Ganon est déterminée en priorité par le marqueur persistant
-`GameClear`, et non par le seul état temporaire de la quête finale après le
-générique.
+The first Ganon victory is detected from the persistent `GameClear` marker,
+not only from the temporary state of the final quest after the credits.
 
 ## Documentation
 
-- [Installation et mises à jour](docs/INSTALLATION.md)
-- [Configuration du gyroscope DSU](docs/DSU.md)
-- [Dépannage](docs/TROUBLESHOOTING.md)
-- [Développement et tests](docs/DEVELOPMENT.md)
-- [Contribuer au projet](CONTRIBUTING.md)
-- [Journal des versions](CHANGELOG.md)
-- [Publier une version](RELEASING.md)
+- [Installation and updates](docs/INSTALLATION.md)
+- [DSU motion setup](docs/DSU.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Development and tests](docs/DEVELOPMENT.md)
+- [Contributing](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
+- [Release process](RELEASING.md)
 
-## Données et confidentialité
+## Data and privacy
 
-Le serveur écoute uniquement sur `127.0.0.1`. Les sauvegardes et données de
-progression ne sont envoyées à aucun service distant. Seule la liste publique
-des Releases GitHub peut être consultée pour signaler une mise à jour ; cette
-vérification expire rapidement et n'empêche jamais le fonctionnement hors
-ligne. Les liens externes et le téléchargement restent déclenchés par
-l'utilisateur.
+The server listens only on `127.0.0.1`. Saves and progress data are never sent
+to a remote service. BOTW Companion may briefly query the public GitHub
+Releases endpoint to report an available update; that check times out quickly
+and never blocks offline use. External links and downloads require a user
+action.
 
-Les données personnelles sont conservées séparément de l'application :
+Personal data is stored outside the application:
 
 ```text
-Windows : %LOCALAPPDATA%\BOTW Companion
-macOS   : ~/Library/Application Support/BOTW Companion
+Windows: %LOCALAPPDATA%\BOTW Companion
+macOS:   ~/Library/Application Support/BOTW Companion
 ```
 
-Une mise à niveau ou une désinstallation ne les supprime pas. Les détails sont
-dans [`PRIVACY.md`](PRIVACY.md).
+Upgrades and uninstallations leave this data in place. See
+[`PRIVACY.md`](PRIVACY.md) for details.
 
-## Sécurité et licences
+## Security and licensing
 
-- [`SECURITY.md`](SECURITY.md) explique comment signaler une vulnérabilité sans
-  publier de donnée sensible.
-- [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) recense les composants
-  inclus et les outils de construction.
-- [`DATA_SOURCES.md`](DATA_SOURCES.md) documente la provenance des données et de
-  la carte.
-- [`licenses/`](licenses/) contient les textes complets requis par les
-  composants redistribués.
+- [`SECURITY.md`](SECURITY.md) explains how to report a vulnerability without
+  exposing sensitive data.
+- [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) lists bundled components
+  and build tools.
+- [`DATA_SOURCES.md`](DATA_SOURCES.md) records the sources of the data and map.
+- [`licenses/`](licenses/) contains the required full license texts.
 
-Le code propre au projet est distribué sous licence MIT. Cette licence ne
-s'étend pas aux marques, ressources ou contenus appartenant à Nintendo ou à
-d'autres tiers.
+Project-authored code is available under the MIT License. That license does not
+grant rights to trademarks, assets, or content owned by Nintendo or other
+third parties.

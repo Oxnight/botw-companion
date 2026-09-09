@@ -55,7 +55,7 @@ CONTENT_SECURITY_POLICY = "; ".join((
 
 
 class RequestPayloadError(ManualTrackingError):
-    """Erreur HTTP déterministe rencontrée avant la validation métier."""
+    """Deterministic HTTP error raised before domain validation."""
 
     def __init__(self, message: str, status: int = 400) -> None:
         super().__init__(message)
@@ -63,13 +63,13 @@ class RequestPayloadError(ManualTrackingError):
 
 
 class LoopbackThreadingHTTPServer(ThreadingHTTPServer):
-    """Serveur local sans résolution DNS inverse pendant l'ouverture du socket."""
+    """Local server that avoids reverse DNS lookup while opening the socket."""
 
     def server_bind(self) -> None:
-        # HTTPServer.server_bind() appelle socket.getfqdn() après le bind. Cette
-        # résolution est inutile pour un serveur strictement lié à 127.0.0.1 et
-        # peut rester bloquée sur certains runners macOS. TCPServer effectue le
-        # même bind sans accès DNS; on conserve les attributs publics HTTPServer.
+        # HTTPServer.server_bind() calls socket.getfqdn() after binding. That
+        # lookup is unnecessary for a server restricted to 127.0.0.1 and can
+        # hang on some macOS runners. TCPServer performs the same bind without
+        # DNS access; retain the public HTTPServer attributes.
         TCPServer.server_bind(self)
         host, port = self.server_address[:2]
         self.server_name = str(host)
@@ -461,8 +461,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self._json_response(self._payload_error_status(exc), {"erreur": str(exc)})
 
         def do_OPTIONS(self) -> None:  # noqa: N802
-            # Aucune API CORS : une page distante ne doit jamais obtenir une
-            # autorisation de requêter le serveur loopback.
+            # No CORS API: a remote page must never be allowed to query the
+            # loopback server.
             self._reject_request(403, "Requête inter-origine non autorisée")
 
         def log_message(self, _format: str, *_args) -> None:

@@ -1,20 +1,27 @@
-# Construction Windows de JoyConDSU
+# Building JoyConDSU on Windows
 
-Le moteur conserve exactement le protocole DSU 1001, le port local `127.0.0.1:26760`, les événements SDL horodatés, la calibration robuste, la correction du biais, l'absence de filtre et la télémétrie du moteur macOS.
+The engine uses DSU protocol version 1001 on `127.0.0.1:26760`, timestamped SDL
+events, robust calibration, bias correction, an unfiltered motion path, and the
+same telemetry as the macOS engine.
 
-La couche réseau choisit automatiquement les API natives : sockets POSIX sous macOS et Winsock 2.2 sous Windows. Le CRC32 est inclus dans le moteur et contrôlé avec les mêmes vecteurs octet par octet que l'implémentation antérieure ; aucune DLL zlib n'est nécessaire.
+The network layer selects native APIs automatically: POSIX sockets on macOS and
+Winsock 2.2 on Windows. CRC32 is implemented in the engine and checked
+byte-for-byte against the same vectors as the earlier implementation, so no
+zlib DLL is required.
 
-## Construire sur Windows x64
+## Windows x64 build
 
-Prérequis : Windows 10 ou 11, Visual Studio 2022 Build Tools avec les outils C++ et CMake.
+Requirements: Windows 10 or 11 and Visual Studio 2022 Build Tools with C++ and
+CMake.
 
-Depuis la racine du dépôt :
+From the repository root:
 
 ```powershell
 .\tools\build_joycon_dsu_windows.ps1
 ```
 
-CMake télécharge la source officielle SDL 3.4.14 dont l'empreinte SHA-256 est verrouillée, compile le moteur, puis produit :
+CMake downloads the official SDL 3.4.14 source archive using a pinned SHA-256
+digest, builds the engine, and produces:
 
 ```text
 windows\native-dsu\JoyConDSU.exe
@@ -22,6 +29,10 @@ windows\native-dsu\SDL3.dll
 windows\native-dsu\manifest.json
 ```
 
-L'utilisateur final n'aura pas à installer SDL3 : la DLL sera placée à côté de l'exécutable dans le paquet Windows.
+Players do not install SDL3 separately; the DLL is placed next to the
+executable in the Windows package.
 
-Le script copie également ces trois fichiers dans `botw_companion\dsu\windows`. Le gestionnaire DSU les détecte automatiquement, lance `JoyConDSU.exe` sans console avec la DLL placée à côté, puis utilise un événement Windows local nommé pour demander un arrêt coopératif. Le bouton et les états visibles sont les mêmes que sous macOS.
+The script also copies these files to `botw_companion\dsu\windows`. The DSU
+manager starts `JoyConDSU.exe` without a console, keeps `SDL3.dll` beside it,
+and uses a named local Windows event for cooperative shutdown. Controls and
+visible states match macOS.

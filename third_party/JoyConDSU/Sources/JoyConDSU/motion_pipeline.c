@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <string.h>
 
-/* Une demi-période HID autour du flux Joy-Con nominal à 200 Hz. */
+/* Half a HID period around the nominal 200 Hz Joy-Con stream. */
 static const uint64_t MAX_PAIRING_DISTANCE_NS = 3000000ULL;
 static const uint64_t EXPECTED_INTERVAL_NS = 5000000ULL;
 
@@ -130,10 +130,10 @@ static bool emit_pair(
     pipeline->last_emitted_timestamp_ns = timestamp_ns;
     pipeline->stats.emitted_samples += 1;
     /*
-     * SDL peut livrer plusieurs échantillons dans une même rafale. Leur date
-     * de réception est alors identique : ces intervalles nuls doivent compter
-     * dans la moyenne, sinon trois mesures toutes les 15 ms seraient annoncées
-     * à tort comme un flux à 66,7 Hz au lieu de 200 Hz.
+     * SDL may deliver several samples in one burst with the same receive time.
+     * These zero intervals must count toward the average; otherwise three
+     * samples every 15 ms would be incorrectly reported as 66.7 Hz instead of
+     * 200 Hz.
      */
     const uint64_t received_ns = sample->received_timestamp_ns;
     if (pipeline->stats.last_received_ns != 0

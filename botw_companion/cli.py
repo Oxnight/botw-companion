@@ -69,8 +69,8 @@ def _save_context(slot_path: Path, flags: dict[str, object]) -> dict:
 
 def _build_payload(slot: SaveSlot, caption: dict[str, object], flags: dict[str, object],
                    inventory: list[dict[str, object]], platform_label: str) -> dict:
-    # GameClear est enregistré dans caption.sav pour conserver l'étoile
-    # post-Ganon, tandis que la progression ordinaire vient de game_data.sav.
+    # GameClear is stored in caption.sav to preserve the completion star
+    # after Ganon, while ordinary progress comes from game_data.sav.
     analysis_flags = dict(flags)
     if type(caption.get("GameClear")) is bool:
         analysis_flags["GameClear"] = caption["GameClear"]

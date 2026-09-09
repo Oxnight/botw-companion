@@ -43,12 +43,12 @@ int main(void)
     assert(stable.effective_rate_hz > 199.0 && stable.effective_rate_hz < 201.0);
     assert(fabs(stable.gyro_bias_rad_s.x - 0.010) < 0.0001);
 
-    /* Une pointe isolée est écartée de la moyenne robuste. */
+    /* The robust average rejects an isolated spike. */
     CalibrationResult robust = stationary_calibration(true);
     assert(robust.status == CALIBRATION_VALID);
     assert(fabs(robust.gyro_bias_rad_s.x - 0.010) < 0.0001);
 
-    /* Une rotation lente entre les deux moitiés doit être refusée. */
+    /* Reject slow rotation between the two halves. */
     CalibrationCollector moving;
     calibration_reset(&moving);
     for (size_t i = 0; i < CALIBRATION_REQUIRED_SAMPLES; ++i) {
@@ -62,7 +62,7 @@ int main(void)
     }
     assert(calibration_evaluate(&moving).status == CALIBRATION_MOTION_DETECTED);
 
-    /* Un flux parfaitement figé n'est pas une preuve d'immobilité réelle. */
+    /* A perfectly frozen stream is not evidence of a still controller. */
     CalibrationCollector frozen;
     calibration_reset(&frozen);
     for (size_t i = 0; i < CALIBRATION_REQUIRED_SAMPLES; ++i) {
@@ -75,7 +75,7 @@ int main(void)
     }
     assert(calibration_evaluate(&frozen).status == CALIBRATION_FROZEN_STREAM);
 
-    /* Doublons et valeurs non finies sont refusés dès la collecte. */
+    /* Reject duplicates and non-finite values during collection. */
     CalibrationCollector invalid;
     calibration_reset(&invalid);
     MotionSample first = sample_at(
@@ -88,7 +88,7 @@ int main(void)
     );
     assert(calibration_push(&invalid, &nan_sample) == CALIBRATION_NONFINITE);
 
-    /* Une cadence artificiellement trop rapide est détectée. */
+    /* Detect an artificially high sample rate. */
     CalibrationCollector timing;
     calibration_reset(&timing);
     for (size_t i = 0; i < CALIBRATION_REQUIRED_SAMPLES; ++i) {

@@ -1,10 +1,10 @@
-Fond de carte BOTW 24000x20000, découpé et converti en tuiles WebP hors ligne.
+BOTW 24000x20000 map background, split into offline WebP tiles.
 
-Fichier source : https://static.zeldamods.org/botw_map.png
-Contexte : https://github.com/zeldamods/objmap
+Source file: https://static.zeldamods.org/botw_map.png
+Context: https://github.com/zeldamods/objmap
 
-Ce fichier source a été extrait des fichiers de The Legend of Zelda: Breath of
-the Wild. Les droits sur la carte appartiennent à Nintendo et/ou à leurs
-titulaires respectifs. La licence GPL-3.0 du code de BOTW Object Map ne concède
-pas de droit sur cette ressource issue du jeu. Aucune autorisation écrite de
-redistribution n'est fournie dans ce dépôt ; voir DATA_SOURCES.md.
+The source image was extracted from files for The Legend of Zelda: Breath of
+the Wild. Rights in the map belong to Nintendo and/or their respective owners.
+The GPL-3.0 license covering BOTW Object Map code does not grant rights to this
+game-derived asset. This repository contains no written redistribution
+permission; see DATA_SOURCES.md.

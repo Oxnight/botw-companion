@@ -1,4 +1,4 @@
-"""Parcours de quêtes vérifiés et reformulés pour une consultation hors ligne."""
+"""Verified, rewritten quest walkthroughs for offline use."""
 from __future__ import annotations
 
 
@@ -21,7 +21,7 @@ def _steps(*values: str) -> dict:
 
 
 QUEST_WALKTHROUGHS = {
-    # Quêtes principales
+    # Main quests
     "PictureMemory": _steps("Débloque l'appareil photo au laboratoire antique d'Elimith puis montre l'album à Impa.", "Retrouve les douze lieux représentés dans l'album et examine chaque halo lumineux pour restaurer le souvenir.", "Retourne voir Impa après les douze souvenirs, observe le tableau puis récupère le treizième souvenir dans la plaine de Blatchery."),
     "BalladOfHeroGoron": _steps("Examine les trois monuments apparus dans la région d'Ordinn et photographie leurs cartes.", "Accomplis les trois défis indiqués : vaincre le Méga Magrok, traverser les anneaux au-dessus de la lave et rester sur la lumière près du pont d'Ordinn.", "Termine les trois sanctuaires révélés puis bats l'Ombre de feu de Ganon dans le royaume illusoire."),
     "BalladOfHeroZora": _steps("Examine les trois monuments sur le plateau Ja'Abu et photographie leurs cartes.", "Accomplis les trois défis indiqués : suivre les anneaux de lumière, atteindre l'aube au lac et vaincre tous les Gardiens désignés.", "Termine les trois sanctuaires révélés puis bats l'Ombre d'eau de Ganon dans le royaume illusoire."),
@@ -43,7 +43,7 @@ QUEST_WALKTHROUGHS = {
     "Get_MasterSword": _steps("Traverse les Bois perdus en suivant d'abord les torches, puis la direction des braises portées par le vent.", "Parle à l'Arbre Mojo et approche-toi de l'épée au centre de la forêt Korogu.", "Dispose d'au moins treize cœurs permanents, puis maintiens l'action jusqu'à extraire complètement la lame."),
     "FindDungeon": _steps("Rejoins le vieil homme après l'activation de la tour et termine le sanctuaire de Ma'Ohnu.", "Obtiens Polaris, Bombes à distance, Cryonis et Cinetis dans les quatre sanctuaires du plateau.", "Retrouve le vieil homme au sommet du temple du Temps après avoir prié à la statue, puis reçois la paravoile."),
 
-    # Quêtes de sanctuaire
+    # Shrine quests
     "GoronsRock": _steps("Parle à Bladon dans la cité Goron puis descends vers le tunnel de Gorko.", "Retrouve Gonguron dans le tunnel, apporte à Bladon un rôti de caillasse obtenu à la rôtisserie Gortram.", "Rapporte le rôti à Gonguron : il brise la paroi et révèle le sanctuaire de Gu'Achitoh."),
     "SearchStone": _steps("Photographie le fragment de monument lumineux près des ruines de Palmorae, puis parle à Garini.", "Trouve et photographie les deux autres fragments : l'un à l'ouest sur la plage, l'autre à la pointe de Soka la nuit.", "Montre les trois photos à Garini puis accroupis-toi sur une dalle pendant qu'il occupe l'autre."),
     "MtMotelMini_Landscape": _steps("Examine le tableau dans le relais du pied de la Montagne et parle à Mayro.", "Repère la forme du sanctuaire peinte au sud-ouest du lac Gorbi, dans la région d'Ordinn.", "Brise les rochers qui condamnent l'entrée pour révéler le sanctuaire de Tahu'Naeh."),
@@ -87,7 +87,7 @@ QUEST_WALKTHROUGHS = {
     "BloodyMoonRelief": _steps("Écoute Kass sur la crête d'Hyrule puis localise le socle près du chant.", "Attends une nuit de lune de sang et retire tout équipement, y compris armes, arc, bouclier et vêtements.", "Tiens-toi nu sur le socle pendant que la lune devient rouge pour révéler le sanctuaire de Mijah Rokee."),
     "DontDamageFlower": _steps("Parle à Magda devant le champ de fleurs situé sur une île de la rivière Hylia.", "Suis le chemin étroit sans marcher sur une fleur et sans laisser un ennemi ou une attaque les endommager.", "Atteins le sanctuaire de Hila Rao au centre du champ."),
 
-    # Quêtes secondaires
+    # Side quests
     "MinamihateeluMini_touzoku": _steps("Parle à Domidak et Prissen au relais des Géminés puis obtiens l'énigme contre 100 rubis.", "Remonte la rivière au sud du relais jusqu'à la cascade située près du pont du petit frère.", "Brise la paroi friable derrière la cascade et ouvre tous les coffres de la cache de Lambda."),
     "OldKorok_Help": _steps("Parle à Noïa sur la route au nord-ouest de Cocorico.", "Élimine les Bokoblins dans le défilé voisin et ouvre le coffre du camp pour récupérer ses maracas.", "Rapporte les maracas à Noïa puis donne-lui une noix Korogu afin qu'il agrandisse une poche d'inventaire."),
     "HutagoHatago_Ch_001": _steps("Parle à Rensa devant le relais des Géminés et accepte le défi de débourrage.", "Monte un cheval sauvage dans la plaine, calme-le puis ramène-le au point de départ.", "Franchis la ligne avec la monture dans le temps imparti pour recevoir la récompense."),

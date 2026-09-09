@@ -1,55 +1,53 @@
-# Avis relatifs aux composants tiers
+# Third-party notices
 
-Ce document couvre les composants logiciels utilisés pour produire ou exécuter
-BOTW Companion. Les données et ressources éditoriales sont décrites séparément
-dans [`DATA_SOURCES.md`](DATA_SOURCES.md).
+This document covers software used to build or run BOTW Companion. Data and
+editorial sources are listed separately in
+[`DATA_SOURCES.md`](DATA_SOURCES.md).
 
-## Composants présents dans les applications distribuées
+## Components included in distributed applications
 
 ### CPython 3.12
 
-Les applications Windows et macOS embarquent un runtime CPython 3.12. Python est
-distribué selon la Python Software Foundation License Version 2 et contient des
-éléments régis par les avis reproduits dans le texte officiel complet :
+The Windows and macOS applications include a CPython 3.12 runtime. Python is
+distributed under the Python Software Foundation License Version 2 and includes
+material governed by the notices reproduced in the complete official text:
 [`licenses/PYTHON-3.12.txt`](licenses/PYTHON-3.12.txt).
 
 Copyright © 2001 Python Software Foundation. All Rights Reserved.
 
-Source officielle : <https://docs.python.org/3/license.html>
+Official source: <https://docs.python.org/3/license.html>
 
 ### Simple DirectMedia Layer 3.4.14
 
-Le moteur JoyConDSU est distribué avec SDL 3.4.14 sous licence zlib. Le texte
-complet est fourni dans [`licenses/SDL3-3.4.14.txt`](licenses/SDL3-3.4.14.txt)
-et à côté de la bibliothèque native dans chaque paquet.
+JoyConDSU is distributed with SDL 3.4.14 under the zlib license. The complete
+text is available in [`licenses/SDL3-3.4.14.txt`](licenses/SDL3-3.4.14.txt) and
+next to the native library in each package.
 
 Copyright © Sam Lantinga and the SDL contributors.
 
-Sources officielles : <https://www.libsdl.org/license.php> et
+Official sources: <https://www.libsdl.org/license.php> and
 <https://github.com/libsdl-org/SDL/tree/release-3.4.14>
 
-### BOTW Companion et JoyConDSU
+### BOTW Companion and JoyConDSU
 
-Le code propre à BOTW Companion, y compris le moteur JoyConDSU situé dans ce
-dépôt, est distribué sous la licence MIT du fichier [`LICENSE`](LICENSE).
-JoyConDSU utilise SDL3 mais ne contient pas le code du projet tiers historique
-portant le même nom.
+Project-authored BOTW Companion code, including the JoyConDSU engine in this
+repository, is distributed under the MIT License in [`LICENSE`](LICENSE).
+JoyConDSU uses SDL3 but contains no code from the unrelated historical project
+with the same name.
 
-## Outils de construction non installés chez le joueur
+## Build-only tools
 
-* **PyInstaller 6.22.2** produit les bundles autonomes. Sa licence GPL 2.0 avec
-  exception autorise les exécutables générés à conserver la licence du projet
-  et précise qu'aucun avis PyInstaller n'est requis dans l'application :
-  <https://pyinstaller.org/en/stable/license.html>.
-* **Inno Setup 6** produit uniquement l'installateur Windows. Son avis officiel
-  autorise cet usage et apprécie, sans l'imposer, une mention dans la
-  documentation : <https://jrsoftware.org/files/is/license.txt>.
-* **CMake**, les compilateurs Apple Clang/MSVC, **setuptools** et les actions
-  GitHub servent uniquement à la construction et ne sont pas installés avec
-  BOTW Companion.
-* **Playwright 1.62.0** (Apache-2.0) et **axe-core 4.13.0** (MPL-2.0) servent
-  uniquement aux tests navigateur. Ils ne sont pas présents dans les deux
-  applications publiées.
+- **PyInstaller 6.22.2** creates the self-contained bundles. Its GPL 2.0
+  license exception allows generated executables to retain the project's
+  license and states that a PyInstaller notice is not required in the
+  application: <https://pyinstaller.org/en/stable/license.html>.
+- **Inno Setup 6** creates only the Windows installer. Its official terms
+  allow this use and appreciate, but do not require, documentation credit:
+  <https://jrsoftware.org/files/is/license.txt>.
+- **CMake**, Apple Clang/MSVC, **setuptools**, and GitHub Actions are used only
+  during builds and are not installed with BOTW Companion.
+- **Playwright 1.62.0** (Apache-2.0) and **axe-core 4.13.0** (MPL-2.0) are used
+  only by browser tests. Neither is included in the published applications.
 
-Les versions et le périmètre de ces composants sont contrôlés par
-`tools/audit_distribution.py` avant chaque construction.
+`tools/audit_distribution.py` checks component versions and scope before every
+build.

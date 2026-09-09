@@ -23,9 +23,9 @@ typedef enum {
 typedef struct {
     DsuVec3 gyro_rad_s;
     DsuVec3 accel_ms2;
-    /* Horloge matérielle alignée : transmise à Ryujinx. */
+    /* Aligned hardware clock forwarded to Ryujinx. */
     uint64_t timestamp_ns;
-    /* Horloge SDL de réception : utilisée uniquement pour contrôler l'âge. */
+    /* SDL receive clock used only to check sample age. */
     uint64_t received_timestamp_ns;
 } MotionSample;
 
@@ -75,9 +75,8 @@ typedef struct {
 void motion_pipeline_reset(MotionPipeline *pipeline);
 
 /*
- * Ajoute une mesure SDL déjà normalisée. Pour une mesure d'accéléromètre,
- * retourne true uniquement lorsqu'un échantillon gyro compatible et inédit
- * permet de construire une mesure DSU complète.
+ * Add an already normalized SDL sample. For an accelerometer sample, return
+ * true only when a compatible, new gyro sample completes a DSU measurement.
  */
 bool motion_pipeline_push(
     MotionPipeline *pipeline,
@@ -99,8 +98,8 @@ double motion_pipeline_jitter_mean_ms(const MotionPipeline *pipeline);
 double motion_pipeline_jitter_max_ms(const MotionPipeline *pipeline);
 
 /*
- * Refuse une mesure trop ancienne puis produit une date DSU strictement
- * monotone, même si l'horloge matérielle repart de zéro après reconnexion.
+ * Reject a stale sample and then produce a strictly monotonic DSU timestamp,
+ * even when the hardware clock resets after reconnection.
  */
 bool motion_sample_to_dsu_timestamp(
     MotionDsuTimeline *timeline,

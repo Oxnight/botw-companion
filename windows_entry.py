@@ -2,8 +2,8 @@ import os
 import sys
 
 
-# Le bootloader Windows sans console de PyInstaller expose ces flux à None.
-# Plusieurs chemins CLI restent partagés avec l'application autonome.
+# PyInstaller's windowed bootloader exposes these streams as None.
+# Several CLI paths remain shared with the self-contained application.
 if sys.stdout is None:
     sys.stdout = open(os.devnull, "w", encoding="utf-8")
 if sys.stderr is None:

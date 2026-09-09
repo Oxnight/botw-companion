@@ -10,7 +10,7 @@ def load_hashes() -> dict[int, tuple[int, str]]:
 
 @lru_cache(maxsize=1)
 def load_catalog() -> dict:
-    """Charge le catalogue français déjà validé pendant la construction."""
+    """Load the French catalog validated during the build."""
     payload = json.loads(
         files("botw_companion.data").joinpath("catalog_fr_compiled.json").read_text(encoding="utf-8")
     )
@@ -21,7 +21,7 @@ def load_catalog() -> dict:
 
 @lru_cache(maxsize=1)
 def load_runtime_nomenclature_audit() -> dict:
-    """Charge le résultat statique de l'audit français validé par les tests."""
+    """Load the static French-language audit result validated by tests."""
     payload = json.loads(
         files("botw_companion.data").joinpath("nomenclature_audit_compiled.json").read_text(encoding="utf-8")
     )
@@ -39,7 +39,7 @@ def load_completion_standard() -> dict:
 
 @lru_cache(maxsize=1)
 def load_cartography_reference() -> dict:
-    """Charge les données cartographiques françaises préparées à la construction."""
+    """Load the French map data prepared during the build."""
     payload = json.loads(
         files("botw_companion.data").joinpath(
             "cartography_reference_fr_compiled.json"

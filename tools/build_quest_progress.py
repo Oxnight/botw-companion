@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lie les états internes du journal aux quêtes du catalogue."""
+"""Link internal quest-log states to catalog quests."""
 from __future__ import annotations
 
 import argparse

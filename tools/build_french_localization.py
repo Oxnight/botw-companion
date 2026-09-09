@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Construit la localisation fr-FR à partir de nomenclatures publiques vérifiables.
+"""Build the fr-FR localization from verifiable public terminology.
 
-Le catalogue conserve ses identifiants techniques anglais (flags, acteurs et IDs),
-mais toutes les chaînes présentées à l'utilisateur sont remplacées à l'exécution.
+The catalog retains English technical identifiers for flags, actors, and IDs,
+while every user-visible string is replaced at runtime.
 """
 from __future__ import annotations
 
@@ -117,9 +117,9 @@ FIXED = {
     "Revive Horse God Malanya": "Réveiller Marlon",
 }
 
-# Noms de personnages de la version française européenne. Ces graphies sont
-# contrôlées contre les tables de nomenclature Zelda Wiki et les guides français
-# du Palais de Zelda ; les identifiants internes anglais restent inchangés.
+# Character names from the European French release. Spellings are checked
+# against Zelda Wiki terminology tables and French Palais de Zelda guides;
+# internal English identifiers remain unchanged.
 CHARACTER_NAMES = {
     "Amali": "Camailla", "Bayge": "Bagodet", "Bedoli": "Della",
     "Benja": "Benjamin", "Bladon": "Landonn", "Bolson": "Sérasieh",
@@ -158,7 +158,7 @@ def get_json(url: str) -> dict:
 
 
 def nomenclature(names: list[str]) -> dict[str, str]:
-    """Récupère le nom français européen, de préférence celui marqué BotW."""
+    """Return the European French name, preferring the entry marked BotW."""
     result: dict[str, str] = {}
     endpoint = "https://zeldawiki.wiki/w/api.php"
     for start in range(0, len(names), 20):
@@ -227,7 +227,7 @@ def nearest(points: list[dict], source: dict, *, strict: bool = True) -> dict:
 
 
 def palais_shrine_trials() -> dict[str, str]:
-    """Retourne le titre français de chaque épreuve, indexé par nom du guide."""
+    """Return each trial's French title, indexed by guide name."""
     index_url = "https://www.palaiszelda.com/breathofthewild/sanctuaires.php"
     tree = html.fromstring(urlopen(index_url, timeout=60).read().decode("utf-8"))
     pages = sorted({a.get("href").split("#", 1)[0] for a in tree.xpath("//table//a[@href]")})
@@ -253,7 +253,7 @@ def main() -> None:
     strings = dict(FIXED)
     strings.update(CHARACTER_NAMES)
 
-    # Noms affichables pour lesquels Zelda Wiki expose la nomenclature fr-FR.
+    # Display names for which Zelda Wiki provides fr-FR terminology.
     query = set()
     for key in ("locations", "shrines", "main_quests", "shrine_quests", "side_quests", "memories", "armor_owned"):
         for item in catalog[key]:
@@ -269,7 +269,7 @@ def main() -> None:
             query.update(str(item[field]) for field in ("location", "item") if item.get(field))
     strings.update(nomenclature(sorted(query)))
 
-    # Encyclopédie : numérotation identique au jeu, donc correspondance sans ambiguïté.
+    # Compendium: numbering matches the game, so the mapping is unambiguous.
     compendium = palais_compendium()
     for item in catalog["compendium"]:
         if item.get("number") in compendium:
@@ -282,7 +282,7 @@ def main() -> None:
         "One-Hit Obliterator": "Destructeur",
     })
 
-    # Sanctuaires, épreuves et tours : rapprochement direct par coordonnées.
+    # Shrines, trials, and towers: direct coordinate matching.
     map_data = palais_map()
     base = [x for x in catalog["shrines"] if not x["dlc"]]
     dlc = [x for x in catalog["shrines"] if x["dlc"]]
@@ -301,13 +301,13 @@ def main() -> None:
     for english, match in nearest(catalog["towers"], map_data["tour"]).items():
         strings[english] = match["nom"]
 
-    # Noms génériques des miniboss suivis par leur index stable.
+    # Generic miniboss names followed by their stable index.
     for i in range(1, 41):
         strings[f"Talus {i:02d}"] = f"Lithorok {i:02d}"
     for i in range(1, 5):
         strings[f"Molduga {i:02d}"] = f"Moldarquor {i:02d}"
 
-    # Les appellations d'ensembles ne sont pas toutes des pages autonomes.
+    # Not every armor-set name has a standalone page.
     strings.update({
         "Ancient": "archéonique", "Barbarian": "barbare", "Climber": "d'escalade",
         "Desert Voe": "des sablons", "Fierce Deity": "du dieu démon",

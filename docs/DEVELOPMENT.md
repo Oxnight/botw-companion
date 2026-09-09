@@ -1,28 +1,28 @@
-# Développer BOTW Companion
+# Developing BOTW Companion
 
-Ce guide concerne le clone Git. Les joueurs doivent utiliser les installateurs
-décrits dans [`INSTALLATION.md`](INSTALLATION.md).
+This guide is for source checkouts. Players should use the packages described
+in [`INSTALLATION.md`](INSTALLATION.md).
 
-## Prérequis communs
+## Requirements
 
-- Git ;
-- Python 3.10 ou ultérieur, Python 3.12 recommandé ;
-- Node.js et npm uniquement pour les tests navigateur.
+- Git
+- Python 3.10 or later; Python 3.12 is recommended
+- Node.js and npm only for browser tests
 
-Cloner le projet :
+Clone the project:
 
 ```bash
 git clone https://github.com/Oxnight/botw-companion.git
 cd botw-companion
 ```
 
-Créer l'environnement avec `uv` :
+Create the environment with `uv`:
 
 ```bash
 uv sync
 ```
 
-Ou avec Python :
+Or use Python directly:
 
 ```bash
 python3 -m venv .venv
@@ -30,7 +30,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 ```
 
-Sous Windows PowerShell :
+On Windows PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
@@ -38,19 +38,19 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
 
-## Lancer depuis les sources
+## Running from source
 
 ```bash
 .venv/bin/python -m botw_companion interface
 ```
 
-Avec une sauvegarde précise :
+To use a specific save directory:
 
 ```bash
-.venv/bin/python -m botw_companion interface "/chemin/vers/le/slot"
+.venv/bin/python -m botw_companion interface "/path/to/slot"
 ```
 
-Commandes disponibles :
+Other commands:
 
 ```bash
 .venv/bin/python -m botw_companion analyse
@@ -59,7 +59,10 @@ Commandes disponibles :
 .venv/bin/python -m botw_companion --help
 ```
 
-## Tests Python et audits
+Command names remain French because they are part of the player-facing
+application.
+
+## Python tests and audits
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
@@ -67,10 +70,9 @@ Commandes disponibles :
 .venv/bin/python tools/check_version_consistency.py
 ```
 
-Les tests utilisent des données synthétiques. Aucune sauvegarde personnelle ne
-doit être ajoutée au dépôt.
+Tests use synthetic data. Never add a personal save to the repository.
 
-## Tests navigateur
+## Browser tests
 
 ```bash
 npm ci --ignore-scripts
@@ -78,7 +80,7 @@ npx playwright install chromium firefox webkit
 python3 tools/browser_test_server.py --port 18765
 ```
 
-Dans un autre terminal :
+In another terminal:
 
 ```bash
 node tools/browser_smoke.js http://127.0.0.1:18765 chromium
@@ -86,26 +88,26 @@ node tools/browser_smoke.js http://127.0.0.1:18765 firefox
 node tools/browser_smoke.js http://127.0.0.1:18765 webkit
 ```
 
-Sous Windows, le script `tools/run_browser_smoke.ps1` utilise Chrome, Edge et
-Firefox installés ou préparés par le workflow. L'audit axe-core couvre les
-critères WCAG automatisables ; une vérification humaine reste nécessaire.
+On Windows, `tools/run_browser_smoke.ps1` uses Chrome, Edge, and Firefox as
+installed or prepared by the workflow. axe-core covers automatable WCAG checks;
+manual accessibility review is still required.
 
-## Construction Windows x64
+## Building for Windows x64
 
-Installer Visual Studio 2022 Build Tools avec C++ et CMake, Python 3.12 x64 et
-Inno Setup 6, puis lancer :
+Install Visual Studio 2022 Build Tools with C++ and CMake, Python 3.12 x64, and
+Inno Setup 6. Then run:
 
 ```powershell
 .\tools\build_windows_app.ps1
 ```
 
-Le script compile JoyConDSU et SDL3, construit l'application PyInstaller,
-exécute son auto-test et crée le `Setup.exe` dans `dist\installer`.
+The script builds JoyConDSU and SDL3, packages the application with PyInstaller,
+runs its self-test, and writes the `Setup.exe` to `dist\installer`.
 
-## Construction macOS Apple Silicon
+## Building for macOS Apple Silicon
 
-La construction nécessite un Mac Apple Silicon, macOS 14 ou ultérieur, les
-Command Line Tools Xcode, CMake et Python 3.12 arm64 :
+Use an Apple Silicon Mac with macOS 14 or later, Xcode Command Line Tools,
+CMake, and arm64 Python 3.12:
 
 ```bash
 xcode-select --install
@@ -113,21 +115,20 @@ brew install cmake
 ./tools/build_macos_app.sh
 ```
 
-Le script compile JoyConDSU et SDL3 en arm64, vérifie les dépendances Mach-O,
-signe l'application localement et crée le DMG dans `dist/`.
+The script builds arm64 JoyConDSU and SDL3, checks Mach-O dependencies, applies
+an ad hoc signature, and writes the DMG to `dist/`.
 
-## Données générées
+## Generated data
 
-Les fichiers compilés du dossier `botw_companion/data` accélèrent le démarrage
-hors ligne et font partie du produit. Lorsqu'une source de données change,
-utiliser le script `tools/build_*.py` correspondant, vérifier le diff et lancer
-tous les tests avant de committer le résultat.
+Compiled files in `botw_companion/data` improve offline startup and are part of
+the product. When a source changes, run the applicable `tools/build_*.py`
+script, review the diff, and run the full suite before committing.
 
-Toute nouvelle bibliothèque, police, image ou source de données doit également
-être déclarée dans `THIRD_PARTY_NOTICES.md`, `DATA_SOURCES.md` ou `licenses/`
-selon le cas, puis ajoutée à `tools/audit_distribution.py`.
+Declare every new library, font, image, or data source in
+`THIRD_PARTY_NOTICES.md`, `DATA_SOURCES.md`, or `licenses/` as appropriate, and
+add it to `tools/audit_distribution.py`.
 
-## Publier une version
+## Publishing a release
 
-Seul le mainteneur prépare une version. La procédure complète se trouve dans
-[`RELEASING.md`](../RELEASING.md).
+Only the maintainer prepares releases. See [`RELEASING.md`](../RELEASING.md)
+for the complete process.

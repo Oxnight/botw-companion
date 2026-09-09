@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit le référentiel factuel des fiches (quêtes et Épreuves de l'Épée)."""
+"""Build factual guides for quests and Trial of the Sword challenges."""
 from __future__ import annotations
 
 import argparse

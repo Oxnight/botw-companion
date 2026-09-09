@@ -69,7 +69,7 @@ def _client_packet(message_type: int, payload: bytes = b"") -> bytes:
 
 
 def probe_dsu(timeout: float = 0.2) -> dict | None:
-    """Interroge réellement le port 0 DSU; aucun état n'est déduit du PID."""
+    """Probe DSU port 0 directly; never infer state from a PID."""
     request = _client_packet(DSU_MSG_PORTS, struct.pack("<IB", 1, 0))
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client:
@@ -98,7 +98,7 @@ def probe_dsu(timeout: float = 0.2) -> dict | None:
 
 
 class DsuManager:
-    """Possède le processus JoyConDSU pendant toute la vie du serveur web."""
+    """Own the JoyConDSU process for the lifetime of the web server."""
 
     def __init__(self, *, executable: Path | None = None,
                  launcher: Path | None = None, system: str | None = None,
@@ -564,7 +564,7 @@ class DsuManager:
                 return self.status()
             self._started_at = time.time()
 
-        # Laisse au binaire le temps d'ouvrir le socket, sans bloquer l'UI longtemps.
+        # Give the binary time to open its socket without blocking the UI for long.
         for _attempt in range(8):
             time.sleep(0.1)
             with self._lock:

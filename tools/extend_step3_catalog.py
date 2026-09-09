@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Construit les catégories et couches cartographiques de l'étape 3.
+"""Build the categories and map layers introduced in step 3.
 
-Le fichier ``map_locations.js`` est l'export factuel du projet public
-``MrCheeze/botw-object-map``. Il n'est pas redistribué : seules les positions
-et identifiants nécessaires au compagnon sont intégrés au catalogue final.
+``map_locations.js`` is the factual export from the public
+``MrCheeze/botw-object-map`` project. It is not redistributed; only positions
+and identifiers required by the Companion are included in the final catalog.
 """
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def object_points(data: dict, actors: list[str]) -> list[tuple[str, str, float, 
 
 
 def apply_dlc_metadata(catalog: dict) -> None:
-    """Classe tout le contenu additionnel selon la matrice officielle Nintendo."""
+    """Classify all additional content using Nintendo's official matrix."""
     lists = (
         "shrines", "shrine_chests", "world_chests", "dungeon_chests",
         "main_quests", "shrine_quests", "side_quests", "memories",
@@ -209,9 +209,9 @@ def apply_dlc_metadata(catalog: dict) -> None:
 def make_layers(catalog: dict, object_map: dict) -> list[dict]:
     layers: list[dict] = []
 
-    # Les acteurs de la carte sont les variantes initiales. Certaines familles
-    # sont remplacées par LevelSensor quand la difficulté du monde augmente :
-    # on conserve donc la famille comme filtre exact et la variante comme aide.
+    # Map actors are the initial variants. LevelSensor replaces some families
+    # as world difficulty increases:
+    # retain the family as an exact filter and the variant as guidance.
     enemy_families = (
         ("Enemy_Bokoblin", "enemy_bokoblin", "Bokoblin", True),
         ("Enemy_Moriblin", "enemy_moblin", "Moblin", True),
@@ -317,8 +317,8 @@ def make_layers(catalog: dict, object_map: dict) -> list[dict]:
                 layer["dlc"] = True
             layers.append(layer)
 
-    # Nano Gardiens présents dans les sanctuaires de combat : leurs emplacements
-    # extérieurs restent utiles pour le farm et ils reviennent à la lune de sang.
+    # Guardian Scouts in combat shrines: their exterior access points remain
+    # useful for farming, and they return after a Blood Moon.
     combat_levels = {
         "A Minor Test of Strength": "Épreuve mineure de force",
         "A Modest Test of Strength": "Épreuve moyenne de force",
@@ -359,8 +359,8 @@ def make_layers(catalog: dict, object_map: dict) -> list[dict]:
                 x=x, z=z, layer_type=layer_type, actor=actor,
             ))
 
-    # Bâtiments et enseignes suffisamment spécifiques pour éviter de placer
-    # un service sur un PNJ qui se déplace selon l'heure ou une quête.
+    # Buildings and signs specific enough to avoid placing a service on an NPC
+    # who moves based on the time or a quest.
     shop_specs = {
         "auberge": (
             "TwnObj_Village_IchikaraHotelSign_A_01", "TwnObj_Village_RitoHotelSign_A_01",
@@ -420,8 +420,8 @@ def make_layers(catalog: dict, object_map: dict) -> list[dict]:
             layer_type=layer_type,
         ))
 
-    # Les fiches de quête gardent leur point de départ principal. Les étapes
-    # suivantes deviennent aussi sélectionnables indépendamment sur la carte.
+    # Quest guides keep their main start point. Later steps can also be selected
+    # independently on the map.
     objective_index = 0
     for source_name in ("main_quests", "shrine_quests", "side_quests"):
         for quest in catalog.get(source_name, []):

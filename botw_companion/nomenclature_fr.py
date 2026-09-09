@@ -3,8 +3,8 @@ from __future__ import annotations
 import re
 
 
-# Corrections de présentation vérifiées contre les textes français européens du jeu.
-# Les identifiants, acteurs et flags ne passent jamais par cette table.
+# Presentation corrections checked against the game's European French text.
+# Identifiers, actors, and flags never pass through this table.
 DISPLAY_EXACT = {
     "Filet archéonique": "Filet antique",
     "Selle archéonique": "Selle antique",
@@ -181,7 +181,7 @@ def enemy_subtype(actor: str, previous: str) -> str:
 
 
 def normalize_catalog(data: dict) -> dict:
-    """Normalise exclusivement les libellés français visibles du catalogue."""
+    """Normalize only visible French catalog labels."""
     visible_keys = {
         "name", "label", "region", "subtype", "content_origin_label", "action",
         "completion_condition", "reward", "location", "nearby", "contenu",

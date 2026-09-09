@@ -1,4 +1,4 @@
-"""Fiches d'accompagnement individuelles et honnêtes pour chaque objectif."""
+"""Individual, evidence-based guidance for each objective."""
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -346,7 +346,7 @@ GuideBuilder = Callable[[dict, str], dict]
 
 
 def _build_guide_v1(item: dict, category: str, flags: dict[str, object]) -> dict:
-    """Retourne toujours une fiche individuelle, quelle que soit la catégorie."""
+    """Always return an individual guide, regardless of category."""
     if category in {"quetes_principales", "quetes_sanctuaires", "quetes_secondaires"}:
         return _quest(item, category, flags)
     if category in {"sanctuaires", "coffres_sanctuaires"}:
@@ -396,7 +396,7 @@ def _build_guide_v1(item: dict, category: str, flags: dict[str, object]) -> dict
         )
     if category == "tresors_chiens":
         return _dog_treasure(item, category)
-    # Garde-fou : toute future catégorie reçoit tout de même une fiche.
+    # Safeguard: every future category still receives a guide.
     done = item.get("termine", False)
     return _base(item, category, "Objectif individuel du catalogue BOTW.",
                  "Consulte ses métadonnées et accomplis l'action associée.",

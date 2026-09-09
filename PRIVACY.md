@@ -1,35 +1,35 @@
-# Confidentialité
+# Privacy
 
-BOTW Companion fonctionne localement et ne contient ni compte, ni publicité, ni
-télémétrie, ni outil d'analyse d'audience.
+BOTW Companion runs locally. It has no account system, advertising,
+telemetry, or analytics.
 
-## Données lues
+## Data read by the application
 
-L'application cherche les sauvegardes locales de Ryujinx ou Cemu, puis lit le
-slot BOTW sélectionné et sa vignette. Le moteur gyroscopique lit les capteurs de
-la manette choisie uniquement lorsqu'il est activé.
+The application searches for local Ryujinx or Cemu saves, then reads the
+selected BOTW slot and its thumbnail. The motion engine reads sensors from the
+selected controller only while DSU is enabled.
 
-## Données écrites
+## Data written by the application
 
-Le suivi manuel, les itinéraires, les préférences et les journaux restent dans :
+Manual tracking, routes, preferences, backups, and logs remain in:
 
-* Windows : `%LOCALAPPDATA%\BOTW Companion\` ;
-* macOS : `~/Library/Application Support/BOTW Companion/`.
+- Windows: `%LOCALAPPDATA%\BOTW Companion\`
+- macOS: `~/Library/Application Support/BOTW Companion/`
 
-La désinstallation conserve volontairement ce dossier. Pour effacer toutes les
-données du Companion, fermer l'application puis supprimer manuellement ce
-dossier. Cette suppression ne touche pas aux sauvegardes de l'émulateur.
+Uninstalling the application intentionally leaves this directory in place. To
+remove all Companion data, close the application and delete that directory
+manually. This does not affect emulator saves.
 
-## Réseau
+## Network access
 
-Le serveur écoute uniquement sur `127.0.0.1`. L'analyse de la sauvegarde, la
-carte, les guides et le suivi ne sont jamais envoyés sur Internet.
+The local server listens only on `127.0.0.1`. Save analysis, maps, guides, and
+tracking data are never sent over the Internet.
 
-Au démarrage, l'application peut consulter la liste publique des Releases de
-`github.com/Oxnight/botw-companion`. Cette requête ne contient ni sauvegarde,
-ni progression, ni préférence personnelle. Elle expire rapidement si la
-connexion est absente et n'empêche aucune fonction hors ligne. Une nouvelle
-tentative peut être demandée avec **Vérifier les mises à jour**.
+At startup, BOTW Companion may query the public release list for
+`github.com/Oxnight/botw-companion`. The request contains no save data,
+progress, or personal preference. It has a short timeout, and a failure never
+disables offline features. The user can retry with **Vérifier les mises à
+jour**.
 
-Le téléchargement ne commence qu'après un clic de l'utilisateur et cible
-directement le Setup Windows ou le DMG Apple Silicon publié sur GitHub.
+A download starts only after a user action and points directly to the Windows
+Setup or Apple Silicon DMG published on GitHub.

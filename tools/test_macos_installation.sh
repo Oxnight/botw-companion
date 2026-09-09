@@ -209,12 +209,12 @@ PY
 cmake -E remove_directory "$TEST_ROOT"
 mkdir -p "$CLEAN_DATA_ROOT" "$CLEAN_HOME_ROOT"
 
-# Installation propre depuis le DMG actuel.
+# Clean installation from the current DMG.
 copy_application_from_dmg "$DMG_PATH" "$CLEAN_APPLICATION"
 assert_current_application "$CLEAN_APPLICATION"
 run_current_application "$CLEAN_APPLICATION" "$CLEAN_HOME_ROOT" "$CLEAN_DATA_ROOT" 18767 no
 
-# Remplacement réel de la version de référence, sans toucher à Application Support.
+# Replace the reference version without modifying Application Support.
 if [[ -n "$PREVIOUS_DMG_PATH" ]]; then
   [[ -f "$PREVIOUS_DMG_PATH" ]] || { echo "DMG de référence introuvable : $PREVIOUS_DMG_PATH" >&2; exit 1; }
   copy_application_from_dmg "$PREVIOUS_DMG_PATH" "$UPGRADE_APPLICATION"
@@ -263,13 +263,13 @@ for name, payload in payloads.items():
     (root / name).write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 PY
 
-  # Finder remplace le bundle ; les données restent dans Application Support.
+  # Finder replaces the bundle; data remains in Application Support.
   cmake -E remove_directory "$UPGRADE_APPLICATION"
   copy_application_from_dmg "$DMG_PATH" "$UPGRADE_APPLICATION"
   assert_current_application "$UPGRADE_APPLICATION"
   run_current_application "$UPGRADE_APPLICATION" "$UPGRADE_HOME_ROOT" "" 18769 yes
 
-  # Sur macOS, désinstaller revient à retirer le bundle de Applications.
+  # On macOS, uninstalling means removing the bundle from Applications.
   cmake -E remove_directory "$UPGRADE_APPLICATION"
   [[ ! -e "$UPGRADE_APPLICATION" ]] || { echo "Le bundle n'a pas été supprimé." >&2; exit 1; }
   for name in manual_tracking.json route_sessions.json preferences.json export-reference.json; do

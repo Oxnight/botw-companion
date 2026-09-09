@@ -25,7 +25,7 @@ def _translate_text(value: str, translations: dict[str, str]) -> str:
         if match:
             suffix, content = match.group(0), content[:match.start()]
         return "Coffre - " + translations.get(content, content) + suffix
-    # Les libellés cartographiques composés contiennent souvent un nom officiel.
+    # Compound map labels often contain an official name.
     result = value
     for source in sorted(translations, key=len, reverse=True):
         if len(source) >= 5 and source in result:
@@ -48,7 +48,7 @@ def _editorial_exact() -> dict[str, str]:
 
 
 def _localize_armor_recipe_materials(catalog: dict) -> None:
-    """Applique les noms officiels aux recettes via leurs identifiants stables."""
+    """Apply official names to recipes through stable identifiers."""
     reference = _nomenclature_reference()["armor_recipe_materials_by_id"]
     for armor in catalog.get("armor_owned", []):
         for recipe in armor.get("recettes", {}).values():
@@ -59,7 +59,7 @@ def _localize_armor_recipe_materials(catalog: dict) -> None:
 
 
 def _correct_compendium_variants(catalog: dict) -> None:
-    """Distingue les variantes de Gardien que la table anglaise fusionne."""
+    """Distinguish Guardian variants merged by the English table."""
     overrides = _nomenclature_reference()["compendium_overrides_by_id"]
     for item in catalog.get("compendium", []):
         override = overrides.get(item.get("id"))
@@ -68,7 +68,7 @@ def _correct_compendium_variants(catalog: dict) -> None:
 
 
 def localize_editorial_text(value: str) -> str:
-    """Traduit une donnée éditoriale externe sans modifier sa source bibliographique."""
+    """Translate external editorial data without changing its source citation."""
     if not value:
         return value
     value = value.replace("{{List|", "").replace("<br/>", "").replace("<br>", "")
@@ -125,7 +125,7 @@ def _stage_label(flag: str, internal_id: str, index: int) -> str:
 
 
 def localize_catalog(catalog: dict) -> dict:
-    """Retourne une copie localisée, sans toucher aux flags et identifiants internes."""
+    """Return a localized copy without changing internal flags or identifiers."""
     data = copy.deepcopy(catalog)
     translations = _strings()
     technical = {

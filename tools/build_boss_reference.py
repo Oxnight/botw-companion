@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit les stratégies hors ligne vérifiées des boss et mini-boss BOTW."""
+"""Build verified offline strategies for BOTW bosses and minibosses."""
 
 from __future__ import annotations
 

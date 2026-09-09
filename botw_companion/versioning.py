@@ -1,4 +1,4 @@
-"""Métadonnées de version dérivées de l'unique fichier VERSION."""
+"""Version metadata derived from the single VERSION file."""
 
 from __future__ import annotations
 
@@ -80,9 +80,9 @@ class ReleaseVersion:
 
     @property
     def macos_bundle(self) -> str:
-        # Apple compare CFBundleVersion numériquement. Ce schéma reste croissant
-        # entre alpha, beta, RC, stable et version corrective, tout en dépassant
-        # les anciennes préversions qui utilisaient un simple numéro de build.
+        # Apple compares CFBundleVersion numerically. This scheme increases
+        # across alpha, beta, RC, stable, and patch releases while remaining
+        # above legacy prereleases that used a plain build number.
         first = self.major * 100 + self.minor
         if self.stage == "alpha":
             third = self.prerelease_number

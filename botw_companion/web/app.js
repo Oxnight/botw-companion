@@ -2949,8 +2949,8 @@ function renderMapTiles() {
             tile.src = `/map-tiles/${level.id}/${column}_${row}.webp`;
             tile.style.left = `${sourceX / level.density}px`;
             tile.style.top = `${sourceY / level.density}px`;
-            // Deux pixels source de chevauchement empêchent Safari d'exposer
-            // le fond entre deux images transformées sur des sous-pixels.
+            // A two-source-pixel overlap prevents Safari from exposing the
+            // background between images transformed onto subpixels.
             tile.style.width = `${sourceWidth / level.density + 2 / level.density}px`;
             tile.style.height = `${sourceHeight / level.density + 2 / level.density}px`;
             host.appendChild(tile);
@@ -3151,9 +3151,9 @@ function renderMap(items) {
                     p = worldPoint(x),
                     id = itemId(x);
 
-                // Les points denses restent cliquables à la souris. Leur bouton
-                // clavier équivalent est la ligne complète de la liste filtrée,
-                // ce qui évite aussi des centaines d’arrêts Tab redondants.
+                // Dense points remain clickable with a mouse. Their keyboard
+                // equivalent is the full row in the filtered list, which also
+                // avoids hundreds of redundant Tab stops.
                 return `<span aria-hidden="true" title="${esc(x.name)}" data-map-id="${esc(id)}" class="marker baseMapMarker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></span>`
             }
 

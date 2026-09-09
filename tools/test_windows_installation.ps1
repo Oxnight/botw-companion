@@ -149,7 +149,7 @@ if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
 }
 if (Test-Path -LiteralPath $testRoot) { Remove-Item -LiteralPath $testRoot -Recurse -Force }
 
-# Installation propre et autonomie complète.
+# Clean installation and complete self-containment.
 $cleanInstallRoot = Join-Path $testRoot "Installation propre"
 $cleanDataRoot = Join-Path $testRoot "Données propres"
 New-Item -ItemType Directory -Force -Path $cleanDataRoot | Out-Null
@@ -166,7 +166,7 @@ if (-not (Test-Path -LiteralPath $cleanSentinel -PathType Leaf)) {
     throw "La désinstallation a supprimé les données personnelles."
 }
 
-# Mise à niveau réelle depuis le premier installateur macOS/Windows publié ensemble.
+# Real upgrade from the first jointly published macOS and Windows installers.
 if ($PreviousInstallerPath) {
     $resolvedPreviousInstaller = Resolve-TestPath $PreviousInstallerPath
     if (-not (Test-Path -LiteralPath $resolvedPreviousInstaller -PathType Leaf)) {
@@ -210,7 +210,7 @@ if ($PreviousInstallerPath) {
         -Value '{"application":"BOTW Companion","schema_version":2,"origine":"version précédente"}' `
         -Encoding UTF8 -NoNewline
 
-    # Aucun /DIR ni /TASKS : Inno doit retrouver l'installation et ses choix.
+    # No /DIR or /TASKS: Inno must recover the installation and its choices.
     Invoke-Installer $resolvedInstaller
     Assert-InstalledLayout $upgradeInstallRoot
     $desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"

@@ -1,4 +1,4 @@
-"""BOTW Companion: analyse locale et en lecture seule des sauvegardes."""
+"""BOTW Companion: local, read-only save analysis."""
 
 from .versioning import CURRENT_VERSION
 

@@ -25,8 +25,8 @@ def report_revision_key(report: dict) -> str:
 
 
 def compact_item(item: dict) -> dict:
-    # Ces vues sont uniquement sérialisées. Réutiliser les valeurs immuables du
-    # rapport évite une seconde copie complète de milliers de marqueurs.
+    # These views are serialized only. Reusing immutable report values avoids a
+    # second complete copy of thousands of markers.
     return {key: value for key, value in item.items()
             if key not in CATALOG_HEAVY_FIELDS}
 

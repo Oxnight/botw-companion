@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Construit la référence hors ligne des accès aux coffres de BOTW.
+"""Build the offline reference for BOTW chest access.
 
-Les relations d'acteurs viennent de l'API d'ObjMap. Les formulations françaises
-sont originales et décrivent uniquement ce que les données permettent de
-prouver : accès individuel lorsqu'un paramètre ou un groupe le révèle, méthode
-par famille dans les autres cas.
+Actor relationships come from the ObjMap API. The original French descriptions
+state only what the data supports: individual access when a parameter or group
+reveals it, and a family-level method otherwise.
 """
 
 from __future__ import annotations

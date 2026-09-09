@@ -1,4 +1,4 @@
-name: Tests et versions Windows/macOS
+name: Windows and macOS tests and releases
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       validate_packages:
-        description: Construire et tester les installateurs sans publier de release
+        description: Build and test installers without publishing a release
         required: false
         default: false
         type: boolean
@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   windows:
-    name: Tester Windows x64
+    name: Test Windows x64
     runs-on: windows-2022
     timeout-minutes: 75
     env:
@@ -32,17 +32,17 @@ jobs:
       PYTHONUNBUFFERED: "1"
       BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
     steps:
-      - name: Récupérer les sources
+      - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Installer Python 3.12 x64
+      - name: Install Python 3.12 x64
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
           architecture: x64
           cache: pip
 
-      - name: Lire et vérifier la version
+      - name: Read and validate version
         id: version
         shell: pwsh
         env:
@@ -56,23 +56,23 @@ jobs:
           python @arguments
           python tools/check_version_consistency.py
 
-      - name: Auditer licences et contenu distribué
+      - name: Audit licenses and distribution contents
         run: python tools/audit_distribution.py
 
-      - name: Tester le code Python et le paquet
+      - name: Test Python code and package
         timeout-minutes: 5
         run: python -m unittest discover -s tests -v
 
-      - name: Préparer les navigateurs
+      - name: Prepare browsers
         run: |
           npm ci --ignore-scripts
           npx playwright install firefox
 
-      - name: Tester Chrome, Edge et Firefox
+      - name: Test Chrome, Edge, and Firefox
         shell: pwsh
         run: ./tools/run_browser_smoke.ps1
 
-      - name: Conserver le diagnostic navigateur en cas d'échec
+      - name: Preserve browser diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -81,7 +81,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Conserver les références visuelles de la lune de sang
+      - name: Preserve Blood Moon visual references
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: blood-moon-reference-${{ github.run_id }}-windows
@@ -89,19 +89,19 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Installer Inno Setup officiel vérifié
+      - name: Install verified official Inno Setup
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./tools/install_inno_setup_ci.ps1
 
-      - name: Construire l'application et l'installateur
+      - name: Build the application and installer
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         run: ./tools/build_windows_app.ps1
 
-      - name: Télécharger l'installateur de référence
+      - name: Download the reference installer
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         timeout-minutes: 5
@@ -115,7 +115,7 @@ jobs:
             --dir build/upgrade-reference `
             --clobber
 
-      - name: Tester l'installation autonome et la mise à niveau
+      - name: Test self-contained installation and upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         run: |
@@ -123,7 +123,7 @@ jobs:
             -InstallerPath "dist/installer/${{ steps.version.outputs.installer_name }}" `
             -PreviousInstallerPath "build/upgrade-reference/${{ steps.version.outputs.upgrade_installer_name }}"
 
-      - name: Conserver l'installateur Windows
+      - name: Preserve the Windows installer
         if: env.BUILD_PACKAGES == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -134,9 +134,9 @@ jobs:
           retention-days: 14
 
   macos:
-    name: Tester macOS Apple Silicon
-    # Playwright >= 1.59 ne prend plus WebKit en charge sur macOS 14.
-    # Le label macos-15 de GitHub Actions est un runner Apple Silicon arm64.
+    name: Test macOS Apple Silicon
+    # Playwright >= 1.59 no longer supports WebKit on macOS 14.
+    # GitHub Actions label macos-15 provides an Apple Silicon arm64 runner.
     runs-on: macos-15
     timeout-minutes: 75
     env:
@@ -146,28 +146,28 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: "14.0"
       BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
     steps:
-      - name: Récupérer les sources
+      - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Vérifier le runner Apple Silicon et macOS
+      - name: Validate Apple Silicon runner and macOS
         shell: bash
         run: |
           architecture="$(uname -m)"
           macos_version="$(sw_vers -productVersion)"
           macos_major="${macos_version%%.*}"
-          echo "Architecture : $architecture"
-          echo "macOS : $macos_version"
+          echo "Architecture: $architecture"
+          echo "macOS: $macos_version"
           test "$architecture" = "arm64"
           test "$macos_major" -ge 15
 
-      - name: Installer Python 3.12 arm64
+      - name: Install Python 3.12 arm64
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
           architecture: arm64
           cache: pip
 
-      - name: Lire et vérifier la version
+      - name: Read and validate version
         id: version
         shell: bash
         env:
@@ -181,20 +181,20 @@ jobs:
           python3 tools/release_metadata.py "${arguments[@]}"
           python3 tools/check_version_consistency.py
 
-      - name: Auditer licences et contenu distribué
+      - name: Audit licenses and distribution contents
         run: python3 tools/audit_distribution.py
 
-      - name: Tester le code Python et le paquet
+      - name: Test Python code and package
         timeout-minutes: 5
         run: python3 -m unittest discover -s tests -v
 
-      - name: Préparer Chromium, Firefox et WebKit
+      - name: Prepare Chromium, Firefox, and WebKit
         timeout-minutes: 15
         run: |
           npm ci --ignore-scripts
           npx playwright install chromium firefox webkit
 
-      - name: Tester le site dans les trois moteurs
+      - name: Test the site in all three engines
         shell: bash
         timeout-minutes: 10
         run: |
@@ -208,7 +208,7 @@ jobs:
           }
           trap stop_server EXIT
           for browser in webkit chromium firefox; do
-            echo "::group::Parcours $browser"
+            echo "::group::$browser flow"
             python3 tools/browser_test_server.py --port 18765 >"browser-test-$browser.log" 2>&1 &
             server_pid=$!
             ready=0
@@ -234,7 +234,7 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Conserver le diagnostic navigateur en cas d'échec
+      - name: Preserve browser diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -245,13 +245,13 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Construire l'application et le DMG
+      - name: Build the application and DMG
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 35
         run: ./tools/build_macos_app.sh
 
-      - name: Télécharger le DMG de référence
+      - name: Download the reference DMG
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 5
@@ -265,7 +265,7 @@ jobs:
             --dir build/upgrade-reference \
             --clobber
 
-      - name: Tester le DMG autonome et la mise à niveau
+      - name: Test self-contained DMG and upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 10
@@ -274,7 +274,7 @@ jobs:
             "dist/${{ steps.version.outputs.dmg_name }}" \
             "build/upgrade-reference/${{ steps.version.outputs.upgrade_dmg_name }}"
 
-      - name: Conserver le DMG Apple Silicon
+      - name: Preserve the Apple Silicon DMG
         if: env.BUILD_PACKAGES == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -285,22 +285,22 @@ jobs:
           retention-days: 14
 
   publish:
-    name: Publier la version GitHub
+    name: Publish the GitHub release
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [windows, macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Récupérer les sources
+      - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Installer Python 3.12
+      - name: Install Python 3.12
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
 
-      - name: Lire et vérifier la version
+      - name: Read and validate version
         id: version
         shell: bash
         env:
@@ -311,24 +311,24 @@ jobs:
             --tag "$BUILD_REF_NAME"
           python3 tools/check_version_consistency.py
 
-      - name: Auditer licences et contenu distribué
+      - name: Audit licenses and distribution contents
         run: python3 tools/audit_distribution.py
 
-      - name: Télécharger les installateurs validés
+      - name: Download validated installers
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           pattern: BOTW-Companion-${{ steps.version.outputs.display_version }}-*
           path: release-assets
           merge-multiple: true
 
-      - name: Vérifier les deux plateformes
+      - name: Verify both platforms
         shell: bash
         run: |
           test -f "release-assets/${{ steps.version.outputs.installer_name }}"
           test -f "release-assets/${{ steps.version.outputs.dmg_name }}"
           test "$(find release-assets -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
 
-      - name: Créer la GitHub Release
+      - name: Create the GitHub release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}

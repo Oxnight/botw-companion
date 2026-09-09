@@ -946,11 +946,10 @@
 }
 
 /*
- * Illustration « Éclipse de malice ».
+ * "Malice Eclipse" illustration.
  *
- * Les formes sont intégralement locales et vectorielles. Les textures ne
- * bougent pas : seules les couches de décor utilisent transform et opacity,
- * afin de rester sur le compositeur des navigateurs modernes.
+ * Every shape is local and vector-based. Textures remain fixed; only scenery
+ * layers use transform and opacity so modern browsers keep them composited.
  */
 .bloodMoonArtwork {
     display: block;

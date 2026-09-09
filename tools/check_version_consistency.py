@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Vérifie que toutes les plateformes consomment la source de version unique."""
+"""Check that every platform uses the single version source."""
 
 from __future__ import annotations
 
@@ -61,11 +61,11 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
     if not (root / "RELEASE_NOTES.md").is_file():
         findings.append("RELEASE_NOTES.md est absent")
 
-    # La version courante ne doit exister littéralement que dans sa source.
+    # The current version must appear literally only in its source file.
     excluded = {
         root / "botw_companion" / "VERSION",
-        # Le journal mentionne volontairement chaque version publiée. Il ne
-        # sert jamais de source aux scripts de construction.
+        # The changelog intentionally lists every published version. Build
+        # scripts never use it as a version source.
         root / "CHANGELOG.md",
         root / ".git",
     }

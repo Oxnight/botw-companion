@@ -1,35 +1,33 @@
-# Données, carte et propriété intellectuelle
+# Data sources and intellectual property
 
-BOTW Companion est un projet de fans non officiel. Il n'est ni affilié à
-Nintendo, ni approuvé, sponsorisé ou soutenu par Nintendo. *The Legend of
-Zelda*, *Breath of the Wild* et les éléments associés appartiennent à leurs
-titulaires respectifs. La licence MIT du dépôt porte uniquement sur le code et
-les contenus originaux de BOTW Companion ; elle ne concède aucun droit sur les
-marques, données ou ressources de tiers.
+BOTW Companion is an unofficial fan project. It is not affiliated with,
+endorsed by, sponsored by, or supported by Nintendo. *The Legend of Zelda*,
+*Breath of the Wild*, and related material belong to their respective owners.
+The repository's MIT License applies only to original BOTW Companion code and
+content. It grants no rights to third-party trademarks, data, or assets.
 
-## Registre de provenance
+## Source register
 
-| Élément | Utilisation | Source et régime identifié |
+| Material | Use | Source and identified terms |
 | --- | --- | --- |
-| Carte d'Hyrule | Image découpée en tuiles WebP hors ligne | `botw_map.png`, hébergé par ZeldaMods et extrait des fichiers du jeu. Droits Nintendo ; aucune autorisation de redistribution n'est fournie dans ce dépôt. Voir `botw_companion/web/map-tiles/SOURCE.txt`. |
-| BOTW Object Map | Coordonnées, identifiants et contrôles factuels | [zeldamods/objmap](https://github.com/zeldamods/objmap), code GPL-3.0. Aucun code de ce projet n'est embarqué ; sa licence ne couvre pas la carte extraite du jeu. |
-| MrCheeze/botw-tools | Identifiants et placements extraits des données de jeu | [MrCheeze/botw-tools](https://github.com/MrCheeze/botw-tools). Le dépôt ne publie pas de licence ; aucun de ses programmes n'est embarqué. |
-| ZeldaMods Wiki | Documentation technique et contexte des données internes | [ZeldaMods](https://zeldamods.org/wiki/Main_Page), contenu CC BY-SA sauf mention contraire. |
-| Zelda Wiki | Noms et faits de quêtes utilisés comme références | [Zelda Wiki](https://zeldawiki.wiki/), contenu rédactionnel CC BY-SA 4.0 sauf mention contraire. Valeurs sélectionnées, normalisées et traduites ; URLs conservées dans les fiches. |
-| Zelda Dungeon | Vérification de parcours, coffres, Korogus, boss et quêtes | [Zelda Dungeon](https://www.zeldadungeon.net/breath-of-the-wild-walkthrough/). Références et faits ; aucun article, média ou programme du site n'est embarqué. |
-| Palais de Zelda | Nomenclature française et contrôles croisés | [Palais de Zelda](https://www.palaiszelda.com/breathofthewild/). Noms et faits normalisés ; aucune page, image ou programme du site n'est embarqué. |
-| Nintendo | Nomenclature officielle et règles du jeu | [Page officielle du jeu](https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/). Référence factuelle uniquement. |
+| Hyrule map | Offline WebP tiles | `botw_map.png`, hosted by ZeldaMods and extracted from game files. Nintendo-owned material; this repository contains no redistribution permission. See `botw_companion/web/map-tiles/SOURCE.txt`. |
+| BOTW Object Map | Coordinates, identifiers, and factual checks | [zeldamods/objmap](https://github.com/zeldamods/objmap), GPL-3.0 code. No code from that project is bundled; its license does not cover the game-extracted map. |
+| MrCheeze/botw-tools | Identifiers and placements derived from game data | [MrCheeze/botw-tools](https://github.com/MrCheeze/botw-tools). The repository publishes no license; none of its programs are bundled. |
+| ZeldaMods Wiki | Technical documentation and internal-data context | [ZeldaMods Wiki](https://zeldamods.org/wiki/Main_Page), CC BY-SA unless a page states otherwise. |
+| Zelda Wiki | Quest names and facts used as references | [Zelda Wiki](https://zeldawiki.wiki/), editorial content generally under CC BY-SA 4.0. Selected facts were normalized and translated; source URLs remain in records. |
+| Zelda Dungeon | Checks for routes, chests, Koroks, bosses, and quests | [Zelda Dungeon](https://www.zeldadungeon.net/breath-of-the-wild-walkthrough/). Used as a factual reference; no article, media, or program is bundled. |
+| Palais de Zelda | French terminology and cross-checks | [Palais de Zelda](https://www.palaiszelda.com/breathofthewild/). Names and facts were normalized; no page, image, or program is bundled. |
+| Nintendo | Official terminology and game rules | [Official game page](https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/). Factual reference only. |
 
-Les guides hors ligne sont une synthèse éditoriale propre au projet. Leurs
-fiches conservent les liens de vérification. Les données issues de la sauvegarde
-de l'utilisateur ne sont jamais ajoutées au dépôt ni à ces jeux de données.
+Offline guides are original project summaries. Their records retain source
+links for verification. User save data is never added to the repository or
+these datasets.
 
-## Point à résoudre avant la version 1.0
+## Unresolved requirement for 1.0
 
-La carte haute définition est une ressource extraite du jeu. Une attribution
-n'équivaut pas à une autorisation. Avant une version 1.0 présentée comme une
-distribution juridiquement assainie, le projet doit soit obtenir une permission
-écrite couvrant sa redistribution, soit la remplacer par un fond original dont
-la licence autorise explicitement son inclusion dans les installateurs. Ce point
-exige une décision du mainteneur ; un test logiciel ne peut pas créer le droit
-manquant.
+The high-resolution map was extracted from the game. Attribution is not
+permission. Before presenting 1.0 as a legally cleared distribution, the
+project must either obtain written redistribution permission or replace the map
+with an original background under terms that explicitly allow inclusion in the
+installers. This requires a maintainer decision; an automated test cannot grant
+missing rights.

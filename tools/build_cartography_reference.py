@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit la référence cartographique intérieure depuis les placements BOTW extraits."""
+"""Build the interior-map reference from extracted BOTW placements."""
 
 from __future__ import annotations
 

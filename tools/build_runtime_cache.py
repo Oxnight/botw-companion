@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit les données françaises statiques utilisées au démarrage."""
+"""Build static French data used at startup."""
 
 from __future__ import annotations
 
@@ -62,8 +62,8 @@ def main() -> int:
         "reference": localize_catalog(raw_cartography),
     })
 
-    # Le fichier vient d'être créé : vider le cache si ce script est rappelé
-    # depuis un processus ayant déjà chargé une version précédente.
+    # The file was just created. Clear the cache if this script is called again
+    # from a process that already loaded an earlier version.
     from botw_companion.resources import load_catalog, load_cartography_reference  # noqa: E402
     load_catalog.cache_clear()
     load_cartography_reference.cache_clear()

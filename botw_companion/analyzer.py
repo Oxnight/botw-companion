@@ -44,7 +44,7 @@ def _tracking_id(item: dict) -> str:
 
 
 def _apply_solution_reference(catalog: dict) -> dict:
-    """Joint les preuves externes sans modifier les identifiants du catalogue."""
+    """Join external evidence without changing catalog identifiers."""
     reference = load_solution_reference()
     quest_evidence = reference.get("quests", {})
     quest_facts = reference.get("quest_facts", {})
@@ -218,7 +218,7 @@ def _evaluate(items: Iterable[dict], flags: dict[str, object], category: str) ->
         if item.get("target") is not None and item.get("flag"):
             item["progression"] = min(int(flags.get(item["flag"], 0) or 0), int(item["target"]))
             item["statut"] = f"{item['progression']}/{item['target']}" if not item["termine"] else "terminé"
-        # Les règles sont utiles pour l'audit JSON mais pas dans chaque ligne de l'UI.
+        # Rules are useful in the JSON audit but not on every UI row.
         item.pop("rule", None)
         item.pop("started_rule", None)
         elements.append(item)
@@ -325,7 +325,7 @@ def _evaluate_inventory_items(items: Iterable[dict], inventory: list[dict] | Non
 
 
 def _dlc_detection(flags: dict[str, object]) -> dict:
-    """Centralise les preuves persistantes de l'Expansion Pass dans la sauvegarde."""
+    """Collect persistent Expansion Pass evidence from the save."""
     evidence_flags = (
         "BalladOfHeroes_Activated", "100enemy_Activated", "IsGet_Obj_Motorcycle",
         "IsGet_Obj_WarpDLC", "TreasureHunt_Aoc1_RunAutoOrder",
@@ -424,8 +424,8 @@ CATEGORY_FILTERS = {
     "tresors_chiens": ("manuel", "tresors_chiens", "Trésors indiqués par les chiens"),
 }
 
-# Contrat indépendant du catalogue courant : une variation doit être examinée
-# et acceptée explicitement au lieu de modifier silencieusement un compteur.
+# Contract independent of the current catalog: review and explicitly accept a
+# variation instead of silently changing a counter.
 FILTER_EXPECTED_COUNTS = {
     "laboratoires": 2, "lieux": 168, "sanctuaires": 136, "tours": 15,
     "objectifs_quete": 77, "quetes_sanctuaires": 42, "quetes_principales": 20,
@@ -473,7 +473,7 @@ PLACEMENT_LABELS = {
 
 
 def _apply_cartography_reference(catalog: dict) -> dict:
-    """Ajoute les cartes intérieures et les positions d'obtention sans inventer un point Hyrule."""
+    """Add interior maps and acquisition positions without inventing a Hyrule point."""
     reference = load_cartography_reference()
     for item in catalog.get("shrine_chests", []):
         item.update(copy.deepcopy(reference["shrines"][item["id"]]))
@@ -500,7 +500,7 @@ def _apply_cartography_reference(catalog: dict) -> dict:
     for item in catalog.get("dungeon_chests", []):
         item.update(copy.deepcopy(reference["dungeon_chests"][str(item["hash"])]))
 
-    # Les activités intérieures sont placées à leur accès réel sur Hyrule.
+    # Interior activities are placed at their actual access point in Hyrule.
     activity_points = {
         "epreuves-debutant": (431.66, -2110.99, "Piédestal de l'Épée de légende - Forêt Korogu"),
         "epreuves-moyen": (431.66, -2110.99, "Piédestal de l'Épée de légende - Forêt Korogu"),
@@ -555,7 +555,7 @@ def _apply_cartography_reference(catalog: dict) -> dict:
 
 
 def _enrich_service_names(catalog: dict) -> None:
-    """Remplace les numéros techniques par un service et son repère géographique le plus proche."""
+    """Replace technical numbers with a service and its nearest geographic landmark."""
     labels = {
         "statue_deesse": "Statue de la Déesse", "marmite": "Marmite", "radeau": "Radeau",
         "kilton": "Boutique de Kilton", "auberge": "Auberge",
@@ -595,7 +595,7 @@ def _enrich_service_names(catalog: dict) -> None:
 
 
 def _scope_metadata(item: dict) -> None:
-    """Décrit honnêtement où et dans quel mode un élément peut être affiché."""
+    """Describe where and in which mode an item can be displayed."""
     category = item.get("categorie", "")
     layer_type = item.get("layer_type", "")
     located = item.get("x") is not None and item.get("z") is not None
@@ -911,7 +911,7 @@ def _filter_scope_audit(items: list[dict], groups: list[dict], save_mode: str) -
 
 
 def _cartography_quality_audit(items: list[dict], catalog_audit: dict) -> dict:
-    """Contrôles reproductibles des positions publiques et intérieures."""
+    """Run reproducible checks of public and interior positions."""
     invalid_world = []
     incomplete_pairs = []
     invalid_interior = []
@@ -953,7 +953,7 @@ def _cartography_quality_audit(items: list[dict], catalog_audit: dict) -> dict:
 
 
 def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
-    """Reproduit le compteur de carte, séparé de l'indice de couverture."""
+    """Reproduce the map counter independently from the coverage metric."""
     dlc_detection = _dlc_detection(flags)
     dlc_evidence = dlc_detection["detected"]
     base_components = {
@@ -1021,7 +1021,7 @@ def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
 def _completion_reference(standard: dict, categories: dict, all_items: list[dict],
                           official_map: dict, manual_required: list[dict],
                           save_context: dict | None = None) -> dict:
-    """Dérive les statuts et profils depuis le rapport au lieu d'un état figé."""
+    """Derive statuses and profiles from the report instead of frozen state."""
     resolved = []
     for source in standard["categories"]:
         item = dict(source)
@@ -1343,7 +1343,7 @@ def _guide_audit(items: list[dict], map_layers: list[dict]) -> dict:
 
 
 def _nomenclature_audit(items: list[dict], map_layers: list[dict]) -> dict:
-    """Contrôle les textes visibles, les fiches et toutes les recettes d'armures."""
+    """Check visible text, guides, and every armor-upgrade recipe."""
     reference = load_nomenclature_reference()
     visible_keys = {"name", "label", "region", "subtype", "content_origin_label",
                     "action", "completion_condition", "reward", "contenu"}
@@ -1488,7 +1488,7 @@ def analyze(flags: dict[str, object], inventory: list[dict] | None = None,
         ("medailles_kilton", "Médailles de Kilton", "kilton_medals", "flags", False),
         ("recompenses_uniques", "Récompenses uniques", "unique_rewards", "flags", False),
         ("objets_speciaux", "Objets spéciaux et DLC", "special_items", "flags", False),
-        # Ces deux vues détaillent des accomplissements déjà comptés ailleurs.
+        # These two views detail achievements already counted elsewhere.
         ("creatures_divines", "Créatures divines", "divine_beasts", "flags", True),
         ("bosses_scenarises", "Boss scénarisés et DLC", "scripted_bosses", "flags", True),
         ("bonus_expansion", "Coffres bonus de l'Expansion Pass", "expansion_bonus_chests", "flags", True),
@@ -1548,7 +1548,7 @@ def analyze(flags: dict[str, object], inventory: list[dict] | None = None,
             "libelle": "Indice de couverture automatique",
             "note": "Indice du compagnon, distinct du pourcentage de carte affiché par le jeu.",
         },
-        # Alias conservé pour les scripts qui utilisaient la première archive.
+        # Alias retained for scripts that used the first archive.
         "synthese_technique": {"faits": done, "total": total,
                                "pourcentage": round(100 * done / total, 2) if total else 0},
         "carte_officielle": official_map,

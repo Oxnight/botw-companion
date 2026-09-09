@@ -36,7 +36,7 @@ def _resource(root, relative: str):
 
 
 def windows_dsu_errors(dsu_root) -> list[str]:
-    """Valide la présence, le format et les empreintes du runtime DSU Windows."""
+    """Validate presence, format, and digests of the Windows DSU runtime."""
     errors = []
     required = ("JoyConDSU.exe", "SDL3.dll", "manifest.json", "SDL3-LICENSE.txt")
     for name in required:
@@ -76,7 +76,7 @@ def windows_dsu_errors(dsu_root) -> list[str]:
 
 
 def macos_dsu_errors(dsu_root) -> list[str]:
-    """Valide le moteur DSU Apple Silicon livré dans l'application."""
+    """Validate the Apple Silicon DSU engine bundled with the application."""
     errors = []
     required = (
         "JoyConDSU",
@@ -123,7 +123,7 @@ def macos_dsu_errors(dsu_root) -> list[str]:
 
 def offline_resource_errors(*, windows_dsu: bool = False,
                             macos_dsu: bool = False) -> list[str]:
-    """Valide toutes les ressources nécessaires sans effectuer d'accès réseau."""
+    """Validate every required resource without network access."""
     data_root = files("botw_companion.data")
     web_root = files("botw_companion.web")
     errors = [
@@ -154,7 +154,7 @@ def offline_resource_errors(*, windows_dsu: bool = False,
 
 
 def remote_runtime_dependencies() -> list[str]:
-    """Détecte une ressource Web distante requise automatiquement par l'interface."""
+    """Detect a remote web resource automatically required by the interface."""
     web_root = files("botw_companion.web")
     findings = []
     html = web_root.joinpath("index.html").read_text(encoding="utf-8")

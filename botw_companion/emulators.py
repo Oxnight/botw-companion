@@ -25,11 +25,10 @@ def emulator_save_roots(emulator: str | None = None, *, system: str | None = Non
                         environ: Mapping[str, str] | None = None,
                         home: Path | None = None,
                         which: Callable[[str], str | None] | None = None) -> list[tuple[EmulatorBackend, Path]]:
-    """Retourne les racines de sauvegarde connues dans un ordre déterministe.
+    """Return known save roots in deterministic order.
 
-    Si aucun émulateur n'est imposé, les deux backends sont inspectés. Le choix
-    final de la sauvegarde se fait ensuite sur l'horodatage interne BOTW, pas
-    sur cet ordre.
+    When no emulator is forced, inspect both backends. The final save choice is
+    based on the internal BOTW timestamp, not this order.
     """
     kwargs = {"system": system, "environ": environ, "home": home}
     if which is not None:

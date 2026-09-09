@@ -81,8 +81,8 @@ try {
     Pop-Location
 }
 
-# PyInstaller 6 place les fichiers de données du mode onedir dans _internal.
-# Les documents destinés au joueur doivent rester visibles à côté de l'exécutable.
+# PyInstaller 6 places onedir data files under _internal. Player documentation
+# must remain visible beside the executable.
 foreach ($documentName in @("LICENSE", "CHANGELOG.md", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md")) {
     $documentSource = Join-Path $projectRoot $documentName
     if (-not (Test-Path -LiteralPath $documentSource -PathType Leaf)) {

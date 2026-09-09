@@ -1,22 +1,29 @@
-# Distribution Windows
+# Windows distribution
 
-Les joueurs téléchargent le fichier dont le nom se termine par `_Setup.exe` depuis [GitHub Releases](https://github.com/Oxnight/botw-companion/releases). L’installateur x64 embarque le runtime Python, les ressources hors ligne, JoyConDSU et SDL3, puis crée les raccourcis Bureau et menu Démarrer.
+Players download the file ending in `_Setup.exe` from
+[GitHub Releases](https://github.com/Oxnight/botw-companion/releases). The x64
+installer includes Python, offline resources, JoyConDSU, and SDL3, and can
+create desktop and Start menu shortcuts.
 
-## Construction
+## Building
 
-La construction officielle s’exécute sur le runner `windows-2022` du workflow `release.yml`. Pour la reproduire sous Windows x64 :
+The official build runs on the `windows-2022` runner in
+`.github/workflows/release.yml`. To reproduce it on Windows x64:
 
 ```powershell
 .\tools\build_windows_app.ps1
 .\tools\test_windows_installation.ps1
 ```
 
-Le résultat se trouve dans :
+The installer is written to:
 
 ```text
 dist\installer\BOTW_Companion_<version>_Setup.exe
 ```
 
-L’installateur est installé par utilisateur dans `%LOCALAPPDATA%\Programs\BOTW Companion`. Les données personnelles restent séparées dans `%LOCALAPPDATA%\BOTW Companion`.
+It installs per user in `%LOCALAPPDATA%\Programs\BOTW Companion`. Personal data
+remains separate in `%LOCALAPPDATA%\BOTW Companion`.
 
-Les scripts `Installer BOTW Companion.cmd`, `Installer BOTW Companion.ps1` et `BOTW Companion.vbs` restent disponibles uniquement pour le développement depuis un clone et un environnement `.venv`.
+`Installer BOTW Companion.cmd`, `Installer BOTW Companion.ps1`, and
+`BOTW Companion.vbs` remain available only for development from a checkout with
+a `.venv` environment.

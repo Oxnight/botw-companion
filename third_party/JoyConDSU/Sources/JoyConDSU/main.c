@@ -411,8 +411,8 @@ static bool calibrate_controller(
         motion_pipeline_reset(&controller->motion);
 
         /*
-         * Laisse le flux Bluetooth et les deux capteurs se resynchroniser.
-         * Ces mesures ne doivent jamais participer au calcul du biais.
+         * Allow the Bluetooth stream and both sensors to resynchronize.
+         * These samples must never contribute to bias calculation.
          */
         bool warmup_ok = true;
         for (size_t i = 0; i < CALIBRATION_WARMUP_SAMPLES; ++i) {
@@ -1093,7 +1093,7 @@ int main(int argc, char *argv[])
             socket_handle,
             &clients,
             server_id,
-            /* La télémétrie ne doit jamais couper un flux frais et calibré. */
+            /* Telemetry must never stop a fresh, calibrated stream. */
             controller_available(&controller, &telemetry, SDL_GetTicksNS()),
             &crc_warning_printed,
             &telemetry
@@ -1152,10 +1152,9 @@ int main(int argc, char *argv[])
         }
 
         /*
-         * Un événement capteur réveille naturellement la boucle à environ
-         * 200 Hz. Le délai de 25 ms n'est qu'un filet de sécurité pour UDP,
-         * l'arrêt et la détection d'une pause du capteur : aucun polling à
-         * haute fréquence n'a lieu entre deux véritables mesures.
+         * A sensor event naturally wakes the loop at about 200 Hz. The 25 ms
+         * delay only safeguards UDP, shutdown, and detection of a paused
+         * sensor; no high-frequency polling occurs between real samples.
          */
         SDL_Event waited_event;
         if (SDL_WaitEventTimeout(

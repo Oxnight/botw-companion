@@ -19,7 +19,7 @@ def default_runtime_state_path() -> Path:
 
 
 class RuntimeStateStore:
-    """État local non exportable : dernière source et historique de synchronisation."""
+    """Non-exportable local state: last source and synchronization history."""
 
     def __init__(self, path: str | Path | None = None):
         self.path = Path(path) if path is not None else default_runtime_state_path()

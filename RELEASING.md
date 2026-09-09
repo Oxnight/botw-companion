@@ -1,17 +1,17 @@
-# Publier une version
+# Releasing BOTW Companion
 
-Trois fichiers sont à modifier pour préparer une version :
+Update these three files when preparing a release:
 
-1. `botw_companion/VERSION`, qui contient la version unique du projet ;
-2. `RELEASE_NOTES.md`, qui décrit clairement les changements pour les joueurs ;
-3. `CHANGELOG.md`, où la section **À venir** est déplacée sous la nouvelle
-   version avec la date au format `AAAA-MM-JJ`.
+1. `botw_companion/VERSION`, the single source of the project version;
+2. `RELEASE_NOTES.md`, a concise player-facing summary;
+3. `CHANGELOG.md`, moving **Unreleased** entries under the new version and an
+   ISO `YYYY-MM-DD` date.
 
-Les formats acceptés sont `X.Y.Z`, `X.Y.Z-alpha.N`, `X.Y.Z-beta.N` et `X.Y.Z-rc.N`. Les versions Python, Windows et macOS, les noms des installateurs et le titre GitHub sont tous calculés à partir de cette valeur.
+Supported versions are `X.Y.Z`, `X.Y.Z-alpha.N`, `X.Y.Z-beta.N`, and
+`X.Y.Z-rc.N`. Python metadata, native application versions, installer names,
+and the GitHub release title are derived from this value.
 
-Après le commit et le push, les jobs Windows et macOS exécutent les tests sans construire ni publier d’installateur. Pour valider aussi les deux paquets avant le tag, lancer manuellement le workflow avec l’option **Construire et tester les installateurs** ; cette vérification ne publie rien. Lorsque tout est vert, créer puis pousser le tag correspondant.
-
-Avant le commit, lancer l'audit local :
+Before committing, run:
 
 ```bash
 python tools/audit_distribution.py
@@ -19,21 +19,31 @@ python tools/check_version_consistency.py
 python -m unittest discover -s tests
 ```
 
-Créer ensuite le tag :
+After the commit is pushed, Windows and macOS jobs run the test suite without
+publishing installers. To validate both packages before tagging, run the
+workflow manually with **Build and test installers** enabled. This run does not
+publish a release.
+
+When both jobs pass, create and push the matching annotated tag:
 
 ```bash
 git tag -a vX.Y.Z-alpha.N -m "BOTW Companion X.Y.Z alpha N"
 git push origin vX.Y.Z-alpha.N
 ```
 
-Le tag déclenche la construction native, les tests d’installation propre et de mise à niveau, puis la publication. Une version alpha, beta ou RC est marquée comme préversion. Une version sans suffixe, comme `v1.0.0`, est publiée comme version stable et devient la version la plus récente.
+The tag builds both native packages, tests clean installation and upgrade
+paths, and then publishes the release. Alpha, beta, and release-candidate tags
+become prereleases. A tag without a suffix, such as `v1.0.0`, becomes a stable
+release.
 
-La release contient uniquement l’installateur Windows et le DMG Apple Silicon, en plus des archives de code source ajoutées automatiquement par GitHub.
+The release must contain exactly the Windows installer and Apple Silicon DMG,
+in addition to the source archives GitHub adds automatically. It must not
+contain a checksum text file.
 
-Tout ajout ou changement de runtime, bibliothèque native, source de données,
-image, police ou outil inclus impose de mettre à jour les avis, le dossier
-`licenses/` et l'audit avant de créer le tag.
+Any change to a runtime, native library, data source, image, font, or bundled
+tool requires an update to the applicable notices, `licenses/` contents, and
+distribution audit before tagging.
 
-Après la publication, vérifier le titre, le statut préversion/stable, les deux
-installateurs et les liens du journal des versions. Un tag publié ne doit pas
-être déplacé : toute correction passe par une nouvelle version.
+After publication, verify the title, prerelease or stable status, both
+installers, and changelog links. Never move a published tag; issue a new
+version for every correction.

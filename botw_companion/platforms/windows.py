@@ -34,7 +34,7 @@ class PROCESSENTRY32W(ctypes.Structure):
 
 
 class WindowsNamedMutex:
-    """Verrou Win32 conservé pendant toute la vie d'une instance serveur."""
+    """Win32 lock held for the lifetime of a server instance."""
 
     def __init__(self, name: str, *, kernel32=None, get_last_error=None) -> None:
         if kernel32 is None:
@@ -77,7 +77,7 @@ class WindowsNamedMutex:
 
 
 class WindowsConsoleShutdownHandler:
-    """Convertit les événements console, fermeture et session en arrêt propre."""
+    """Convert console, close, and session events into a clean shutdown."""
 
     def __init__(self, callback: Callable[[str], None], *, kernel32=None) -> None:
         self.callback = callback
@@ -114,7 +114,7 @@ class WindowsConsoleShutdownHandler:
 
 
 def running_process_names(*, kernel32=None) -> set[str]:
-    """Énumère les exécutables sans lancer tasklist ni PowerShell."""
+    """Enumerate executables without starting tasklist or PowerShell."""
     if kernel32 is None:
         if os.name != "nt":
             return set()
@@ -145,7 +145,7 @@ def running_process_names(*, kernel32=None) -> set[str]:
 
 
 def running_process_paths(*, kernel32=None) -> list[Path]:
-    """Retourne les chemins exécutables accessibles, sans PowerShell/tasklist."""
+    """Return accessible executable paths without PowerShell or tasklist."""
     if kernel32 is None:
         if os.name != "nt":
             return []

@@ -34,7 +34,7 @@ def _botw_save_time(value: float) -> str:
 
 @dataclass(frozen=True)
 class SaveSnapshot:
-    """Copie cohérente des deux fichiers d'un slot, capturée avant l'analyse."""
+    """Consistent copy of both slot files captured before analysis."""
 
     slot_path: Path
     caption_data: bytes
@@ -43,7 +43,7 @@ class SaveSnapshot:
 
 
 class ReliableSaveSync:
-    """Cache le dernier rapport valide et ne lit qu'un fichier devenu stable."""
+    """Cache the last valid report and read only files that have become stable."""
 
     def __init__(self, save_path: str | Path | None, payload_factory: Callable[[], dict],
                  stability_checks: int = 3, stability_delay: float = 0.12,
@@ -274,7 +274,7 @@ class ReliableSaveSync:
         }
 
     def check(self, force: bool = False, include_report: bool = False) -> dict:
-        """Vérifie la source; conserve le dernier rapport si l’émulateur écrit encore."""
+        """Check the source and retain the last report while the emulator writes."""
         with self._lock:
             self._state["last_check_at"] = _iso_now()
             source_unavailable = False
@@ -337,7 +337,7 @@ class ReliableSaveSync:
                 "emulator_label": backend.label if backend else None,
             })
 
-            # Un slot plus ancien ne doit jamais remplacer le dernier rapport valide.
+            # An older slot must never replace the latest valid report.
             if self._report is not None and self._internal_timestamp is not None and timestamp < self._internal_timestamp:
                 current = next((item for item in observations
                                 if self._slot_path is not None and item["slot"] == self._slot_path), selected)
@@ -349,8 +349,9 @@ class ReliableSaveSync:
                               event_kind="erreur" if expired else "attente")
                 return self._cached_result(include_report=include_report)
 
-            # La date système peut changer sur un ancien slot (copie, antivirus, Finder).
-            # Elle est informative uniquement : l'horodatage interne décide du slot courant.
+            # The filesystem timestamp can change on an old slot due to a copy,
+            # antivirus, or Finder. It is informational only; the internal
+            # timestamp determines the current slot.
             hottest = max(observations, key=lambda item: int(item["mtime_ns"]))
             ignored = None
             unknown_new = None
@@ -399,8 +400,8 @@ class ReliableSaveSync:
             stable_status, stable, stable_error = self._stable_snapshot(slot, files)
             if stable_status != "stable" or stable is None:
                 expired = self._pending_expired(selected)
-                # Un fichier momentanément tronqué est indiscernable d'une écriture
-                # Émulateur : on ne le déclare corrompu qu’après l’attente maximale.
+                # A temporarily truncated file is indistinguishable from an
+                # emulator write. Report corruption only after the maximum wait.
                 status = "fichier_corrompu" if expired else "ecriture_en_cours"
                 label = (f"Fichier corrompu ou incomplet dans le slot {slot.name}"
                          if status == "fichier_corrompu" else f"Écriture en cours dans le slot {slot.name}")

@@ -15,7 +15,7 @@ int main(void)
     MotionSample sample = {0};
     motion_pipeline_reset(&pipeline);
 
-    /* Une mesure complète conserve la date réelle du capteur. */
+    /* A complete sample retains the sensor's actual timestamp. */
     assert(!motion_pipeline_push(
         &pipeline, MOTION_SENSOR_GYRO, vec(1.0f, 2.0f, 3.0f),
         100000000ULL, 500000000ULL, &sample
@@ -34,7 +34,7 @@ int main(void)
     assert(stats->accepted_gyro == 1 && stats->accepted_accel == 1);
     assert(stats->emitted_samples == 1);
 
-    /* Les doublons et les dates régressives ne sont jamais réémis. */
+    /* Never emit duplicates or regressing timestamps. */
     assert(!motion_pipeline_push(
         &pipeline, MOTION_SENSOR_ACCEL, vec(7.0f, 8.0f, 9.0f),
         100000000ULL, 500000200ULL, &sample
@@ -46,13 +46,13 @@ int main(void)
     ));
     assert(motion_pipeline_stats(&pipeline)->regressive_timestamps == 1);
 
-    /* Un gyro trop éloigné de l'accéléromètre n'est pas apparié. */
+    /* Do not pair a gyro sample too far from the accelerometer sample. */
     assert(!motion_pipeline_push(
         &pipeline, MOTION_SENSOR_ACCEL, vec(1.0f, 1.0f, 1.0f),
         110000000ULL, 510000000ULL, &sample
     ));
 
-    /* L'ordre inverse accel puis gyro est également accepté. */
+    /* Also accept the reverse accelerometer-then-gyro order. */
     motion_pipeline_reset(&pipeline);
     assert(!motion_pipeline_push(
         &pipeline, MOTION_SENSOR_ACCEL, vec(0.0f, 9.8f, 0.0f),
@@ -64,7 +64,7 @@ int main(void)
     ));
     assert(sample.timestamp_ns == 600000000ULL);
 
-    /* La date hôte sert de secours quand le pilote ne fournit pas de date. */
+    /* Use host time when the driver provides no timestamp. */
     motion_pipeline_reset(&pipeline);
     assert(!motion_pipeline_push(
         &pipeline, MOTION_SENSOR_GYRO, vec(2.0f, 0.0f, 0.0f),
@@ -77,7 +77,7 @@ int main(void)
     assert(sample.timestamp_ns == 700100000ULL);
     assert(motion_pipeline_stats(&pipeline)->fallback_timestamps == 2);
 
-    /* La cadence et le jitter sont calculés depuis les réceptions réelles. */
+    /* Calculate sample rate and jitter from actual receive times. */
     motion_pipeline_reset(&pipeline);
     for (uint64_t i = 0; i < 3; ++i) {
         const uint64_t sensor_ns = 800000000ULL + i * 5000000ULL;
@@ -95,7 +95,7 @@ int main(void)
     assert(motion_pipeline_jitter_mean_ms(&pipeline) < 0.001);
     assert(motion_pipeline_jitter_max_ms(&pipeline) < 0.001);
 
-    /* Trois mesures livrées ensemble toutes les 15 ms restent un flux 200 Hz. */
+    /* Three samples delivered together every 15 ms remain a 200 Hz stream. */
     motion_pipeline_reset(&pipeline);
     for (uint64_t i = 0; i < 7; ++i) {
         const uint64_t sensor_ns = 1000000000ULL + i * 5000000ULL;
@@ -115,7 +115,7 @@ int main(void)
     assert(motion_pipeline_latest_gyro(&pipeline, &latest));
     assert(latest.x == 0.1f);
 
-    /* Une mesure ancienne est refusée, sans avancer la chronologie DSU. */
+    /* Reject a stale sample without advancing the DSU timeline. */
     MotionDsuTimeline timeline = {0};
     MotionSample timestamped = {
         .gyro_rad_s = vec(0.0f, 0.0f, 0.0f),
@@ -129,7 +129,7 @@ int main(void)
     ));
     assert(timeline.last_timestamp_us == 0);
 
-    /* Une reconnexion ne peut jamais faire régresser l'horodatage transmis. */
+    /* Reconnection must never regress the transmitted timestamp. */
     assert(motion_sample_to_dsu_timestamp(
         &timeline, &timestamped, 1050000000ULL, 100000000ULL, &timestamp_us
     ));
@@ -142,8 +142,8 @@ int main(void)
     assert(timestamp_us == 1000001ULL);
 
     /*
-     * L'horloge matérielle peut être en avance sur SDL. La fraîcheur dépend
-     * exclusivement de l'heure de réception, jamais de cette autre horloge.
+     * The hardware clock may be ahead of SDL. Freshness depends exclusively on
+     * receive time, never on the other clock.
      */
     timestamped.timestamp_ns = 5000000000ULL;
     timestamped.received_timestamp_ns = 2000000000ULL;

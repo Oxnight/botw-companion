@@ -1,1 +1,1 @@
-"""Données générées et versionnées du catalogue BOTW."""
+"""Generated and versioned BOTW catalog data."""

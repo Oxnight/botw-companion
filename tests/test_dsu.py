@@ -274,8 +274,8 @@ class DsuManagerTests(unittest.TestCase):
 
     def test_real_protocol_probe_marks_controller_ready(self):
         manager = self.manager(lambda: {"connected": True, "motion": True})
-        # Première sonde = vérification du port avant lancement; la simulation
-        # d'un serveur déjà présent doit empêcher une seconde instance.
+        # First probe: check the port before launch. Simulating an existing
+        # server must prevent a second instance.
         result = manager.start()
         self.assertEqual(result["state"], "error")
         self.assertIn("déjà utilisé", result["message"])

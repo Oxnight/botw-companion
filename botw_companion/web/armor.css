@@ -1944,7 +1944,7 @@ aside {
     min-width: 0;
 }
 
-/* Accessibilité clavier et premier lancement */
+/* Keyboard accessibility and first launch */
 .srOnly {
     position: absolute;
     width: 1px;

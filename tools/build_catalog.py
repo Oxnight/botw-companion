@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit les données distribuées depuis les dépôts tiers documentés."""
+"""Build distributed data from documented third-party repositories."""
 from __future__ import annotations
 
 import argparse

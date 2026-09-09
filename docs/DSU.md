@@ -1,51 +1,47 @@
-# Configurer le gyroscope DSU
+# Setting up DSU motion controls
 
-BOTW Companion intègre un serveur compatible avec le protocole
-Cemuhook/DSU. Il transmet localement les capteurs d'une manette compatible vers
-Ryujinx ou Cemu sur `127.0.0.1:26760`.
+BOTW Companion includes a Cemuhook/DSU-compatible server. It sends motion data
+from a supported controller to Ryujinx or Cemu on `127.0.0.1:26760`.
 
-## Manettes
+## Controllers
 
-Le moteur utilise SDL3 et n'affiche comme activables que les sources fournissant
-à la fois un gyroscope et un accéléromètre. Une paire de Joy-Con est regroupée
-comme une seule source en mode grip. La détection réelle dépend du matériel, de
-sa connexion et de sa prise en charge par SDL3 sur le système utilisé.
+The engine uses SDL3 and offers only sources that provide both a gyroscope and
+an accelerometer. A Joy-Con pair is grouped as one grip-style source. Actual
+support depends on the hardware, connection, operating system, and SDL3 driver.
 
-## Dans BOTW Companion
+## In BOTW Companion
 
-1. Connecter la manette en Bluetooth ou en USB.
-2. Ouvrir la section **Gyroscope universel**.
-3. Choisir la source proposée.
-4. Cliquer sur **Activer**.
-5. Laisser la manette immobile pendant la calibration.
-6. Attendre l'état **Gyroscope prêt**.
+1. Connect the controller over Bluetooth or USB.
+2. Open **Gyroscope universel**.
+3. Select an available source.
+4. Choose **Activer**.
+5. Keep the controller still during calibration.
+6. Wait for **Gyroscope prêt**.
 
-Le diagnostic affiche notamment la cadence, le jitter, l'âge des échantillons,
-la qualité de la calibration, les anomalies et l'état réseau.
+Diagnostics include sample rate, jitter, sample age, calibration quality,
+anomalies, and network state.
 
-## Dans l'émulateur
+## In the emulator
 
-Configurer une source de mouvement Cemuhook/DSU avec :
+Configure a Cemuhook/DSU motion source with:
 
 ```text
-Hôte : 127.0.0.1
-Port : 26760
-Slot : 1
+Host: 127.0.0.1
+Port: 26760
+Slot: 1
 ```
 
-Les noms exacts des menus changent selon la version de l'émulateur. Dans Cemu,
-la source se trouve dans les paramètres d'entrée ou de mouvement du Wii U
-GamePad. Dans les versions de Ryujinx qui acceptent Cemuhook, elle se trouve
-dans la configuration du mouvement de la manette.
+Menu names vary by emulator version. In Cemu, the source is in the Wii U
+GamePad input or motion settings. Ryujinx versions with Cemuhook support expose
+it in controller motion settings.
 
-Le serveur transporte uniquement le mouvement. Les boutons et sticks restent
-configurés normalement dans l'émulateur.
+DSU carries motion only. Configure buttons and sticks normally in the emulator.
 
-## Arrêt et données locales
+## Shutdown and local data
 
-Le moteur DSU est désactivé par défaut et ne démarre qu'après une action dans
-l'interface. Son journal est enregistré sous `joycon-dsu.log` dans le dossier
-de données de BOTW Companion. L'interface indique son chemin exact.
+The DSU engine is disabled by default and starts only after an action in the
+interface. Its log is stored as `joycon-dsu.log` in the BOTW Companion data
+directory; the interface shows the exact path.
 
-En cas de problème de détection ou de port, suivre la section
-[Dépannage du gyroscope](TROUBLESHOOTING.md#le-gyroscope-ne-fonctionne-pas).
+For controller detection or port errors, see
+[DSU motion controls do not work](TROUBLESHOOTING.md#dsu-motion-controls-do-not-work).

@@ -1,22 +1,22 @@
-# Politique de sécurité
+# Security policy
 
-## Versions prises en charge
+## Supported versions
 
-Seule la dernière version publiée reçoit des correctifs de sécurité. Les
-anciennes préversions doivent être mises à jour avant tout diagnostic.
+Only the latest published version receives security fixes. Update an older
+prerelease before requesting support.
 
-## Signaler une vulnérabilité
+## Reporting a vulnerability
 
-Ne pas publier de secret, de sauvegarde ni de détail exploitable dans une issue
-publique. Utiliser **Report a vulnerability** dans l'onglet **Security** :
+Do not publish secrets, saves, or exploitable details in a public issue. Use
+**Report a vulnerability** in the repository's **Security** tab:
 <https://github.com/Oxnight/botw-companion/security/advisories/new>.
 
-Si ce bouton n'est pas disponible, ouvrir une issue sans détail sensible pour
-demander un canal privé. Ne publier l'explication technique qu'après avoir reçu
-ce canal.
+If private vulnerability reporting is unavailable, open an issue without
+sensitive details and ask the maintainer for a private contact channel. Share
+technical details only after that channel has been established.
 
-Indiquer la version, le système, les étapes minimales de reproduction et
-l'impact attendu. Préférer un exemple synthétique sans donnée personnelle.
+Include the affected version and platform, minimal reproduction steps, and the
+expected impact. Prefer synthetic examples without personal data.
 
-Les préversions ne sont pas signées par un certificat commercial. Télécharger
-les exécutables uniquement depuis les Releases du dépôt officiel.
+Prereleases are not signed with a commercial code-signing certificate. Only
+download executables from the official repository's Releases page.

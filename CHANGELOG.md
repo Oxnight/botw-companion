@@ -1,150 +1,154 @@
-# Journal des versions
+# Changelog
 
-Ce fichier recense les changements visibles ou importants de BOTW Companion.
-Il suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et le projet
-utilise [Semantic Versioning](https://semver.org/lang/fr/).
+All notable changes to BOTW Companion are documented here. The format is based
+on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
+uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [À venir]
+## [Unreleased]
+
+## [0.40.0-alpha.37] - 2026-09-09
+
+### Changed
+
+- Rewrote public project documentation in concise American English.
+- Translated existing comments and docstrings while keeping the application
+  and player-facing messages in French.
+
+### Security
+
+- Added repository hygiene and public-language checks to the distribution
+  audit.
 
 ## [0.40.0-alpha.36] - 2026-09-09
 
-### Ajouté
+### Added
 
-- Centre d’aide hors ligne composé de douze chapitres couvrant toutes les
-  fonctions principales du Companion.
-- Parcours guidé de neuf étapes qui met en évidence les commandes réelles sans
-  déclencher d’action ni modifier les données.
-- Reprise du parcours interrompu, aide contextuelle par chapitre et mémorisation
-  de la version du tutoriel terminée.
+- Twelve-chapter offline help covering every major Companion feature.
+- Nine-step guided tour that highlights real controls without triggering
+  actions or changing data.
+- Tour resume support, contextual help by chapter, and completed tutorial
+  version tracking.
 
-### Accessibilité
+### Accessibility
 
-- Navigation intégrale au clavier, piège de focus, retour au point d’ouverture,
-  annonces d’étape et comportement adapté à la réduction des animations.
+- Full keyboard navigation, focus trapping and restoration, step
+  announcements, and reduced-motion support.
 
 ## [0.40.0-alpha.35] - 2026-09-09
 
-### Modifié
+### Changed
 
-- Séparation des commandes de synchronisation et des actions générales de
-  l’application dans le panneau de sauvegarde.
-- Agrandissement des anneaux de progression et adaptation de leur typographie
-  aux valeurs longues et aux écrans étroits.
+- Split save synchronization controls from general application actions.
+- Enlarged progress rings and made their type responsive to long values and
+  narrow screens.
 
 ## [0.40.0-alpha.34] - 2026-09-09
 
-### Ajouté
+### Added
 
-- Vérification non bloquante des nouvelles versions publiées sur GitHub.
-- Téléchargement guidé du Setup Windows ou du DMG Apple Silicon et commande de
-  vérification manuelle.
+- Non-blocking checks for new GitHub releases.
+- Guided Windows Setup or Apple Silicon DMG download and a manual update check.
 
-### Corrigé
+### Fixed
 
-- Lecture de la victoire persistante contre Ganon depuis `caption.sav`.
-- Détection du dernier marqueur de carte de l’Ode aux Prodiges à partir de ses
-  preuves persistantes.
-- Retrait des trois filaments rouges sous la lune de sang.
+- Read persistent Ganon victory state from `caption.sav`.
+- Detect the final Champions' Ballad map marker from durable save evidence.
+- Removed the three red strands beneath the Blood Moon.
 
 ## [0.40.0-alpha.33] - 2026-09-08
 
-### Ajouté
+### Added
 
-- Guides distincts pour l'installation, le gyroscope DSU, le dépannage et le
-  développement.
-- Instructions de contribution et historique public des versions.
-- Contrôles automatiques de la structure et des liens de la documentation.
+- Separate installation, DSU, troubleshooting, and development guides.
+- Contribution instructions and a public release history.
+- Automated documentation structure and link checks.
 
-### Modifié
+### Changed
 
-- README recentré sur la présentation du projet et le démarrage rapide.
-- Documents utiles aux joueurs inclus dans les applications autonomes.
+- Refocused the README on the project and quick start.
+- Bundled player documentation in the self-contained applications.
 
 ## [0.40.0-alpha.32] - 2026-09-08
 
-### Ajouté
+### Added
 
-- Licences complètes de Python 3.12 et SDL3 dans les deux applications.
-- Registre de provenance des données, politique de confidentialité et politique
-  de sécurité.
-- Audit bloquant des composants distribués et des actifs de release.
+- Full Python 3.12 and SDL3 license texts in both applications.
+- Data provenance, privacy, and security policies.
+- Blocking audits of bundled components and release assets.
 
 ## [0.40.0-alpha.31] - 2026-09-08
 
-### Ajouté
+### Added
 
-- Guide de premier lancement accessible et réouvrable depuis l'interface.
-- Navigation au clavier, focus visible, annonces pour lecteurs d'écran et prise
-  en charge de la réduction des animations.
-- Audit automatisé WCAG 2.2 AA dans les parcours navigateur.
+- A first-launch guide that can be reopened from the interface.
+- Keyboard navigation, visible focus, screen-reader announcements, and
+  reduced-motion support.
+- Automated WCAG 2.2 AA checks in browser tests.
 
 ## [0.40.0-alpha.30] - 2026-09-08
 
-### Modifié
+### Changed
 
-- Workflow rendu indépendant d'une version précise.
-- Tags, titres de release et noms d'installateurs dérivés d'une source de
-  version unique.
-- Commits et pull requests limités aux tests ; publication réservée aux tags.
+- Made the workflow independent of a specific version number.
+- Derived tags, release titles, and installer names from one version source.
+- Limited commits and pull requests to tests; releases require a tag.
 
 ## [0.40.0-alpha.29] - 2026-09-08
 
-### Modifié
+### Changed
 
-- Validation des installations propres et des mises à niveau depuis
-  l'alpha 24 sur Windows et macOS.
-- Conservation vérifiée du suivi manuel, des itinéraires, des préférences et
-  des raccourcis.
+- Validated clean installs and upgrades from alpha 24 on Windows and macOS.
+- Verified preservation of manual tracking, routes, preferences, and
+  shortcuts.
 
 ## [0.40.0-alpha.28] - 2026-09-08
 
-### Modifié
+### Changed
 
-- Refonte complète des états visuels et de l'animation de la lune de sang.
-- Références visuelles automatiques ajoutées aux tests navigateur.
+- Rebuilt the Blood Moon visual states and animation.
+- Added automated visual references to browser tests.
 
 ## [0.40.0-alpha.27] - 2026-09-08
 
-### Sécurité
+### Security
 
-- Jeton de session obligatoire pour les actions locales sensibles.
-- Vérification de l'hôte, de l'origine et du contexte des requêtes.
-- Ajout d'en-têtes de protection et refus des origines distantes.
+- Required a session token for sensitive local actions.
+- Validated request host, origin, and context.
+- Added security headers and rejected remote origins.
 
 ## [0.40.0-alpha.26] - 2026-09-08
 
-### Modifié
+### Changed
 
-- Traduction française complétée et audit récursif de la nomenclature.
-- Ressources françaises précompilées pour conserver un démarrage rapide hors
-  ligne.
+- Completed the French localization and recursive terminology audit.
+- Precompiled French resources to retain fast offline startup.
 
 ## [0.40.0-alpha.25] - 2026-09-08
 
-### Corrigé
+### Fixed
 
-- Détection permanente de la victoire contre Ganon grâce à `GameClear`.
-- Formules du pourcentage officiel et du profil de complétion rendues
-  indépendantes et dédupliquées.
-- Liste des éléments qui empêchent encore d'atteindre 100 %.
+- Detected persistent Ganon victory through `GameClear`.
+- Kept official map and Companion completion formulas independent and
+  deduplicated.
+- Listed items still preventing 100% completion.
 
 ## [0.40.0-alpha.24] - 2026-09-07
 
-### Ajouté
+### Added
 
-- Application et DMG autonomes pour macOS 14 ou ultérieur sur Apple Silicon.
-- Runtime Python, JoyConDSU et SDL3 intégrés sans dépendance à Homebrew ou
-  Xcode chez le joueur.
+- Self-contained application and DMG for macOS 14 or later on Apple Silicon.
+- Bundled Python, JoyConDSU, and SDL3 without requiring Homebrew or Xcode on a
+  player's Mac.
 
 ## [0.40.0-alpha.23] - 2026-09-02
 
-### Ajouté
+### Added
 
-- Installateur Windows x64 autonome avec runtime Python, JoyConDSU et SDL3.
-- Raccourcis Bureau et menu Démarrer et conservation des données à la mise à
-  niveau.
+- Self-contained Windows x64 installer with Python, JoyConDSU, and SDL3.
+- Desktop and Start menu shortcuts with user-data preservation on upgrade.
 
-[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.36...HEAD
+[Unreleased]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.37...HEAD
+[0.40.0-alpha.37]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.36...v0.40.0-alpha.37
 [0.40.0-alpha.36]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.35...v0.40.0-alpha.36
 [0.40.0-alpha.35]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.34...v0.40.0-alpha.35
 [0.40.0-alpha.34]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.33...v0.40.0-alpha.34

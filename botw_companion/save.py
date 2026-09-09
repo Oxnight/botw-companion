@@ -41,10 +41,10 @@ def parse_data(data: bytes, source: str | Path = "mémoire") -> dict[str, object
     hashes = load_hashes()
     result: dict[str, object] = {}
 
-    # Les entrées GameData sont alignées sur 8 octets : hash u32 + valeur.
-    # Les scalaires suffisent au comparateur. Parcourir chaque bloc reste sûr
-    # pour les chaînes/tableaux : leurs blocs de données ne correspondent en
-    # pratique à aucun hash recherché et sont ignorés.
+    # GameData entries are aligned to eight bytes: u32 hash followed by value.
+    # Scalar entries are sufficient for comparison. Scanning every block is
+    # safe for strings and arrays: their data blocks do not match any requested
+    # hash in practice and are ignored.
     for offset in range(12, len(data) - 4, 8):
         hash_id = struct.unpack_from(endian + "I", data, offset)[0]
         descriptor = hashes.get(hash_id)
@@ -71,7 +71,7 @@ _ARMOR_RE = re.compile(r"Armor_\d{3}_(?:Head|Upper|Lower)$")
 
 
 def _array_base(data: bytes, endian: str, hash_id: int) -> int:
-    """Trouve le premier bloc d'un tableau GameData aligné sur 8 octets."""
+    """Find the first eight-byte-aligned block of a GameData array."""
     for offset in range(12, len(data) - 4, 8):
         if struct.unpack_from(endian + "I", data, offset)[0] == hash_id:
             return offset + 4
@@ -79,7 +79,7 @@ def _array_base(data: bytes, endian: str, hash_id: int) -> int:
 
 
 def parse_inventory_data(data: bytes, source: str | Path = "mémoire") -> list[dict[str, object]]:
-    """Lit les identifiants et quantités des emplacements d'inventaire BOTW."""
+    """Read BOTW inventory-slot identifiers and quantities."""
     if len(data) < 16 or data[-4:] != b"\xff\xff\xff\xff":
         raise SaveError(f"Fichier incomplet ou invalide : {source}")
     endian = _endian(data)
@@ -124,7 +124,7 @@ def _candidate_slots(path: Path) -> list[Path]:
 
 
 def find_game_save_roots(search_roots: list[tuple[EmulatorBackend, Path]] | None = None) -> list[tuple[EmulatorBackend, Path]]:
-    """Recense les sauvegardes BOTW de tous les émulateurs supportés."""
+    """List BOTW saves from every supported emulator."""
     roots = search_roots if search_roots is not None else emulator_save_roots()
     candidates: dict[Path, EmulatorBackend] = {}
     for backend, root in roots:
@@ -143,7 +143,7 @@ def find_game_save_roots(search_roots: list[tuple[EmulatorBackend, Path]] | None
 
 
 def discover_save_root(search_roots: list[tuple[EmulatorBackend, Path]] | None = None) -> tuple[EmulatorBackend, Path]:
-    """Trouve la sauvegarde BOTW la plus récente entre Ryujinx et Cemu."""
+    """Find the newest BOTW save across Ryujinx and Cemu."""
     roots = search_roots if search_roots is not None else emulator_save_roots()
     candidates = find_game_save_roots(roots)
     active = {backend.id for backend in running_emulators()}
@@ -181,12 +181,12 @@ def detect_save_emulator(path: Path | str) -> EmulatorBackend | None:
 
 
 def default_ryujinx_save_roots() -> list[Path]:
-    """Emplacements connus, sans supposer lequel est utilisé par l'installation."""
+    """Return known locations without assuming which one the installation uses."""
     return ryujinx_save_roots()
 
 
 def find_ryujinx_game_save_roots(search_roots: list[Path] | None = None) -> list[Path]:
-    """Recense les dossiers de sauvegarde candidats, y compris en cours d'écriture."""
+    """List candidate save directories, including ones currently being written."""
     roots = search_roots if search_roots is not None else default_ryujinx_save_roots()
     candidates: set[Path] = set()
     for root in roots:
@@ -204,7 +204,7 @@ def find_ryujinx_game_save_roots(search_roots: list[Path] | None = None) -> list
 
 
 def discover_ryujinx_save_root(search_roots: list[Path] | None = None) -> Path:
-    """Trouve la sauvegarde BOTW la plus récente dans l'arborescence Ryujinx."""
+    """Find the newest BOTW save in the Ryujinx directory tree."""
     roots = search_roots if search_roots is not None else default_ryujinx_save_roots()
     candidates = find_ryujinx_game_save_roots(roots)
     readable = []

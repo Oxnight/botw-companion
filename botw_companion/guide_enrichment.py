@@ -1,4 +1,4 @@
-"""Détails de solution structurés, sans transformer une supposition en certitude."""
+"""Structured solution details that do not present assumptions as facts."""
 from __future__ import annotations
 
 import re
@@ -117,8 +117,8 @@ def _shrine_mechanic(item: dict) -> dict:
             "chest": "Le coffre apparaît après la victoire, avant l'autel.",
         }
 
-    # Épreuves dont le titre français ne contient pas le nom du module. Ces
-    # parcours ont été contrôlés individuellement contre des solutions publiées.
+    # Trials whose French title does not include the rune name. These routes
+    # were checked individually against published solutions.
     specials = {
         "entre calme et chaos": ("Cinetis, tapis roulants et lasers", ["Cinetis", "Arc"], [
             "Fige la première sphère lorsqu'elle passe devant le réceptacle, puis décoche une flèche pour la faire tomber dedans.",
@@ -311,7 +311,7 @@ def _boss_strategy(item: dict) -> tuple[list[str], list[str]]:
 
 
 def _scripted_boss_detail(item: dict) -> dict:
-    """Décrit les combats uniques sans les confondre avec les mini-boss de farm."""
+    """Describe unique fights without confusing them with farmable minibosses."""
     name = _plain(item.get("name"))
     illusory = "royaume illusoire" in name
     if "kohga" in name:

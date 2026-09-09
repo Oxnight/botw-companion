@@ -61,7 +61,7 @@ async function saveDiagnosticScreenshot(page, browserName, name) {
 }
 
 async function assertAccessible(page, context) {
-  // L’injection par le protocole du navigateur ne relâche pas la politique CSP
+  // Browser-protocol injection does not weaken the CSP policy.
   // stricte de l’application (script-src 'self').
   await page.evaluate(axeSource);
   const result = await page.evaluate(async () => window.axe.run(document, {
@@ -281,7 +281,7 @@ async function runDesktop(browser, baseUrl, browserName) {
   const updateHref = await page.locator("#downloadUpdate").getAttribute("href");
   assert(updateHref ===
     "https://github.com/Oxnight/botw-companion/releases/download/" +
-    "v0.40.0-alpha.37/BOTW_Companion_0.40.0-alpha.37_Setup.exe",
+    "v0.40.0-alpha.38/BOTW_Companion_0.40.0-alpha.38_Setup.exe",
     "La mise à jour ne cible pas exactement l’installateur Windows attendu");
   await page.locator("#dismissUpdate").click();
   await page.locator("#updateBanner").waitFor({state: "hidden"});
@@ -463,10 +463,9 @@ async function runDesktop(browser, baseUrl, browserName) {
     `[data-manual-uncheck="${selectedTrackingId}"]`
   );
   const dialogPromise = page.waitForEvent("dialog", {timeout: ACTION_TIMEOUT_MS});
-  // locator.uncheck() attend implicitement une éventuelle navigation. Firefox
-  // peut conserver cette attente après la boîte confirm(), bien qu'aucune
-  // navigation n'existe. Le clic DOM conserve le vrai événement utilisateur et
-  // la vraie confirmation, sans ajouter cette attente de navigation étrangère.
+  // locator.uncheck() implicitly waits for possible navigation. Firefox may
+  // keep waiting after confirm() even when no navigation exists. A DOM click
+  // retains the real user event and confirmation without that unrelated wait.
   const clickPromise = manualCheckbox.evaluate(element => element.click());
   const dialog = await dialogPromise;
   const dialogMessage = dialog.message();

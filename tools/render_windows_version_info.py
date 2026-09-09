@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Génère la ressource de version Windows utilisée par PyInstaller."""
+"""Generate the Windows version resource used by PyInstaller."""
 
 from __future__ import annotations
 

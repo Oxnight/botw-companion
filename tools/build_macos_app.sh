@@ -81,10 +81,9 @@ for document in LICENSE CHANGELOG.md THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIV
 done
 /bin/chmod 755 "$PACKAGED_DSU" "$PACKAGED_LAUNCHER"
 
-# PyInstaller signe déjà ses binaires en mode ad hoc. Le moteur ajouté au paquet
-# est néanmoins signé explicitement, de l'intérieur vers l'extérieur. Ne pas
-# utiliser --deep pour signer : --force --deep modifierait à nouveau les binaires
-# après le calcul de leurs empreintes dans le manifeste.
+# PyInstaller already signs its binaries ad hoc. Sign the bundled engine
+# explicitly from the inside out. Do not use --deep: --force --deep would alter
+# binaries again after their manifest digests were calculated.
 /usr/bin/codesign --force --sign - "$PACKAGED_SDL"
 /usr/bin/codesign --force --sign - "$PACKAGED_DSU"
 python3 - "$PACKAGED_MANIFEST" "$PACKAGED_DSU" "$PACKAGED_SDL" <<'PY'
@@ -106,9 +105,9 @@ PY
 /usr/bin/ditto "$APPLICATION" "$DMG_ROOT/BOTW Companion.app"
 /bin/ln -s /Applications "$DMG_ROOT/Applications"
 
-# hdiutil peut répondre transitoirement « Resource busy » sur les runners macOS
-# hébergés. La source et l'image temporaire restent hors du dépôt, chaque essai
-# repart d'un fichier absent et le résultat est vérifié avant publication.
+# hdiutil may transiently report "Resource busy" on hosted macOS runners. The
+# source and temporary image remain outside the repository, each attempt starts
+# without an existing output file, and the result is checked before publication.
 dmg_created=0
 for attempt in 1 2 3 4; do
   cmake -E rm -f "$TEMP_DMG_PATH"

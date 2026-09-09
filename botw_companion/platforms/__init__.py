@@ -16,7 +16,7 @@ Which = Callable[[str], str | None]
 
 
 class LocalInstanceGuard:
-    """Le socket assure déjà l'instance unique hors Windows."""
+    """The socket already enforces a single instance outside Windows."""
 
     def acquire(self) -> bool:
         return True
@@ -225,7 +225,7 @@ def server_instance_guard(*, system: str | None = None,
                           environ: Environment | None = None,
                           home: Path | None = None,
                           mutex_factory=None):
-    """Retourne un verrou par utilisateur pour l'unique serveur Windows."""
+    """Return a per-user guard for the single Windows server."""
     resolved = system_name(system)
     if resolved != "Windows":
         return LocalInstanceGuard()

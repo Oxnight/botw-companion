@@ -4,10 +4,10 @@
 #define MyAppNumericVersion GetEnv("BOTW_APP_NUMERIC_VERSION")
 
 #if MyAppVersion == ""
-  #error MyAppVersion doit être fourni par le script de construction
+  #error MyAppVersion must be provided by the build script
 #endif
 #if MyAppNumericVersion == ""
-  #error MyAppNumericVersion doit être fourni par le script de construction
+  #error MyAppNumericVersion must be provided by the build script
 #endif
 
 [Setup]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ajoute aux flux de quête les faits éditoriaux vérifiables de Zelda Wiki."""
+"""Add verifiable Zelda Wiki facts to quest data."""
 from __future__ import annotations
 
 import argparse

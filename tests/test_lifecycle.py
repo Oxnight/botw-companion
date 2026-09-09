@@ -207,8 +207,8 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
             ), timeout=0.5):
                 pass
         except (OSError, URLError):
-            # Une assertion de démarrage peut échouer avant que le socket existe.
-            # Le thread daemon garantit alors que la suite rend quand même la main.
+            # A startup assertion may fail before the socket exists. The daemon
+            # thread still guarantees that the suite regains control.
             pass
 
     @contextmanager

@@ -1,96 +1,92 @@
-# Installer et mettre à jour BOTW Companion
+# Installing and updating BOTW Companion
 
-Les joueurs doivent utiliser les fichiers publiés sur la page
-[Releases](https://github.com/Oxnight/botw-companion/releases). Aucun clone du
-dépôt et aucun environnement de développement ne sont nécessaires.
+Players should use the files published on
+[GitHub Releases](https://github.com/Oxnight/botw-companion/releases). Cloning
+the repository and installing development tools are not required.
 
-## Compatibilité
+## Compatibility
 
-| Système | Paquet | Configuration prise en charge |
+| Platform | Package | Supported configuration |
 | --- | --- | --- |
-| Windows | `_Setup.exe` | Windows 10 version 1809 ou ultérieure, Windows 11, processeur x64 |
-| macOS | `_macOS_arm64.dmg` | macOS 14 ou ultérieur, Mac Apple Silicon uniquement |
+| Windows | `_Setup.exe` | Windows 10 version 1809 or later, Windows 11, x64 processor |
+| macOS | `_macOS_arm64.dmg` | macOS 14 or later, Apple Silicon only |
 
-Les paquets incluent le runtime Python, les données hors ligne, la carte,
-JoyConDSU, SDL3, les licences, les icônes et le lanceur. Python, Git, Node.js,
-CMake, Homebrew, Xcode, Visual Studio et PyCharm ne sont pas nécessaires.
+The packages include Python, offline data and maps, JoyConDSU, SDL3, licenses,
+icons, and the launcher. Python, Git, Node.js, CMake, Homebrew, Xcode, Visual
+Studio, and PyCharm are not required.
 
 ## Windows
 
-1. Télécharger le fichier se terminant par `_Setup.exe`.
-2. Lancer l'installateur et conserver l'option de raccourci Bureau si souhaité.
-3. Ouvrir **BOTW Companion** depuis le Bureau ou le menu Démarrer.
+1. Download the file ending in `_Setup.exe`.
+2. Run the installer. Keep the desktop-shortcut option enabled if desired.
+3. Open **BOTW Companion** from the desktop or Start menu.
 
-L'installation se fait sans privilèges administrateur dans :
+The per-user installation requires no administrator privileges and is stored
+in:
 
 ```text
 %LOCALAPPDATA%\Programs\BOTW Companion
 ```
 
-La préversion n'est pas signée avec un certificat commercial. SmartScreen peut
-afficher un avertissement : vérifier que le fichier vient bien de
-`github.com/Oxnight/botw-companion/releases` avant de choisir les informations
-complémentaires permettant de l'exécuter.
+The prerelease is not signed with a commercial certificate. If SmartScreen
+shows a warning, confirm that the file came from
+`github.com/Oxnight/botw-companion/releases` before using the additional
+information option to run it.
 
 ## macOS Apple Silicon
 
-1. Télécharger le fichier se terminant par `_macOS_arm64.dmg`.
-2. Ouvrir le DMG.
-3. Glisser **BOTW Companion** dans le raccourci **Applications** affiché dans la
-   fenêtre.
-4. Lancer l'application depuis Applications.
+1. Download the file ending in `_macOS_arm64.dmg`.
+2. Open the DMG.
+3. Drag **BOTW Companion** onto the **Applications** shortcut in the window.
+4. Open BOTW Companion from Applications.
 
-La préversion utilise une signature ad hoc et n'est pas notariée. Si macOS la
-bloque, tenter une première ouverture, puis utiliser **Réglages Système >
-Confidentialité et sécurité > Ouvrir quand même** après avoir vérifié la
-provenance du DMG.
+The prerelease uses an ad hoc signature and is not notarized. If macOS blocks
+it, attempt to open it once, confirm that the DMG came from the official
+Releases page, then use **System Settings > Privacy & Security > Open Anyway**.
 
-## Premier lancement
+## First launch
 
-Le lanceur ouvre l'interface locale dans le navigateur. Le guide initial
-confirme la sauvegarde détectée et présente le gyroscope facultatif. Le bouton
-**Aide** permet de rouvrir ce guide.
+The launcher opens the local interface in the default browser. The initial
+guide explains the detected save and optional motion controls. Use **Aide** to
+open the complete help center or restart the guided tour.
 
-Si aucune sauvegarde n'est détectée, consulter le
-[guide de dépannage](TROUBLESHOOTING.md#aucune-sauvegarde-détectée).
+If no save is found, see
+[No save was detected](TROUBLESHOOTING.md#no-save-was-detected).
 
-## Mise à jour
+## Updating
 
-BOTW Companion consulte brièvement les Releases GitHub au démarrage. Si une
-version plus récente et compatible est publiée, un bandeau propose directement
-le bon paquet. Le bouton **Vérifier les mises à jour** permet de recommencer la
-vérification manuellement.
+BOTW Companion briefly checks GitHub Releases at startup. When a newer
+compatible version is available, a banner offers the correct package. Use
+**Vérifier les mises à jour** to retry manually.
 
-Sans connexion, cette vérification expire rapidement et silencieusement :
-l'analyse, la carte, les guides, le suivi et le gyroscope restent entièrement
-fonctionnels hors ligne. Aucun téléchargement ne démarre sans clic.
+When offline, the check times out quickly and silently. Save analysis, maps,
+guides, tracking, and motion controls remain available. A download never starts
+without a user action.
 
-Installer ensuite le nouveau paquet par-dessus la version existante :
+Install the new package over the existing version:
 
-- sous Windows, relancer le nouveau `Setup.exe` ;
-- sous macOS, remplacer l'application présente dans Applications par celle du
-  nouveau DMG.
+- on Windows, run the new `Setup.exe`;
+- on macOS, replace the application in Applications with the copy from the new
+  DMG.
 
-Il n'est pas nécessaire de désinstaller la version précédente. Il reste aussi
-possible de télécharger manuellement le paquet depuis Releases.
+There is no need to uninstall first. The package can also be downloaded
+manually from Releases.
 
-Le suivi manuel, les itinéraires, les préférences et les sauvegardes de sécurité
-restent dans un dossier utilisateur séparé :
+Manual tracking, routes, preferences, and backups remain in a separate user
+directory:
 
 ```text
-Windows : %LOCALAPPDATA%\BOTW Companion
-macOS   : ~/Library/Application Support/BOTW Companion
+Windows: %LOCALAPPDATA%\BOTW Companion
+macOS:   ~/Library/Application Support/BOTW Companion
 ```
 
-Le workflow teste automatiquement une installation propre et une mise à niveau
-depuis la version de référence avant toute publication.
+Before publication, the workflow tests both a clean installation and an
+upgrade from the reference version.
 
-## Désinstallation
+## Uninstalling
 
-- Windows : utiliser **Applications installées > BOTW Companion >
-  Désinstaller**.
-- macOS : déplacer **BOTW Companion.app** de Applications vers la Corbeille.
+- Windows: use **Installed apps > BOTW Companion > Uninstall**.
+- macOS: move **BOTW Companion.app** from Applications to the Trash.
 
-Les données personnelles sont volontairement conservées. Elles peuvent être
-supprimées séparément dans le dossier indiqué ci-dessus après avoir réalisé un
-export si elles doivent être gardées.
+Personal data is intentionally preserved. Export it first if needed, then
+delete the user directory above to remove it.

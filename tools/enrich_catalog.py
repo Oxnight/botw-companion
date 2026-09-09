@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Enrichit le catalogue avec les règles de progression documentées.
+"""Enrich the catalog with documented progression rules.
 
-Ce générateur n'est pas exécuté chez l'utilisateur. Il traduit les offsets du
-BOTW Save File Mapper en noms de GameData flags, puis ne distribue que ces
-règles portables avec l'application.
+This generator does not run on player systems. It translates BOTW Save File
+Mapper offsets into GameData flag names and distributes only those portable
+rules with the application.
 """
 from __future__ import annotations
 
@@ -110,8 +110,8 @@ def main() -> None:
             node = node[substate]
         result = entries(node)
         if not result:
-            # Quelques quêtes n'ont pas leur propre flag de fin : leur
-            # dépendance dure pointe vers le flag qui fait foi dans le jeu.
+            # Some quests have no completion flag of their own. Their hard
+            # dependency points to the authoritative in-game flag.
             for dep in node.get("harddependencies", []):
                 bits = dep.split(".")
                 if len(bits) >= 3 and bits[0] in effects and bits[1] in effects[bits[0]]:
@@ -123,7 +123,7 @@ def main() -> None:
 
     def build_effect_items(group: str, source: list, name_getter, complete_state="complete") -> list[dict]:
         lookup = {norm(name_getter(item)): item for item in source}
-        # Deux titres officiels diffèrent uniquement par l'article dans le mapper.
+        # Two official titles differ only by their article in the mapper.
         if group == "shrinequests":
             lookup["atestofwill"] = lookup.get("testofwill")
         output = []
@@ -155,9 +155,9 @@ def main() -> None:
             quest.update({"region": shrine.get("region"), "x": shrine.get("x"),
                           "z": shrine.get("z"), "sanctuaire": shrine.get("name")})
 
-    # Le titre officiel QuestMsg donne directement l'identifiant du journal.
-    # Les offsets du mapper restent utiles pour l'état "commencé", mais ils
-    # varient selon certaines versions et ne doivent pas décider de la fin.
+    # The official QuestMsg title directly provides the journal identifier.
+    # Mapper offsets remain useful for the started state, but they vary across
+    # versions and must not determine completion.
     quest_ids = {}
     for path in args.questmsg.glob("QL_*.xmsbt"):
         text = path.read_text()
@@ -181,10 +181,10 @@ def main() -> None:
             quest["rule"] = journal_finish_rule(quest["name"])
             quest["detection"] = "flag exact du journal"
 
-    # BOTW recharge la sauvegarde juste avant le combat final. Le journal remet
-    # alors GanonQuest_Finished à faux, tandis que GameClear reste vrai et
-    # commande notamment l'étoile du fichier et le compteur de carte. C'est
-    # donc la seule preuve persistante fiable d'une première victoire.
+    # BOTW reloads the save immediately before the final fight. The journal sets
+    # GanonQuest_Finished then returns to false while GameClear remains true and
+    # controls the save-file star and map counter. It is therefore the only
+    # reliable persistent evidence of a first victory.
     destroy_ganon = next(
         quest for quest in catalog["main_quests"] if quest["id"] == "destroyganon"
     )
@@ -204,7 +204,7 @@ def main() -> None:
                          "rule": entries(node["remembered"]), "detection": "exacte"})
     catalog["memories"] = memories
 
-    # Restaure les vrais noms, régions et coordonnées des 16 sanctuaires DLC.
+    # Restore the actual names, regions, and coordinates of the 16 DLC shrines.
     checklist = json.loads(args.checklist.read_text())
     shrine_metadata = checklist["shrines"]
     metadata = {norm(s["name"].replace(" Shrine", "")): s for s in shrine_metadata}
@@ -230,8 +230,8 @@ def main() -> None:
         for s in catalog["shrines"]
     ]
 
-    # Quêtes secondaires : le nom affiché dans QuestMsg fournit une jointure
-    # exacte vers l'identifiant interne, donc aucun rapprochement approximatif.
+    # Side quests: the displayed QuestMsg name provides a join
+    # exact match to the internal identifier, so no fuzzy matching is needed.
     side = []
     for quest in catalog["canonical"]["side_quests"]:
         side.append({**quest, "id": norm(quest["name"]), "dlc": quest.get("region") is None,
@@ -239,8 +239,8 @@ def main() -> None:
                      "detection": "flag exact du journal"})
     catalog["side_quests"] = side
 
-    # Le nom interne des 394 flags du compendium correspond sans ambiguïté au
-    # nom anglais canonique. On distribue le lien, pas la base tierce brute.
+    # The internal names of the 394 compendium flags map unambiguously to the
+    # canonical English name. Distribute the link, not the raw third-party data.
     actor_names = json.loads(args.names.read_text())
     comp_by_name = {norm(item["name"]): item for item in catalog["canonical"]["compendium"]}
     compendium = []
@@ -275,9 +275,8 @@ def main() -> None:
             }
             if prefix == "AocField":
                 item["region"] = "Trial of the Sword"
-            # Les coordonnées AocField appartiennent aux salles instanciées
-            # des Épreuves de l'Épée et ne doivent pas être projetées sur
-            # la carte extérieure d'Hyrule.
+            # AocField coordinates belong to instanced Trial of the Sword rooms
+            # and must not be projected onto the outdoor Hyrule map.
             if prefix == "MainField" and raw.get("pos"):
                 item.update({"x": raw["pos"][0], "z": raw["pos"][2]})
             (dungeon_chests if prefix == "MainFieldDungeon" else world_chests).append(item)
@@ -311,8 +310,8 @@ def main() -> None:
         raise RuntimeError(f"Marqueurs officiels incomplets : {len(official_locations)}/187")
     catalog["official_map_locations"] = official_locations
 
-    # Ces trois marqueurs comptent dans la carte officielle, mais la source
-    # historique de la catégorie `locations` ne les exposait pas.
+    # These three markers count toward the official map, but the historical
+    # `locations` source did not expose them.
     extra_location_regions = {
         "Location_AncientLabo": "Akkala",
         "Location_HatenoLabo": "Hateno",
@@ -328,7 +327,7 @@ def main() -> None:
                 "detection": "exacte",
             })
 
-    # Activités utiles qui ne disposent pas toutes d'un flag simple et stable.
+    # Useful activities that do not all have a simple, stable flag.
     catalog["manual"] = {
         "ameliorations_armures": [{**a, "status": "manuel"} for a in catalog["canonical"]["enhanceable_armor"]],
         "chiens": [{**d, "status": "manuel"} for d in catalog["canonical"]["dogs"]],

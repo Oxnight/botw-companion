@@ -13,13 +13,13 @@ _LOOPBACK_OPENER = build_opener(ProxyHandler({}))
 
 
 def open_loopback(request, timeout: float = 0.8):
-    """Ouvre une URL locale sans consulter les proxys système ou d'environnement."""
+    """Open a local URL without consulting system or environment proxies."""
     return _LOOPBACK_OPENER.open(request, timeout=timeout)
 
 
 def probe_companion_server(port: int = 8765, timeout: float = 0.8,
                            opener=open_loopback) -> dict | None:
-    """Identifie le serveur local au lieu de faire confiance au seul port."""
+    """Identify the local server instead of trusting the port alone."""
     try:
         with opener(f"http://127.0.0.1:{port}/api/version", timeout=timeout) as response:
             if getattr(response, "status", 200) != 200:
@@ -79,10 +79,10 @@ class WebLifecycle:
 
 
 class EmulatorLifecycleWatcher:
-    """Surveille Ryujinx/Cemu sans dépendre du navigateur.
+    """Monitor Ryujinx/Cemu independently from the browser.
 
-    L'arrêt n'est demandé qu'après avoir observé au moins un émulateur supporté
-    réellement actif, puis confirmé son absence pendant la période de grâce.
+    Request shutdown only after observing an active supported emulator and then
+    confirming its absence throughout the grace period.
     """
 
     def __init__(self, is_running: Callable[[], bool],
@@ -173,7 +173,7 @@ class EmulatorLifecycleWatcher:
 
 
 class RyujinxLifecycleWatcher(EmulatorLifecycleWatcher):
-    """Alias rétrocompatible conservé pour les intégrations existantes."""
+    """Backward-compatible alias retained for existing integrations."""
 
     def __init__(self, is_running: Callable[[], bool], request_shutdown: Callable[[str], None], **kwargs) -> None:
         self._legacy_shutdown = request_shutdown
@@ -188,7 +188,7 @@ class RyujinxLifecycleWatcher(EmulatorLifecycleWatcher):
         }
         self._state = aliases.get(self._state, self._state)
         if stopped and self._state == "ryujinx_ferme":
-            # L'ancien contrat de test attend ce motif précis.
-            # Le watcher générique utilisé par le serveur produit emulateur_ferme.
+            # The legacy test contract expects this exact pattern.
+            # The generic watcher used by the server emits emulateur_ferme.
             pass
         return stopped

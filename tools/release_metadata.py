@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Expose les noms et versions dérivés aux scripts et à GitHub Actions."""
+"""Expose derived names and versions to scripts and GitHub Actions."""
 
 from __future__ import annotations
 

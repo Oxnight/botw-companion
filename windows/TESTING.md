@@ -1,12 +1,17 @@
-# Validation Windows
+# Windows validation
 
-Le job Windows du workflow `.github/workflows/release.yml` exécute :
+The Windows job in `.github/workflows/release.yml` runs:
 
-1. les tests Python et les contrôles de version ;
-2. le parcours fonctionnel dans Chrome, Edge et Firefox ;
-3. la compilation native de JoyConDSU avec SDL3 ;
-4. la création PyInstaller et Inno Setup ;
-5. une installation silencieuse réelle dans un dossier propre ;
-6. l’auto-test du paquet, le démarrage du serveur sans Python dans le `PATH`, puis la désinstallation.
+1. Python tests and version checks;
+2. browser flows in Chrome, Edge, and Firefox;
+3. a native JoyConDSU and SDL3 build;
+4. PyInstaller and Inno Setup packaging;
+5. a real silent installation in a clean directory;
+6. package self-tests, server startup without Python in `PATH`, and
+   uninstallation.
 
-Les commits et pull requests exécutent uniquement les tests. Un tag `v*` construit une release seulement si les jobs Windows et macOS réussissent. Le workflow installe d’abord la version définie dans `packaging/UPGRADE_BASELINE`, applique la mise à niveau et vérifie les raccourcis ainsi que les données persistantes. Une validation matérielle sur Windows 10/11 reste recommandée pour les Joy-Con et l’intégration avec les émulateurs.
+Commits and pull requests run tests only. A `v*` tag publishes a release only
+after both Windows and macOS jobs pass. The workflow first installs the version
+in `packaging/UPGRADE_BASELINE`, performs the upgrade, and checks shortcuts and
+persistent data. Hardware testing on Windows 10/11 remains recommended for
+Joy-Con and emulator integration.

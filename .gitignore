@@ -3,22 +3,28 @@ __pycache__/
 *.py[cod]
 *.pyo
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
 .coverage
+coverage.xml
 htmlcov/
 
-# Environnements Python
+# Python environments
 .venv/
 venv/
 env/
 
-# Dépendances Node utilisées uniquement par les tests navigateur
+# Node dependencies and browser-test output
 node_modules/
+playwright-report/
 
 # PyCharm
 .idea/
 *.iml
 
-# Construction et distributions
+# Build and distribution output
 build/
 dist/
 test-results/
@@ -30,21 +36,21 @@ deliverables/
 *.rtf
 *.rtfd/
 
-# Sauvegardes BOTW / Ryujinx
+# BOTW and Ryujinx saves
 *.sav
 caption.jpg
 last_save/
 ryujinx-save/
 saves/
 
-# Données personnelles BOTW Companion
+# Personal BOTW Companion data
 manual_tracking.json
 manual_tracking.backup.json
 route_sessions.json
 route_sessions.backup.json
 progression.json
 
-# Variables et secrets éventuels
+# Environment files and possible secrets
 .env
 .env.*
 !.env.example
@@ -54,6 +60,6 @@ progression.json
 ._*
 __MACOSX/
 
-# Fichiers temporaires
+# Temporary files
 *.tmp
 *.log

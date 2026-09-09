@@ -1,4 +1,4 @@
-"""Vérification facultative des nouvelles versions publiées sur GitHub."""
+"""Optional checks for new versions published on GitHub."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ FAILURE_CACHE_SECONDS = 60
 
 
 class UpdateCheckError(RuntimeError):
-    """Réponse distante inutilisable, sans conséquence pour le mode hors ligne."""
+    """Unusable remote response that does not affect offline operation."""
 
 
 def _safe_release_url(tag: str) -> str:
@@ -54,7 +54,7 @@ def _exact_https_url(candidate: object, expected: str) -> bool:
 
 
 class UpdateChecker:
-    """Consulte GitHub avec délai court, validation stricte et cache mémoire."""
+    """Query GitHub with a short timeout, strict validation, and memory cache."""
 
     def __init__(
         self,
@@ -200,7 +200,7 @@ class UpdateChecker:
         }
 
     def check(self, *, force: bool = False) -> dict:
-        """Retourne toujours un état exploitable; une panne réseau reste silencieuse."""
+        """Always return usable state; network failures remain silent."""
         with self._lock:
             now = self.monotonic()
             if not force and self._cached_payload is not None and self._cached_at is not None:

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Construit les variantes d'armures et leurs recettes dans catalog.json.
+"""Build armor variants and upgrade recipes in catalog.json.
 
-Les identifiants de variantes viennent du Savegame Editor de Marc Robledo.
-Les recettes viennent du BOTW Armor Upgrade Tracker de Jared Wilcurt.
-Ce script de développement n'est pas distribué comme dépendance d'exécution.
+Variant identifiers come from Marc Robledo's Savegame Editor. Recipes come
+from Jared Wilcurt's BOTW Armor Upgrade Tracker. This development script is not
+distributed as a runtime dependency.
 """
 from __future__ import annotations
 
@@ -24,8 +24,8 @@ ARMOR_ALIASES = {
     "Trousers of the Wind": "Trousers of Wind",
 }
 
-# Plusieurs noms d'acteurs désignent le même objet visible dans le monde.
-# Cette table choisit l'acteur réellement stocké dans l'inventaire.
+# Several actor names refer to the same visible world item.
+# This table selects the actor actually stored in the inventory.
 MATERIAL_ACTORS = {
     "Acorn": "Item_Fruit_K",
     "Blue Nightshade": "Item_PlantGet_I",

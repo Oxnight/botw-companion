@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Ajoute les points géographiques des quêtes et souvenirs au catalogue.
+"""Add geographic points for quests and memories to the catalog.
 
-Les marqueurs Zelda Dungeon utilisent une carte de 24 000 pixels :
-``x_botw = y_carte / 2`` et ``z_botw = -x_carte / 2``.  Le script conserve
-séparément le départ, les objectifs intermédiaires et la destination afin de
-ne jamais présenter un sanctuaire comme le donneur d'une quête.
+Zelda Dungeon markers use a 24,000-pixel map: ``x_botw = y_map / 2`` and
+``z_botw = -x_map / 2``. The script keeps start, intermediate objectives, and
+destination separate so a shrine is never presented as a quest giver.
 """
 from __future__ import annotations
 
@@ -33,7 +32,7 @@ def norm(value: str) -> str:
 
 
 def game_coords(coords: list[float]) -> tuple[float, float]:
-    """Convertit [x, y] de la carte ZD en [x, z] du monde BOTW."""
+    """Convert ZD map [x, y] coordinates to BOTW world [x, z]."""
     return round(coords[1] / 2, 3), round(-coords[0] / 2, 3)
 
 
@@ -148,8 +147,8 @@ def main() -> None:
                     source_id=marker.get("id"),
                 ))
 
-    # Les anciennes coordonnées des quêtes de sanctuaire désignaient le
-    # sanctuaire final. Elles deviennent désormais une destination explicite.
+    # Legacy shrine-quest coordinates referred to the final shrine. They now
+    # become an explicit destination.
     shrines_by_name = {shrine["name"]: shrine for shrine in catalog["shrines"]}
     for quest in catalog["shrine_quests"]:
         shrine = shrines_by_name[quest["sanctuaire"]]
@@ -161,8 +160,8 @@ def main() -> None:
             source_id=shrine["id"],
         ))
 
-    # Le crossover est commandé automatiquement et ne possède pas de donneur.
-    # Ces trois zones sont les CollaboShootingStarArea de la carte statique.
+    # The crossover starts automatically and has no quest giver. These three
+    # areas are the static map's CollaboShootingStarArea entries.
     xenoblade = next(q for q in catalog["side_quests"] if q["name"] == "[Xenoblade Chronicles 2]")
     xenoblade_specs = (
         ((-44.0, 2496.0), "Indice 1 - ciel austral depuis le milieu du plus grand pont", "E-7"),

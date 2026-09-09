@@ -36,7 +36,7 @@ void telemetry_record_send(DsuTelemetry *telemetry, uint64_t now_ns)
 void telemetry_pause_sends(DsuTelemetry *telemetry)
 {
     if (telemetry != NULL) {
-        /* Une absence de client n'est pas du jitter réseau. */
+        /* Having no client is not network jitter. */
         telemetry->last_send_ns = 0;
     }
 }
