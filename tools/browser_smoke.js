@@ -553,10 +553,20 @@ async function runResponsive(browser, baseUrl, browserName) {
   assert(await page.locator("[data-help-chapter]").count() === 12,
     "Le sommaire mobile ne contient pas les douze chapitres");
   const applicationChapter = page.locator('[data-help-chapter="application"]');
-  await applicationChapter.evaluate(element =>
-    element.scrollIntoView({block: "center", inline: "nearest"}));
+  const mobileNavigation = page.locator(".helpNavigation");
+  const navigationMeasurements = await mobileNavigation.evaluate(element => ({
+    clientHeight: element.clientHeight,
+    scrollHeight: element.scrollHeight
+  }));
+  assert(navigationMeasurements.clientHeight > 0 &&
+    navigationMeasurements.scrollHeight > navigationMeasurements.clientHeight,
+  `La navigation mobile n’est pas défilable : ${JSON.stringify(navigationMeasurements)}`);
+  await mobileNavigation.evaluate(element => { element.scrollTop = element.scrollHeight; });
   await applicationChapter.waitFor({state: "visible"});
-  await applicationChapter.click();
+  await applicationChapter.focus();
+  await page.keyboard.press("Enter");
+  await page.waitForFunction(() =>
+    document.querySelector("#helpContent h3")?.textContent.includes("mises à jour"));
   await page.locator("[data-start-chapter]").click();
   await page.locator("#tutorialLayer").waitFor({state: "visible"});
   const tutorialBounds = await page.locator("#tutorialCard").boundingBox();

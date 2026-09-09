@@ -2462,7 +2462,8 @@ aside {
     }
 
     .helpNavigation {
-        max-height: 150px;
+        height: min(150px, 25vh);
+        max-height: none;
         border-right: 0;
         border-bottom: 1px solid var(--line);
     }
