@@ -22,7 +22,10 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn('id="itemDetails"', html)
         self.assertIn('id="mainContent" tabindex="-1"', html)
         self.assertIn('class="skipLink"', html)
-        self.assertIn('id="onboardingDialog"', html)
+        self.assertIn('id="helpDialog"', html)
+        self.assertIn('id="tutorialLayer"', html)
+        self.assertIn('role="dialog"', html)
+        self.assertIn('aria-modal="true"', html)
         self.assertIn('id="openHelp"', html)
         self.assertIn('role="status" aria-live="polite"', html)
         self.assertIn('aria-label="Rechercher un objectif"', html)
@@ -42,12 +45,36 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("/api/save-caption?revision=", script)
         self.assertIn("function closeDetails", script)
         self.assertIn("function showOnboarding", script)
-        self.assertIn("onboarding_completed", script)
+        self.assertIn('const TUTORIAL_VERSION = "1"', script)
+        self.assertIn("tutorial_completed_version", script)
+        self.assertIn("const HELP_CHAPTERS = [", script)
+        self.assertIn("const ESSENTIAL_TUTORIAL_STEPS = [", script)
+        self.assertIn("function setTutorialBackgroundInert", script)
+        self.assertIn("function positionTutorial", script)
+        self.assertIn("function tutorialFocusableElements", script)
+        self.assertIn("scrollIntoView", script)
+        self.assertEqual(script.count('id: "privacy"'), 1)
+        self.assertEqual(script.count('id: "application"'), 1)
+        for chapter in (
+            "Confidentialité et mode hors ligne",
+            "Sauvegarde et slot analysé",
+            "Synchronisation de la sauvegarde",
+            "Les deux pourcentages",
+            "Catégories, recherche et filtres",
+            "Carte d’Hyrule",
+            "Fiches, preuves et guides",
+            "Suivi manuel et sauvegarde des données",
+            "Planificateur d’itinéraire",
+            "Lune de sang",
+            "Gyroscope JoyConDSU",
+            "Mises à jour, aide et fermeture",
+        ):
+            self.assertIn(chapter, script)
         self.assertIn('class="itemOpen"', script)
         self.assertIn('class="itemOpen"', script)
         self.assertIn('<span aria-hidden="true" title=', script)
         self.assertIn("baseMapMarker", script)
-        self.assertIn("focusTarget.focus({ preventScroll: true })", script)
+        self.assertIn("previous.returnFocus?.focus({ preventScroll: true })", script)
         self.assertIn("selectedId = null", script)
         self.assertIn("renderMap(filtered())", script)
         self.assertIn("prochaine_amelioration", script)

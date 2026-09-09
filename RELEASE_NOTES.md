@@ -1,14 +1,18 @@
-## Interface
+## Aide et tutoriel
 
-- Les commandes liées à la sauvegarde sont maintenant regroupées dans la zone
-  de synchronisation.
-- Aide, Vérifier les mises à jour et Quitter disposent d’une zone Application
-  distincte.
-- Les deux anneaux de progression sont plus grands et leurs valeurs restent
-  lisibles, y compris lorsque la carte atteint 100.00 %.
+- Le premier lancement propose maintenant un parcours guidé de neuf étapes
+  directement dans l’interface.
+- Le bouton Aide ouvre un centre hors ligne de douze chapitres couvrant la
+  sauvegarde, les compteurs, les filtres, la carte, les guides, le suivi manuel,
+  les itinéraires, la lune de sang, JoyConDSU et les mises à jour.
+- Un parcours interrompu peut être repris. Chaque chapitre peut également
+  montrer la commande correspondante sans déclencher d’action.
+- Le tutoriel prend en charge le clavier, les lecteurs d’écran, les petits
+  écrans et la réduction des animations.
 
-Ces changements n’altèrent ni l’analyse de la sauvegarde, ni les calculs de
-progression, ni la carte, les guides, la lune de sang ou JoyConDSU.
+Les modifications CSS locales préparées après l’alpha 35 sont incluses. Cette
+version ne change ni l’analyse de la sauvegarde, ni les calculs de progression,
+ni la carte, les guides, la lune de sang ou JoyConDSU.
 
 ## Installation
 

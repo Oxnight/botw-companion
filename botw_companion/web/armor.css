@@ -1900,7 +1900,8 @@ aside {
 
 .appActions {
     display: grid;
-    align-content: center;
+    grid-template-rows: auto 1fr;
+    align-content: stretch;
     gap: 9px;
     min-width: 0;
     padding: 17px 18px;
@@ -1914,8 +1915,10 @@ aside {
 
 .appActionButtons {
     display: grid;
-    grid-template-columns: minmax(78px, .7fr) minmax(170px, 1.3fr);
-    gap: 9px;
+    grid-template-columns: .65fr 1.7fr .75fr;
+    align-items: stretch;
+    align-self: center;
+    gap: 10px;
 }
 
 .appActionButtons button {
@@ -1936,9 +1939,9 @@ aside {
 }
 
 .appActionButtons #quitCompanion {
-    grid-column: 1 / -1;
-    justify-self: end;
-    min-width: 112px;
+    grid-column: auto;
+    justify-self: stretch;
+    min-width: 0;
 }
 
 /* Accessibilité clavier et premier lancement */
@@ -2072,9 +2075,11 @@ aside {
     --marker-color: #6eafd2;
 }
 
-.onboardingDialog {
-    width: min(560px, calc(100vw - 32px));
-    max-height: min(720px, calc(100vh - 32px));
+.helpDialog {
+    width: min(980px, calc(100vw - 32px));
+    height: min(720px, calc(100vh - 32px));
+    max-width: none;
+    max-height: none;
     padding: 0;
     overflow: hidden;
     border: 1px solid #52665e;
@@ -2084,71 +2089,204 @@ aside {
     box-shadow: 0 28px 90px #000c;
 }
 
-.onboardingDialog::backdrop {
-    background: #03080bcf;
+.helpDialog[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.helpDialog::backdrop {
+    background: #03080be0;
     backdrop-filter: blur(5px);
 }
 
-.onboardingProgress {
+.helpHeader {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: start;
+    padding: 24px 28px 21px;
+    border-bottom: 1px solid var(--line);
+}
+
+.helpHeader h2 {
+    margin: 4px 0 7px;
+    font: 500 clamp(25px, 3vw, 34px)/1.15 Georgia, serif;
+}
+
+.helpHeader p:last-child {
+    max-width: 700px;
+    margin: 0;
+    color: #aebdb8;
+    line-height: 1.5;
+}
+
+#closeHelp,
+#closeTutorial {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid #3a5055;
+    border-radius: 9px;
+    color: #dfe7e3;
+    background: #14252a;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.helpWorkspace {
+    display: grid;
+    grid-template-columns: minmax(230px, 285px) minmax(0, 1fr);
+    min-height: 0;
+}
+
+.helpNavigation,
+.helpContent {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.helpNavigation {
+    padding: 15px 12px;
+    border-right: 1px solid var(--line);
+    background: #0a1519a8;
+}
+
+.helpNavigation button {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
     gap: 8px;
-    padding: 20px 24px 0;
-    color: #b8c7c2;
-    font-size: 11px;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #aebdb8;
+    background: transparent;
+    text-align: left;
+    line-height: 1.25;
+    cursor: pointer;
 }
 
-.onboardingProgressTrack {
-    height: 4px;
-    overflow: hidden;
-    border-radius: 4px;
-    background: #26383d;
-}
-
-.onboardingProgressTrack i {
+.helpNavigation > button:first-child {
     display: block;
-    width: 33.333%;
-    height: 100%;
-    border-radius: inherit;
-    background: var(--gold);
-    transition: width .2s ease;
+    margin-bottom: 8px;
+    color: #e3e9e6;
+    font-weight: 700;
 }
 
-.onboardingContent {
-    min-height: 260px;
-    padding: 40px 42px 28px;
+.helpNavigation button span {
+    color: #70827d;
+    font-size: 10px;
+    letter-spacing: .08em;
 }
 
-.onboardingContent h2 {
-    margin: 5px 0 16px;
-    font: 500 31px/1.15 Georgia, serif;
+.helpNavigation button:hover,
+.helpNavigation button.active {
+    border-color: #3b5156;
+    color: var(--text);
+    background: #17292e;
 }
 
-.onboardingContent > p:not(.eyebrow) {
-    color: #c0ccc8;
+.helpNavigation button.active {
+    border-left-color: var(--gold);
+}
+
+.helpContent {
+    padding: clamp(28px, 5vw, 52px);
+    outline: none;
+}
+
+.helpContent h3 {
+    max-width: 670px;
+    margin: 5px 0 13px;
+    font: 500 clamp(25px, 3vw, 34px)/1.18 Georgia, serif;
+}
+
+.helpContent > p:not(.eyebrow, .helpTip, .helpPrivacyNote) {
+    max-width: 680px;
+    color: #b6c4bf;
     font-size: 16px;
-    line-height: 1.65;
+    line-height: 1.6;
 }
 
-.onboardingContent .onboardingDetail {
-    margin: 22px 0 0;
-    padding: 12px 14px;
+.helpContent ul {
+    display: grid;
+    gap: 12px;
+    max-width: 700px;
+    margin: 24px 0;
+    padding-left: 22px;
+    color: #d4ddd9;
+    line-height: 1.55;
+}
+
+.helpContent li::marker {
+    color: var(--gold);
+}
+
+.helpTip,
+.helpPrivacyNote {
+    display: grid;
+    gap: 5px;
+    max-width: 700px;
+    margin: 24px 0 0;
+    padding: 14px 16px;
     border-left: 3px solid var(--gold);
-    color: #e2e8e4;
+    color: #dce4e0;
     background: #111f24;
     font-size: 13px;
+    line-height: 1.55;
 }
 
-.onboardingActions {
+.helpOverviewCards {
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    gap: 9px;
-    padding: 16px 24px 22px;
-    border-top: 1px solid var(--line);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 26px 0;
 }
 
-.onboardingActions button {
-    min-height: 40px;
+.helpOverviewCards article {
+    display: grid;
+    gap: 6px;
+    padding: 18px;
+    border: 1px solid #31464b;
+    border-radius: 10px;
+    background: #0e1b1f;
+}
+
+.helpOverviewCards article span {
+    color: #96a7a2;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.showHelpTarget {
+    min-height: 44px;
+    margin-top: 22px;
     padding: 0 16px;
+    border: 1px solid #607c78;
+    border-radius: 8px;
+    color: #dfe9e5;
+    background: #18302f;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.helpActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 28px 19px;
+    border-top: 1px solid var(--line);
+    background: #0a1418c7;
+}
+
+.helpActions button {
+    min-height: 44px;
+    padding: 0 17px;
     border: 1px solid #3a5055;
     border-radius: 8px;
     color: var(--text);
@@ -2156,11 +2294,143 @@ aside {
     cursor: pointer;
 }
 
-#nextOnboarding {
+.helpActions .primaryHelpAction,
+#nextTutorial {
     border-color: #aa914b;
     color: #161b18;
     background: #e1c56f;
     font-weight: 700;
+}
+
+.tutorialLayer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.tutorialLayer[hidden] {
+    display: none;
+}
+
+.tutorialMask,
+.tutorialSpotlight,
+.tutorialCard {
+    position: fixed;
+}
+
+.tutorialMask {
+    z-index: 1000;
+    background: #020609e8;
+    pointer-events: auto;
+}
+
+.tutorialSpotlight {
+    z-index: 1001;
+    border: 2px solid #e1c56f;
+    border-radius: 14px;
+    box-shadow: 0 0 0 4px #e1c56f24, 0 0 32px #e1c56f30;
+    pointer-events: auto;
+    transition: left .18s ease, top .18s ease, width .18s ease, height .18s ease;
+}
+
+.tutorialCard {
+    z-index: 1002;
+    width: min(440px, calc(100vw - 24px));
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+    border: 1px solid #6d765a;
+    border-radius: 14px;
+    color: var(--text);
+    background: linear-gradient(155deg, #192b30, #0b1418 76%);
+    box-shadow: 0 22px 70px #000e;
+    pointer-events: auto;
+}
+
+.tutorialHeading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: start;
+    padding: 18px 20px 10px;
+}
+
+.tutorialHeading > div {
+    display: grid;
+    gap: 3px;
+}
+
+#tutorialKind {
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .13em;
+}
+
+#tutorialStepLabel {
+    color: #9dafaa;
+    font-size: 11px;
+}
+
+.tutorialProgressTrack {
+    display: block;
+    height: 4px;
+    margin: 0 20px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #26383d;
+}
+
+.tutorialProgressTrack i {
+    display: block;
+    width: 11.111%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--gold);
+    transition: width .18s ease;
+}
+
+.tutorialContent {
+    padding: 24px 24px 20px;
+}
+
+.tutorialContent h2 {
+    margin: 0 0 12px;
+    outline: none;
+    font: 500 28px/1.16 Georgia, serif;
+}
+
+.tutorialContent > p {
+    color: #c1ceca;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.tutorialContent .tutorialDetail {
+    margin: 17px 0 0;
+    padding: 12px 14px;
+    border-left: 3px solid var(--gold);
+    color: #e2e8e4;
+    background: #111f24;
+    font-size: 13px;
+}
+
+.tutorialActions {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 8px;
+    padding: 14px 18px 18px;
+    border-top: 1px solid var(--line);
+}
+
+.tutorialActions button {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid #3a5055;
+    border-radius: 8px;
+    color: var(--text);
+    background: #14252a;
+    cursor: pointer;
 }
 
 @media (max-width: 600px) {
@@ -2172,21 +2442,69 @@ aside {
         grid-column: 2;
     }
 
-    .onboardingContent {
-        min-height: 250px;
-        padding: 30px 24px 22px;
+    .helpDialog {
+        width: calc(100vw - 16px);
+        height: calc(100vh - 16px);
+        border-radius: 12px;
     }
 
-    .onboardingContent h2 {
-        font-size: 26px;
+    .helpHeader {
+        padding: 18px 18px 15px;
     }
 
-    .onboardingActions {
+    .helpHeader p:last-child {
+        display: none;
+    }
+
+    .helpWorkspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .helpNavigation {
+        max-height: 150px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .helpContent {
+        padding: 25px 20px;
+    }
+
+    .helpOverviewCards {
+        grid-template-columns: 1fr;
+    }
+
+    .helpActions {
+        display: grid;
+        grid-template-columns: 1fr;
+        padding: 12px 18px 16px;
+    }
+
+    .tutorialCard {
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 16px);
+    }
+
+    .tutorialContent {
+        padding: 20px 20px 17px;
+    }
+
+    .tutorialContent h2 {
+        font-size: 24px;
+    }
+
+    .tutorialActions {
         grid-template-columns: 1fr 1fr;
     }
 
-    .onboardingActions > span {
+    .tutorialActions > span {
         display: none;
+    }
+
+    #skipTutorial {
+        grid-column: 1 / -1;
+        order: 3;
     }
 }
 
@@ -2254,12 +2572,7 @@ aside {
     }
 
     .appActionButtons {
-        grid-template-columns: minmax(90px, .65fr) minmax(190px, 1.35fr) minmax(112px, .75fr);
-    }
-
-    .appActionButtons #quitCompanion {
-        grid-column: auto;
-        justify-self: stretch;
+        grid-template-columns: .65fr 1.7fr .75fr;
     }
 }
 

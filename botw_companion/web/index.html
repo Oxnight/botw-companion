@@ -1005,27 +1005,89 @@
     <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <dialog
-        id="onboardingDialog"
-        class="onboardingDialog"
-        aria-labelledby="onboardingTitle"
-        aria-describedby="onboardingDescription"
+        id="helpDialog"
+        class="helpDialog"
+        aria-labelledby="helpTitle"
+        aria-describedby="helpIntroduction"
     >
-        <div class="onboardingProgress" aria-live="polite">
-            <span id="onboardingStepLabel">Étape 1 sur 3</span>
-            <span class="onboardingProgressTrack" aria-hidden="true">
-                <i id="onboardingProgressBar"></i>
-            </span>
+        <header class="helpHeader">
+            <div>
+                <p class="eyebrow">CENTRE D’AIDE</p>
+                <h2 id="helpTitle" tabindex="-1">Découvrir BOTW Companion</h2>
+                <p id="helpIntroduction">
+                    Retrouve une explication de chaque fonction ou lance le parcours guidé dans l’interface.
+                </p>
+            </div>
+
+            <button id="closeHelp" type="button" aria-label="Fermer le centre d’aide">×</button>
+        </header>
+
+        <div class="helpWorkspace">
+            <nav class="helpNavigation" aria-label="Chapitres du centre d’aide">
+                <button id="helpOverview" class="active" type="button" aria-current="page">
+                    Vue d’ensemble
+                </button>
+                <div id="helpChapterList"></div>
+            </nav>
+
+            <section
+                id="helpContent"
+                class="helpContent"
+                tabindex="-1"
+                aria-live="polite"
+                aria-atomic="true"
+            ></section>
         </div>
 
-        <section id="onboardingContent" class="onboardingContent"></section>
-
-        <div class="onboardingActions">
-            <button id="skipOnboarding" type="button">Passer</button>
-            <span></span>
-            <button id="previousOnboarding" type="button">Précédent</button>
-            <button id="nextOnboarding" type="button">Suivant</button>
-        </div>
+        <footer class="helpActions">
+            <button id="resumeTutorial" type="button" hidden>Reprendre le parcours</button>
+            <button id="startTutorial" class="primaryHelpAction" type="button">
+                Lancer le parcours essentiel
+            </button>
+        </footer>
     </dialog>
+
+    <div id="tutorialLayer" class="tutorialLayer" hidden>
+        <div class="tutorialMask tutorialMask--top" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--right" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--bottom" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--left" aria-hidden="true"></div>
+        <div id="tutorialSpotlight" class="tutorialSpotlight" aria-hidden="true"></div>
+
+        <section
+            id="tutorialCard"
+            class="tutorialCard"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tutorialTitle"
+            aria-describedby="tutorialDescription tutorialDetail"
+        >
+            <div class="tutorialHeading">
+                <div>
+                    <span id="tutorialKind">PARCOURS ESSENTIEL</span>
+                    <span id="tutorialStepLabel" role="status" aria-live="polite">Étape 1 sur 9</span>
+                </div>
+                <button id="closeTutorial" type="button" aria-label="Fermer le parcours guidé">×</button>
+            </div>
+
+            <span class="tutorialProgressTrack" aria-hidden="true">
+                <i id="tutorialProgressBar"></i>
+            </span>
+
+            <div class="tutorialContent" aria-live="polite" aria-atomic="true">
+                <h2 id="tutorialTitle" tabindex="-1"></h2>
+                <p id="tutorialDescription"></p>
+                <p id="tutorialDetail" class="tutorialDetail"></p>
+            </div>
+
+            <div class="tutorialActions">
+                <button id="skipTutorial" type="button">Passer le parcours</button>
+                <span></span>
+                <button id="previousTutorial" type="button">Précédent</button>
+                <button id="nextTutorial" type="button">Suivant</button>
+            </div>
+        </section>
+    </div>
 
     <script src="/route_planner.js"></script>
     <script src="/app.js"></script>

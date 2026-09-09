@@ -83,6 +83,7 @@ class PreferenceStoreTests(unittest.TestCase):
             "game_mode_filter": "save",
             "dsu_mode": "integrated",
             "onboarding_completed": True,
+            "tutorial_completed_version": "1",
         }, 0)
         restored = PreferenceStore(self.path).load()
         self.assertEqual(restored, saved)
@@ -104,6 +105,18 @@ class PreferenceStoreTests(unittest.TestCase):
                 with self.assertRaisesRegex(ManualTrackingError, "Préférence invalide"):
                     self.store.update(
                         {"onboarding_completed": invalid},
+                        saved["revision"],
+                    )
+        self.assertEqual(self.store.load(), saved)
+
+    def test_tutorial_completion_is_versioned_and_strict(self):
+        saved = self.store.update({"tutorial_completed_version": "1"}, 0)
+        self.assertEqual(saved["values"]["tutorial_completed_version"], "1")
+        for invalid in (True, 1, "0", "2", None):
+            with self.subTest(value=invalid):
+                with self.assertRaisesRegex(ManualTrackingError, "Préférence invalide"):
+                    self.store.update(
+                        {"tutorial_completed_version": invalid},
                         saved["revision"],
                     )
         self.assertEqual(self.store.load(), saved)

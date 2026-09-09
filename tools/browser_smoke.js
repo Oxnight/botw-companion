@@ -68,29 +68,96 @@ async function assertAccessible(page, context) {
 }
 
 async function exerciseOnboarding(page) {
-  const dialog = page.locator("#onboardingDialog");
-  if (await dialog.isVisible()) {
-    assert((await page.locator("#onboardingStepLabel").textContent()).includes("1 sur 3"),
-      "L’assistant de premier lancement ne commence pas à la première étape");
-    await assertAccessible(page, "assistant de premier lancement");
-    await page.locator("#nextOnboarding").click();
-    assert((await page.locator("#onboardingTitle").textContent()).includes("sauvegarde"),
+  const tutorial = page.locator("#tutorialLayer");
+  const help = page.locator("#helpDialog");
+  const businessStateBefore = await page.evaluate(() => ({
+    syncInterval: document.querySelector("#syncInterval")?.value,
+    syncPaused: document.querySelector("#pauseSync")?.getAttribute("aria-pressed"),
+    routeHidden: document.querySelector("#routeBody")?.hasAttribute("hidden"),
+    checkedFilters: document.querySelectorAll("#categories input[type=checkbox]:checked").length,
+    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent
+  }));
+  const externalRequests = [];
+  const observeRequest = request => {
+    if (new URL(request.url()).origin !== new URL(page.baseUrl).origin) {
+      externalRequests.push(request.url());
+    }
+  };
+  page.on("request", observeRequest);
+
+  if (await tutorial.isVisible()) {
+    assert((await page.locator("#tutorialStepLabel").textContent()).includes("1 sur 9"),
+      "Le parcours de premier lancement ne commence pas à la première des neuf étapes");
+    assert((await page.locator("#tutorialSpotlight").boundingBox())?.width > 0,
+      "La première cible du parcours n’est pas mise en évidence");
+    await assertAccessible(page, "parcours de premier lancement");
+    await page.locator("#nextTutorial").click();
+    assert((await page.locator("#tutorialTitle").textContent()).includes("sauvegarde"),
       "La deuxième étape du premier lancement est absente");
-    await page.locator("#nextOnboarding").click();
-    assert((await page.locator("#onboardingTitle").textContent()).includes("Gyroscope"),
-      "La présentation facultative du gyroscope est absente");
-    await page.locator("#nextOnboarding").click();
-    await dialog.waitFor({state: "hidden"});
-    const preferences = await fetchJson(page, "/api/preferences");
-    assert(preferences.body.values.onboarding_completed === true,
-      "La fin du premier lancement n’est pas conservée");
+
+    await page.keyboard.press("Escape");
+    await tutorial.waitFor({state: "hidden"});
+    let preferences = await fetchJson(page, "/api/preferences");
+    assert(preferences.body.values.tutorial_completed_version === undefined,
+      "Fermer le parcours ne doit pas le marquer comme terminé");
+
+    await page.locator("#openHelp").click();
+    await help.waitFor({state: "visible"});
+    assert(await page.locator("[data-help-chapter]").count() === 12,
+      "Le centre d’aide ne contient pas ses douze chapitres");
+    assert((await page.locator("#resumeTutorial").textContent()).includes("étape 2"),
+      "Le parcours interrompu ne peut pas être repris à la bonne étape");
+    await page.locator("#resumeTutorial").click();
+    await tutorial.waitFor({state: "visible"});
+    assert((await page.locator("#tutorialStepLabel").textContent()).includes("2 sur 9"),
+      "La reprise du parcours a perdu la progression en mémoire");
+
+    for (let index = 1; index < 9; index += 1) {
+      await page.locator("#nextTutorial").click();
+    }
+    await tutorial.waitFor({state: "hidden"});
+    await page.waitForFunction(async () => {
+      const response = await fetch("/api/preferences");
+      const data = await response.json();
+      return data.values.tutorial_completed_version === "1";
+    });
+    preferences = await fetchJson(page, "/api/preferences");
+    assert(preferences.body.values.tutorial_completed_version === "1",
+      "La version terminée du tutoriel n’est pas conservée");
+    await help.waitFor({state: "visible"});
+    await page.locator("#closeHelp").click();
+    await help.waitFor({state: "hidden"});
   }
 
   await page.locator("#openHelp").click();
-  await dialog.waitFor({state: "visible"});
+  await help.waitFor({state: "visible"});
+  assert(await page.locator("[data-help-chapter]").count() === 12,
+    "Le centre d’aide ne contient pas ses douze chapitres");
+  await assertAccessible(page, "centre d’aide");
+  await page.locator('[data-help-chapter="completion"]').click();
+  assert((await page.locator("#helpContent h3").textContent()).includes("pourcentages"),
+    "Un chapitre ne peut pas être ouvert depuis le sommaire");
+  await page.locator("[data-start-chapter]").click();
+  await tutorial.waitFor({state: "visible"});
+  assert((await page.locator("#tutorialKind").textContent()).includes("CONTEXTUELLE"),
+    "L’aide contextuelle d’un chapitre ne démarre pas");
+  await page.locator("#closeTutorial").click();
+  await help.waitFor({state: "visible"});
   await page.keyboard.press("Escape");
-  await dialog.waitFor({state: "hidden"});
+  await help.waitFor({state: "hidden"});
   await page.waitForFunction(() => document.activeElement?.id === "openHelp");
+  page.off("request", observeRequest);
+  assert(externalRequests.length === 0,
+    `L’aide a effectué un appel externe inattendu : ${externalRequests.join(", ")}`);
+  const businessStateAfter = await page.evaluate(() => ({
+    syncInterval: document.querySelector("#syncInterval")?.value,
+    syncPaused: document.querySelector("#pauseSync")?.getAttribute("aria-pressed"),
+    routeHidden: document.querySelector("#routeBody")?.hasAttribute("hidden"),
+    checkedFilters: document.querySelectorAll("#categories input[type=checkbox]:checked").length,
+    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent
+  }));
+  assert(JSON.stringify(businessStateAfter) === JSON.stringify(businessStateBefore),
+    "Le tutoriel a modifié un état métier de l’application");
 }
 
 async function captureBloodMoonReferences(page, browserName) {
@@ -196,7 +263,7 @@ async function runDesktop(browser, baseUrl, browserName) {
   const updateHref = await page.locator("#downloadUpdate").getAttribute("href");
   assert(updateHref ===
     "https://github.com/Oxnight/botw-companion/releases/download/" +
-    "v0.40.0-alpha.36/BOTW_Companion_0.40.0-alpha.36_Setup.exe",
+    "v0.40.0-alpha.37/BOTW_Companion_0.40.0-alpha.37_Setup.exe",
     "La mise à jour ne cible pas exactement l’installateur Windows attendu");
   await page.locator("#dismissUpdate").click();
   await page.locator("#updateBanner").waitFor({state: "hidden"});
@@ -472,6 +539,26 @@ async function runResponsive(browser, baseUrl, browserName) {
       ? `${overflowingRegion.name} déborde en affichage étroit : ` +
         `${overflowingRegion.scroll}px pour ${overflowingRegion.client}px`
       : "Les régions principales respectent la largeur mobile");
+
+  await page.locator("#openHelp").click();
+  await page.locator("#helpDialog").waitFor({state: "visible"});
+  const helpBounds = await page.locator("#helpDialog").boundingBox();
+  assert(helpBounds && helpBounds.width <= 390 && helpBounds.height <= 844,
+    "Le centre d’aide dépasse de l’affichage mobile");
+  assert(await page.locator("[data-help-chapter]").count() === 12,
+    "Le sommaire mobile ne contient pas les douze chapitres");
+  await page.locator('[data-help-chapter="application"]').click();
+  await page.locator("[data-start-chapter]").click();
+  await page.locator("#tutorialLayer").waitFor({state: "visible"});
+  const tutorialBounds = await page.locator("#tutorialCard").boundingBox();
+  assert(tutorialBounds && tutorialBounds.x >= 0 && tutorialBounds.y >= 0 &&
+    tutorialBounds.x + tutorialBounds.width <= 390 &&
+    tutorialBounds.y + tutorialBounds.height <= 844,
+  "Le parcours contextuel dépasse de l’affichage mobile");
+  await page.keyboard.press("Escape");
+  await page.locator("#helpDialog").waitFor({state: "visible"});
+  await page.locator("#closeHelp").click();
+  await page.locator("#helpDialog").waitFor({state: "hidden"});
 
   await page.locator("#toggleRoute").click();
   await page.waitForFunction(() => !document.querySelector("#routeBody").hidden);

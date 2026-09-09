@@ -6,6 +6,22 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [À venir]
 
+## [0.40.0-alpha.36] - 2026-09-09
+
+### Ajouté
+
+- Centre d’aide hors ligne composé de douze chapitres couvrant toutes les
+  fonctions principales du Companion.
+- Parcours guidé de neuf étapes qui met en évidence les commandes réelles sans
+  déclencher d’action ni modifier les données.
+- Reprise du parcours interrompu, aide contextuelle par chapitre et mémorisation
+  de la version du tutoriel terminée.
+
+### Accessibilité
+
+- Navigation intégrale au clavier, piège de focus, retour au point d’ouverture,
+  annonces d’étape et comportement adapté à la réduction des animations.
+
 ## [0.40.0-alpha.35] - 2026-09-09
 
 ### Modifié
@@ -128,7 +144,8 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 - Raccourcis Bureau et menu Démarrer et conservation des données à la mise à
   niveau.
 
-[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.35...HEAD
+[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.36...HEAD
+[0.40.0-alpha.36]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.35...v0.40.0-alpha.36
 [0.40.0-alpha.35]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.34...v0.40.0-alpha.35
 [0.40.0-alpha.34]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.33...v0.40.0-alpha.34
 [0.40.0-alpha.33]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.32...v0.40.0-alpha.33

@@ -25,7 +25,9 @@ const detailCache = new Map();
 let manualTracking = { schema_version: 2, revision: 0, updated_at: null, entries: {} };
 let preferencesData = { schema_version: 1, revision: 0, updated_at: null, values: {} };
 let preferenceSaveQueue = Promise.resolve();
-let onboardingStep = 0, onboardingShown = false, onboardingReopened = false;
+let onboardingShown = false, helpReturnFocus = null;
+let helpChapterId = null, tutorialResume = null, tutorialInertState = [];
+let tutorialState = null, tutorialPositionFrame = null, tutorialResizeObserver = null;
 let detailReturnTarget = null, manualReviewReturnFocus = null;
 const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
@@ -33,6 +35,7 @@ const PROFILE_KEY = "botw-companion-completion-profile";
 const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
 const DSU_SOURCE_KEY = "botw-companion-dsu-source";
 const UPDATE_DISMISSED_KEY = "botw-companion-update-dismissed";
+const TUTORIAL_VERSION = "1";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
@@ -194,67 +197,520 @@ function savePreference(name, value) {
     return preferenceSaveQueue;
 }
 
-const ONBOARDING_STEPS = [
+const HELP_CHAPTERS = [
     {
-        title: "Bienvenue dans BOTW Companion",
-        description: "L’application analyse ta sauvegarde directement sur cet appareil. Ta sauvegarde et tes données personnelles ne sont jamais envoyées.",
-        detail: "La carte, les guides et tes validations restent hors ligne. Seule la version publiée sur GitHub peut être consultée avec un délai court."
+        id: "privacy",
+        title: "Confidentialité et mode hors ligne",
+        summary: "Ce qui reste sur ton appareil et ce qui nécessite Internet.",
+        target: "header",
+        points: [
+            "L’analyse de la sauvegarde, la carte, les guides, le suivi manuel et les itinéraires fonctionnent localement.",
+            "La sauvegarde et les données personnelles du Companion ne sont envoyées à aucun service distant.",
+            "Une connexion est utilisée uniquement lorsque tu demandes une vérification de mise à jour ou ouvres une source externe. Une panne de réseau ne bloque pas le Companion."
+        ],
+        tip: "Les services locaux du Companion écoutent seulement sur 127.0.0.1, c’est-à-dire ton propre ordinateur."
     },
     {
-        title: "Ta sauvegarde est prête",
-        description: "BOTW Companion détecte automatiquement le dernier slot pris en charge et actualise la progression pendant que tu joues.",
-        detail: () => {
-            const save = report?.sauvegarde || {};
-            return `${save.emulateur || "Émulateur"} • ${save.plateforme || runtimePlatform.label || "Système local"} • slot ${save.slot || "-"}`;
-        }
+        id: "save",
+        title: "Sauvegarde et slot analysé",
+        summary: "Comprendre la détection de Ryujinx ou Cemu et le choix du slot.",
+        target: "#savePreview",
+        points: [
+            "Le bandeau supérieur indique l’émulateur détecté, la plateforme et le slot actuellement conservé.",
+            "BOTW Companion compare les sauvegardes prises en charge et retient la progression la plus récente d’après les informations internes du jeu.",
+            "L’aperçu, la date et la source permettent de vérifier que tu consultes bien la partie attendue. Une écriture incomplète n’écrase jamais le dernier rapport valide."
+        ],
+        tip: "Si la mauvaise partie apparaît, vérifie le chemin de sauvegarde de l’émulateur puis utilise « Lire maintenant »."
     },
     {
-        title: "Gyroscope facultatif",
-        description: "Le moteur JoyConDSU est déjà inclus. Active-le seulement si ton émulateur doit recevoir les mouvements d’une manette compatible.",
-        detail: "Il reste désactivé par défaut et utilise uniquement le serveur local 127.0.0.1:26760."
+        id: "sync",
+        title: "Synchronisation de la sauvegarde",
+        summary: "Intervalle, pause, lecture immédiate et historique.",
+        target: ".syncSaveArea",
+        points: [
+            "Choisis l’intervalle auquel le Companion vérifie si la sauvegarde a réellement changé.",
+            "« Pause » suspend les lectures automatiques sans arrêter l’application. « Lire maintenant » déclenche une vérification immédiate.",
+            "L’historique récent distingue une lecture réussie, une sauvegarde inchangée et une erreur temporaire. Le dernier résultat valide reste affiché en cas d’échec."
+        ],
+        tip: "Une vérification fréquente n’accélère pas l’écriture de l’émulateur ; 30 secondes convient dans la plupart des cas."
+    },
+    {
+        id: "completion",
+        title: "Les deux pourcentages",
+        summary: "Distinguer la carte officielle du profil de complétion.",
+        target: ".hero",
+        points: [
+            "Le pourcentage officiel reproduit le compteur de carte de BOTW : Korogus, sanctuaires, lieux, tours, créatures cartographiques et contenu DLC applicable.",
+            "Le profil de complétion est un indicateur plus large propre au Companion. Il mesure les objectifs que la sauvegarde permet de confirmer automatiquement.",
+            "Les deux nombres n’ont donc ni le même total ni le même rôle. Le sélecteur de formule ou de profil permet d’examiner le jeu de base, le DLC et les profils spécialisés."
+        ],
+        tip: "Déplie « éléments empêchant le 100 % » pour voir précisément ce qui manque au profil sélectionné."
+    },
+    {
+        id: "navigation",
+        title: "Catégories, recherche et filtres",
+        summary: "Réduire la liste aux objectifs utiles.",
+        target: ".toolbar",
+        points: [
+            "La navigation latérale choisit les catégories visibles. La recherche accepte un nom, une région ou un terme présent dans une fiche.",
+            "Les filtres séparent les états, contenus additionnels, modes de jeu, localisations, variantes et régions.",
+            "Un objectif peut être automatique, manuel, mixte ou informatif. Le bandeau de portée signale les limites du filtre actif afin d’éviter une interprétation incorrecte."
+        ],
+        tip: "Commence par une catégorie, puis affine avec la recherche : la carte et la liste utilisent exactement le même périmètre."
+    },
+    {
+        id: "map",
+        title: "Carte d’Hyrule",
+        summary: "Déplacement, zoom, marqueurs et ouverture des fiches.",
+        target: ".mapPanel",
+        points: [
+            "Déplace la carte par glisser-déposer, utilise la molette ou les boutons pour zoomer, et le bouton maison pour revenir à la vue d’ensemble.",
+            "Les marqueurs reprennent l’état des objectifs filtrés. Sélectionner un marqueur ouvre la même fiche que son entrée dans la liste.",
+            "Certains objectifs se déroulent dans un intérieur ou ne possèdent pas de coordonnées fiables : ils restent accessibles dans la liste sans faux emplacement sur Hyrule."
+        ],
+        tip: "La carte et toutes ses tuiles sont intégrées à l’application et restent disponibles hors ligne."
+    },
+    {
+        id: "guides",
+        title: "Fiches, preuves et guides",
+        summary: "Lire le statut, les solutions et leurs limites.",
+        target: ".listPanel",
+        points: [
+            "Chaque fiche rassemble l’état détecté, la position disponible, les étapes utiles, les récompenses, coffres ou conditions associées.",
+            "Une preuve automatique vient de la sauvegarde ; elle n’affirme jamais une action que les données du jeu ne permettent pas de distinguer.",
+            "Les guides peuvent inclure des sources externes. Leur consultation nécessite Internet, mais le contenu essentiel de la fiche est déjà embarqué."
+        ],
+        tip: "Les mentions de limite ou de validation manuelle sont volontaires : elles évitent de transformer une absence de preuve en faux résultat."
+    },
+    {
+        id: "manual",
+        title: "Suivi manuel et sauvegarde des données",
+        summary: "Cases personnelles, notes, import et export.",
+        target: ".manualBar",
+        points: [
+            "Le suivi manuel complète l’analyse sans modifier le pourcentage officiel ni prétendre provenir de la sauvegarde du jeu.",
+            "Tu peux revoir les validations, ajouter des notes et retirer une case depuis le panneau de contrôle.",
+            "Les exports permettent de transférer ou sauvegarder tes validations et les données du Companion. Un import vérifie le format avant de remplacer les données locales."
+        ],
+        tip: "Effectue régulièrement « Sauvegarder toutes les données » si tu prévois de changer d’ordinateur."
+    },
+    {
+        id: "routes",
+        title: "Planificateur d’itinéraire",
+        summary: "Créer, ordonner et conserver des sessions de jeu.",
+        target: "#routePlanner",
+        points: [
+            "Ajoute les résultats filtrés ou un objectif précis à une session, puis choisis un point de départ facultatif.",
+            "L’optimisation peut privilégier la distance directe, les régions ou les téléportations. Les étapes verrouillées conservent leur position.",
+            "Le calcul est indicatif : il ne simule ni relief, météo, escalade, ennemis ni ressources consommées. Les sessions peuvent être dupliquées, importées ou exportées."
+        ],
+        tip: "Verrouille les étapes obligatoires avant d’optimiser pour conserver l’ordre des rendez-vous importants."
+    },
+    {
+        id: "blood_moon",
+        title: "Lune de sang",
+        summary: "Interpréter le compteur interne et l’estimation.",
+        target: "#bloodMoonPanel",
+        points: [
+            "Le panneau lit le compteur enregistré par BOTW et estime le temps de jeu actif restant avant le seuil normal des sept jours.",
+            "Une lune peut être programmée puis reportée si les conditions du jeu ne permettent pas la cinématique à minuit.",
+            "L’estimation dépend de la dernière sauvegarde lue : un jeu en pause, un menu ou une période non sauvegardée peut expliquer un écart avec le temps réel."
+        ],
+        tip: "Le pourcentage représente l’avancement du minuteur connu, pas une probabilité aléatoire de déclenchement."
+    },
+    {
+        id: "dsu",
+        title: "Gyroscope JoyConDSU",
+        summary: "Manette, calibration, diagnostic et émulateur.",
+        target: "#dsuControl",
+        points: [
+            "Sélectionne une manette compatible, puis active le moteur seulement lorsque ton émulateur doit recevoir ses mouvements.",
+            "Le diagnostic mesure fréquence, retard, jitter, pertes et recalibrations. Une qualité insuffisante peut venir du Bluetooth, de la veille ou d’une autre application utilisant la manette.",
+            "L’émulateur doit être configuré pour le serveur DSU local 127.0.0.1:26760. Le moteur reste désactivé par défaut et s’arrête proprement avec le Companion."
+        ],
+        tip: "Pose la manette immobile pendant la calibration et évite de lancer plusieurs serveurs DSU sur le même port."
+    },
+    {
+        id: "application",
+        title: "Mises à jour, aide et fermeture",
+        summary: "Gérer l’application sans perdre tes données.",
+        target: ".appActions",
+        points: [
+            "« Vérifier les mises à jour » consulte la dernière Release compatible avec un délai court. En cas de coupure Internet, le Companion continue de fonctionner normalement.",
+            "Le bouton Aide rouvre ce centre et permet de reprendre le parcours ou d’afficher directement un chapitre.",
+            "Utilise « Quitter » pour arrêter proprement le serveur local et JoyConDSU. Les données personnelles restent dans le dossier de données de l’application, séparé de l’installation."
+        ],
+        tip: () => runtimePlatform.data_directory
+            ? `Données et journaux locaux : ${runtimePlatform.data_directory}`
+            : "Les données et journaux sont conservés dans le dossier de données de l’application, séparé du programme installé."
     }
 ];
 
-function renderOnboardingStep() {
-    const step = ONBOARDING_STEPS[onboardingStep],
-        detail = typeof step.detail === "function" ? step.detail() : step.detail,
-        last = onboardingStep === ONBOARDING_STEPS.length - 1;
+const ESSENTIAL_TUTORIAL_STEPS = [
+    {
+        chapter: "privacy",
+        title: "Bienvenue dans BOTW Companion",
+        description: "Le Companion analyse ta progression sur cet ordinateur et reste utilisable sans connexion Internet.",
+        detail: "Ta sauvegarde n’est pas envoyée. Seules les mises à jour et les sources externes utilisent Internet, lorsque tu les demandes.",
+        target: "header"
+    },
+    {
+        chapter: "save",
+        title: "Vérifie la sauvegarde retenue",
+        description: "L’émulateur, le slot, la date et l’aperçu confirment quelle partie est actuellement analysée.",
+        detail: () => {
+            const save = report?.sauvegarde || {};
+            return `${save.emulateur || "Émulateur détecté"} • ${save.plateforme || runtimePlatform.label || "Système local"} • slot ${save.slot || "en cours de détection"}`;
+        },
+        target: "#savePreview"
+    },
+    {
+        chapter: "sync",
+        title: "Garde la progression à jour",
+        description: "Choisis l’intervalle de lecture, mets la synchronisation en pause ou demande une lecture immédiate.",
+        detail: "Une erreur temporaire ne remplace jamais le dernier rapport valide. L’historique récent explique chaque lecture.",
+        target: ".syncSaveArea"
+    },
+    {
+        chapter: "completion",
+        title: "Deux mesures, deux usages",
+        description: "L’anneau doré reproduit la carte officielle de BOTW ; l’anneau vert mesure les objectifs automatiquement vérifiables du profil choisi.",
+        detail: "Leurs totaux sont différents. Déplie les éléments bloquants pour comprendre précisément ce qui manque au profil de complétion.",
+        target: ".hero"
+    },
+    {
+        chapter: "navigation",
+        title: "Trouve ce qui t’intéresse",
+        description: "Combine catégories, recherche et filtres pour définir les objectifs affichés dans la liste et sur la carte.",
+        detail: "Les états automatique, manuel, mixte et informatif restent distincts afin de ne jamais confondre une preuve de sauvegarde avec une case personnelle.",
+        target: ".toolbar"
+    },
+    {
+        chapter: "map",
+        title: "Explore la carte et les fiches",
+        description: "Déplace et zoome la carte, puis sélectionne un marqueur ou un résultat pour ouvrir sa fiche détaillée.",
+        detail: "Les objectifs intérieurs ou sans coordonnées fiables restent dans la liste plutôt que d’être placés arbitrairement sur Hyrule.",
+        target: ".mapPanel"
+    },
+    {
+        chapter: "manual",
+        title: "Conserve tes validations personnelles",
+        description: "Le suivi manuel, les notes et les exports complètent l’analyse automatique sans modifier le compteur officiel.",
+        detail: "Le planificateur situé plus bas permet ensuite de regrouper ces objectifs en sessions et d’en optimiser l’ordre indicatif.",
+        target: ".manualBar"
+    },
+    {
+        chapter: "blood_moon",
+        title: "Anticipe la lune de sang",
+        description: "Ce panneau interprète le minuteur enregistré dans la dernière sauvegarde et les étapes de programmation du jeu.",
+        detail: "L’estimation suit le temps de jeu actif connu. Une cinématique peut être reportée si les conditions ne sont pas réunies à minuit.",
+        target: "#bloodMoonPanel"
+    },
+    {
+        chapter: "dsu",
+        title: "Active le gyroscope seulement si nécessaire",
+        description: "JoyConDSU est inclus, mais reste désactivé tant que ton émulateur n’a pas besoin des mouvements de la manette.",
+        detail: "Le bouton Aide permet de retrouver les 12 chapitres, dont la configuration DSU, les itinéraires, les sauvegardes et les mises à jour.",
+        target: "#dsuControl"
+    }
+];
 
-    $("#onboardingStepLabel").textContent =
-        `Étape ${onboardingStep + 1} sur ${ONBOARDING_STEPS.length}`;
-    $("#onboardingProgressBar").style.width =
-        `${(onboardingStep + 1) / ONBOARDING_STEPS.length * 100}%`;
-    $("#onboardingContent").innerHTML =
-        `<p class="eyebrow">PREMIER LANCEMENT</p>` +
-        `<h2 id="onboardingTitle" tabindex="-1">${esc(step.title)}</h2>` +
-        `<p id="onboardingDescription">${esc(step.description)}</p>` +
-        `<p class="onboardingDetail">${esc(detail)}</p>`;
-    $("#previousOnboarding").hidden = onboardingStep === 0;
-    $("#nextOnboarding").textContent = last ? "Commencer" : "Suivant";
-    requestAnimationFrame(() => $("#onboardingTitle").focus());
+function chapterById(id) {
+    return HELP_CHAPTERS.find(chapter => chapter.id === id) || null;
+}
+
+function renderHelpNavigation() {
+    $("#helpChapterList").innerHTML = HELP_CHAPTERS.map((chapter, index) =>
+        `<button type="button" data-help-chapter="${esc(chapter.id)}">` +
+        `<span>${String(index + 1).padStart(2, "0")}</span>${esc(chapter.title)}</button>`
+    ).join("");
+}
+
+function updateHelpNavigation() {
+    $("#helpOverview").classList.toggle("active", helpChapterId === null);
+    $("#helpOverview").toggleAttribute("aria-current", helpChapterId === null);
+    document.querySelectorAll("[data-help-chapter]").forEach(button => {
+        const active = button.dataset.helpChapter === helpChapterId;
+        button.classList.toggle("active", active);
+        button.toggleAttribute("aria-current", active);
+        if (active) button.setAttribute("aria-current", "page");
+    });
+}
+
+function renderHelpOverview() {
+    helpChapterId = null;
+    updateHelpNavigation();
+    $("#helpContent").innerHTML =
+        `<p class="eyebrow">BIEN DÉMARRER</p>` +
+        `<h3>Choisis le niveau d’aide qui te convient</h3>` +
+        `<p>Le parcours essentiel présente neuf repères directement dans l’interface. Les chapitres détaillés restent disponibles ici à tout moment.</p>` +
+        `<div class="helpOverviewCards">` +
+        `<article><b>Parcours guidé</b><span>9 étapes contextuelles • environ 3 minutes</span></article>` +
+        `<article><b>Centre d’aide</b><span>12 chapitres complets • entièrement hors ligne</span></article>` +
+        `</div>` +
+        `<p class="helpPrivacyNote"><b>Aucune action n’est déclenchée pendant le parcours.</b> Les éléments sont seulement mis en évidence ; tes filtres, validations et sauvegardes ne sont jamais modifiés.</p>`;
+}
+
+function renderHelpChapter(id, focus = true) {
+    const chapter = chapterById(id);
+    if (!chapter) {
+        renderHelpOverview();
+        return;
+    }
+    const tip = typeof chapter.tip === "function" ? chapter.tip() : chapter.tip;
+    helpChapterId = id;
+    updateHelpNavigation();
+    $("#helpContent").innerHTML =
+        `<p class="eyebrow">CHAPITRE ${String(HELP_CHAPTERS.indexOf(chapter) + 1).padStart(2, "0")}</p>` +
+        `<h3>${esc(chapter.title)}</h3>` +
+        `<p>${esc(chapter.summary)}</p>` +
+        `<ul>${chapter.points.map(point => `<li>${esc(point)}</li>`).join("")}</ul>` +
+        `<p class="helpTip"><b>À retenir</b>${esc(tip)}</p>` +
+        `<button class="showHelpTarget" type="button" data-start-chapter="${esc(chapter.id)}">Voir dans l’interface</button>`;
+    if (focus) $("#helpContent").focus({ preventScroll: true });
+}
+
+function updateResumeTutorialButton() {
+    const button = $("#resumeTutorial");
+    if (!tutorialResume) {
+        button.hidden = true;
+        return;
+    }
+    button.hidden = false;
+    button.textContent = `Reprendre à l’étape ${tutorialResume.index + 1}`;
+}
+
+function showHelp(chapterId = null, returnFocus = document.activeElement) {
+    const dialog = $("#helpDialog");
+    if (dialog.open || tutorialState) return;
+    helpReturnFocus = returnFocus instanceof HTMLElement ? returnFocus : $("#openHelp");
+    renderHelpNavigation();
+    chapterId ? renderHelpChapter(chapterId, false) : renderHelpOverview();
+    updateResumeTutorialButton();
+    dialog.showModal();
+    requestAnimationFrame(() => $("#helpTitle").focus({ preventScroll: true }));
+}
+
+function closeHelp(restoreFocus = true) {
+    const dialog = $("#helpDialog");
+    if (!dialog.open) return;
+    dialog.close();
+    if (restoreFocus) {
+        const target = helpReturnFocus?.isConnected ? helpReturnFocus : $("#openHelp");
+        target.focus({ preventScroll: true });
+    }
+}
+
+function tutorialFocusableElements() {
+    return [...$("#tutorialCard").querySelectorAll(
+        "button:not([hidden]):not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+    )].filter(element => element.getClientRects().length > 0);
+}
+
+function setTutorialBackgroundInert(active) {
+    if (active) {
+        tutorialInertState = [...document.body.children]
+            .filter(element => element !== $("#tutorialLayer") && element.tagName !== "SCRIPT")
+            .map(element => ({ element, inert: element.inert }));
+        tutorialInertState.forEach(({ element }) => { element.inert = true; });
+        return;
+    }
+    tutorialInertState.forEach(({ element, inert }) => { element.inert = inert; });
+    tutorialInertState = [];
+}
+
+function currentTutorialStep() {
+    return tutorialState?.steps[tutorialState.index] || null;
+}
+
+function visibleTutorialTarget(step) {
+    if (!step?.target) return null;
+    const target = document.querySelector(step.target);
+    return target && target.getClientRects().length ? target : null;
+}
+
+function queueTutorialPosition() {
+    if (!tutorialState) return;
+    cancelAnimationFrame(tutorialPositionFrame);
+    tutorialPositionFrame = requestAnimationFrame(() => {
+        tutorialPositionFrame = requestAnimationFrame(positionTutorial);
+    });
+}
+
+function setTutorialRectangle(element, left, top, width, height) {
+    Object.assign(element.style, {
+        left: `${Math.max(0, left)}px`,
+        top: `${Math.max(0, top)}px`,
+        width: `${Math.max(0, width)}px`,
+        height: `${Math.max(0, height)}px`
+    });
+}
+
+function positionTutorial() {
+    if (!tutorialState) return;
+    const layer = $("#tutorialLayer"), card = $("#tutorialCard"),
+        spotlight = $("#tutorialSpotlight"), target = visibleTutorialTarget(currentTutorialStep()),
+        masks = [...layer.querySelectorAll(".tutorialMask")],
+        viewportWidth = window.innerWidth, viewportHeight = window.innerHeight,
+        margin = 12, gap = 16;
+
+    if (!target) {
+        setTutorialRectangle(masks[0], 0, 0, viewportWidth, viewportHeight);
+        masks.slice(1).forEach(mask => setTutorialRectangle(mask, 0, 0, 0, 0));
+        spotlight.hidden = true;
+        card.classList.add("tutorialCard--centered");
+        card.style.left = `${Math.max(margin, (viewportWidth - card.offsetWidth) / 2)}px`;
+        card.style.top = `${Math.max(margin, (viewportHeight - card.offsetHeight) / 2)}px`;
+        return;
+    }
+
+    const raw = target.getBoundingClientRect(), padding = 9,
+        left = Math.min(viewportWidth - 7, Math.max(7, raw.left - padding)),
+        top = Math.min(viewportHeight - 7, Math.max(7, raw.top - padding)),
+        right = Math.max(7, Math.min(viewportWidth - 7, raw.right + padding)),
+        bottom = Math.max(7, Math.min(viewportHeight - 7, raw.bottom + padding)),
+        width = Math.max(0, right - left), height = Math.max(0, bottom - top);
+
+    setTutorialRectangle(masks[0], 0, 0, viewportWidth, top);
+    setTutorialRectangle(masks[1], right, top, viewportWidth - right, height);
+    setTutorialRectangle(masks[2], 0, bottom, viewportWidth, viewportHeight - bottom);
+    setTutorialRectangle(masks[3], 0, top, left, height);
+    spotlight.hidden = false;
+    setTutorialRectangle(spotlight, left, top, width, height);
+    card.classList.remove("tutorialCard--centered");
+
+    const cardWidth = card.offsetWidth, cardHeight = card.offsetHeight;
+    let cardLeft = Math.min(
+        Math.max(margin, left + width / 2 - cardWidth / 2),
+        viewportWidth - cardWidth - margin
+    );
+    let cardTop;
+    if (viewportHeight - bottom >= cardHeight + gap) {
+        cardTop = bottom + gap;
+    } else if (top >= cardHeight + gap) {
+        cardTop = top - cardHeight - gap;
+    } else if (viewportWidth - right >= cardWidth + gap) {
+        cardLeft = right + gap;
+        cardTop = Math.min(Math.max(margin, top + height / 2 - cardHeight / 2), viewportHeight - cardHeight - margin);
+    } else if (left >= cardWidth + gap) {
+        cardLeft = left - cardWidth - gap;
+        cardTop = Math.min(Math.max(margin, top + height / 2 - cardHeight / 2), viewportHeight - cardHeight - margin);
+    } else {
+        cardTop = Math.max(margin, viewportHeight - cardHeight - margin);
+    }
+    card.style.left = `${cardLeft}px`;
+    card.style.top = `${Math.min(cardTop, viewportHeight - cardHeight - margin)}px`;
+}
+
+function renderTutorialStep(focusHeading = false) {
+    const step = currentTutorialStep(), total = tutorialState.steps.length,
+        detail = typeof step.detail === "function" ? step.detail() : step.detail,
+        last = tutorialState.index === total - 1,
+        target = visibleTutorialTarget(step);
+    $("#tutorialKind").textContent = tutorialState.kind === "essential"
+        ? "PARCOURS ESSENTIEL"
+        : "AIDE CONTEXTUELLE";
+    $("#tutorialStepLabel").textContent = `Étape ${tutorialState.index + 1} sur ${total}`;
+    $("#tutorialProgressBar").style.width = `${(tutorialState.index + 1) / total * 100}%`;
+    $("#tutorialTitle").textContent = step.title;
+    $("#tutorialDescription").textContent = step.description;
+    $("#tutorialDetail").textContent = target
+        ? detail
+        : `${detail || ""} Cette partie de l’interface n’est pas disponible dans l’état actuel, mais l’explication reste accessible.`.trim();
+    $("#previousTutorial").hidden = tutorialState.index === 0;
+    $("#skipTutorial").hidden = tutorialState.kind !== "essential";
+    $("#nextTutorial").textContent = last ? "Terminer" : "Suivant";
+    if (target) {
+        target.scrollIntoView({
+            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+            block: "center",
+            inline: "nearest"
+        });
+    }
+    tutorialResizeObserver?.disconnect();
+    tutorialResizeObserver?.observe($("#tutorialCard"));
+    if (target) tutorialResizeObserver?.observe(target);
+    queueTutorialPosition();
+    if (focusHeading) requestAnimationFrame(() => $("#tutorialTitle").focus({ preventScroll: true }));
+}
+
+function openTutorial(steps, options = {}) {
+    if (!steps.length || tutorialState) return;
+    const helpWasOpen = $("#helpDialog").open;
+    if (helpWasOpen) closeHelp(false);
+    tutorialState = {
+        steps,
+        index: Math.min(options.index || 0, steps.length - 1),
+        kind: options.kind || "essential",
+        returnToHelp: options.returnToHelp ?? helpWasOpen,
+        helpChapterId: options.helpChapterId || helpChapterId,
+        returnFocus: options.returnFocus instanceof HTMLElement
+            ? options.returnFocus
+            : (document.activeElement instanceof HTMLElement ? document.activeElement : $("#mainContent"))
+    };
+    tutorialResizeObserver = typeof ResizeObserver === "function"
+        ? new ResizeObserver(queueTutorialPosition)
+        : null;
+    $("#tutorialLayer").hidden = false;
+    setTutorialBackgroundInert(true);
+    renderTutorialStep(true);
+}
+
+function startEssentialTutorial(resume = false, returnToHelp = false) {
+    openTutorial(ESSENTIAL_TUTORIAL_STEPS, {
+        kind: "essential",
+        index: resume && tutorialResume ? tutorialResume.index : 0,
+        returnToHelp,
+        returnFocus: returnToHelp ? $("#openHelp") : $("#mainContent")
+    });
+}
+
+function startChapterTutorial(id) {
+    const chapter = chapterById(id);
+    if (!chapter) return;
+    const tip = typeof chapter.tip === "function" ? chapter.tip() : chapter.tip;
+    openTutorial([{
+        title: chapter.title,
+        description: chapter.summary,
+        detail: tip,
+        target: chapter.target
+    }], {
+        kind: "chapter",
+        returnToHelp: true,
+        helpChapterId: id,
+        returnFocus: $("#openHelp")
+    });
+}
+
+async function closeTutorial({ persist = false, returnToHelp } = {}) {
+    if (!tutorialState) return;
+    const previous = tutorialState;
+    tutorialState = null;
+    cancelAnimationFrame(tutorialPositionFrame);
+    tutorialResizeObserver?.disconnect();
+    tutorialResizeObserver = null;
+    $("#tutorialLayer").hidden = true;
+    setTutorialBackgroundInert(false);
+    if (previous.kind === "essential") {
+        tutorialResume = persist ? null : { index: previous.index };
+        if (persist && preferencesData.values.tutorial_completed_version !== TUTORIAL_VERSION) {
+            await savePreference("tutorial_completed_version", TUTORIAL_VERSION);
+        }
+    }
+    if (returnToHelp ?? previous.returnToHelp) {
+        showHelp(previous.helpChapterId, previous.returnFocus);
+    } else {
+        previous.returnFocus?.focus({ preventScroll: true });
+    }
 }
 
 function showOnboarding(force = false) {
-    const dialog = $("#onboardingDialog");
-    if (dialog.open) return;
-    onboardingStep = 0;
-    onboardingShown = true;
-    onboardingReopened = force;
-    renderOnboardingStep();
-    dialog.showModal();
-}
-
-async function closeOnboarding(persist = true) {
-    const dialog = $("#onboardingDialog");
-    if (!dialog.open) return;
-    if (persist && preferencesData.values.onboarding_completed !== true) {
-        await savePreference("onboarding_completed", true);
+    if (force) {
+        showHelp();
+        return;
     }
-    const focusTarget = onboardingReopened
-        ? $("#openHelp")
-        : $("#mainContent");
-    dialog.close();
-    focusTarget.focus({ preventScroll: true });
+    onboardingShown = true;
+    startEssentialTutorial(false, false);
 }
 
 async function migrateBrowserPreferences() {
@@ -1277,7 +1733,7 @@ async function load(showToast = false) {
 
         preferencesData = preferences;
         if (
-            preferencesData.values.onboarding_completed !== true &&
+            preferencesData.values.tutorial_completed_version !== TUTORIAL_VERSION &&
             !onboardingShown
         ) {
             showOnboarding();
@@ -4846,7 +5302,7 @@ $("#manualReviewCategory").onchange =
 document.addEventListener(
     "keydown",
     e => {
-        if (e.key === "Escape" && !$("#onboardingDialog").open) {
+        if (e.key === "Escape" && !$("#helpDialog").open && !tutorialState) {
             closeDetails();
             closeManualReview()
         }
@@ -5004,7 +5460,7 @@ $("#toggleDsu").onclick =
     toggleDsu;
 
 $("#openHelp").onclick =
-    () => showOnboarding(true);
+    () => showHelp(null, $("#openHelp"));
 
 $("#checkUpdates").onclick =
     () => checkForUpdates(true);
@@ -5016,32 +5472,100 @@ $("#dismissUpdate").onclick =
         $("#updateBanner").hidden = true;
     };
 
-$("#skipOnboarding").onclick =
-    () => closeOnboarding(true);
+$("#closeHelp").onclick =
+    () => closeHelp(true);
 
-$("#previousOnboarding").onclick =
+$("#helpOverview").onclick =
     () => {
-        onboardingStep = Math.max(0, onboardingStep - 1);
-        renderOnboardingStep();
+        renderHelpOverview();
+        $("#helpContent").focus({ preventScroll: true });
     };
 
-$("#nextOnboarding").onclick =
-    () => {
-        if (onboardingStep < ONBOARDING_STEPS.length - 1) {
-            onboardingStep += 1;
-            renderOnboardingStep();
-        } else {
-            closeOnboarding(true);
-        }
+$("#helpChapterList").onclick =
+    event => {
+        const button = event.target.closest("[data-help-chapter]");
+        if (button) renderHelpChapter(button.dataset.helpChapter);
     };
 
-$("#onboardingDialog").addEventListener(
+$("#helpContent").onclick =
+    event => {
+        const button = event.target.closest("[data-start-chapter]");
+        if (button) startChapterTutorial(button.dataset.startChapter);
+    };
+
+$("#startTutorial").onclick =
+    () => {
+        tutorialResume = null;
+        startEssentialTutorial(false, true);
+    };
+
+$("#resumeTutorial").onclick =
+    () => startEssentialTutorial(true, true);
+
+$("#helpDialog").addEventListener(
     "cancel",
     event => {
         event.preventDefault();
-        closeOnboarding(true);
+        closeHelp(true);
     }
 );
+
+$("#closeTutorial").onclick =
+    () => closeTutorial({ persist: false });
+
+$("#skipTutorial").onclick =
+    () => closeTutorial({ persist: true, returnToHelp: false });
+
+$("#previousTutorial").onclick =
+    () => {
+        if (!tutorialState) return;
+        tutorialState.index = Math.max(0, tutorialState.index - 1);
+        renderTutorialStep();
+    };
+
+$("#nextTutorial").onclick =
+    () => {
+        if (!tutorialState) return;
+        if (tutorialState.index < tutorialState.steps.length - 1) {
+            tutorialState.index += 1;
+            renderTutorialStep();
+        } else {
+            closeTutorial({ persist: tutorialState.kind === "essential" });
+        }
+    };
+
+$("#tutorialLayer").addEventListener(
+    "keydown",
+    event => {
+        if (!tutorialState) return;
+        if (event.key === "Escape") {
+            event.preventDefault();
+            closeTutorial({ persist: false });
+            return;
+        }
+        if (event.key !== "Tab") return;
+        const focusable = tutorialFocusableElements();
+        if (!focusable.length) {
+            event.preventDefault();
+            $("#tutorialTitle").focus();
+            return;
+        }
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (!focusable.includes(document.activeElement)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first).focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+);
+
+window.addEventListener("scroll", queueTutorialPosition, true);
+window.addEventListener("resize", queueTutorialPosition);
 
 document.addEventListener(
     "visibilitychange",
