@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from pathlib import Path
+import json
 import tempfile
 import threading
 import unittest
@@ -193,6 +194,30 @@ class FakeUpdateChecker:
         return {"status": "up_to_date", "update_available": False}
 
 
+class FakeUpdateDownloadManager:
+    def __init__(self) -> None:
+        self.actions = []
+        self.closed = False
+
+    def status(self) -> dict:
+        return {"status": "inactive", "can_cancel": False, "can_retry": False}
+
+    def start(self) -> dict:
+        self.actions.append("start")
+        return {"status": "checking"}
+
+    def retry(self) -> dict:
+        self.actions.append("retry")
+        return {"status": "checking"}
+
+    def cancel(self) -> dict:
+        self.actions.append("cancel")
+        return {"status": "cancelled"}
+
+    def close(self) -> None:
+        self.closed = True
+
+
 class ServerLifecycleIntegrationTests(unittest.TestCase):
     SESSION_TOKEN = "integration-test-session-token"
 
@@ -310,11 +335,13 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
 
     def test_update_endpoint_supports_cached_and_manual_checks(self):
         checker = FakeUpdateChecker()
+        downloads = FakeUpdateDownloadManager()
         with self.running_server(
             lambda: {},
             instance_guard=FakeInstanceGuard(),
             dsu_manager=FakeDsuManager(),
             update_checker=checker,
+            update_download_manager=downloads,
         ) as (_thread, port):
             with open_loopback(f"http://127.0.0.1:{port}/api/update", timeout=1) as response:
                 self.assertEqual(response.status, 200)
@@ -323,7 +350,22 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
                 headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
             ), timeout=1) as response:
                 self.assertEqual(response.status, 200)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/download",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+            ), timeout=1) as response:
+                self.assertEqual(json.loads(response.read())["status"], "inactive")
+            for action, expected_status in (("start", 202), ("cancel", 200), ("retry", 202)):
+                with open_loopback(Request(
+                    f"http://127.0.0.1:{port}/api/update/download/{action}",
+                    data=b"",
+                    headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                    method="POST",
+                ), timeout=1) as response:
+                    self.assertEqual(response.status, expected_status)
         self.assertEqual(checker.forces, [False, True])
+        self.assertEqual(downloads.actions[:3], ["start", "cancel", "retry"])
+        self.assertTrue(downloads.closed)
 
     def test_selected_save_caption_is_served_as_a_private_jpeg(self):
         with tempfile.TemporaryDirectory() as directory:

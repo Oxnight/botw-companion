@@ -32,6 +32,7 @@ from .report_views import ReportViewCache, report_revision_key
 from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
 from .updates import UpdateChecker
+from .update_downloads import UpdateDownloadManager
 from . import __version__
 
 
@@ -93,7 +94,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           shutdown_notifier_factory=None,
           server_ready=None,
           session_token: str | None = None,
-          update_checker: UpdateChecker | None = None) -> None:
+          update_checker: UpdateChecker | None = None,
+          update_download_manager: UpdateDownloadManager | None = None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -104,6 +106,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     lifecycle = WebLifecycle(inactivity_seconds)
     dsu_manager = dsu_manager or DsuManager()
     update_checker = update_checker or UpdateChecker()
+    update_download_manager = update_download_manager or UpdateDownloadManager(update_checker)
     session_token = session_token or secrets.token_urlsafe(32)
     if not isinstance(session_token, str) or not session_token:
         raise ValueError("Le jeton de session local ne peut pas être vide")
@@ -216,7 +219,9 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             parsed = urlsplit(self.path)
             path = parsed.path
             force = parse_qs(parsed.query).get("force", ["0"])[0] == "1"
-            if not self._request_is_allowed(mutating=force):
+            if not self._request_is_allowed(
+                mutating=force or path == "/api/update/download"
+            ):
                 return
             if path == "/api/report":
                 try:
@@ -291,6 +296,9 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 return
             if path == "/api/update":
                 self._json_response(200, update_checker.check(force=force))
+                return
+            if path == "/api/update/download":
+                self._json_response(200, update_download_manager.status())
                 return
             if path in {"/api/manual", "/api/manual/export"}:
                 try:
@@ -398,7 +406,17 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             if path == "/api/heartbeat":
                 self._json_response(200, lifecycle.heartbeat())
                 return
+            if path == "/api/update/download/start":
+                self._json_response(202, update_download_manager.start())
+                return
+            if path == "/api/update/download/retry":
+                self._json_response(202, update_download_manager.retry())
+                return
+            if path == "/api/update/download/cancel":
+                self._json_response(200, update_download_manager.cancel())
+                return
             if path == "/api/shutdown":
+                update_download_manager.cancel()
                 dsu_manager.stop()
                 self._json_response(200, {"status": "arret", "message": "BOTW Companion va s’arrêter"})
                 request_server_shutdown("bouton_quitter")
@@ -538,6 +556,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
         if watcher is not None:
             watcher.stop()
         dsu_manager.close()
+        update_download_manager.close()
         server.server_close()
         shutdown_notifier.close()
         guard.close()

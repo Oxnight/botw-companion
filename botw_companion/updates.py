@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from threading import RLock
 import time
 from typing import Callable
@@ -18,6 +19,7 @@ REPOSITORY = "Oxnight/botw-companion"
 RELEASES_API = f"https://api.github.com/repos/{REPOSITORY}/releases?per_page=30"
 RELEASES_PAGE = f"https://github.com/{REPOSITORY}/releases"
 MAX_RESPONSE_BYTES = 1_000_000
+MAX_ASSET_BYTES = 1_073_741_824
 DEFAULT_TIMEOUT_SECONDS = 3.0
 SUCCESS_CACHE_SECONDS = 15 * 60
 FAILURE_CACHE_SECONDS = 60
@@ -176,7 +178,8 @@ class UpdateChecker:
                 and item.get("name") == filename
                 and item.get("state") == "uploaded"
                 and isinstance(item.get("size"), int)
-                and item["size"] > 0
+                and not isinstance(item.get("size"), bool)
+                and 0 < item["size"] <= MAX_ASSET_BYTES
             ),
             None,
         )
@@ -185,6 +188,17 @@ class UpdateChecker:
         download_url = _safe_download_url(tag, filename)
         if not _exact_https_url(asset.get("browser_download_url"), download_url):
             raise UpdateCheckError("Adresse de téléchargement GitHub non reconnue")
+        digest = asset.get("digest")
+        if not isinstance(digest, str) or re.fullmatch(r"sha256:[0-9a-fA-F]{64}", digest) is None:
+            raise UpdateCheckError("Empreinte de mise à jour absente ou invalide")
+        content_type = asset.get("content_type")
+        allowed_types = {
+            "application/octet-stream",
+            "application/x-msdownload",
+            "application/x-apple-diskimage",
+        }
+        if content_type not in allowed_types:
+            raise UpdateCheckError("Type de paquet de mise à jour non reconnu")
 
         return {
             "status": "update_available",
@@ -195,6 +209,9 @@ class UpdateChecker:
             "platform": target,
             "filename": filename,
             "download_url": download_url,
+            "size": asset["size"],
+            "digest": digest.casefold(),
+            "content_type": content_type,
             "release_url": release_url,
             "prerelease": version.is_prerelease,
         }

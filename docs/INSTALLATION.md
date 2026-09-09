@@ -56,12 +56,23 @@ If no save is found, see
 ## Updating
 
 BOTW Companion briefly checks GitHub Releases at startup. When a newer
-compatible version is available, a banner offers the correct package. Use
-**Vérifier les mises à jour** to retry manually.
+compatible version is available, a banner offers the correct package. Select
+**Télécharger la mise à jour** to start a managed download, or use **Vérifier
+les mises à jour** to retry the version check manually.
 
 When offline, the check times out quickly and silently. Save analysis, maps,
 guides, tracking, and motion controls remain available. A download never starts
 without a user action.
+
+The banner reports downloaded bytes, total size, progress, and transfer speed.
+Cancel keeps the valid partial file; Retry resumes it when GitHub still serves
+the same asset. BOTW Companion restarts from zero if the remote validator has
+changed. It rejects an incomplete package or one whose size or SHA-256 digest
+does not match the GitHub Release metadata. This internal verification does not
+create or publish a checksum text file.
+
+Verified packages are stored under the `updates` subdirectory of the user data
+directory. Alpha 38 does not replace a running application automatically.
 
 Install the new package over the existing version:
 

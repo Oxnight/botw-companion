@@ -141,20 +141,61 @@ class BrowserTestUpdateChecker:
             "status": "update_available",
             "update_available": True,
             "current_version": CURRENT_VERSION.display,
-            "latest_version": "0.40.0-alpha.38",
-            "title": "BOTW Companion 0.40.0 alpha 38",
+            "latest_version": "0.40.0-alpha.39",
+            "title": "BOTW Companion 0.40.0 alpha 39",
             "platform": "windows",
-            "filename": "BOTW_Companion_0.40.0-alpha.38_Setup.exe",
+            "filename": "BOTW_Companion_0.40.0-alpha.39_Setup.exe",
             "download_url": (
                 "https://github.com/Oxnight/botw-companion/releases/download/"
-                "v0.40.0-alpha.38/BOTW_Companion_0.40.0-alpha.38_Setup.exe"
+                "v0.40.0-alpha.39/BOTW_Companion_0.40.0-alpha.39_Setup.exe"
             ),
             "release_url": (
                 "https://github.com/Oxnight/botw-companion/releases/tag/"
-                "v0.40.0-alpha.38"
+                "v0.40.0-alpha.39"
             ),
             "prerelease": True,
+            "size": 67108864,
+            "digest": "sha256:" + "a" * 64,
+            "content_type": "application/octet-stream",
         }
+
+
+class BrowserTestUpdateDownloadManager:
+    def __init__(self) -> None:
+        self.started = False
+
+    def _state(self) -> dict:
+        return {
+            "status": "ready_to_install" if self.started else "inactive",
+            "version": "0.40.0-alpha.39" if self.started else None,
+            "filename": "BOTW_Companion_0.40.0-alpha.39_Setup.exe" if self.started else None,
+            "bytes_received": 67108864 if self.started else 0,
+            "bytes_total": 67108864 if self.started else 0,
+            "progress": 100.0 if self.started else 0.0,
+            "bytes_per_second": 0,
+            "message": "Téléchargement terminé et vérifié." if self.started else None,
+            "release_url": None,
+            "can_cancel": False,
+            "can_retry": False,
+            "ready_to_install": self.started,
+        }
+
+    def status(self) -> dict:
+        return self._state()
+
+    def start(self) -> dict:
+        self.started = True
+        return self._state()
+
+    def retry(self) -> dict:
+        return self.start()
+
+    def cancel(self) -> dict:
+        self.started = False
+        return self._state()
+
+    def close(self) -> None:
+        pass
 
 
 def build_report() -> dict:
@@ -216,6 +257,7 @@ def main() -> None:
             instance_guard=BrowserTestGuard(),
             shutdown_notifier_factory=lambda _callback: BrowserTestNotifier(),
             update_checker=BrowserTestUpdateChecker(),
+            update_download_manager=BrowserTestUpdateDownloadManager(),
         )
 
 

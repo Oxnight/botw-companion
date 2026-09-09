@@ -241,11 +241,17 @@
                 <p class="metricLabel">MISE À JOUR DISPONIBLE</p>
                 <h2 id="updateTitle">Une nouvelle version est disponible</h2>
                 <p id="updateVersions"></p>
+                <div id="updateProgress" class="updateProgress" hidden>
+                    <progress id="updateProgressBar" max="100" value="0"></progress>
+                    <p id="updateProgressText" role="status">Préparation du téléchargement…</p>
+                </div>
             </div>
             <div class="updateActions">
-                <a id="downloadUpdate" class="primaryAction" href="#" target="_blank" rel="noopener noreferrer">
+                <button id="downloadUpdate" class="primaryAction" type="button">
                     Télécharger la mise à jour
-                </a>
+                </button>
+                <button id="cancelUpdateDownload" type="button" hidden>Annuler</button>
+                <button id="retryUpdateDownload" type="button" hidden>Réessayer</button>
                 <a id="updateReleaseNotes" href="#" target="_blank" rel="noopener noreferrer">
                     Notes de version
                 </a>

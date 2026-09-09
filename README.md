@@ -70,9 +70,10 @@ not only from the temporary state of the final quest after the credits.
 
 The server listens only on `127.0.0.1`. Saves and progress data are never sent
 to a remote service. BOTW Companion may briefly query the public GitHub
-Releases endpoint to report an available update; that check times out quickly
-and never blocks offline use. External links and downloads require a user
-action.
+Releases endpoint to report an available update. After explicit consent, the
+local server can download the matching installer into the application data
+directory, resume an interrupted transfer, and verify GitHub's SHA-256 digest.
+These operations never block offline use.
 
 Personal data is stored outside the application:
 

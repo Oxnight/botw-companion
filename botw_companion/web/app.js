@@ -39,6 +39,8 @@ const TUTORIAL_VERSION = "1";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
+let updateDownloadTimer = null;
+let availableUpdateVersion = null;
 let runtimePlatform = {
     label: "Système local",
     native_dsu_engine: "DSU",
@@ -86,9 +88,8 @@ function rememberDismissedUpdate(version) {
 }
 
 function showAvailableUpdate(data, manual = false) {
-    const downloadUrl = trustedGitHubReleaseUrl(data.download_url, "download");
     const releaseUrl = trustedGitHubReleaseUrl(data.release_url, "release");
-    if (!downloadUrl || !releaseUrl || typeof data.latest_version !== "string") {
+    if (!releaseUrl || typeof data.latest_version !== "string") {
         if (manual) toast("La réponse de mise à jour n’est pas valide", true);
         return;
     }
@@ -96,10 +97,77 @@ function showAvailableUpdate(data, manual = false) {
     $("#updateTitle").textContent = data.title || `BOTW Companion ${data.latest_version}`;
     $("#updateVersions").textContent =
         `Version installée : ${data.current_version} • Nouvelle version : ${data.latest_version}`;
-    $("#downloadUpdate").href = downloadUrl;
-    $("#downloadUpdate").setAttribute("download", data.filename || "");
+    availableUpdateVersion = data.latest_version;
+    $("#downloadUpdate").disabled = false;
+    $("#downloadUpdate").textContent = "Télécharger la mise à jour";
     $("#updateReleaseNotes").href = releaseUrl;
     $("#updateBanner").hidden = false;
+    refreshUpdateDownload();
+}
+
+function formatUpdateBytes(value) {
+    const bytes = Math.max(0, Number(value) || 0);
+    if (bytes < 1024) return `${Math.round(bytes)} o`;
+    if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} Ko`;
+    return `${(bytes / 1024 ** 2).toFixed(1)} Mo`;
+}
+
+function renderUpdateDownload(state) {
+    if (!state || typeof state.status !== "string") return;
+    const active = ["checking", "downloading", "verifying"].includes(state.status);
+    const progressVisible = state.status !== "inactive";
+    const progress = Math.min(100, Math.max(0, Number(state.progress) || 0));
+    $("#updateProgress").hidden = !progressVisible;
+    $("#updateProgressBar").value = progress;
+    $("#cancelUpdateDownload").hidden = !state.can_cancel;
+    $("#retryUpdateDownload").hidden = !state.can_retry;
+    $("#downloadUpdate").disabled = active || state.status === "ready_to_install";
+    if (state.status === "ready_to_install") {
+        $("#downloadUpdate").textContent = "Téléchargement vérifié";
+    } else if (active) {
+        $("#downloadUpdate").textContent = state.status === "verifying" ? "Vérification…" : "Téléchargement…";
+    } else {
+        $("#downloadUpdate").textContent = "Télécharger la mise à jour";
+    }
+    const amount = state.bytes_total > 0
+        ? `${formatUpdateBytes(state.bytes_received)} sur ${formatUpdateBytes(state.bytes_total)} (${progress.toFixed(1)} %)`
+        : "";
+    const rate = state.bytes_per_second > 0
+        ? ` • ${formatUpdateBytes(state.bytes_per_second)}/s`
+        : "";
+    $("#updateProgressText").textContent = [state.message, amount].filter(Boolean).join(" ") + rate;
+    if (active) scheduleUpdateDownloadPoll();
+}
+
+function scheduleUpdateDownloadPoll() {
+    clearTimeout(updateDownloadTimer);
+    updateDownloadTimer = setTimeout(refreshUpdateDownload, 750);
+}
+
+async function refreshUpdateDownload() {
+    try {
+        const response = await fetch("/api/update/download");
+        if (!response.ok) throw Error("service indisponible");
+        renderUpdateDownload(await response.json());
+    } catch (_error) {
+        clearTimeout(updateDownloadTimer);
+    }
+}
+
+async function updateDownloadAction(action) {
+    const response = await fetch(`/api/update/download/${action}`, { method: "POST" });
+    const state = await response.json();
+    if (!response.ok) throw Error(state.erreur || "service indisponible");
+    renderUpdateDownload(state);
+    scheduleUpdateDownloadPoll();
+}
+
+async function startUpdateDownload() {
+    try {
+        await updateDownloadAction("start");
+    } catch (_error) {
+        toast("Le téléchargement ne peut pas démarrer pour le moment", true);
+    }
 }
 
 async function checkForUpdates(manual = false) {
@@ -336,7 +404,7 @@ const HELP_CHAPTERS = [
         summary: "Gérer l’application sans perdre tes données.",
         target: ".appActions",
         points: [
-            "« Vérifier les mises à jour » consulte la dernière Release compatible avec un délai court. En cas de coupure Internet, le Companion continue de fonctionner normalement.",
+            "« Vérifier les mises à jour » consulte la dernière Release compatible avec un délai court. Le téléchargement démarre uniquement après confirmation, peut reprendre après une coupure et doit être vérifié avant toute installation.",
             "Le bouton Aide rouvre ce centre et permet de reprendre le parcours ou d’afficher directement un chapitre.",
             "Utilise « Quitter » pour arrêter proprement le serveur local et JoyConDSU. Les données personnelles restent dans le dossier de données de l’application, séparé de l’installation."
         ],
@@ -5465,11 +5533,33 @@ $("#openHelp").onclick =
 $("#checkUpdates").onclick =
     () => checkForUpdates(true);
 
+$("#downloadUpdate").onclick =
+    startUpdateDownload;
+
+$("#cancelUpdateDownload").onclick =
+    async () => {
+        try {
+            await updateDownloadAction("cancel");
+        } catch (_error) {
+            toast("Impossible d’annuler le téléchargement", true);
+        }
+    };
+
+$("#retryUpdateDownload").onclick =
+    async () => {
+        try {
+            await updateDownloadAction("retry");
+        } catch (_error) {
+            toast("Impossible de reprendre le téléchargement", true);
+        }
+    };
+
 $("#dismissUpdate").onclick =
     () => {
-        const latest = $("#updateVersions").textContent.match(/Nouvelle version : (.+)$/)?.[1];
+        const latest = availableUpdateVersion;
         if (latest) rememberDismissedUpdate(latest);
         $("#updateBanner").hidden = true;
+        clearTimeout(updateDownloadTimer);
     };
 
 $("#closeHelp").onclick =

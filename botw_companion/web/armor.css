@@ -1245,6 +1245,43 @@ aside {
     color: var(--muted);
 }
 
+.updateBanner > div:first-child {
+    flex: 1 1 420px;
+    min-width: 0;
+}
+
+.updateProgress {
+    margin-top: 10px;
+}
+
+.updateProgress progress {
+    display: block;
+    width: min(100%, 560px);
+    height: 9px;
+    margin-bottom: 7px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 999px;
+    accent-color: var(--gold);
+    background: rgba(255, 255, 255, .08);
+}
+
+.updateProgress progress::-webkit-progress-bar {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .08);
+}
+
+.updateProgress progress::-webkit-progress-value,
+.updateProgress progress::-moz-progress-bar {
+    border-radius: 999px;
+    background: var(--gold);
+}
+
+#updateProgressText {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
 .updateActions {
     display: flex;
     align-items: center;
@@ -1270,6 +1307,11 @@ aside {
     color: #101719;
     background: var(--gold);
     font-weight: 700;
+}
+
+.updateActions button:disabled {
+    cursor: default;
+    opacity: .72;
 }
 
 .updateActions a:hover,

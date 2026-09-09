@@ -187,6 +187,10 @@ class ServerSecurityTests(unittest.TestCase):
             ("POST", "/api/backup/import", {"backup": {}}),
             ("GET", "/api/sync?force=1", None),
             ("GET", "/api/update?force=1", None),
+            ("GET", "/api/update/download", None),
+            ("POST", "/api/update/download/start", None),
+            ("POST", "/api/update/download/retry", None),
+            ("POST", "/api/update/download/cancel", None),
         )
         with self.running_server() as (thread, port, dsu):
             for method, path, body in cases:

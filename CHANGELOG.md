@@ -6,6 +6,22 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.40.0-alpha.38] - 2026-09-09
+
+### Added
+
+- Managed update downloads with progress, cancellation, bounded retries, and
+  HTTP range resumption.
+- Recovery of verified downloads after the Companion restarts.
+
+### Security
+
+- Validate the release repository, version, platform asset, media type, size,
+  redirect hosts, and GitHub-provided SHA-256 digest before accepting a
+  package.
+- Keep partial and verified packages in the user data directory and publish a
+  completed download only through an atomic rename.
+
 ## [0.40.0-alpha.37] - 2026-09-09
 
 ### Changed

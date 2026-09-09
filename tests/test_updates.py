@@ -38,6 +38,8 @@ def release(version, *, prerelease=True, draft=False, asset_platform="windows"):
             "name": filename,
             "state": "uploaded",
             "size": 123456,
+            "digest": "sha256:" + "a" * 64,
+            "content_type": "application/octet-stream",
             "browser_download_url":
                 f"https://github.com/Oxnight/botw-companion/releases/download/{tag}/{filename}",
         }],
@@ -64,6 +66,8 @@ class UpdateCheckerTests(unittest.TestCase):
         payload = checker.check()
         self.assertEqual(payload["latest_version"], "0.40.0-alpha.8")
         self.assertEqual(payload["filename"], "BOTW_Companion_0.40.0-alpha.8_Setup.exe")
+        self.assertEqual(payload["digest"], "sha256:" + "a" * 64)
+        self.assertEqual(payload["size"], 123456)
         self.assertEqual(calls, [(RELEASES_API, 0.25)])
 
     def test_stable_channel_ignores_prereleases(self):
@@ -88,6 +92,21 @@ class UpdateCheckerTests(unittest.TestCase):
             [candidate], current=ReleaseVersion.parse("0.40.0-alpha.7"), system="Windows"
         )
         self.assertEqual(checker.check()["status"], "unavailable")
+
+    def test_missing_digest_wrong_type_and_excessive_size_are_rejected(self):
+        mutations = (
+            lambda asset: asset.pop("digest"),
+            lambda asset: asset.update(content_type="text/html"),
+            lambda asset: asset.update(size=2_000_000_000),
+        )
+        for mutate in mutations:
+            with self.subTest(mutation=mutate):
+                candidate = release("0.40.0-alpha.8")
+                mutate(candidate["assets"][0])
+                checker, _ = self.checker(
+                    [candidate], current=ReleaseVersion.parse("0.40.0-alpha.7"), system="Windows"
+                )
+                self.assertEqual(checker.check()["status"], "unavailable")
 
     def test_api_redirect_is_rejected(self):
         checker = UpdateChecker(

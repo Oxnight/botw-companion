@@ -278,11 +278,12 @@ async function runDesktop(browser, baseUrl, browserName) {
   await waitForApplication(page, browserName);
   await exerciseOnboarding(page);
   await page.locator("#updateBanner").waitFor({state: "visible"});
-  const updateHref = await page.locator("#downloadUpdate").getAttribute("href");
-  assert(updateHref ===
-    "https://github.com/Oxnight/botw-companion/releases/download/" +
-    "v0.40.0-alpha.38/BOTW_Companion_0.40.0-alpha.38_Setup.exe",
-    "La mise à jour ne cible pas exactement l’installateur Windows attendu");
+  assert(await page.locator("#downloadUpdate").getAttribute("href") === null,
+    "Le navigateur ne doit jamais recevoir un lien direct d'installation");
+  await page.locator("#downloadUpdate").click();
+  await page.locator("#updateProgressText").filter({hasText: "terminé et vérifié"}).waitFor();
+  assert(await page.locator("#updateProgressBar").evaluate(element => element.value) === 100,
+    "Le téléchargement vérifié doit atteindre 100 %");
   await page.locator("#dismissUpdate").click();
   await page.locator("#updateBanner").waitFor({state: "hidden"});
   await page.locator("#checkUpdates").click();

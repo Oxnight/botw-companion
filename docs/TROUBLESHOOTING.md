@@ -57,6 +57,17 @@ save path.
   valid source.
 - Do not edit `.sav` files directly.
 
+## An update download stops
+
+- Keep BOTW Companion open and select **Réessayer** after the connection
+  returns. A valid partial download is retained.
+- If the banner reports insufficient disk space, free space on the volume that
+  contains the application data directory before retrying.
+- A security verification failure removes the rejected package. Download it
+  again only from the update banner or the official Releases page.
+- Save analysis, maps, guides, tracking, and JoyConDSU remain available while
+  update checks or downloads are unavailable.
+
 ## DSU motion controls do not work
 
 - Confirm that the selected source reports both a gyroscope and accelerometer.
