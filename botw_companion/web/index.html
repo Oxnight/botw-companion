@@ -208,6 +208,10 @@
                     Aide
                 </button>
 
+                <button id="checkUpdates" type="button">
+                    Vérifier les mises à jour
+                </button>
+
                 <button id="quitCompanion" class="dangerButton">
                     Quitter
                 </button>
@@ -222,6 +226,23 @@
                     <p>Aucun événement.</p>
                 </div>
             </details>
+        </section>
+
+        <section id="updateBanner" class="panel updateBanner" aria-live="polite" hidden>
+            <div>
+                <p class="metricLabel">MISE À JOUR DISPONIBLE</p>
+                <h2 id="updateTitle">Une nouvelle version est disponible</h2>
+                <p id="updateVersions"></p>
+            </div>
+            <div class="updateActions">
+                <a id="downloadUpdate" class="primaryAction" href="#" target="_blank" rel="noopener noreferrer">
+                    Télécharger la mise à jour
+                </a>
+                <a id="updateReleaseNotes" href="#" target="_blank" rel="noopener noreferrer">
+                    Notes de version
+                </a>
+                <button id="dismissUpdate" type="button">Plus tard</button>
+            </div>
         </section>
 
         <section
@@ -283,11 +304,6 @@
                             <path d="M-16 69c11-11 24-11 35-2 7-11 22-12 31-1 11-8 24-5 31 5 7-4 15-3 24 4H-16Z" />
                         </g>
 
-                        <g class="bloodMoonWisps">
-                            <path d="M16 84c-5-12 6-17 1-29" />
-                            <path d="M77 88c8-13-5-19 2-31" />
-                            <path d="M57 90c-4-9 5-13 1-22" />
-                        </g>
                         <g class="bloodMoonEmbers">
                             <circle cx="12" cy="82" r="1.2" />
                             <circle cx="28" cy="75" r="0.8" />

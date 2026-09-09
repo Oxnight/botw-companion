@@ -977,7 +977,16 @@ def _official_map(catalog: dict, flags: dict[str, object]) -> dict:
             "total": 16,
         },
         "donjon_final_dlc": {
-            "faits": int(_done(flags.get("Location_Dungeon136"))), "total": 1,
+            "faits": int(any(
+                _done(flags.get(name))
+                for name in (
+                    "Location_Dungeon136",
+                    "Used_App_FinalTrial",
+                    "Die_Boss_FinalTrial",
+                    "BalladOfHeroes_Finish",
+                )
+            )),
+            "total": 1,
         },
     }
 

@@ -31,6 +31,7 @@ from .runtime_state import RuntimeStateStore
 from .report_views import ReportViewCache, report_revision_key
 from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
+from .updates import UpdateChecker
 from . import __version__
 
 
@@ -91,7 +92,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           instance_guard=None,
           shutdown_notifier_factory=None,
           server_ready=None,
-          session_token: str | None = None) -> None:
+          session_token: str | None = None,
+          update_checker: UpdateChecker | None = None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -101,6 +103,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     report_views = ReportViewCache()
     lifecycle = WebLifecycle(inactivity_seconds)
     dsu_manager = dsu_manager or DsuManager()
+    update_checker = update_checker or UpdateChecker()
     session_token = session_token or secrets.token_urlsafe(32)
     if not isinstance(session_token, str) or not session_token:
         raise ValueError("Le jeton de session local ne peut pas être vide")
@@ -285,6 +288,9 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                         "shutdown_reason": lifecycle.shutdown_reason,
                     },
                 })
+                return
+            if path == "/api/update":
+                self._json_response(200, update_checker.check(force=force))
                 return
             if path in {"/api/manual", "/api/manual/export"}:
                 try:

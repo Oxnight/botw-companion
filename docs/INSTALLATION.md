@@ -56,12 +56,23 @@ Si aucune sauvegarde n'est détectée, consulter le
 
 ## Mise à jour
 
-Télécharger le nouveau paquet depuis Releases et l'installer par-dessus la
-version existante :
+BOTW Companion consulte brièvement les Releases GitHub au démarrage. Si une
+version plus récente et compatible est publiée, un bandeau propose directement
+le bon paquet. Le bouton **Vérifier les mises à jour** permet de recommencer la
+vérification manuellement.
+
+Sans connexion, cette vérification expire rapidement et silencieusement :
+l'analyse, la carte, les guides, le suivi et le gyroscope restent entièrement
+fonctionnels hors ligne. Aucun téléchargement ne démarre sans clic.
+
+Installer ensuite le nouveau paquet par-dessus la version existante :
 
 - sous Windows, relancer le nouveau `Setup.exe` ;
 - sous macOS, remplacer l'application présente dans Applications par celle du
   nouveau DMG.
+
+Il n'est pas nécessaire de désinstaller la version précédente. Il reste aussi
+possible de télécharger manuellement le paquet depuis Releases.
 
 Le suivi manuel, les itinéraires, les préférences et les sauvegardes de sécurité
 restent dans un dossier utilisateur séparé :

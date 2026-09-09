@@ -1023,16 +1023,6 @@
     animation: bloodMoonMistDrift 11s ease-in-out infinite alternate;
 }
 
-.bloodMoonWisps {
-    fill: none;
-    stroke: #bc273b;
-    stroke-width: 2.1;
-    stroke-linecap: round;
-    opacity: var(--moon-malice-opacity, 0);
-    transition: opacity .8s ease;
-    animation: bloodMoonWispDrift 7s ease-in-out infinite alternate;
-}
-
 .bloodMoonEmbers {
     fill: #e55655;
     opacity: var(--moon-ember-opacity, 0);
@@ -1075,7 +1065,6 @@
 }
 
 .bloodMoonBar.just-occurred .bloodMoonMist,
-.bloodMoonBar.just-occurred .bloodMoonWisps,
 .bloodMoonBar.just-occurred .bloodMoonEmbers {
     opacity: .08;
     animation-duration: 10s;
@@ -1087,7 +1076,6 @@
 
 .bloodMoonBar.unavailable .bloodMoonCorona,
 .bloodMoonBar.unavailable .bloodMoonMist,
-.bloodMoonBar.unavailable .bloodMoonWisps,
 .bloodMoonBar.unavailable .bloodMoonEmbers {
     opacity: 0;
 }
@@ -1109,11 +1097,6 @@
 @keyframes bloodMoonMistDrift {
     from { transform: translate3d(-2px, 3px, 0) scaleX(1.04); }
     to { transform: translate3d(3px, 1px, 0) scaleX(.98); }
-}
-
-@keyframes bloodMoonWispDrift {
-    from { transform: translate3d(-1px, 2px, 0) scaleY(.95); }
-    to { transform: translate3d(2px, -2px, 0) scaleY(1.05); }
 }
 
 @keyframes bloodMoonAshRise {

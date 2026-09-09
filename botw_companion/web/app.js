@@ -32,6 +32,7 @@ const MAP_MODE_KEY = "botw-companion-map-formula";
 const PROFILE_KEY = "botw-companion-completion-profile";
 const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
 const DSU_SOURCE_KEY = "botw-companion-dsu-source";
+const UPDATE_DISMISSED_KEY = "botw-companion-update-dismissed";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
@@ -44,6 +45,95 @@ const LIST_PAGE_SIZE = 300;
 let listRenderLimit = LIST_PAGE_SIZE;
 const ROUTE_STORAGE_KEY = "botw-companion-route-v1", ROUTE_LIMIT = 1000;
 let routePickStart = false;
+
+function trustedGitHubReleaseUrl(value, kind) {
+    try {
+        const url = new URL(value);
+        const prefix = kind === "download"
+            ? "/Oxnight/botw-companion/releases/download/"
+            : "/Oxnight/botw-companion/releases/tag/";
+        return url.protocol === "https:" &&
+            url.hostname === "github.com" &&
+            url.port === "" &&
+            url.username === "" &&
+            url.password === "" &&
+            url.search === "" &&
+            url.hash === "" &&
+            url.pathname.startsWith(prefix)
+            ? url.href
+            : null;
+    } catch (_error) {
+        return null;
+    }
+}
+
+function dismissedUpdateVersion() {
+    try {
+        return sessionStorage.getItem(UPDATE_DISMISSED_KEY);
+    } catch (_error) {
+        return null;
+    }
+}
+
+function rememberDismissedUpdate(version) {
+    try {
+        sessionStorage.setItem(UPDATE_DISMISSED_KEY, version);
+    } catch (_error) {
+    }
+}
+
+function showAvailableUpdate(data, manual = false) {
+    const downloadUrl = trustedGitHubReleaseUrl(data.download_url, "download");
+    const releaseUrl = trustedGitHubReleaseUrl(data.release_url, "release");
+    if (!downloadUrl || !releaseUrl || typeof data.latest_version !== "string") {
+        if (manual) toast("La réponse de mise à jour n’est pas valide", true);
+        return;
+    }
+    if (!manual && dismissedUpdateVersion() === data.latest_version) return;
+    $("#updateTitle").textContent = data.title || `BOTW Companion ${data.latest_version}`;
+    $("#updateVersions").textContent =
+        `Version installée : ${data.current_version} • Nouvelle version : ${data.latest_version}`;
+    $("#downloadUpdate").href = downloadUrl;
+    $("#downloadUpdate").setAttribute("download", data.filename || "");
+    $("#updateReleaseNotes").href = releaseUrl;
+    $("#updateBanner").hidden = false;
+}
+
+async function checkForUpdates(manual = false) {
+    const button = $("#checkUpdates");
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    if (manual) {
+        button.disabled = true;
+        button.textContent = "Vérification…";
+    }
+    try {
+        const response = await fetch(`/api/update${manual ? "?force=1" : ""}`, {
+            signal: controller.signal
+        });
+        if (!response.ok) throw Error("service indisponible");
+        const data = await response.json();
+        if (data.update_available === true) {
+            showAvailableUpdate(data, manual);
+        } else if (manual && data.status === "up_to_date") {
+            toast("BOTW Companion est à jour");
+        } else if (manual && data.status === "unsupported") {
+            toast("La vérification automatique n’est pas disponible sur ce système", true);
+        } else if (manual) {
+            toast(data.message || "Vérification impossible pour le moment", true);
+        }
+    } catch (_error) {
+        if (manual) {
+            toast("Connexion indisponible. BOTW Companion reste utilisable hors ligne.", true);
+        }
+    } finally {
+        clearTimeout(timer);
+        if (manual) {
+            button.disabled = false;
+            button.textContent = "Vérifier les mises à jour";
+        }
+    }
+}
 
 function loadRouteState() {
     try {
@@ -107,8 +197,8 @@ function savePreference(name, value) {
 const ONBOARDING_STEPS = [
     {
         title: "Bienvenue dans BOTW Companion",
-        description: "L’application analyse ta sauvegarde directement sur cet appareil. Rien n’est envoyé sur Internet.",
-        detail: "La carte, les guides et tes validations personnelles restent disponibles hors ligne."
+        description: "L’application analyse ta sauvegarde directement sur cet appareil. Ta sauvegarde et tes données personnelles ne sont jamais envoyées.",
+        detail: "La carte, les guides et tes validations restent hors ligne. Seule la version publiée sur GitHub peut être consultée avec un délai court."
     },
     {
         title: "Ta sauvegarde est prête",
@@ -4916,6 +5006,16 @@ $("#toggleDsu").onclick =
 $("#openHelp").onclick =
     () => showOnboarding(true);
 
+$("#checkUpdates").onclick =
+    () => checkForUpdates(true);
+
+$("#dismissUpdate").onclick =
+    () => {
+        const latest = $("#updateVersions").textContent.match(/Nouvelle version : (.+)$/)?.[1];
+        if (latest) rememberDismissedUpdate(latest);
+        $("#updateBanner").hidden = true;
+    };
+
 $("#skipOnboarding").onclick =
     () => closeOnboarding(true);
 
@@ -4993,6 +5093,7 @@ $("#refresh").onclick =
 loadRuntimePlatform();
 load();
 refreshDsu();
+checkForUpdates(false);
 
 $("#exportManual").onclick =
     () => {

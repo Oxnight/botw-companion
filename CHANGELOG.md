@@ -6,6 +6,21 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [À venir]
 
+## [0.40.0-alpha.34] - 2026-09-09
+
+### Ajouté
+
+- Vérification non bloquante des nouvelles versions publiées sur GitHub.
+- Téléchargement guidé du Setup Windows ou du DMG Apple Silicon et commande de
+  vérification manuelle.
+
+### Corrigé
+
+- Lecture de la victoire persistante contre Ganon depuis `caption.sav`.
+- Détection du dernier marqueur de carte de l’Ode aux Prodiges à partir de ses
+  preuves persistantes.
+- Retrait des trois filaments rouges sous la lune de sang.
+
 ## [0.40.0-alpha.33] - 2026-09-08
 
 ### Ajouté
@@ -104,7 +119,8 @@ utilise [Semantic Versioning](https://semver.org/lang/fr/).
 - Raccourcis Bureau et menu Démarrer et conservation des données à la mise à
   niveau.
 
-[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.33...HEAD
+[À venir]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.34...HEAD
+[0.40.0-alpha.34]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.33...v0.40.0-alpha.34
 [0.40.0-alpha.33]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.32...v0.40.0-alpha.33
 [0.40.0-alpha.32]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.31...v0.40.0-alpha.32
 [0.40.0-alpha.31]: https://github.com/Oxnight/botw-companion/compare/v0.40.0-alpha.30...v0.40.0-alpha.31

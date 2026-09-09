@@ -166,6 +166,19 @@ class AnalyzerTests(unittest.TestCase):
             (hidden["faits"], hidden["total"], hidden["pourcentage"]),
         )
 
+    def test_final_trial_map_uses_persistent_dlc_evidence(self):
+        catalog = load_catalog()
+        for evidence in (
+            "Location_Dungeon136",
+            "Used_App_FinalTrial",
+            "Die_Boss_FinalTrial",
+            "BalladOfHeroes_Finish",
+        ):
+            with self.subTest(evidence=evidence):
+                report = _official_map(catalog, {evidence: True})
+                component = report["scenarios"]["dlc"]["components"]["donjon_final_dlc"]
+                self.assertEqual(component["faits"], 1)
+
     def test_all_quests_and_memories_have_structured_coordinates(self):
         catalog = load_catalog()
         groups = ("main_quests", "shrine_quests", "side_quests", "memories")

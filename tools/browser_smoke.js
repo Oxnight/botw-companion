@@ -62,7 +62,7 @@ async function assertAccessible(page, context) {
     const nodes = violation.nodes.slice(0, 3)
       .map(node => `${node.target.join(" ")}: ${node.failureSummary}`)
       .join(" | ");
-    return `${violation.id} (${violation.impact || "impact inconnu"}) — ${nodes}`;
+    return `${violation.id} (${violation.impact || "impact inconnu"}) - ${nodes}`;
   }).join("\n");
   throw new Error(`Audit d’accessibilité échoué (${context})\n${summary}`);
 }
@@ -192,6 +192,16 @@ async function runDesktop(browser, baseUrl, browserName) {
   progress(browserName, "bureau:chargement");
   await waitForApplication(page, browserName);
   await exerciseOnboarding(page);
+  await page.locator("#updateBanner").waitFor({state: "visible"});
+  const updateHref = await page.locator("#downloadUpdate").getAttribute("href");
+  assert(updateHref ===
+    "https://github.com/Oxnight/botw-companion/releases/download/" +
+    "v0.40.0-alpha.35/BOTW_Companion_0.40.0-alpha.35_Setup.exe",
+    "La mise à jour ne cible pas exactement l’installateur Windows attendu");
+  await page.locator("#dismissUpdate").click();
+  await page.locator("#updateBanner").waitFor({state: "hidden"});
+  await page.locator("#checkUpdates").click();
+  await page.locator("#updateBanner").waitFor({state: "visible"});
   await assertAccessible(page, "tableau de bord");
   progress(browserName, "bureau:carte");
 

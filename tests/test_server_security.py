@@ -186,6 +186,7 @@ class ServerSecurityTests(unittest.TestCase):
             ("POST", "/api/manual/import", {"tracking": {}}),
             ("POST", "/api/backup/import", {"backup": {}}),
             ("GET", "/api/sync?force=1", None),
+            ("GET", "/api/update?force=1", None),
         )
         with self.running_server() as (thread, port, dsu):
             for method, path, body in cases:

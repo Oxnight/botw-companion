@@ -15,6 +15,7 @@ from botw_companion.preferences import PreferenceStore
 from botw_companion.route_sessions import RouteSessionStore
 from botw_companion.runtime_state import RuntimeStateStore
 from botw_companion.server import serve
+from botw_companion.versioning import CURRENT_VERSION
 
 
 class BrowserTestSync:
@@ -134,6 +135,28 @@ class BrowserTestNotifier:
         pass
 
 
+class BrowserTestUpdateChecker:
+    def check(self, *, force=False) -> dict:
+        return {
+            "status": "update_available",
+            "update_available": True,
+            "current_version": CURRENT_VERSION.display,
+            "latest_version": "0.40.0-alpha.35",
+            "title": "BOTW Companion 0.40.0 alpha 35",
+            "platform": "windows",
+            "filename": "BOTW_Companion_0.40.0-alpha.35_Setup.exe",
+            "download_url": (
+                "https://github.com/Oxnight/botw-companion/releases/download/"
+                "v0.40.0-alpha.35/BOTW_Companion_0.40.0-alpha.35_Setup.exe"
+            ),
+            "release_url": (
+                "https://github.com/Oxnight/botw-companion/releases/tag/"
+                "v0.40.0-alpha.35"
+            ),
+            "prerelease": True,
+        }
+
+
 def build_report() -> dict:
     now = datetime.now(timezone.utc).isoformat()
     report = analyze({})
@@ -192,6 +215,7 @@ def main() -> None:
             running_emulators_provider=lambda: [],
             instance_guard=BrowserTestGuard(),
             shutdown_notifier_factory=lambda _callback: BrowserTestNotifier(),
+            update_checker=BrowserTestUpdateChecker(),
         )
 
 

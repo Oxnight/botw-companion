@@ -23,7 +23,13 @@ dossier. Cette suppression ne touche pas aux sauvegardes de l'émulateur.
 ## Réseau
 
 Le serveur écoute uniquement sur `127.0.0.1`. L'analyse de la sauvegarde, la
-carte, les guides et le suivi ne déclenchent aucune requête Internet. Une
-connexion n'est utilisée que si l'utilisateur ouvre lui-même un lien externe.
-Le téléchargement initial et les mises à jour passent par GitHub Releases, en
-dehors de l'application.
+carte, les guides et le suivi ne sont jamais envoyés sur Internet.
+
+Au démarrage, l'application peut consulter la liste publique des Releases de
+`github.com/Oxnight/botw-companion`. Cette requête ne contient ni sauvegarde,
+ni progression, ni préférence personnelle. Elle expire rapidement si la
+connexion est absente et n'empêche aucune fonction hors ligne. Une nouvelle
+tentative peut être demandée avec **Vérifier les mises à jour**.
+
+Le téléchargement ne commence qu'après un clic de l'utilisateur et cible
+directement le Setup Windows ou le DMG Apple Silicon publié sur GitHub.

@@ -36,6 +36,8 @@ les étapes détaillées et les avertissements SmartScreen ou Gatekeeper.
 - Filtres et marqueurs sur une carte haute définition utilisable hors ligne.
 - Suivi manuel, notes et planificateur d'itinéraire persistants.
 - Import, export et sauvegardes de sécurité des données du Companion.
+- Détection facultative des nouvelles versions avec téléchargement guidé du
+  paquet correspondant au système.
 - Estimation de la prochaine lune de sang depuis le compteur de la sauvegarde.
 - Serveur gyroscopique Cemuhook/DSU pour Ryujinx et Cemu avec diagnostic de
   calibration et de qualité.
@@ -73,9 +75,11 @@ générique.
 ## Données et confidentialité
 
 Le serveur écoute uniquement sur `127.0.0.1`. Les sauvegardes et données de
-progression ne sont envoyées à aucun service distant. Les liens vers des guides
-externes sont facultatifs et constituent les seuls accès réseau déclenchés
-depuis les fiches.
+progression ne sont envoyées à aucun service distant. Seule la liste publique
+des Releases GitHub peut être consultée pour signaler une mise à jour ; cette
+vérification expire rapidement et n'empêche jamais le fonctionnement hors
+ligne. Les liens externes et le téléchargement restent déclenchés par
+l'utilisateur.
 
 Les données personnelles sont conservées séparément de l'application :
 

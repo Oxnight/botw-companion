@@ -1220,6 +1220,63 @@ aside {
     overflow: visible;
 }
 
+.updateBanner[hidden] {
+    display: none;
+}
+
+.updateBanner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: -4px 0 16px;
+    padding: 16px 18px;
+    border-color: rgba(224, 181, 82, .55);
+    background: linear-gradient(110deg, rgba(224, 181, 82, .10), rgba(12, 23, 27, .96) 42%);
+}
+
+.updateBanner h2 {
+    margin: 3px 0 2px;
+    font-size: 17px;
+}
+
+.updateBanner p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.updateActions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.updateActions a,
+.updateActions button {
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    background: #14252a;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.updateActions .primaryAction {
+    border-color: var(--gold);
+    color: #101719;
+    background: var(--gold);
+    font-weight: 700;
+}
+
+.updateActions a:hover,
+.updateActions button:hover {
+    border-color: var(--gold);
+}
+
 .savePreview {
     display: grid;
     grid-template-columns: 168px minmax(0, 1fr);
@@ -2135,6 +2192,22 @@ aside {
 }
 
 @media(max-width:600px) {
+    .updateBanner {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .updateActions {
+        justify-content: stretch;
+    }
+
+    .updateActions a,
+    .updateActions button {
+        flex: 1 1 100%;
+        text-align: center;
+    }
+
     .syncControls label,
     .syncControls button {
         flex: 1 1 auto;

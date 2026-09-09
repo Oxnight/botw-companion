@@ -184,6 +184,15 @@ class FakeDsuManager:
         self.closed = True
 
 
+class FakeUpdateChecker:
+    def __init__(self) -> None:
+        self.forces = []
+
+    def check(self, *, force=False) -> dict:
+        self.forces.append(force)
+        return {"status": "up_to_date", "update_available": False}
+
+
 class ServerLifecycleIntegrationTests(unittest.TestCase):
     SESSION_TOKEN = "integration-test-session-token"
 
@@ -298,6 +307,23 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
                 pass
             thread.join(timeout=3)
             self.assertFalse(thread.is_alive())
+
+    def test_update_endpoint_supports_cached_and_manual_checks(self):
+        checker = FakeUpdateChecker()
+        with self.running_server(
+            lambda: {},
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=FakeDsuManager(),
+            update_checker=checker,
+        ) as (_thread, port):
+            with open_loopback(f"http://127.0.0.1:{port}/api/update", timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update?force=1",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+        self.assertEqual(checker.forces, [False, True])
 
     def test_selected_save_caption_is_served_as_a_private_jpeg(self):
         with tempfile.TemporaryDirectory() as directory:

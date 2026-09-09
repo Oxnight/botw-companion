@@ -1,7 +1,9 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from botw_companion.cli import _save_context
+from botw_companion.cli import _build_payload, _save_context
+from botw_companion.save import SaveSlot
 
 
 class CliProfileTests(unittest.TestCase):
@@ -25,3 +27,18 @@ class CliProfileTests(unittest.TestCase):
     def test_normal_slot_without_flag_stays_normal(self):
         context = _save_context(Path("/saves/1"), {})
         self.assertEqual(context["mode"], "normal")
+
+    def test_caption_game_clear_is_merged_into_analysis(self):
+        with (
+            patch("botw_companion.cli.analyze", return_value={}) as analyze,
+            patch("botw_companion.cli.blood_moon_status", return_value={}),
+        ):
+            _build_payload(
+                SaveSlot(Path("/saves/1"), 0),
+                {"GameClear": True},
+                {"GameClear": False, "GanonQuest_Finished": False},
+                [],
+                "Ryujinx Windows",
+            )
+        self.assertIs(analyze.call_args.args[0]["GameClear"], True)
+        self.assertIs(analyze.call_args.args[0]["GanonQuest_Finished"], False)
