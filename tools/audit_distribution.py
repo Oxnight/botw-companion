@@ -179,8 +179,9 @@ def repository_hygiene_errors(root: Path = ROOT) -> list[str]:
     """Reject generated, personal, and release-output files from source control."""
     findings: list[str] = []
     for path in _repository_files(root):
-        relative = path.relative_to(root)
-        if any(part in FORBIDDEN_PARTS for part in relative.parts):
+        relative_path = path.relative_to(root)
+        relative = relative_path.as_posix()
+        if any(part in FORBIDDEN_PARTS for part in relative_path.parts):
             findings.append(f"forbidden tracked directory: {relative}")
         elif path.name in FORBIDDEN_NAMES:
             findings.append(f"forbidden tracked local file: {relative}")
