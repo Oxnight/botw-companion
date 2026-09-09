@@ -67,6 +67,8 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("height: min(150px, 25vh);", armor)
         self.assertIn("test-results/browser", smoke)
         self.assertIn("responsive-help", smoke)
+        self.assertIn("responsive-tutorial", smoke)
+        self.assertIn('openedChapter.heading === "Mises à jour, aide et fermeture"', smoke)
         self.assertEqual(script.count('id: "privacy"'), 1)
         self.assertEqual(script.count('id: "application"'), 1)
         for chapter in (

@@ -591,17 +591,30 @@ async function runResponsive(browser, baseUrl, browserName) {
     `La navigation mobile n’est pas défilable : ${JSON.stringify(helpLayout.navigation)}`);
   await mobileNavigation.evaluate(element => { element.scrollTop = element.scrollHeight; });
   await applicationChapter.waitFor({state: "visible"});
-  await applicationChapter.focus();
-  await page.keyboard.press("Enter");
-  await page.waitForFunction(() =>
-    document.querySelector("#helpContent h3")?.textContent.includes("mises à jour"));
+  await applicationChapter.press("Enter");
+  const openedChapter = {
+    current: await applicationChapter.getAttribute("aria-current"),
+    heading: (await page.locator("#helpContent h3").textContent())?.trim(),
+    focused: await page.evaluate(() => document.activeElement?.id)
+  };
+  assert(openedChapter.current === "page" &&
+    openedChapter.heading === "Mises à jour, aide et fermeture" &&
+    openedChapter.focused === "helpContent",
+  `Le dernier chapitre ne s’ouvre pas au clavier : ${JSON.stringify(openedChapter)}`);
+  progress(browserName, "responsive:aide-chapitre");
   await page.locator("[data-start-chapter]").click();
   await page.locator("#tutorialLayer").waitFor({state: "visible"});
+  await page.waitForFunction(() => {
+    const card = document.querySelector("#tutorialCard");
+    return Boolean(card?.style.left && card?.style.top);
+  });
+  await saveDiagnosticScreenshot(page, browserName, "responsive-tutorial");
   const tutorialBounds = await page.locator("#tutorialCard").boundingBox();
   assert(tutorialBounds && tutorialBounds.x >= 0 && tutorialBounds.y >= 0 &&
     tutorialBounds.x + tutorialBounds.width <= 390 &&
     tutorialBounds.y + tutorialBounds.height <= 844,
   "Le parcours contextuel dépasse de l’affichage mobile");
+  progress(browserName, "responsive:tutoriel-contextuel");
   await page.keyboard.press("Escape");
   await page.locator("#helpDialog").waitFor({state: "visible"});
   await page.locator("#closeHelp").click();
