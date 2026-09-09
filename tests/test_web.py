@@ -52,6 +52,8 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("function setTutorialBackgroundInert", script)
         self.assertIn("function positionTutorial", script)
         self.assertIn("function tutorialFocusableElements", script)
+        self.assertIn('event.key !== "Escape"', script)
+        self.assertIn("event.stopPropagation()", script)
         self.assertIn("scrollIntoView", script)
         self.assertEqual(script.count('id: "privacy"'), 1)
         self.assertEqual(script.count('id: "application"'), 1)

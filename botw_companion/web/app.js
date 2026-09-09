@@ -5538,11 +5538,6 @@ $("#tutorialLayer").addEventListener(
     "keydown",
     event => {
         if (!tutorialState) return;
-        if (event.key === "Escape") {
-            event.preventDefault();
-            closeTutorial({ persist: false });
-            return;
-        }
         if (event.key !== "Tab") return;
         const focusable = tutorialFocusableElements();
         if (!focusable.length) {
@@ -5562,6 +5557,17 @@ $("#tutorialLayer").addEventListener(
             first.focus();
         }
     }
+);
+
+document.addEventListener(
+    "keydown",
+    event => {
+        if (!tutorialState || event.key !== "Escape") return;
+        event.preventDefault();
+        event.stopPropagation();
+        closeTutorial({ persist: false });
+    },
+    true
 );
 
 window.addEventListener("scroll", queueTutorialPosition, true);

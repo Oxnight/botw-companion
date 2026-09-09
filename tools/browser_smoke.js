@@ -95,6 +95,7 @@ async function exerciseOnboarding(page) {
     assert((await page.locator("#tutorialTitle").textContent()).includes("sauvegarde"),
       "La deuxième étape du premier lancement est absente");
 
+    await page.evaluate(() => document.activeElement?.blur());
     await page.keyboard.press("Escape");
     await tutorial.waitFor({state: "hidden"});
     let preferences = await fetchJson(page, "/api/preferences");
@@ -112,9 +113,13 @@ async function exerciseOnboarding(page) {
     assert((await page.locator("#tutorialStepLabel").textContent()).includes("2 sur 9"),
       "La reprise du parcours a perdu la progression en mémoire");
 
-    for (let index = 1; index < 9; index += 1) {
+    for (let expectedStep = 3; expectedStep <= 9; expectedStep += 1) {
       await page.locator("#nextTutorial").click();
+      await page.waitForFunction(step =>
+        document.querySelector("#tutorialStepLabel")?.textContent.includes(`${step} sur 9`),
+      expectedStep);
     }
+    await page.locator("#nextTutorial").click();
     await tutorial.waitFor({state: "hidden"});
     await page.waitForFunction(async () => {
       const response = await fetch("/api/preferences");
@@ -547,7 +552,11 @@ async function runResponsive(browser, baseUrl, browserName) {
     "Le centre d’aide dépasse de l’affichage mobile");
   assert(await page.locator("[data-help-chapter]").count() === 12,
     "Le sommaire mobile ne contient pas les douze chapitres");
-  await page.locator('[data-help-chapter="application"]').click();
+  const applicationChapter = page.locator('[data-help-chapter="application"]');
+  await applicationChapter.evaluate(element =>
+    element.scrollIntoView({block: "center", inline: "nearest"}));
+  await applicationChapter.waitFor({state: "visible"});
+  await applicationChapter.click();
   await page.locator("[data-start-chapter]").click();
   await page.locator("#tutorialLayer").waitFor({state: "visible"});
   const tutorialBounds = await page.locator("#tutorialCard").boundingBox();
