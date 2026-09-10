@@ -56,7 +56,7 @@ class FakeChecker:
         return dict(self.payload)
 
 
-def candidate(content: bytes, version="0.40.0-alpha.39") -> dict:
+def candidate(content: bytes, version="0.40.0-alpha." + "39") -> dict:
     filename = f"BOTW_Companion_{version}_Setup.exe"
     return {
         "status": "update_available",
@@ -121,6 +121,24 @@ class UpdateDownloadManagerTests(unittest.TestCase):
         self.assertFalse(any("sum" in path.name.casefold() for path in self.root.iterdir()))
         self.assertEqual(checker.calls, 1)
         self.assertEqual(len(calls), 1)
+        install = manager.installation_candidate()
+        self.assertEqual(install.version, "0.40.0-alpha." + "39")
+        self.assertEqual(install.installer.read_bytes(), content)
+        self.assertEqual(install.digest, hashlib.sha256(content).hexdigest())
+
+    def test_installation_candidate_rehashes_the_ready_file(self):
+        content = b"verified before handoff"
+        manager, _checker = self.manager(
+            content,
+            lambda *_args, **_kwargs: FakeResponse(
+                content, headers={"Content-Length": str(len(content))}
+            ),
+        )
+        manager.start()
+        self.assertEqual(self.wait(manager, {"ready_to_install"})["status"], "ready_to_install")
+        (self.root / candidate(content)["filename"]).write_bytes(b"tampered after download")
+        with self.assertRaisesRegex(Exception, "sécurité"):
+            manager.installation_candidate()
 
     def test_valid_partial_file_resumes_with_range_and_if_range(self):
         content = b"resume this transfer safely"

@@ -17,12 +17,21 @@ $buildRoot = Join-Path $projectRoot "build\windows-package"
 $environmentRoot = Join-Path $buildRoot "venv"
 $environmentPython = Join-Path $environmentRoot "Scripts\python.exe"
 $specPath = Join-Path $projectRoot "windows\BOTW Companion.spec"
+$updaterSpecPath = Join-Path $projectRoot "windows\BOTW Companion Updater.spec"
 $applicationDirectory = Join-Path $projectRoot "dist\BOTW Companion"
 $applicationExecutable = Join-Path $applicationDirectory "BOTW Companion.exe"
+$updaterOutputDirectory = Join-Path $buildRoot "updater-dist"
+$updaterWorkDirectory = Join-Path $buildRoot "updater-build"
+$updaterExecutable = Join-Path $applicationDirectory "BOTW Companion Updater.exe"
 $installerDirectory = Join-Path $projectRoot "dist\installer"
 $versionInfoPath = Join-Path $buildRoot "version_info.txt"
 
 foreach ($stalePath in @($applicationDirectory, $installerDirectory)) {
+    if (Test-Path -LiteralPath $stalePath) {
+        Remove-Item -LiteralPath $stalePath -Recurse -Force
+    }
+}
+foreach ($stalePath in @($updaterOutputDirectory, $updaterWorkDirectory)) {
     if (Test-Path -LiteralPath $stalePath) {
         Remove-Item -LiteralPath $stalePath -Recurse -Force
     }
@@ -77,8 +86,24 @@ Push-Location $projectRoot
 try {
     & $environmentPython -m PyInstaller --noconfirm --clean $specPath
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    & $environmentPython -m PyInstaller --noconfirm --clean `
+        --distpath $updaterOutputDirectory --workpath $updaterWorkDirectory `
+        $updaterSpecPath
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } finally {
     Pop-Location
+}
+
+$builtUpdater = Join-Path $updaterOutputDirectory "BOTW Companion Updater.exe"
+if (-not (Test-Path -LiteralPath $builtUpdater -PathType Leaf)) {
+    Write-Error "Le relais autonome de mise à jour n'a pas été produit."
+    exit 1
+}
+Copy-Item -LiteralPath $builtUpdater -Destination $updaterExecutable -Force
+& $updaterExecutable --self-test
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "L'auto-test du relais de mise à jour a échoué."
+    exit $LASTEXITCODE
 }
 
 # PyInstaller 6 places onedir data files under _internal. Player documentation
@@ -98,6 +123,7 @@ Copy-Item -LiteralPath (Join-Path $projectRoot "licenses") `
 
 foreach ($required in @(
     $applicationExecutable,
+    $updaterExecutable,
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\JoyConDSU.exe"),
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3.dll"),
     (Join-Path $applicationDirectory "_internal\botw_companion\dsu\windows\SDL3-LICENSE.txt"),

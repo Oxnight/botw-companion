@@ -32,7 +32,7 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
-CloseApplications=force
+CloseApplications=yes
 RestartApplications=no
 UsePreviousAppDir=yes
 UsePreviousTasks=yes
@@ -54,4 +54,10 @@ Name: "{group}\BOTW Companion"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "
 Name: "{autodesktop}\BOTW Companion"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Lancer BOTW Companion"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Lancer BOTW Companion"; Flags: nowait postinstall skipifsilent; Check: not IsAssistedUpdate
+
+[Code]
+function IsAssistedUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:ASSISTEDUPDATE|0}') = '1';
+end;

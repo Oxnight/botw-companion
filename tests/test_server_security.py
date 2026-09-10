@@ -195,6 +195,7 @@ class ServerSecurityTests(unittest.TestCase):
             ("POST", "/api/update/download/start"),
             ("POST", "/api/update/download/retry"),
             ("POST", "/api/update/download/cancel"),
+            ("POST", "/api/update/install"),
         )
         with self.running_server() as (thread, port, dsu):
             for method, path in cases:

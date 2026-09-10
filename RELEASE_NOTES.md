@@ -1,10 +1,11 @@
 ## What's new
 
-- Updates can now be downloaded inside BOTW Companion.
-- Interrupted downloads can resume instead of starting over.
-- The update banner shows progress and provides Cancel and Retry actions.
-- Every completed package is checked against the size and SHA-256 digest
-  reported by GitHub before it is marked ready.
+- On Windows, a verified update can now be installed directly from the update
+  banner.
+- BOTW Companion and JoyConDSU stop cleanly before the visible Windows Setup
+  assistant opens.
+- After Setup finishes, BOTW Companion restarts and confirms that the new
+  version is running before the downloaded installer is removed.
 
 ## Installation
 
@@ -16,10 +17,12 @@ Python, offline data, JoyConDSU, and SDL3 are included.
 
 ## Updating
 
-BOTW Companion downloads the correct package only after you select
-**Télécharger la mise à jour**. When it is marked as verified, run the Windows
-installer or replace the macOS application as described in the installation
-guide. Automatic installation and relaunch are planned for later alphas.
+On Windows, select **Installer et redémarrer** after the download has been
+verified. Setup remains visible, never forces a Windows restart, and keeps the
+installer and its diagnostic log if the installation is cancelled or fails.
+
+On macOS, the verified DMG is still installed manually. Assisted Apple Silicon
+installation is planned for the next alpha.
 
 An unavailable connection does not affect save analysis, the offline map,
 guides, tracking, or JoyConDSU.

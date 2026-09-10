@@ -35,6 +35,7 @@ const PROFILE_KEY = "botw-companion-completion-profile";
 const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
 const DSU_SOURCE_KEY = "botw-companion-dsu-source";
 const UPDATE_DISMISSED_KEY = "botw-companion-update-dismissed";
+const UPDATE_INSTALL_NOTICE_KEY = "botw-companion-update-install-notice";
 const TUTORIAL_VERSION = "1";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
@@ -121,9 +122,12 @@ function renderUpdateDownload(state) {
     $("#updateProgressBar").value = progress;
     $("#cancelUpdateDownload").hidden = !state.can_cancel;
     $("#retryUpdateDownload").hidden = !state.can_retry;
-    $("#downloadUpdate").disabled = active || state.status === "ready_to_install";
+    $("#downloadUpdate").disabled = active ||
+        (state.status === "ready_to_install" && !state.can_install);
     if (state.status === "ready_to_install") {
-        $("#downloadUpdate").textContent = "Téléchargement vérifié";
+        $("#downloadUpdate").textContent = state.can_install
+            ? "Installer et redémarrer"
+            : "Téléchargement vérifié";
     } else if (active) {
         $("#downloadUpdate").textContent = state.status === "verifying" ? "Vérification…" : "Téléchargement…";
     } else {
@@ -136,6 +140,20 @@ function renderUpdateDownload(state) {
         ? ` • ${formatUpdateBytes(state.bytes_per_second)}/s`
         : "";
     $("#updateProgressText").textContent = [state.message, amount].filter(Boolean).join(" ") + rate;
+    const installation = state.installation;
+    if (installation && installation.status !== "inactive") {
+        const notice = `${installation.status}:${installation.version || ""}:${installation.updated_at || ""}`;
+        let previous = null;
+        try { previous = sessionStorage.getItem(UPDATE_INSTALL_NOTICE_KEY); } catch (_error) {}
+        if (notice !== previous && ["succeeded", "failed", "cancelled"].includes(installation.status)) {
+            const logHint = installation.log_available && installation.log_path
+                ? ` Journal : ${installation.log_path}`
+                : "";
+            toast((installation.message || "État de la mise à jour disponible") + logHint,
+                installation.status !== "succeeded");
+            try { sessionStorage.setItem(UPDATE_INSTALL_NOTICE_KEY, notice); } catch (_error) {}
+        }
+    }
     if (active) scheduleUpdateDownloadPoll();
 }
 
@@ -167,6 +185,44 @@ async function startUpdateDownload() {
         await updateDownloadAction("start");
     } catch (_error) {
         toast("Le téléchargement ne peut pas démarrer pour le moment", true);
+    }
+}
+
+async function installWindowsUpdate() {
+    if (!confirm(
+        "Installer cette mise à jour maintenant ?\n\n" +
+        "BOTW Companion et JoyConDSU vont s’arrêter proprement. " +
+        "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
+        "Windows ne sera pas redémarré."
+    )) return;
+    const button = $("#downloadUpdate");
+    button.disabled = true;
+    button.textContent = "Préparation de l’installation…";
+    try {
+        const response = await fetch("/api/update/install", { method: "POST" });
+        const state = await response.json();
+        if (!response.ok) throw Error(state.erreur || "service indisponible");
+        $("#updateProgressText").textContent =
+            state.message || "Arrêt sécurisé avant l’installation…";
+    } catch (error) {
+        button.disabled = false;
+        button.textContent = "Installer et redémarrer";
+        toast(error.message || "L’installation ne peut pas démarrer", true);
+    }
+}
+
+async function handleUpdatePrimaryAction() {
+    try {
+        const response = await fetch("/api/update/download");
+        if (!response.ok) throw Error("service indisponible");
+        const state = await response.json();
+        if (state.status === "ready_to_install" && state.can_install) {
+            await installWindowsUpdate();
+            return;
+        }
+        await startUpdateDownload();
+    } catch (_error) {
+        toast("La mise à jour ne peut pas démarrer pour le moment", true);
     }
 }
 
@@ -5534,7 +5590,7 @@ $("#checkUpdates").onclick =
     () => checkForUpdates(true);
 
 $("#downloadUpdate").onclick =
-    startUpdateDownload;
+    handleUpdatePrimaryAction;
 
 $("#cancelUpdateDownload").onclick =
     async () => {
@@ -5713,6 +5769,7 @@ $("#refresh").onclick =
 loadRuntimePlatform();
 load();
 refreshDsu();
+refreshUpdateDownload();
 checkForUpdates(false);
 
 $("#exportManual").onclick =

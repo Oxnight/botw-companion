@@ -141,17 +141,17 @@ class BrowserTestUpdateChecker:
             "status": "update_available",
             "update_available": True,
             "current_version": CURRENT_VERSION.display,
-            "latest_version": "0.40.0-alpha.39",
+            "latest_version": "0.40.0-alpha.40",
             "title": "BOTW Companion 0.40.0 alpha 39",
             "platform": "windows",
-            "filename": "BOTW_Companion_0.40.0-alpha.39_Setup.exe",
+            "filename": "BOTW_Companion_0.40.0-alpha.40_Setup.exe",
             "download_url": (
                 "https://github.com/Oxnight/botw-companion/releases/download/"
-                "v0.40.0-alpha.39/BOTW_Companion_0.40.0-alpha.39_Setup.exe"
+                "v0.40.0-alpha.40/BOTW_Companion_0.40.0-alpha.40_Setup.exe"
             ),
             "release_url": (
                 "https://github.com/Oxnight/botw-companion/releases/tag/"
-                "v0.40.0-alpha.39"
+                "v0.40.0-alpha.40"
             ),
             "prerelease": True,
             "size": 67108864,
@@ -167,8 +167,8 @@ class BrowserTestUpdateDownloadManager:
     def _state(self) -> dict:
         return {
             "status": "ready_to_install" if self.started else "inactive",
-            "version": "0.40.0-alpha.39" if self.started else None,
-            "filename": "BOTW_Companion_0.40.0-alpha.39_Setup.exe" if self.started else None,
+            "version": "0.40.0-alpha.40" if self.started else None,
+            "filename": "BOTW_Companion_0.40.0-alpha.40_Setup.exe" if self.started else None,
             "bytes_received": 67108864 if self.started else 0,
             "bytes_total": 67108864 if self.started else 0,
             "progress": 100.0 if self.started else 0.0,

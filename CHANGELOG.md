@@ -6,6 +6,23 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.40.0-alpha.39] - 2026-09-10
+
+### Added
+
+- Assisted Windows updates that hand a verified installer to an external,
+  self-contained relay before the running application exits.
+- Visible Setup, installation diagnostics, cancellation recovery, and a
+  verified application restart after a successful upgrade.
+
+### Security
+
+- Revalidate the installer path, name, size, and GitHub-provided SHA-256
+  digest immediately before execution.
+- Stop the local server and JoyConDSU cleanly, forbid forced application
+  closure and Windows restarts, and delete the installer only after the new
+  version answers its local health check.
+
 ## [0.40.0-alpha.38] - 2026-09-09
 
 ### Added

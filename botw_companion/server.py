@@ -6,6 +6,7 @@ from importlib.resources import files
 from socketserver import TCPServer
 import gzip
 import json
+import os
 import re
 import secrets
 import signal
@@ -32,7 +33,8 @@ from .report_views import ReportViewCache, report_revision_key
 from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
 from .updates import UpdateChecker
-from .update_downloads import UpdateDownloadManager
+from .update_downloads import UpdateDownloadError, UpdateDownloadManager
+from .windows_updates import WindowsUpdateError, WindowsUpdateInstaller
 from . import __version__
 
 
@@ -95,7 +97,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           server_ready=None,
           session_token: str | None = None,
           update_checker: UpdateChecker | None = None,
-          update_download_manager: UpdateDownloadManager | None = None) -> None:
+          update_download_manager: UpdateDownloadManager | None = None,
+          update_installer: WindowsUpdateInstaller | None = None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -107,6 +110,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     dsu_manager = dsu_manager or DsuManager()
     update_checker = update_checker or UpdateChecker()
     update_download_manager = update_download_manager or UpdateDownloadManager(update_checker)
+    update_installer = update_installer or WindowsUpdateInstaller()
     session_token = session_token or secrets.token_urlsafe(32)
     if not isinstance(session_token, str) or not session_token:
         raise ValueError("Le jeton de session local ne peut pas être vide")
@@ -124,6 +128,15 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
         if sync_controller and isinstance(report.get("synchronisation"), dict):
             remember_sync(report["synchronisation"])
         return report
+
+    def update_download_status() -> dict:
+        state = update_download_manager.status()
+        installation = update_installer.status()
+        state["can_install"] = bool(
+            state.get("ready_to_install") and installation.get("supported")
+        )
+        state["installation"] = installation
+        return state
 
     class Handler(BaseHTTPRequestHandler):
         def end_headers(self) -> None:
@@ -298,7 +311,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self._json_response(200, update_checker.check(force=force))
                 return
             if path == "/api/update/download":
-                self._json_response(200, update_download_manager.status())
+                self._json_response(200, update_download_status())
                 return
             if path in {"/api/manual", "/api/manual/export"}:
                 try:
@@ -407,13 +420,31 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self._json_response(200, lifecycle.heartbeat())
                 return
             if path == "/api/update/download/start":
-                self._json_response(202, update_download_manager.start())
+                update_download_manager.start()
+                self._json_response(202, update_download_status())
                 return
             if path == "/api/update/download/retry":
-                self._json_response(202, update_download_manager.retry())
+                update_download_manager.retry()
+                self._json_response(202, update_download_status())
                 return
             if path == "/api/update/download/cancel":
-                self._json_response(200, update_download_manager.cancel())
+                update_download_manager.cancel()
+                self._json_response(200, update_download_status())
+                return
+            if path == "/api/update/install":
+                try:
+                    candidate = update_download_manager.installation_candidate()
+                    result = update_installer.start(
+                        candidate,
+                        parent_pid=os.getpid(),
+                        port=int(self.server.server_port),
+                    )
+                except (UpdateDownloadError, WindowsUpdateError, OSError, ValueError) as exc:
+                    self._json_response(409, {"erreur": str(exc)})
+                    return
+                dsu_manager.stop()
+                self._json_response(202, result)
+                threading.Timer(0.2, lambda: request_server_shutdown("mise_a_jour_windows")).start()
                 return
             if path == "/api/shutdown":
                 update_download_manager.cancel()

@@ -68,6 +68,19 @@ save path.
 - Save analysis, maps, guides, tracking, and JoyConDSU remain available while
   update checks or downloads are unavailable.
 
+## A Windows update is cancelled or fails
+
+- Reopen BOTW Companion if it did not reopen automatically. The update banner
+  keeps the verified installer available for another attempt.
+- Read the installation log under the `updates/logs` directory in the user
+  data directory shown in **Aide**.
+- Close any program that Setup reports as using BOTW Companion files. The
+  updater deliberately refuses to force-close applications or restart
+  Windows.
+- If the newly installed version cannot be confirmed after startup, use the
+  official Releases page to rerun the installer. Personal tracking, routes,
+  preferences, and backups are stored outside the application directory.
+
 ## DSU motion controls do not work
 
 - Confirm that the selected source reports both a gyroscope and accelerometer.

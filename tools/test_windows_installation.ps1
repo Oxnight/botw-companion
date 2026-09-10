@@ -44,6 +44,7 @@ function Invoke-Uninstaller([string]$Path) {
 function Assert-InstalledLayout([string]$InstallRoot) {
     $required = @(
         (Join-Path $InstallRoot "BOTW Companion.exe"),
+        (Join-Path $InstallRoot "BOTW Companion Updater.exe"),
         (Join-Path $InstallRoot "unins000.exe"),
         (Join-Path $InstallRoot "_internal\botw_companion\dsu\windows\JoyConDSU.exe"),
         (Join-Path $InstallRoot "_internal\botw_companion\dsu\windows\SDL3.dll"),
@@ -143,6 +144,66 @@ function Test-InstalledRuntime([string]$InstallRoot, [string]$DataRoot, [int]$Po
     }
 }
 
+function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
+                              [string]$SourceInstaller, [int]$Port) {
+    $application = Join-Path $InstallRoot "BOTW Companion.exe"
+    $installedUpdater = Join-Path $InstallRoot "BOTW Companion Updater.exe"
+    $updateRoot = Join-Path $DataRoot "updates"
+    $installer = Join-Path $updateRoot $metadata.installer_name
+    $installerMetadata = "$installer.metadata.json"
+    $log = Join-Path $updateRoot "logs\assisted-update.log"
+    New-Item -ItemType Directory -Force -Path $updateRoot | Out-Null
+    $relayDirectory = Join-Path $updateRoot "relay\ci-validation"
+    New-Item -ItemType Directory -Force -Path $relayDirectory | Out-Null
+    $updater = Join-Path $relayDirectory "BOTW Companion Updater.exe"
+    Copy-Item -LiteralPath $installedUpdater -Destination $updater -Force
+    Copy-Item -LiteralPath $SourceInstaller -Destination $installer -Force
+    Set-Content -LiteralPath $installerMetadata -Value '{"ready":true}' -Encoding ASCII -NoNewline
+    [ordered]@{ port = $Port } | ConvertTo-Json | Set-Content `
+        (Join-Path $DataRoot "launcher.json") -Encoding UTF8
+    $digest = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+    $size = (Get-Item -LiteralPath $installer).Length
+    $releaseUrl = "https://github.com/Oxnight/botw-companion/releases/tag/$($metadata.tag)"
+    $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
+    try {
+        $env:BOTW_COMPANION_DATA_DIR = $DataRoot
+        & $updater --root $updateRoot --installer $installer --metadata $installerMetadata `
+            --version $metadata.display_version --digest $digest --size $size `
+            --parent-pid 4294967294 --application $application --port $Port `
+            --log $log --release-url $releaseUrl --silent
+        if ($LASTEXITCODE -ne 0) {
+            throw "Le relais de mise à jour a échoué avec le code $LASTEXITCODE."
+        }
+        $state = Get-Content -LiteralPath (Join-Path $updateRoot "installation.json") `
+            -Raw | ConvertFrom-Json
+        if ($state.status -ne "succeeded" -or (Test-Path -LiteralPath $installer) -or
+            (Test-Path -LiteralPath $installerMetadata)) {
+            throw "Le relais n'a pas validé le redémarrage ou nettoyé le paquet."
+        }
+        $identity = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/version" -TimeoutSec 2
+        if ($identity.version -ne $expectedVersion) {
+            throw "La version relancée après mise à jour n'est pas celle attendue."
+        }
+        Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$Port/api/shutdown" `
+            -Headers @{ "X-BOTW-Session-Token" = $identity.session_token } -TimeoutSec 2 | Out-Null
+        $stopped = $false
+        for ($attempt = 0; $attempt -lt 100; $attempt++) {
+            try {
+                Invoke-RestMethod -Uri "http://127.0.0.1:$Port/api/version" -TimeoutSec 1 | Out-Null
+            } catch {
+                $stopped = $true
+                break
+            }
+            Start-Sleep -Milliseconds 100
+        }
+        if (-not $stopped) {
+            throw "La version relancée ne s'est pas arrêtée proprement après le test."
+        }
+    } finally {
+        $env:BOTW_COMPANION_DATA_DIR = $originalDataRoot
+    }
+}
+
 $resolvedInstaller = Resolve-TestPath $InstallerPath
 if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
     throw "Installateur introuvable : $resolvedInstaller"
@@ -158,6 +219,7 @@ Set-Content -LiteralPath $cleanSentinel -Value '{"preserver":true}' -Encoding AS
 Invoke-Installer $resolvedInstaller @("/DIR=`"$cleanInstallRoot`"", "/TASKS=`"desktopicon`"")
 Assert-InstalledLayout $cleanInstallRoot
 Test-InstalledRuntime $cleanInstallRoot $cleanDataRoot 18766
+Test-AssistedUpdate $cleanInstallRoot $cleanDataRoot $resolvedInstaller 18767
 Invoke-Uninstaller (Join-Path $cleanInstallRoot "unins000.exe")
 if (Test-Path -LiteralPath (Join-Path $cleanInstallRoot "BOTW Companion.exe")) {
     throw "L'exécutable est encore présent après désinstallation."

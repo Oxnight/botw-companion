@@ -218,6 +218,26 @@ class FakeUpdateDownloadManager:
         self.closed = True
 
 
+class ReadyUpdateDownloadManager(FakeUpdateDownloadManager):
+    def installation_candidate(self):
+        return object()
+
+    def status(self) -> dict:
+        return {"status": "ready_to_install", "ready_to_install": True}
+
+
+class FakeUpdateInstaller:
+    def __init__(self) -> None:
+        self.calls = []
+
+    def status(self) -> dict:
+        return {"status": "inactive", "supported": True}
+
+    def start(self, candidate, *, parent_pid, port):
+        self.calls.append((candidate, parent_pid, port))
+        return {"status": "scheduled", "message": "arrêt"}
+
+
 class ServerLifecycleIntegrationTests(unittest.TestCase):
     SESSION_TOKEN = "integration-test-session-token"
 
@@ -366,6 +386,31 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
         self.assertEqual(checker.forces, [False, True])
         self.assertEqual(downloads.actions[:3], ["start", "cancel", "retry"])
         self.assertTrue(downloads.closed)
+
+    def test_assisted_update_handoff_stops_dsu_and_server_after_response(self):
+        downloads = ReadyUpdateDownloadManager()
+        installer = FakeUpdateInstaller()
+        dsu = FakeDsuManager()
+        with self.running_server(
+            lambda: {},
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=dsu,
+            update_download_manager=downloads,
+            update_installer=installer,
+        ) as (thread, port):
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/install",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 202)
+                self.assertEqual(json.loads(response.read())["status"], "scheduled")
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
+        self.assertTrue(dsu.stopped)
+        self.assertEqual(len(installer.calls), 1)
+        self.assertEqual(installer.calls[0][2], port)
 
     def test_selected_save_caption_is_served_as_a_private_jpeg(self):
         with tempfile.TemporaryDirectory() as directory:

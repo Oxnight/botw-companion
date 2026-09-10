@@ -21,6 +21,7 @@ from .persistence import atomic_write_json
 from .platforms import companion_data_dir
 from .updates import MAX_ASSET_BYTES, UpdateChecker
 from .versioning import ReleaseVersion
+from .windows_updates import WindowsInstallCandidate
 
 
 CHUNK_BYTES = 256 * 1024
@@ -215,6 +216,7 @@ class UpdateDownloadManager:
         self._lock = threading.RLock()
         self._cancel = threading.Event()
         self._thread: threading.Thread | None = None
+        self._target: DownloadTarget | None = None
         self._state = self._empty_state()
 
     @staticmethod
@@ -237,6 +239,26 @@ class UpdateDownloadManager:
     def status(self) -> dict:
         with self._lock:
             return dict(self._state)
+
+    def installation_candidate(self) -> WindowsInstallCandidate:
+        with self._lock:
+            target = self._target
+            if self._state["status"] != "ready_to_install" or target is None:
+                raise UpdateDownloadError("Aucun installateur vérifié n’est prêt")
+            part, final, metadata_path = self._paths(target)
+            metadata = self._read_metadata(metadata_path)
+            if part.exists() or not target.matches(metadata) or metadata.get("ready") is not True:
+                raise UpdateDownloadError("L’état du téléchargement n’est plus valide")
+            if not self._file_matches(final, target):
+                raise UpdateDownloadError("La vérification de sécurité avant installation a échoué")
+            return WindowsInstallCandidate(
+                version=target.version,
+                installer=final,
+                size=target.size,
+                digest=target.digest,
+                metadata=metadata_path,
+                release_url=target.release_url,
+            )
 
     def _set_state(self, status: str, **values) -> None:
         with self._lock:
@@ -296,6 +318,8 @@ class UpdateDownloadManager:
             self._set_state("failed", message="Le téléchargement a échoué sans affecter le Companion.")
 
     def _prepare_target(self, target: DownloadTarget) -> None:
+        with self._lock:
+            self._target = target
         self.root.mkdir(parents=True, exist_ok=True)
         self._cleanup_other_targets(target)
         part, _final, metadata_path = self._paths(target)

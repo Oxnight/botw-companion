@@ -72,13 +72,22 @@ does not match the GitHub Release metadata. This internal verification does not
 create or publish a checksum text file.
 
 Verified packages are stored under the `updates` subdirectory of the user data
-directory. Alpha 38 does not replace a running application automatically.
+directory.
 
-Install the new package over the existing version:
+On an installed Windows copy, the primary action becomes **Installer et
+redémarrer** after verification. A confirmation is required. BOTW Companion
+then starts an external updater relay, stops JoyConDSU and the local server,
+and opens the normal visible Setup assistant. Setup is instructed not to force
+applications closed and never to restart Windows. The Companion is relaunched
+after Setup completes; the downloaded installer is removed only after the new
+version answers its local health check.
 
-- on Windows, run the new `Setup.exe`;
-- on macOS, replace the application in Applications with the copy from the new
-  DMG.
+If Setup is cancelled or fails, the verified installer and diagnostic log are
+kept so the operation can be retried. A portable or source checkout does not
+offer assisted installation.
+
+On macOS, replace the application in Applications with the copy from the new
+DMG. Assisted Apple Silicon installation is planned for a later release.
 
 There is no need to uninstall first. The package can also be downloaded
 manually from Releases.
@@ -91,8 +100,9 @@ Windows: %LOCALAPPDATA%\BOTW Companion
 macOS:   ~/Library/Application Support/BOTW Companion
 ```
 
-Before publication, the workflow tests both a clean installation and an
-upgrade from the reference version.
+Before publication, the workflow tests a clean installation, an assisted
+Windows reinstall and verified restart, and an upgrade from the reference
+version.
 
 ## Uninstalling
 
