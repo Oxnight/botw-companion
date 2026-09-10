@@ -318,7 +318,10 @@ def _run_relay(args) -> int:
     setup_command = [
         str(installer), "/NORESTART", "/CLOSEAPPLICATIONS",
         "/NOFORCECLOSEAPPLICATIONS", "/NORESTARTAPPLICATIONS", "/SP-",
-        "/ASSISTEDUPDATE=1", f'/LOG="{log_path}"',
+        # Pass one argv value and let CreateProcess quote paths containing spaces.
+        # Adding literal quotes here double-quotes the value when subprocess
+        # serializes the sequence and makes Inno Setup fail during initialization.
+        "/ASSISTEDUPDATE=1", f"/LOG={log_path}",
     ]
     if getattr(args, "silent", False):
         setup_command.extend(("/VERYSILENT", "/SUPPRESSMSGBOXES"))

@@ -119,6 +119,7 @@ class WindowsUpdateTests(unittest.TestCase):
     def test_relay_reverifies_then_installs_restarts_and_cleans_package(self):
         setup_calls = []
         launch_calls = []
+        args = self.args()
 
         def run(command, **kwargs):
             setup_calls.append((command, kwargs))
@@ -133,11 +134,14 @@ class WindowsUpdateTests(unittest.TestCase):
              patch("botw_companion.windows_updates._probe_version", return_value=True), \
              patch("botw_companion.windows_updates.subprocess.run", side_effect=run), \
              patch("botw_companion.windows_updates.subprocess.Popen", side_effect=popen):
-            self.assertEqual(run_relay(self.args()), 0)
+            self.assertEqual(run_relay(args), 0)
         command, kwargs = setup_calls[0]
         self.assertIn("/NORESTART", command)
         self.assertIn("/NOFORCECLOSEAPPLICATIONS", command)
         self.assertIn("/ASSISTEDUPDATE=1", command)
+        log_arguments = [argument for argument in command if argument.startswith("/LOG=")]
+        self.assertEqual(log_arguments, [f"/LOG={Path(args.log).resolve()}"])
+        self.assertNotIn('"', log_arguments[0])
         self.assertNotIn("/SILENT", " ".join(command))
         self.assertFalse(kwargs["shell"])
         self.assertEqual(launch_calls[0][0], [str(self.application.resolve())])
