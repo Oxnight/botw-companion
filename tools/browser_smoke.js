@@ -88,7 +88,7 @@ async function exerciseOnboarding(page) {
     syncPaused: document.querySelector("#pauseSync")?.getAttribute("aria-pressed"),
     routeHidden: document.querySelector("#routeBody")?.hasAttribute("hidden"),
     checkedFilters: document.querySelectorAll("#categories input[type=checkbox]:checked").length,
-    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent
+    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent.trim()
   }));
   const externalRequests = [];
   const observeRequest = request => {
@@ -172,7 +172,7 @@ async function exerciseOnboarding(page) {
     syncPaused: document.querySelector("#pauseSync")?.getAttribute("aria-pressed"),
     routeHidden: document.querySelector("#routeBody")?.hasAttribute("hidden"),
     checkedFilters: document.querySelectorAll("#categories input[type=checkbox]:checked").length,
-    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent
+    dsuButtonLabel: document.querySelector("#toggleDsu")?.textContent.trim()
   }));
   assert(JSON.stringify(businessStateAfter) === JSON.stringify(businessStateBefore),
     "Le tutoriel a modifié un état métier de l’application");

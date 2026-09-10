@@ -211,7 +211,19 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
         $updaterExitCode = Invoke-ExactProcess $updater $updaterArguments `
             $relayDirectory 120000
         if ($updaterExitCode -ne 0) {
-            throw "Le relais de mise à jour a échoué avec le code $updaterExitCode."
+            $failureStatePath = Join-Path $updateRoot "installation.json"
+            $failureDetails = ""
+            if (Test-Path -LiteralPath $failureStatePath -PathType Leaf) {
+                $failureState = Get-Content -LiteralPath $failureStatePath -Raw | ConvertFrom-Json
+                $failureDetails = " État : $($failureState.status). $($failureState.message)"
+                if ($failureState.log_path -and
+                    (Test-Path -LiteralPath $failureState.log_path -PathType Leaf)) {
+                    Write-Host "----- Journal du relais de mise à jour -----"
+                    Get-Content -LiteralPath $failureState.log_path -Raw | Write-Host
+                    Write-Host "----- Fin du journal du relais -----"
+                }
+            }
+            throw "Le relais de mise à jour a échoué avec le code $updaterExitCode.$failureDetails"
         }
         $state = Get-Content -LiteralPath (Join-Path $updateRoot "installation.json") `
             -Raw | ConvertFrom-Json

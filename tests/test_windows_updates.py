@@ -1,5 +1,6 @@
 import argparse
 import hashlib
+from http.client import RemoteDisconnected
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -13,6 +14,7 @@ from botw_companion.windows_updates import (
     WindowsInstallCandidate,
     WindowsUpdateError,
     WindowsUpdateInstaller,
+    _probe_version,
     run_relay,
 )
 
@@ -179,6 +181,26 @@ class WindowsUpdateTests(unittest.TestCase):
              patch("botw_companion.windows_updates.subprocess.run") as setup:
             self.assertEqual(run_relay(args), 2)
         setup.assert_not_called()
+
+    def test_transient_http_disconnect_during_restart_probe_is_retryable(self):
+        opener = SimpleNamespace(open=lambda *args, **kwargs: (_ for _ in ()).throw(
+            RemoteDisconnected("server is restarting")
+        ))
+        with patch("botw_companion.windows_updates.build_opener", return_value=opener):
+            self.assertFalse(_probe_version(8765, self.VERSION))
+
+    def test_unexpected_relay_failure_is_recorded_instead_of_crashing_silently(self):
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates.subprocess.run",
+                   side_effect=RuntimeError("native launch failed")):
+            self.assertEqual(run_relay(self.args()), 1)
+        state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
+        diagnostic = Path(state["log_path"])
+        self.assertEqual(state["status"], "failed")
+        self.assertTrue(state["can_retry"])
+        self.assertTrue(state["log_available"])
+        self.assertIn("RuntimeError: native launch failed", diagnostic.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

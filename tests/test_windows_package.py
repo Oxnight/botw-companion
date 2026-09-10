@@ -129,6 +129,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("$startInfo.ArgumentList.Add($argument)", validation)
         self.assertIn("$process.WaitForExit($TimeoutMilliseconds)", validation)
         self.assertIn("$process.Kill($true)", validation)
+        self.assertIn("Journal du relais de mise à jour", validation)
         self.assertNotIn("& $updater --root", validation)
         self.assertNotIn('"--sans-navigateur"', validation)
         self.assertIn("RedirectStandardError", validation)
@@ -206,6 +207,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('require("axe-core")', script)
         self.assertIn("wcag22aa", script)
         self.assertIn("exerciseOnboarding", script)
+        self.assertGreaterEqual(script.count('textContent.trim()'), 2)
         self.assertIn("baseMarkerBox?.width >= 24", script)
 
     def test_narrow_layout_cannot_restore_wide_grids(self):

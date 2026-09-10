@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+from http.client import HTTPException
 import json
 import os
 from pathlib import Path
@@ -13,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 import uuid
 from urllib.request import ProxyHandler, Request, build_opener
 
@@ -255,7 +257,7 @@ def _probe_version(port: int, expected: str) -> bool:
             Request(f"http://127.0.0.1:{port}/api/version"), timeout=0.5
         ) as response:
             data = json.loads(response.read(128 * 1024))
-    except (OSError, ValueError, json.JSONDecodeError):
+    except (OSError, HTTPException, ValueError, json.JSONDecodeError):
         return False
     return (
         isinstance(data, dict)
@@ -264,7 +266,7 @@ def _probe_version(port: int, expected: str) -> bool:
     )
 
 
-def run_relay(args) -> int:
+def _run_relay(args) -> int:
     root = Path(args.root).resolve()
     installer_source = Path(args.installer)
     metadata_source = Path(args.metadata)
@@ -363,3 +365,31 @@ def run_relay(args) -> int:
                        release_url=args.release_url, can_retry=False, log_available=log_path.is_file(),
                        log_path=log_path)
     return 6
+
+
+def run_relay(args) -> int:
+    """Run the relay and preserve actionable diagnostics for unexpected failures."""
+    try:
+        return _run_relay(args)
+    except Exception as exc:
+        try:
+            root = Path(args.root).resolve()
+            diagnostic = root / "logs" / "updater-relay-crash.log"
+            diagnostic.parent.mkdir(parents=True, exist_ok=True)
+            with diagnostic.open("a", encoding="utf-8", newline="\n") as stream:
+                stream.write(f"[{int(time.time())}] {type(exc).__name__}: {exc}\n")
+                stream.write(traceback.format_exc())
+                stream.write("\n")
+            _write_relay_state(
+                root,
+                status="failed",
+                version=str(getattr(args, "version", "")),
+                message="Le relais Windows a rencontré une erreur inattendue. Consulte le journal de diagnostic.",
+                release_url=str(getattr(args, "release_url", "")),
+                can_retry=True,
+                log_available=True,
+                log_path=diagnostic,
+            )
+        except Exception:
+            pass
+        return 1
