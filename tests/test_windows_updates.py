@@ -2,6 +2,7 @@ import argparse
 import hashlib
 from http.client import RemoteDisconnected
 import json
+import os
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
@@ -15,6 +16,7 @@ from botw_companion.windows_updates import (
     WindowsUpdateError,
     WindowsUpdateInstaller,
     _probe_version,
+    _external_process_environment,
     run_relay,
 )
 
@@ -132,9 +134,11 @@ class WindowsUpdateTests(unittest.TestCase):
         with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
              patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
              patch("botw_companion.windows_updates._probe_version", return_value=True), \
+             patch("botw_companion.windows_updates._reset_windows_dll_search_path") as reset_dlls, \
              patch("botw_companion.windows_updates.subprocess.run", side_effect=run), \
              patch("botw_companion.windows_updates.subprocess.Popen", side_effect=popen):
             self.assertEqual(run_relay(args), 0)
+        reset_dlls.assert_called_once_with()
         command, kwargs = setup_calls[0]
         self.assertIn("/NORESTART", command)
         self.assertIn("/NOFORCECLOSEAPPLICATIONS", command)
@@ -144,6 +148,7 @@ class WindowsUpdateTests(unittest.TestCase):
         self.assertNotIn('"', log_arguments[0])
         self.assertNotIn("/SILENT", " ".join(command))
         self.assertFalse(kwargs["shell"])
+        self.assertFalse(any(key.startswith("_PYI_") for key in kwargs["env"]))
         self.assertEqual(launch_calls[0][0], [str(self.application.resolve())])
         self.assertFalse(self.installer.exists())
         self.assertFalse(self.metadata.exists())
@@ -175,6 +180,20 @@ class WindowsUpdateTests(unittest.TestCase):
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "cancelled")
         self.assertTrue(state["can_retry"])
+
+    def test_external_installer_environment_removes_pyinstaller_state_and_bundle_path(self):
+        bundle = Path(self.temporary.name) / "bundle"
+        nested = bundle / "runtime"
+        external = Path(self.temporary.name) / "system"
+        with patch.dict(os.environ, {
+            "_PYI_APPLICATION_HOME_DIR": str(bundle),
+            "_PYI_PARENT_PROCESS_LEVEL": "1",
+            "PATH": os.pathsep.join((str(nested), str(external))),
+        }, clear=True), patch.object(__import__("sys"), "_MEIPASS", str(bundle), create=True):
+            environment = _external_process_environment()
+        self.assertNotIn("_PYI_APPLICATION_HOME_DIR", environment)
+        self.assertNotIn("_PYI_PARENT_PROCESS_LEVEL", environment)
+        self.assertEqual(environment["PATH"], str(external))
 
     def test_relay_rejects_an_installer_outside_the_update_directory(self):
         outside = Path(self.temporary.name) / f"BOTW_Companion_{self.VERSION}_Setup.exe"

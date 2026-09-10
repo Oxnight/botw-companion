@@ -251,6 +251,52 @@ def _wait_for_parent(pid: int, timeout: float = 30.0) -> bool:
         kernel32.CloseHandle(handle)
 
 
+def _external_process_environment() -> dict[str, str]:
+    """Return an environment that does not expose PyInstaller internals."""
+    environment = {
+        key: value for key, value in os.environ.items()
+        if not key.startswith("_PYI_")
+    }
+    bundle_root = getattr(sys, "_MEIPASS", None)
+    if bundle_root and environment.get("PATH"):
+        try:
+            resolved_bundle = Path(bundle_root).resolve()
+            environment["PATH"] = os.pathsep.join(
+                entry for entry in environment["PATH"].split(os.pathsep)
+                if entry and not _inside_root(Path(entry), resolved_bundle)
+            )
+        except (OSError, ValueError):
+            # SetDllDirectoryW is the primary Windows isolation mechanism. Keep
+            # PATH intact if a third-party entry cannot be resolved safely.
+            pass
+    return environment
+
+
+def _reset_windows_dll_search_path() -> None:
+    """Stop PyInstaller's DLL directory from leaking into external programs."""
+    if sys.platform != "win32":
+        return
+    import ctypes
+    from ctypes import wintypes
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.SetDllDirectoryW.argtypes = (wintypes.LPCWSTR,)
+    kernel32.SetDllDirectoryW.restype = wintypes.BOOL
+    if not kernel32.SetDllDirectoryW(None):
+        raise ctypes.WinError(ctypes.get_last_error())
+
+
+def _run_external_setup(command: list[str]):
+    """Run the independently-built installer with the system DLL search path."""
+    _reset_windows_dll_search_path()
+    return subprocess.run(
+        command,
+        shell=False,
+        check=False,
+        env=_external_process_environment(),
+    )
+
+
 def _probe_version(port: int, expected: str) -> bool:
     try:
         with build_opener(ProxyHandler({})).open(
@@ -318,14 +364,12 @@ def _run_relay(args) -> int:
     setup_command = [
         str(installer), "/NORESTART", "/CLOSEAPPLICATIONS",
         "/NOFORCECLOSEAPPLICATIONS", "/NORESTARTAPPLICATIONS", "/SP-",
-        # Pass one argv value and let CreateProcess quote paths containing spaces.
-        # Adding literal quotes here double-quotes the value when subprocess
-        # serializes the sequence and makes Inno Setup fail during initialization.
+        # Pass one argv value and let subprocess quote paths containing spaces.
         "/ASSISTEDUPDATE=1", f"/LOG={log_path}",
     ]
     if getattr(args, "silent", False):
         setup_command.extend(("/VERYSILENT", "/SUPPRESSMSGBOXES"))
-    setup = subprocess.run(setup_command, shell=False, check=False)
+    setup = _run_external_setup(setup_command)
     if setup.returncode != 0:
         message = (
             "Installation annulée. Le paquet vérifié est conservé."
