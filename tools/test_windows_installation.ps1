@@ -41,6 +41,33 @@ function Invoke-Uninstaller([string]$Path) {
     }
 }
 
+function Invoke-ExactProcess([string]$Path, [string[]]$Arguments,
+                             [string]$WorkingDirectory, [int]$TimeoutMilliseconds) {
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $Path
+    $startInfo.WorkingDirectory = $WorkingDirectory
+    $startInfo.UseShellExecute = $false
+    $startInfo.CreateNoWindow = $true
+    foreach ($argument in $Arguments) {
+        $startInfo.ArgumentList.Add($argument)
+    }
+    $process = [System.Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
+    try {
+        if (-not $process.Start()) {
+            throw "Le processus de validation n'a pas pu démarrer : $Path"
+        }
+        if (-not $process.WaitForExit($TimeoutMilliseconds)) {
+            $process.Kill($true)
+            $process.WaitForExit()
+            throw "Le processus de validation a dépassé le délai autorisé : $Path"
+        }
+        return $process.ExitCode
+    } finally {
+        $process.Dispose()
+    }
+}
+
 function Assert-InstalledLayout([string]$InstallRoot) {
     $required = @(
         (Join-Path $InstallRoot "BOTW Companion.exe"),
@@ -167,12 +194,24 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
     $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
     try {
         $env:BOTW_COMPANION_DATA_DIR = $DataRoot
-        & $updater --root $updateRoot --installer $installer --metadata $installerMetadata `
-            --version $metadata.display_version --digest $digest --size $size `
-            --parent-pid 4294967294 --application $application --port $Port `
-            --log $log --release-url $releaseUrl --silent
-        if ($LASTEXITCODE -ne 0) {
-            throw "Le relais de mise à jour a échoué avec le code $LASTEXITCODE."
+        $updaterArguments = @(
+            "--root", $updateRoot,
+            "--installer", $installer,
+            "--metadata", $installerMetadata,
+            "--version", $metadata.display_version,
+            "--digest", $digest,
+            "--size", "$size",
+            "--parent-pid", "4294967294",
+            "--application", $application,
+            "--port", "$Port",
+            "--log", $log,
+            "--release-url", $releaseUrl,
+            "--silent"
+        )
+        $updaterExitCode = Invoke-ExactProcess $updater $updaterArguments `
+            $relayDirectory 120000
+        if ($updaterExitCode -ne 0) {
+            throw "Le relais de mise à jour a échoué avec le code $updaterExitCode."
         }
         $state = Get-Content -LiteralPath (Join-Path $updateRoot "installation.json") `
             -Raw | ConvertFrom-Json
