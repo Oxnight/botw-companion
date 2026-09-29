@@ -28,6 +28,7 @@ INSTALL_STATE_NAME = "installation.json"
 DETACHED_PROCESS = 0x00000008
 CREATE_NEW_PROCESS_GROUP = 0x00000200
 CHUNK_BYTES = 256 * 1024
+RELAY_LOG_PREPARATION_FAILED = 20
 
 
 class WindowsUpdateError(RuntimeError):
@@ -297,6 +298,25 @@ def _run_external_setup(command: list[str]):
     )
 
 
+def _prepare_installer_log(log_path: Path) -> None:
+    """Create the log directory before Inno Setup parses its /LOG switch."""
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _write_setup_fallback_log(log_path: Path, returncode: int) -> None:
+    """Preserve a diagnostic when Setup exits before opening its own log."""
+    if log_path.is_file():
+        return
+    try:
+        log_path.write_text(
+            "Inno Setup stopped before creating its installation log.\n"
+            f"Process exit code: {returncode}\n",
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
+
+
 def _probe_version(port: int, expected: str) -> bool:
     try:
         with build_opener(ProxyHandler({})).open(
@@ -357,6 +377,20 @@ def _run_relay(args) -> int:
                            release_url=args.release_url, can_retry=True, log_available=False,
                            log_path=log_path)
         return 4
+    try:
+        _prepare_installer_log(log_path)
+    except OSError:
+        _write_relay_state(
+            root,
+            status="failed",
+            version=args.version,
+            message="Le dossier du journal d’installation ne peut pas être préparé.",
+            release_url=args.release_url,
+            can_retry=True,
+            log_available=False,
+            log_path=log_path,
+        )
+        return RELAY_LOG_PREPARATION_FAILED
     _write_relay_state(root, status="installing", version=args.version,
                        message="L’assistant d’installation Windows est ouvert.",
                        release_url=args.release_url, can_retry=False, log_available=True,
@@ -371,6 +405,7 @@ def _run_relay(args) -> int:
         setup_command.extend(("/VERYSILENT", "/SUPPRESSMSGBOXES"))
     setup = _run_external_setup(setup_command)
     if setup.returncode != 0:
+        _write_setup_fallback_log(log_path, setup.returncode)
         message = (
             "Installation annulée. Le paquet vérifié est conservé."
             if setup.returncode in {2, 5}

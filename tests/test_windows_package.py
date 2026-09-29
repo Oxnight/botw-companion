@@ -134,6 +134,8 @@ class WindowsPackageTests(unittest.TestCase):
         relay = (self.root / "botw_companion" / "windows_updates.py").read_text(encoding="utf-8")
         self.assertIn('f"/LOG={log_path}"', relay)
         self.assertNotIn("f'/LOG=\"{log_path}\"'", relay)
+        self.assertIn("_prepare_installer_log(log_path)", relay)
+        self.assertIn("log_path.parent.mkdir(parents=True, exist_ok=True)", relay)
         self.assertNotIn('"--sans-navigateur"', validation)
         self.assertIn("RedirectStandardError", validation)
         self.assertIn("-WorkingDirectory $InstallRoot", validation)

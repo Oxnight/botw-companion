@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from botw_companion.windows_updates import (
     INSTALL_STATE_NAME,
+    RELAY_LOG_PREPARATION_FAILED,
     UPDATER_EXE_NAME,
     WindowsInstallCandidate,
     WindowsUpdateError,
@@ -122,8 +123,10 @@ class WindowsUpdateTests(unittest.TestCase):
         setup_calls = []
         launch_calls = []
         args = self.args()
+        self.assertFalse(Path(args.log).parent.exists())
 
         def run(command, **kwargs):
+            self.assertTrue(Path(args.log).parent.is_dir())
             setup_calls.append((command, kwargs))
             return SimpleNamespace(returncode=0)
 
@@ -154,6 +157,35 @@ class WindowsUpdateTests(unittest.TestCase):
         self.assertFalse(self.metadata.exists())
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "succeeded")
+
+    def test_relay_stops_before_setup_when_log_directory_cannot_be_created(self):
+        args = self.args()
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates._prepare_installer_log",
+                   side_effect=OSError("disk is read-only")), \
+             patch("botw_companion.windows_updates.subprocess.run") as setup:
+            self.assertEqual(run_relay(args), RELAY_LOG_PREPARATION_FAILED)
+        setup.assert_not_called()
+        state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
+        self.assertEqual(state["status"], "failed")
+        self.assertTrue(state["can_retry"])
+        self.assertFalse(state["log_available"])
+
+    def test_setup_failure_gets_a_fallback_log_when_inno_cannot_create_one(self):
+        args = self.args()
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates._reset_windows_dll_search_path"), \
+             patch("botw_companion.windows_updates.subprocess.run",
+                   return_value=SimpleNamespace(returncode=1)), \
+             patch("botw_companion.windows_updates.subprocess.Popen"):
+            self.assertEqual(run_relay(args), 1)
+        fallback = Path(args.log)
+        self.assertTrue(fallback.is_file())
+        self.assertIn("Process exit code: 1", fallback.read_text(encoding="utf-8"))
+        state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
+        self.assertTrue(state["log_available"])
 
     def test_tampering_after_download_blocks_setup(self):
         args = self.args()
