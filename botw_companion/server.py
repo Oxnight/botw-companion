@@ -34,7 +34,7 @@ from .save_caption import SaveCaptionError, read_selected_caption
 from .synchronization import ReliableSaveSync
 from .updates import UpdateChecker
 from .update_downloads import UpdateDownloadError, UpdateDownloadManager
-from .windows_updates import WindowsUpdateError, WindowsUpdateInstaller
+from .update_installers import INSTALLATION_ERRORS, default_update_installer
 from . import __version__
 
 
@@ -98,7 +98,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
           session_token: str | None = None,
           update_checker: UpdateChecker | None = None,
           update_download_manager: UpdateDownloadManager | None = None,
-          update_installer: WindowsUpdateInstaller | None = None) -> None:
+          update_installer=None) -> None:
     web_root = files("botw_companion.web")
     tracking_store = tracking_store or ManualTrackingStore()
     route_store = route_store or RouteSessionStore()
@@ -110,7 +110,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     dsu_manager = dsu_manager or DsuManager()
     update_checker = update_checker or UpdateChecker()
     update_download_manager = update_download_manager or UpdateDownloadManager(update_checker)
-    update_installer = update_installer or WindowsUpdateInstaller()
+    update_installer = update_installer or default_update_installer()
     session_token = session_token or secrets.token_urlsafe(32)
     if not isinstance(session_token, str) or not session_token:
         raise ValueError("Le jeton de session local ne peut pas être vide")
@@ -439,12 +439,12 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                         parent_pid=os.getpid(),
                         port=int(self.server.server_port),
                     )
-                except (UpdateDownloadError, WindowsUpdateError, OSError, ValueError) as exc:
+                except (UpdateDownloadError, *INSTALLATION_ERRORS, OSError, ValueError) as exc:
                     self._json_response(409, {"erreur": str(exc)})
                     return
                 dsu_manager.stop()
                 self._json_response(202, result)
-                threading.Timer(0.2, lambda: request_server_shutdown("mise_a_jour_windows")).start()
+                threading.Timer(0.2, lambda: request_server_shutdown("mise_a_jour")).start()
                 return
             if path == "/api/shutdown":
                 update_download_manager.cancel()

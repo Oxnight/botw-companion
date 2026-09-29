@@ -86,8 +86,22 @@ If Setup is cancelled or fails, the verified installer and diagnostic log are
 kept so the operation can be retried. A portable or source checkout does not
 offer assisted installation.
 
-On macOS, replace the application in Applications with the copy from the new
-DMG. Assisted Apple Silicon installation is planned for a later release.
+On an installed Apple Silicon copy, the primary action also becomes **Installer
+et redémarrer**. A detached relay mounts the verified DMG read-only, checks the
+bundle identifier, version, ad hoc signature, arm64 binaries, and linked paths,
+then prepares the new bundle beside the existing one. The old application is
+kept as a temporary backup until the new local server answers its health check.
+If that check fails, the relay restores and reopens the previous bundle.
+
+macOS may request administrator authorization when the destination folder is
+not writable. The updater does not disable Gatekeeper or remove quarantine
+metadata. This prerelease is not notarized, so the first launch of a new build
+may still require **System Settings > Privacy & Security > Open Anyway**. The
+relay waits for that decision before treating startup as failed.
+
+Alpha 39 does not contain the macOS relay, so moving from alpha 39 to alpha 40
+requires one final manual drag-and-replace from the DMG. Later versions can use
+the assisted flow from an installed alpha 40 copy.
 
 There is no need to uninstall first. The package can also be downloaded
 manually from Releases.
@@ -100,9 +114,9 @@ Windows: %LOCALAPPDATA%\BOTW Companion
 macOS:   ~/Library/Application Support/BOTW Companion
 ```
 
-Before publication, the workflow tests a clean installation, an assisted
-Windows reinstall and verified restart, and an upgrade from the reference
-version.
+Before publication, the workflow tests clean installation and assisted upgrade
+paths on Windows and macOS, including a verified restart and preservation of
+the reference Application Support data.
 
 ## Uninstalling
 

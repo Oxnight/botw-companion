@@ -6,6 +6,24 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.40.0-alpha.40] - 2026-09-29
+
+### Added
+
+- Assisted Apple Silicon updates using a detached, packaged relay after the
+  verified DMG download.
+- A transactional application replacement with a temporary backup, automatic
+  restart health check, and rollback when the new bundle cannot start.
+
+### Security
+
+- Revalidate the DMG name, size, GitHub-provided SHA-256 digest, disk image,
+  bundle identifier, version fields, ad hoc signature, arm64 Mach-O slices,
+  and linked paths before replacing the installed application.
+- Mount update images read-only in a private location, request normal macOS
+  authorization when Applications is not writable, and leave Gatekeeper
+  protections enabled.
+
 ## [0.40.0-alpha.39] - 2026-09-10
 
 ### Added

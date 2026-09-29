@@ -19,8 +19,9 @@ The official build runs on an Apple Silicon GitHub Actions runner:
 The first script builds arm64 JoyConDSU and SDL3, packages the application with
 PyInstaller, applies an ad hoc signature, and creates the DMG. The second mounts
 the DMG, copies the application as a player would, checks architectures and
-dependencies, upgrades the version in `packaging/UPGRADE_BASELINE`, and verifies
-that Application Support data survives.
+dependencies, exercises the detached update relay against the version in
+`packaging/UPGRADE_BASELINE`, and verifies that Application Support data
+survives the transactional replacement and restart.
 
 This prerelease is not signed with a Developer ID certificate or notarized.
 macOS may require the user to allow it through **System Settings > Privacy &

@@ -188,12 +188,16 @@ async function startUpdateDownload() {
     }
 }
 
-async function installWindowsUpdate() {
+async function installVerifiedUpdate() {
+    const platformMessage = runtimePlatform.id === "macos"
+        ? "Un relais macOS séparé vérifiera le DMG Apple Silicon, remplacera l’application, " +
+          "puis la redémarrera. macOS peut demander ton autorisation."
+        : "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
+          "Windows ne sera pas redémarré.";
     if (!confirm(
         "Installer cette mise à jour maintenant ?\n\n" +
         "BOTW Companion et JoyConDSU vont s’arrêter proprement. " +
-        "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
-        "Windows ne sera pas redémarré."
+        platformMessage
     )) return;
     const button = $("#downloadUpdate");
     button.disabled = true;
@@ -217,7 +221,7 @@ async function handleUpdatePrimaryAction() {
         if (!response.ok) throw Error("service indisponible");
         const state = await response.json();
         if (state.status === "ready_to_install" && state.can_install) {
-            await installWindowsUpdate();
+            await installVerifiedUpdate();
             return;
         }
         await startUpdateDownload();

@@ -8,6 +8,7 @@ fi
 
 readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 readonly CURRENT_DMG_NAME="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field dmg_name)"
+readonly EXPECTED_DISPLAY="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field display_version)"
 readonly EXPECTED_PEP440="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field pep440_version)"
 readonly EXPECTED_MACOS_SHORT="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_short_version)"
 readonly EXPECTED_MACOS_BUNDLE="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_bundle_version)"
@@ -20,6 +21,7 @@ readonly CLEAN_HOME_ROOT="$TEST_ROOT/Clean home"
 readonly UPGRADE_APPLICATION="$TEST_ROOT/Applications upgrade/BOTW Companion.app"
 readonly UPGRADE_HOME_ROOT="$TEST_ROOT/Upgrade home"
 readonly UPGRADE_DATA_ROOT="$UPGRADE_HOME_ROOT/Library/Application Support/BOTW Companion"
+readonly UPDATE_ROOT="$TEST_ROOT/Assisted update"
 MOUNT_POINT=""
 SERVER_PID=""
 
@@ -263,11 +265,110 @@ for name, payload in payloads.items():
     (root / name).write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 PY
 
-  # Finder replaces the bundle; data remains in Application Support.
-  cmake -E remove_directory "$UPGRADE_APPLICATION"
-  copy_application_from_dmg "$DMG_PATH" "$UPGRADE_APPLICATION"
+  # The detached relay replaces the stopped bundle transactionally and starts
+  # the new local server. Application Support remains outside the bundle.
+  mkdir -p "$UPDATE_ROOT"
+  update_dmg="$UPDATE_ROOT/$CURRENT_DMG_NAME"
+  update_metadata="$UPDATE_ROOT/$CURRENT_DMG_NAME.metadata.json"
+  /bin/cp "$DMG_PATH" "$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True,
+    "version": version,
+    "filename": filename,
+    "size": int(size),
+    "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" \
+    /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+      --test-mode \
+      --root "$UPDATE_ROOT" \
+      --dmg "$update_dmg" \
+      --metadata "$update_metadata" \
+      --version "$EXPECTED_DISPLAY" \
+      --runtime-version "$EXPECTED_PEP440" \
+      --short-version "$EXPECTED_MACOS_SHORT" \
+      --bundle-version "$EXPECTED_MACOS_BUNDLE" \
+      --digest "$update_digest" \
+      --size "$update_size" \
+      --parent-pid 0 \
+      --application "$UPGRADE_APPLICATION" \
+      --port 18768 \
+      --log "$UPDATE_ROOT/installation.log" \
+      --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+      --owner-uid "$(/usr/bin/id -u)" \
+      --owner-gid "$(/usr/bin/id -g)"
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == \
+    "succeeded" ]] || { /bin/cat "$UPDATE_ROOT/installation.log" >&2; exit 1; }
+  [[ ! -e "$update_dmg" && ! -e "$update_metadata" ]] || {
+    echo "Le relais n'a pas nettoyé le paquet validé après succès." >&2
+    exit 1
+  }
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18768/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18768/api/shutdown >/dev/null
+  /bin/sleep 1
   assert_current_application "$UPGRADE_APPLICATION"
   run_current_application "$UPGRADE_APPLICATION" "$UPGRADE_HOME_ROOT" "" 18769 yes
+
+  # Force the health check to fail and prove that the detached relay restores
+  # the backup instead of leaving a broken or missing application bundle.
+  /bin/cp "$DMG_PATH" "$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True, "version": version, "filename": filename,
+    "size": int(size), "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  if BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" BOTW_UPDATE_FORCE_RESTART_FAILURE=1 \
+      /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+        --test-mode --root "$UPDATE_ROOT" --dmg "$update_dmg" \
+        --metadata "$update_metadata" --version "$EXPECTED_DISPLAY" \
+        --runtime-version "$EXPECTED_PEP440" --short-version "$EXPECTED_MACOS_SHORT" \
+        --bundle-version "$EXPECTED_MACOS_BUNDLE" --digest "$update_digest" \
+        --size "$update_size" --parent-pid 0 --application "$UPGRADE_APPLICATION" \
+        --port 18770 --log "$UPDATE_ROOT/rollback.log" \
+        --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+        --owner-uid "$(/usr/bin/id -u)" --owner-gid "$(/usr/bin/id -g)"; then
+    echo "Le scénario de redémarrage défaillant aurait dû déclencher un rollback." >&2
+    exit 1
+  fi
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "failed" \
+    && "$(/usr/bin/plutil -extract rollback_performed raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "true" ]] || {
+    /bin/cat "$UPDATE_ROOT/rollback.log" >&2
+    echo "Le rollback macOS n'a pas été attesté." >&2
+    exit 1
+  }
+  assert_current_application "$UPGRADE_APPLICATION"
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18770/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18770/api/shutdown >/dev/null
+  /bin/sleep 1
 
   # On macOS, uninstalling means removing the bundle from Applications.
   cmake -E remove_directory "$UPGRADE_APPLICATION"

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 from http.client import HTTPException
 import json
@@ -21,6 +20,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from .persistence import atomic_write_json
 from .platforms import companion_data_dir
 from .versioning import ReleaseVersion
+from .update_downloads import UpdateInstallCandidate
 
 
 UPDATER_EXE_NAME = "BOTW Companion Updater.exe"
@@ -35,14 +35,7 @@ class WindowsUpdateError(RuntimeError):
     """A safe, user-facing assisted-upgrade failure."""
 
 
-@dataclass(frozen=True)
-class WindowsInstallCandidate:
-    version: str
-    installer: Path
-    size: int
-    digest: str
-    metadata: Path
-    release_url: str
+WindowsInstallCandidate = UpdateInstallCandidate
 
 
 def sha256_file(path: Path) -> str:

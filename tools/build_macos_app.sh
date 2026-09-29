@@ -65,10 +65,11 @@ PACKAGED_DSU="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/JoyConDSU'
 PACKAGED_SDL="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/libSDL3.0.dylib' -type f -print -quit)"
 PACKAGED_LAUNCHER="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/launch_managed.sh' -type f -print -quit)"
 PACKAGED_MANIFEST="$(find "$APPLICATION" -path '*/botw_companion/dsu/macos/manifest.json' -type f -print -quit)"
+PACKAGED_UPDATE_RELAY="$(find "$APPLICATION" -path '*/botw_companion/macos_update_relay.sh' -type f -print -quit)"
 PACKAGED_LOCALIZATION="$(find "$APPLICATION" -path '*/botw_companion/data/localization_fr.json' -type f -print -quit)"
 PACKAGED_NOMENCLATURE="$(find "$APPLICATION" -path '*/botw_companion/data/nomenclature_fr_reference.json' -type f -print -quit)"
 [[ -n "$PACKAGED_DSU" && -n "$PACKAGED_SDL" && -n "$PACKAGED_LAUNCHER" \
-  && -n "$PACKAGED_MANIFEST" && -n "$PACKAGED_LOCALIZATION" \
+  && -n "$PACKAGED_MANIFEST" && -n "$PACKAGED_UPDATE_RELAY" && -n "$PACKAGED_LOCALIZATION" \
   && -n "$PACKAGED_NOMENCLATURE" ]] || {
   echo "Le moteur DSU n'est pas présent dans l'application." >&2
   exit 1
@@ -79,7 +80,7 @@ for document in LICENSE CHANGELOG.md THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIV
     echo "Document absent de l'application macOS : $document" >&2; exit 1;
   }
 done
-/bin/chmod 755 "$PACKAGED_DSU" "$PACKAGED_LAUNCHER"
+/bin/chmod 755 "$PACKAGED_DSU" "$PACKAGED_LAUNCHER" "$PACKAGED_UPDATE_RELAY"
 
 # PyInstaller already signs its binaries ad hoc. Sign the bundled engine
 # explicitly from the inside out. Do not use --deep: --force --deep would alter

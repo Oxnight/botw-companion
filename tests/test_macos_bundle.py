@@ -24,6 +24,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertNotIn(CURRENT_VERSION.display, spec)
         self.assertIn("JoyConDSU", spec)
         self.assertIn("libSDL3.0.dylib", spec)
+        self.assertIn("collect_data_files", spec)
         self.assertIn("sys.stdout is None", entry)
         self.assertIn("os.devnull", entry)
 
@@ -79,6 +80,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertNotIn("codesign --force --deep --sign", build)
         self.assertIn('manifest["executable_sha256"]', build)
         self.assertIn('manifest["sdl_sha256"]', build)
+        self.assertIn("PACKAGED_UPDATE_RELAY", build)
+        self.assertIn("macos_update_relay.sh", build)
         self.assertIn("--package-self-test", validation)
         self.assertIn('PATH="/usr/bin:/bin"', validation)
         self.assertIn("--list-controllers", validation)
@@ -97,6 +100,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("PREVIOUS_DMG_PATH", validation)
         self.assertIn("Application Support/BOTW Companion", validation)
         self.assertIn("Conservé depuis la version précédente", validation)
+        self.assertIn("installation-macos.plist", validation)
+        self.assertIn("--test-mode", validation)
         self.assertIn("localization_fr.json", validation)
         self.assertIn("nomenclature_fr_reference.json", validation)
         for document in (

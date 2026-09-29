@@ -21,7 +21,6 @@ from .persistence import atomic_write_json
 from .platforms import companion_data_dir
 from .updates import MAX_ASSET_BYTES, UpdateChecker
 from .versioning import ReleaseVersion
-from .windows_updates import WindowsInstallCandidate
 
 
 CHUNK_BYTES = 256 * 1024
@@ -49,6 +48,18 @@ class DownloadCancelled(UpdateDownloadError):
 
 class DownloadInterrupted(UpdateDownloadError):
     """A retryable network interruption that preserves partial bytes."""
+
+
+@dataclass(frozen=True)
+class UpdateInstallCandidate:
+    """A verified release asset ready for a platform-specific installer."""
+
+    version: str
+    installer: Path
+    size: int
+    digest: str
+    metadata: Path
+    release_url: str
 
 
 def _trusted_download_url(value: object, *, initial: bool = False) -> bool:
@@ -240,7 +251,7 @@ class UpdateDownloadManager:
         with self._lock:
             return dict(self._state)
 
-    def installation_candidate(self) -> WindowsInstallCandidate:
+    def installation_candidate(self) -> UpdateInstallCandidate:
         with self._lock:
             target = self._target
             if self._state["status"] != "ready_to_install" or target is None:
@@ -251,7 +262,7 @@ class UpdateDownloadManager:
                 raise UpdateDownloadError("L’état du téléchargement n’est plus valide")
             if not self._file_matches(final, target):
                 raise UpdateDownloadError("La vérification de sécurité avant installation a échoué")
-            return WindowsInstallCandidate(
+            return UpdateInstallCandidate(
                 version=target.version,
                 installer=final,
                 size=target.size,
