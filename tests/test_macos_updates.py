@@ -1,4 +1,5 @@
 import hashlib
+import os
 import plistlib
 from pathlib import Path
 import tempfile
@@ -96,7 +97,10 @@ class MacOSUpdateTests(unittest.TestCase):
         self.assertFalse(options.get("shell", False))
         relay = Path(command[1])
         self.assertTrue(relay.is_file())
-        self.assertEqual(relay.stat().st_mode & 0o777, 0o700)
+        # Windows only models the writable bit in chmod(), so it cannot
+        # represent the POSIX 0700 mode used by the real macOS relay.
+        if os.name == "posix":
+            self.assertEqual(relay.stat().st_mode & 0o777, 0o700)
 
     def test_only_a_frozen_apple_silicon_bundle_is_supported(self):
         self.assertTrue(self.installer().supported())
