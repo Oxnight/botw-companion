@@ -65,6 +65,8 @@ class MacOSUpdateTests(unittest.TestCase):
             system=values.pop("system", "Darwin"),
             machine=values.pop("machine", "arm64"),
             frozen=values.pop("frozen", True),
+            owner_uid=values.pop("owner_uid", 501),
+            owner_gid=values.pop("owner_gid", 20),
             **values,
         )
 
@@ -85,6 +87,10 @@ class MacOSUpdateTests(unittest.TestCase):
         self.assertIn("40.0.40", command)
         self.assertIn("--parent-pid", command)
         self.assertIn("4321", command)
+        self.assertIn("--owner-uid", command)
+        self.assertIn("501", command)
+        self.assertIn("--owner-gid", command)
+        self.assertIn("20", command)
         self.assertTrue(options["start_new_session"])
         self.assertTrue(options["close_fds"])
         self.assertFalse(options.get("shell", False))

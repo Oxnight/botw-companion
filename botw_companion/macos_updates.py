@@ -89,6 +89,8 @@ class MacOSUpdateInstaller:
         system: str | None = None,
         machine: str | None = None,
         frozen: bool | None = None,
+        owner_uid: int | None = None,
+        owner_gid: int | None = None,
         popen=subprocess.Popen,
     ) -> None:
         self.root = Path(data_root) if data_root is not None else companion_data_dir() / "updates"
@@ -99,6 +101,8 @@ class MacOSUpdateInstaller:
         self.system = system or platform.system()
         self.machine = (machine or platform.machine()).casefold()
         self.frozen = bool(getattr(sys, "frozen", False)) if frozen is None else frozen
+        self.owner_uid = owner_uid
+        self.owner_gid = owner_gid
         self.popen = popen
         self._process = None
 
@@ -155,6 +159,16 @@ class MacOSUpdateInstaller:
             )
         if self._process is not None and self._process.poll() is None:
             raise MacOSUpdateError("Une installation de mise à jour est déjà en cours")
+        getuid = getattr(os, "getuid", None)
+        getgid = getattr(os, "getgid", None)
+        owner_uid = self.owner_uid if self.owner_uid is not None else (
+            getuid() if getuid is not None else None
+        )
+        owner_gid = self.owner_gid if self.owner_gid is not None else (
+            getgid() if getgid is not None else None
+        )
+        if owner_uid is None or owner_gid is None:
+            raise MacOSUpdateError("L’identité du compte macOS ne peut pas être vérifiée")
         parsed = ReleaseVersion.parse(candidate.version)
         if candidate.installer.name != parsed.dmg_name:
             raise MacOSUpdateError("Nom d’image disque incohérent")
@@ -222,8 +236,8 @@ class MacOSUpdateInstaller:
             "--port", str(port),
             "--log", str(log_path.resolve()),
             "--release-url", candidate.release_url,
-            "--owner-uid", str(os.getuid()),
-            "--owner-gid", str(os.getgid()),
+            "--owner-uid", str(owner_uid),
+            "--owner-gid", str(owner_gid),
         ]
         try:
             self._process = self.popen(
