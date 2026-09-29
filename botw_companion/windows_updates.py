@@ -317,6 +317,37 @@ def _write_setup_fallback_log(log_path: Path, returncode: int) -> None:
         pass
 
 
+def _launch_updated_application(application: Path, *, port: int, silent: bool,
+                                log_path: Path):
+    """Restart the UI for users or the server directly during headless CI."""
+    command = [str(application)]
+    output = subprocess.DEVNULL
+    log_stream = None
+    if silent:
+        command.extend(("--server", "--port", str(port)))
+        try:
+            log_stream = log_path.open("ab", buffering=0)
+            log_stream.write(b"\n----- BOTW Companion restart diagnostics -----\n")
+            output = log_stream
+        except OSError:
+            if log_stream is not None:
+                log_stream.close()
+            log_stream = None
+    try:
+        return subprocess.Popen(
+            command,
+            close_fds=True,
+            stdin=subprocess.DEVNULL,
+            stdout=output,
+            stderr=subprocess.STDOUT if log_stream is not None else subprocess.DEVNULL,
+            creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+            env={**os.environ, "PYINSTALLER_RESET_ENVIRONMENT": "1"},
+        )
+    finally:
+        if log_stream is not None:
+            log_stream.close()
+
+
 def _probe_version(port: int, expected: str) -> bool:
     try:
         with build_opener(ProxyHandler({})).open(
@@ -416,22 +447,26 @@ def _run_relay(args) -> int:
                            release_url=args.release_url, can_retry=True, log_available=log_path.is_file(),
                            log_path=log_path)
         if application.is_file():
-            subprocess.Popen([str(application)], close_fds=True,
-                             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                             stderr=subprocess.DEVNULL,
-                             creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
-                             env={**os.environ, "PYINSTALLER_RESET_ENVIRONMENT": "1"})
+            _launch_updated_application(
+                application,
+                port=args.port,
+                silent=False,
+                log_path=log_path,
+            )
         return setup.returncode or 5
     _write_relay_state(root, status="restarting", version=args.version,
                        message="Installation terminée. Vérification du redémarrage…",
                        release_url=args.release_url, can_retry=False, log_available=log_path.is_file(),
                        log_path=log_path)
-    subprocess.Popen([str(application)], close_fds=True,
-                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                     stderr=subprocess.DEVNULL,
-                     creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
-                     env={**os.environ, "PYINSTALLER_RESET_ENVIRONMENT": "1"})
+    silent_restart = bool(getattr(args, "silent", False))
+    restarted = _launch_updated_application(
+        application,
+        port=args.port,
+        silent=silent_restart,
+        log_path=log_path,
+    )
     deadline = time.monotonic() + 45.0
+    restart_exit_code = None
     while time.monotonic() < deadline:
         if _probe_version(args.port, args.version):
             installer.unlink(missing_ok=True)
@@ -441,10 +476,20 @@ def _run_relay(args) -> int:
                                release_url=args.release_url, can_retry=False,
                                log_available=log_path.is_file(), log_path=log_path)
             return 0
+        if silent_restart:
+            restart_exit_code = restarted.poll()
+            if restart_exit_code is not None:
+                break
         time.sleep(0.25)
+    message = "La nouvelle version est installée mais son redémarrage n’a pas pu être confirmé."
+    if restart_exit_code is not None:
+        message = (
+            "La nouvelle version est installée mais son serveur de validation "
+            f"s’est arrêté (code {restart_exit_code})."
+        )
     _write_relay_state(root, status="failed", version=args.version,
-                       message="La nouvelle version est installée mais son redémarrage n’a pas pu être confirmé.",
-                       release_url=args.release_url, can_retry=False, log_available=log_path.is_file(),
+                       message=message,
+                       release_url=args.release_url, can_retry=True, log_available=log_path.is_file(),
                        log_path=log_path)
     return 6
 

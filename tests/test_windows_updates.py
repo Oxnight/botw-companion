@@ -158,6 +158,53 @@ class WindowsUpdateTests(unittest.TestCase):
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "succeeded")
 
+    def test_silent_relay_restarts_server_directly_and_records_diagnostics(self):
+        args = self.args()
+        args.silent = True
+        launches = []
+
+        def popen(command, **kwargs):
+            launches.append((command, kwargs))
+            return FakeProcess()
+
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates._probe_version", return_value=True), \
+             patch("botw_companion.windows_updates._reset_windows_dll_search_path"), \
+             patch("botw_companion.windows_updates.subprocess.run",
+                   return_value=SimpleNamespace(returncode=0)), \
+             patch("botw_companion.windows_updates.subprocess.Popen", side_effect=popen):
+            self.assertEqual(run_relay(args), 0)
+
+        command, kwargs = launches[0]
+        self.assertEqual(command, [
+            str(self.application.resolve()), "--server", "--port", str(args.port),
+        ])
+        self.assertIs(kwargs["stderr"], __import__("subprocess").STDOUT)
+        self.assertIn(
+            "BOTW Companion restart diagnostics",
+            Path(args.log).read_text(encoding="utf-8", errors="replace"),
+        )
+
+    def test_silent_restart_failure_is_reported_without_waiting_for_timeout(self):
+        args = self.args()
+        args.silent = True
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates._probe_version", return_value=False), \
+             patch("botw_companion.windows_updates._reset_windows_dll_search_path"), \
+             patch("botw_companion.windows_updates.subprocess.run",
+                   return_value=SimpleNamespace(returncode=0)), \
+             patch("botw_companion.windows_updates.subprocess.Popen",
+                   return_value=FakeProcess(returncode=7)), \
+             patch("botw_companion.windows_updates.time.sleep") as sleep:
+            self.assertEqual(run_relay(args), 6)
+        sleep.assert_not_called()
+        state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
+        self.assertEqual(state["status"], "failed")
+        self.assertTrue(state["can_retry"])
+        self.assertIn("code 7", state["message"])
+
     def test_relay_stops_before_setup_when_log_directory_cannot_be_created(self):
         args = self.args()
         with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \

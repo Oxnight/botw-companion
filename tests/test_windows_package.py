@@ -136,6 +136,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertNotIn("f'/LOG=\"{log_path}\"'", relay)
         self.assertIn("_prepare_installer_log(log_path)", relay)
         self.assertIn("log_path.parent.mkdir(parents=True, exist_ok=True)", relay)
+        self.assertIn('command.extend(("--server", "--port", str(port)))', relay)
+        self.assertIn("BOTW Companion restart diagnostics", relay)
         self.assertNotIn('"--sans-navigateur"', validation)
         self.assertIn("RedirectStandardError", validation)
         self.assertIn("-WorkingDirectory $InstallRoot", validation)
