@@ -167,8 +167,10 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("steps.version.outputs.installer_name", workflow)
         self.assertIn("steps.version.outputs.dmg_name", workflow)
         self.assertIn("RELEASE_NOTES.md", workflow)
-        self.assertIn('release_type=(--latest)', workflow)
+        self.assertIn('release_type=()', workflow)
         self.assertIn('release_type=(--prerelease)', workflow)
+        self.assertIn('publish_flags+=(--latest)', workflow)
+        self.assertIn('publish_flags+=(--prerelease)', workflow)
         self.assertIn("validate_packages:", workflow)
         self.assertGreaterEqual(workflow.count("if: env.BUILD_PACKAGES == 'true'"), 9)
         self.assertIn("if: startsWith(github.ref, 'refs/tags/v')", workflow)
@@ -176,6 +178,9 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertNotIn("sha256" + "sum", workflow.casefold())
         self.assertNotIn(CURRENT_VERSION.display, workflow)
         self.assertIn("--verify-tag", workflow)
+        self.assertIn("--draft", workflow)
+        self.assertIn("tools/verify_release_ref.py", workflow)
+        self.assertIn("tools/verify_release_assets.py", workflow)
         self.assertIn("needs: [windows, macos]", workflow)
 
     def test_browser_suite_covers_the_complete_user_path(self):

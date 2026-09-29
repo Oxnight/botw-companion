@@ -20,7 +20,8 @@ PUBLIC_DOCUMENTS = (
     "README.md", "CHANGELOG.md", "CONTRIBUTING.md", "RELEASING.md",
     "SECURITY.md", "PRIVACY.md", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md",
     "docs/INSTALLATION.md", "docs/DSU.md", "docs/TROUBLESHOOTING.md",
-    "docs/DEVELOPMENT.md", "macos/README.md", "windows/README.md",
+    "docs/DEVELOPMENT.md", "docs/UPDATE_THREAT_MODEL.md",
+    "macos/README.md", "windows/README.md",
     "windows/TESTING.md", "third_party/JoyConDSU/README_WINDOWS.md",
     "botw_companion/web/map-tiles/SOURCE.txt",
 )
@@ -234,6 +235,10 @@ def audit() -> list[str]:
             "## Python tests and audits", "## Building for Windows x64",
             "## Building for macOS Apple Silicon",
         ),
+        "docs/UPDATE_THREAT_MODEL.md": (
+            "## Trusted inputs", "## Release pipeline threats",
+            "## Client update threats", "## Release operator checklist",
+        ),
         "DATA_SOURCES.md": (
             "unofficial fan project", "no redistribution permission",
             "BOTW Object Map", "MrCheeze/botw-tools", "Zelda Wiki",
@@ -290,6 +295,9 @@ def audit() -> list[str]:
         "--notes-file RELEASE_NOTES.md",
         "release-assets/${{ steps.version.outputs.installer_name }}",
         "release-assets/${{ steps.version.outputs.dmg_name }}",
+        "tools/verify_release_ref.py",
+        "tools/verify_release_assets.py",
+        "name: github-release",
     ):
         if marker not in workflow:
             errors.append(f"incomplete release publication rule: {marker}")

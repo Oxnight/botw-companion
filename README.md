@@ -62,6 +62,7 @@ not only from the temporary state of the final quest after the credits.
 - [DSU motion setup](docs/DSU.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Development and tests](docs/DEVELOPMENT.md)
+- [Update and release threat model](docs/UPDATE_THREAT_MODEL.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 - [Release process](RELEASING.md)

@@ -77,6 +77,46 @@ class UpdateCheckerTests(unittest.TestCase):
         ], current=ReleaseVersion.parse("1.0.0"), system="Windows")
         self.assertEqual(checker.check()["latest_version"], "1.0.1")
 
+    def test_release_channel_transitions_follow_semantic_precedence(self):
+        scenarios = (
+            (
+                "prerelease to prerelease",
+                "0.40.0-alpha.38",
+                [release("0.40.0-alpha.39")],
+                "0.40.0-alpha.39",
+            ),
+            (
+                "prerelease to stable",
+                "1.0.0-rc.1",
+                [release("1.0.0", prerelease=False)],
+                "1.0.0",
+            ),
+            (
+                "stable to stable",
+                "1.0.0",
+                [release("1.0.1", prerelease=False)],
+                "1.0.1",
+            ),
+            (
+                "stable ignores prerelease",
+                "1.0.0",
+                [release("1.1.0-alpha.1")],
+                None,
+            ),
+        )
+        for label, current, releases, expected in scenarios:
+            with self.subTest(label=label):
+                checker, _ = self.checker(
+                    releases,
+                    current=ReleaseVersion.parse(current),
+                    system="Windows",
+                )
+                payload = checker.check()
+                if expected is None:
+                    self.assertEqual(payload["status"], "up_to_date")
+                else:
+                    self.assertEqual(payload["latest_version"], expected)
+
     def test_macos_requires_arm64_dmg(self):
         checker, _ = self.checker(
             [release("0.40.0-alpha.8", asset_platform="macos")],

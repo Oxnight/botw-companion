@@ -6,6 +6,29 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.40.0-alpha.41] - 2026-09-29
+
+### Changed
+
+- Build releases only from an annotated version tag that identifies the exact
+  commit tested by both native jobs.
+- Upload packages to a draft first and publish it only after verifying the
+  exact asset set, sizes, URLs, media types, and GitHub-provided SHA-256
+  digests against the local build outputs.
+- Route the only write-enabled job through the dedicated `github-release`
+  environment and disable persisted checkout credentials in every job.
+- Remove a release created by a failed verification run while preserving its
+  annotated tag for diagnosis.
+
+### Security
+
+- Added automated policy tests for full-SHA action pins, least-privilege token
+  permissions, immutable tag validation, and verified draft publication.
+- Documented release and client-update trust boundaries, mitigations, recovery
+  paths, and residual signing limitations.
+- Added explicit update-channel tests for prerelease-to-prerelease,
+  prerelease-to-stable, stable-to-stable, and stable rejection of prereleases.
+
 ## [0.40.0-alpha.40] - 2026-09-29
 
 ### Added
