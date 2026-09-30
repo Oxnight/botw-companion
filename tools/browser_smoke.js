@@ -632,6 +632,56 @@ async function runResponsive(browser, baseUrl, browserName) {
   await closeWithTimeout(context, "la fermeture du contexte responsive");
 }
 
+async function runDisplayPreferences(browser, baseUrl, browserName) {
+  const context = await browser.newContext({
+    viewport: {width: 1280, height: 720},
+    reducedMotion: "reduce"
+  });
+  context.setDefaultTimeout(ACTION_TIMEOUT_MS);
+  context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
+  const page = await context.newPage();
+  page.baseUrl = baseUrl;
+  progress(browserName, "accessibilite:mouvement-reduit");
+  await waitForApplication(page, browserName);
+  const motion = await page.evaluate(() => {
+    const tutorial = getComputedStyle(document.querySelector("#tutorialSpotlight"));
+    const moon = getComputedStyle(document.querySelector(".bloodMoonCorona"));
+    const durationToMs = value => value.split(",").map(part => {
+      const item = part.trim();
+      return item.endsWith("ms") ? Number.parseFloat(item) : Number.parseFloat(item) * 1000;
+    });
+    return {
+      preference: matchMedia("(prefers-reduced-motion: reduce)").matches,
+      tutorialTransitions: durationToMs(tutorial.transitionDuration),
+      moonAnimations: durationToMs(moon.animationDuration),
+      moonAnimationName: moon.animationName
+    };
+  });
+  assert(motion.preference, "Le contexte de mouvement réduit n’est pas appliqué");
+  assert(motion.tutorialTransitions.every(value => value <= 0.02),
+    `Les transitions du tutoriel restent animées : ${JSON.stringify(motion)}`);
+  assert(motion.moonAnimationName === "none" ||
+    motion.moonAnimations.every(value => value <= 0.02),
+  `La lune de sang reste animée en mouvement réduit : ${JSON.stringify(motion)}`);
+
+  progress(browserName, "accessibilite:zoom-200");
+  await page.evaluate(() => { document.documentElement.style.zoom = "2"; });
+  await page.waitForTimeout(50);
+  const zoom = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    documentWidth: document.documentElement.scrollWidth,
+    mainWidth: document.querySelector("main")?.getBoundingClientRect().width || 0,
+    helpButton: document.querySelector("#openHelp")?.getBoundingClientRect().width || 0,
+    updateButton: document.querySelector("#checkUpdates")?.getBoundingClientRect().width || 0
+  }));
+  assert(zoom.documentWidth <= zoom.viewport + 2,
+    `Débordement horizontal à 200 % : ${JSON.stringify(zoom)}`);
+  assert(zoom.mainWidth > 0 && zoom.helpButton >= 24 && zoom.updateButton >= 24,
+    `Des commandes disparaissent à 200 % : ${JSON.stringify(zoom)}`);
+  await assertAccessible(page, "zoom à 200 % et mouvement réduit");
+  await closeWithTimeout(context, "la fermeture du contexte accessibilité");
+}
+
 (async () => {
   const url = process.argv[2] || "http://127.0.0.1:8765";
   const target = String(process.argv[3] || process.env.BOTW_BROWSER || "chromium").toLowerCase();
@@ -661,7 +711,11 @@ async function runResponsive(browser, baseUrl, browserName) {
   try {
     const desktop = await runDesktop(browser, url, target);
     await runResponsive(browser, url, target);
-    console.log(JSON.stringify({status: "ok", browser: target, ...desktop, responsive: true}));
+    await runDisplayPreferences(browser, url, target);
+    console.log(JSON.stringify({
+      status: "ok", browser: target, ...desktop, responsive: true,
+      zoom_200: true, reduced_motion: true
+    }));
   } finally {
     progress(target, "navigateur:fermeture");
     await closeWithTimeout(browser, "la fermeture du navigateur");

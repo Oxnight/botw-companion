@@ -63,6 +63,7 @@ not only from the temporary state of the final quest after the credits.
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Development and tests](docs/DEVELOPMENT.md)
 - [Update and release threat model](docs/UPDATE_THREAT_MODEL.md)
+- [Release candidate validation](docs/RELEASE_CANDIDATE_VALIDATION.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 - [Release process](RELEASING.md)

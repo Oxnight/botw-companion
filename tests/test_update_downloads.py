@@ -46,6 +46,19 @@ class FakeResponse:
         return self.url
 
 
+class SlowChunkedResponse(FakeResponse):
+    """Return small chunks to model a slow connection without real delays."""
+
+    def __init__(self, payload, *, chunk_size=97, **kwargs):
+        super().__init__(payload, **kwargs)
+        self.chunk_size = chunk_size
+        self.read_count = 0
+
+    def read(self, size=-1):
+        self.read_count += 1
+        return super().read(min(size, self.chunk_size) if size >= 0 else self.chunk_size)
+
+
 class FakeChecker:
     def __init__(self, payload):
         self.payload = payload
@@ -125,6 +138,27 @@ class UpdateDownloadManagerTests(unittest.TestCase):
         self.assertEqual(install.version, "0.40.0-alpha." + "39")
         self.assertEqual(install.installer.read_bytes(), content)
         self.assertEqual(install.digest, hashlib.sha256(content).hexdigest())
+
+    def test_slow_chunked_download_completes_without_blocking_other_state_reads(self):
+        content = b"slow but valid installer" * 4096
+        response = SlowChunkedResponse(
+            content,
+            chunk_size=113,
+            headers={"Content-Length": str(len(content)), "ETag": '"slow-v1"'},
+        )
+        manager, _checker = self.manager(content, lambda *_args, **_kwargs: response)
+        manager.start()
+        observed = []
+        deadline = time.monotonic() + 3
+        while time.monotonic() < deadline:
+            state = manager.status()
+            observed.append(state.get("bytes_received", 0))
+            if state["status"] in {"ready_to_install", "failed", "interrupted"}:
+                break
+            time.sleep(0.001)
+        self.assertEqual(manager.status()["status"], "ready_to_install")
+        self.assertGreater(response.read_count, 100)
+        self.assertEqual(observed, sorted(observed))
 
     def test_installation_candidate_rehashes_the_ready_file(self):
         content = b"verified before handoff"

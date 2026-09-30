@@ -6,6 +6,23 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2026-09-29
+
+### Changed
+
+- Froze the planned 1.0 feature set for final validation.
+- Validate clean installation and upgrades from both alpha 34 and the latest
+  published alpha on Windows and macOS Apple Silicon.
+- Track draft publication by its immutable GitHub Release database ID so asset
+  verification does not depend on the public tag endpoint.
+
+### Quality
+
+- Added a release-candidate sign-off record for native hardware, emulators,
+  real controllers, update recovery, data retention, and product review.
+- Made 200% zoom, reduced motion, offline operation, and simulated slow update
+  transfers explicit release gates.
+
 ## [0.40.0-alpha.41] - 2026-09-29
 
 ### Changed

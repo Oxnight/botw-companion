@@ -51,6 +51,13 @@ The release must contain exactly the Windows installer and Apple Silicon DMG,
 in addition to the source archives GitHub adds automatically. It must not
 contain a checksum text file.
 
+For a release candidate, complete
+[`docs/RELEASE_CANDIDATE_VALIDATION.md`](docs/RELEASE_CANDIDATE_VALIDATION.md).
+The automatic package run must validate upgrades from both the legacy baseline
+in `packaging/LEGACY_UPGRADE_BASELINE` and the most recent published version in
+`packaging/UPGRADE_BASELINE`. Do not tag `v1.0.0` until every applicable human
+check is signed off and no release-blocking or data-loss issue remains.
+
 Any change to a runtime, native library, data source, image, font, or bundled
 tool requires an update to the applicable notices, `licenses/` contents, and
 distribution audit before tagging.

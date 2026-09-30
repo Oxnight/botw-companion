@@ -49,7 +49,10 @@ class ReleaseSecurityTests(unittest.TestCase):
         self.assertIn("tools/verify_release_assets.py", workflow[verify:publish])
         self.assertIn("tools/verify_release_ref.py", workflow)
         self.assertIn("steps.create_release.outputs.created == 'true'", workflow)
-        self.assertIn("gh release delete", workflow[cleanup:])
+        self.assertIn("gh api --method DELETE", workflow[cleanup:])
+        self.assertIn("steps.create_release.outputs.release_id", workflow)
+        self.assertIn("tools/release_lookup.py", workflow)
+        self.assertNotIn("releases/tags/", workflow[verify:])
         self.assertNotIn("--cleanup-tag", workflow[cleanup:])
         self.assertNotIn("SHA256" + "SUMS", workflow)
 

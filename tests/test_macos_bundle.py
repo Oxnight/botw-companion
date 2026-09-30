@@ -121,7 +121,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertGreaterEqual(workflow.count("timeout-minutes: 5"), 2)
         self.assertIn("./tools/build_macos_app.sh", workflow)
         self.assertIn("./tools/test_macos_installation.sh", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertGreaterEqual(workflow.count("timeout-minutes: 15"), 3)
         self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS=120000", workflow)
         self.assertIn("for browser in webkit chromium firefox", workflow)
         self.assertIn('browser-test-$browser.log', workflow)
@@ -130,6 +130,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("gh release create", workflow)
         self.assertIn("steps.version.outputs.upgrade_tag", workflow)
         self.assertIn("steps.version.outputs.upgrade_dmg_name", workflow)
+        self.assertIn("steps.version.outputs.legacy_upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.legacy_upgrade_dmg_name", workflow)
         self.assertNotIn(CURRENT_VERSION.display, workflow)
 
     def test_source_tree_has_no_clone_dependent_macos_launcher(self):

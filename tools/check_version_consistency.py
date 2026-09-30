@@ -50,8 +50,15 @@ def errors(root: Path, tag: str | None = None) -> list[str]:
     baseline = ReleaseVersion.parse(
         (root / "packaging" / "UPGRADE_BASELINE").read_text(encoding="utf-8")
     )
+    legacy_baseline = ReleaseVersion.parse(
+        (root / "packaging" / "LEGACY_UPGRADE_BASELINE").read_text(encoding="utf-8")
+    )
     if baseline.precedence >= version.precedence:
         findings.append("UPGRADE_BASELINE doit désigner une version publiée antérieure")
+    if legacy_baseline.precedence >= baseline.precedence:
+        findings.append(
+            "LEGACY_UPGRADE_BASELINE doit être antérieure à UPGRADE_BASELINE"
+        )
     if tag is not None and tag != version.tag:
         findings.append(f"Tag invalide : {tag!r}, attendu {version.tag!r}")
 

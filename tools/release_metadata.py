@@ -19,6 +19,9 @@ def metadata() -> dict[str, str]:
     baseline = ReleaseVersion.parse(
         (ROOT / "packaging" / "UPGRADE_BASELINE").read_text(encoding="utf-8")
     )
+    legacy_baseline = ReleaseVersion.parse(
+        (ROOT / "packaging" / "LEGACY_UPGRADE_BASELINE").read_text(encoding="utf-8")
+    )
     current = CURRENT_VERSION
     return {
         "display_version": current.display,
@@ -37,6 +40,10 @@ def metadata() -> dict[str, str]:
         "upgrade_tag": baseline.tag,
         "upgrade_installer_name": baseline.installer_name,
         "upgrade_dmg_name": baseline.dmg_name,
+        "legacy_upgrade_version": legacy_baseline.display,
+        "legacy_upgrade_tag": legacy_baseline.tag,
+        "legacy_upgrade_installer_name": legacy_baseline.installer_name,
+        "legacy_upgrade_dmg_name": legacy_baseline.dmg_name,
     }
 
 

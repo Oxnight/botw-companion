@@ -1,14 +1,11 @@
-## What's new
+## Release candidate
 
-- Releases are now assembled as drafts and published only after GitHub reports
-  the exact two expected assets with the same size and SHA-256 digest as the
-  packages tested by the workflow.
-- Release tags must be annotated, match the project version, and identify the
-  exact commit tested on Windows and macOS.
-- The release job uses a dedicated protected environment and is the only job
-  granted write access to repository contents.
-- A failed post-upload verification removes only the unverified release and
-  keeps the annotated tag available for diagnosis.
+This build freezes the feature set planned for 1.0. It is intended for final
+installation, upgrade, accessibility, save-analysis, and hardware testing.
+
+Automated package validation now covers clean installation and upgrades from
+both alpha 34 and the latest published alpha on Windows and macOS. No player-facing
+features or completion rules have changed since alpha 41.
 
 ## Installation
 
@@ -27,3 +24,11 @@ platform removes the previous installation before a replacement is ready.
 
 An unavailable connection does not affect save analysis, the offline map,
 guides, tracking, or JoyConDSU.
+
+## Known limitations
+
+- The Windows installer is not commercially signed, so SmartScreen may ask for
+  confirmation.
+- The macOS application is not notarized, so Gatekeeper may require **Open
+  Anyway** on first launch.
+- macOS support is limited to Apple Silicon and macOS 14 or later.

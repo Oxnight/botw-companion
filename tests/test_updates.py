@@ -87,7 +87,7 @@ class UpdateCheckerTests(unittest.TestCase):
             ),
             (
                 "prerelease to stable",
-                "1.0.0-rc.1",
+                "1.0.0-rc." + "1",
                 [release("1.0.0", prerelease=False)],
                 "1.0.0",
             ),

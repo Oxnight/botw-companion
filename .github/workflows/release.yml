@@ -25,7 +25,7 @@ jobs:
   windows:
     name: Test Windows x64
     runs-on: windows-2022
-    timeout-minutes: 75
+    timeout-minutes: 90
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
@@ -107,27 +107,41 @@ jobs:
         shell: pwsh
         run: ./tools/build_windows_app.ps1
 
-      - name: Download the reference installer
+      - name: Download the latest and legacy reference installers
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         timeout-minutes: 5
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          New-Item -ItemType Directory -Force -Path build/upgrade-reference | Out-Null
+          New-Item -ItemType Directory -Force -Path build/upgrade-reference/latest | Out-Null
+          New-Item -ItemType Directory -Force -Path build/upgrade-reference/legacy | Out-Null
           gh release download "${{ steps.version.outputs.upgrade_tag }}" `
             --repo "${{ github.repository }}" `
             --pattern "${{ steps.version.outputs.upgrade_installer_name }}" `
-            --dir build/upgrade-reference `
+            --dir build/upgrade-reference/latest `
+            --clobber
+          gh release download "${{ steps.version.outputs.legacy_upgrade_tag }}" `
+            --repo "${{ github.repository }}" `
+            --pattern "${{ steps.version.outputs.legacy_upgrade_installer_name }}" `
+            --dir build/upgrade-reference/legacy `
             --clobber
 
-      - name: Test self-contained installation and upgrade
+      - name: Test self-contained installation and latest-alpha upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         run: |
           ./tools/test_windows_installation.ps1 `
             -InstallerPath "dist/installer/${{ steps.version.outputs.installer_name }}" `
-            -PreviousInstallerPath "build/upgrade-reference/${{ steps.version.outputs.upgrade_installer_name }}"
+            -PreviousInstallerPath "build/upgrade-reference/latest/${{ steps.version.outputs.upgrade_installer_name }}"
+
+      - name: Test legacy-alpha upgrade
+        if: env.BUILD_PACKAGES == 'true'
+        shell: pwsh
+        run: |
+          ./tools/test_windows_installation.ps1 `
+            -InstallerPath "dist/installer/${{ steps.version.outputs.installer_name }}" `
+            -PreviousInstallerPath "build/upgrade-reference/legacy/${{ steps.version.outputs.legacy_upgrade_installer_name }}"
 
       - name: Preserve the Windows installer
         if: env.BUILD_PACKAGES == 'true'
@@ -144,7 +158,7 @@ jobs:
     # Playwright >= 1.59 no longer supports WebKit on macOS 14.
     # GitHub Actions label macos-15 provides an Apple Silicon arm64 runner.
     runs-on: macos-15
-    timeout-minutes: 75
+    timeout-minutes: 90
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: utf-8
@@ -263,28 +277,42 @@ jobs:
         timeout-minutes: 35
         run: ./tools/build_macos_app.sh
 
-      - name: Download the reference DMG
+      - name: Download the latest and legacy reference DMGs
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 5
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p build/upgrade-reference
+          mkdir -p build/upgrade-reference/latest build/upgrade-reference/legacy
           gh release download "${{ steps.version.outputs.upgrade_tag }}" \
             --repo "${{ github.repository }}" \
             --pattern "${{ steps.version.outputs.upgrade_dmg_name }}" \
-            --dir build/upgrade-reference \
+            --dir build/upgrade-reference/latest \
+            --clobber
+          gh release download "${{ steps.version.outputs.legacy_upgrade_tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "${{ steps.version.outputs.legacy_upgrade_dmg_name }}" \
+            --dir build/upgrade-reference/legacy \
             --clobber
 
-      - name: Test self-contained DMG and upgrade
+      - name: Test self-contained DMG and latest-alpha upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           ./tools/test_macos_installation.sh \
             "dist/${{ steps.version.outputs.dmg_name }}" \
-            "build/upgrade-reference/${{ steps.version.outputs.upgrade_dmg_name }}"
+            "build/upgrade-reference/latest/${{ steps.version.outputs.upgrade_dmg_name }}"
+
+      - name: Test legacy-alpha upgrade
+        if: env.BUILD_PACKAGES == 'true'
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          ./tools/test_macos_installation.sh \
+            "dist/${{ steps.version.outputs.dmg_name }}" \
+            "build/upgrade-reference/legacy/${{ steps.version.outputs.legacy_upgrade_dmg_name }}"
 
       - name: Preserve the Apple Silicon DMG
         if: env.BUILD_PACKAGES == 'true'
@@ -354,8 +382,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "${{ steps.version.outputs.tag }}" \
-              --repo "${{ github.repository }}" >/dev/null 2>&1; then
+          gh api --paginate --slurp \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases?per_page=100" \
+            > release-list.json
+          if python3 tools/release_lookup.py \
+              --metadata release-list.json \
+              --tag "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
             echo "::error::A release already exists for this immutable tag."
             exit 1
           fi
@@ -372,6 +406,27 @@ jobs:
             --title "${{ steps.version.outputs.release_title }}" \
             --notes-file RELEASE_NOTES.md
           echo "created=true" >> "$GITHUB_OUTPUT"
+          release_id=""
+          for attempt in {1..10}; do
+            if gh api --paginate --slurp \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "repos/${{ github.repository }}/releases?per_page=100" \
+                > release-list.json; then
+              if release_id="$(python3 tools/release_lookup.py \
+                  --metadata release-list.json \
+                  --tag "${{ steps.version.outputs.tag }}" \
+                  --state draft 2>/dev/null)"; then
+                break
+              fi
+            fi
+            sleep $((attempt * 2))
+          done
+          if [[ -z "$release_id" ]]; then
+            echo "::error::The draft release database ID could not be resolved."
+            exit 1
+          fi
+          echo "release_id=$release_id" >> "$GITHUB_OUTPUT"
 
       - name: Verify GitHub's uploaded assets
         shell: bash
@@ -381,12 +436,12 @@ jobs:
         run: |
           verified=0
           for attempt in {1..10}; do
-            gh api \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              "repos/${{ github.repository }}/releases/tags/${{ steps.version.outputs.tag }}" \
-              > release-metadata.json
-            if python3 tools/verify_release_assets.py \
+            if gh api \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
+                > release-metadata.json && \
+              python3 tools/verify_release_assets.py \
                 --metadata release-metadata.json \
                 --assets release-assets \
                 --repository "${{ github.repository }}"; then
@@ -402,15 +457,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          publish_flags=(--draft=false)
           if [[ "${{ steps.version.outputs.prerelease }}" == "true" ]]; then
-            publish_flags+=(--prerelease)
+            prerelease=true
+            make_latest=false
           else
-            publish_flags+=(--latest)
+            prerelease=false
+            make_latest=true
           fi
-          gh release edit "${{ steps.version.outputs.tag }}" \
-            --repo "${{ github.repository }}" \
-            "${publish_flags[@]}"
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
+            -F draft=false \
+            -F prerelease="$prerelease" \
+            -f make_latest="$make_latest" \
+            > release-metadata.json
 
       - name: Verify the published release
         shell: bash
@@ -423,7 +484,7 @@ jobs:
             if gh api \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                "repos/${{ github.repository }}/releases/tags/${{ steps.version.outputs.tag }}" \
+                "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
                 > release-metadata.json && \
               python3 tools/verify_release_assets.py \
                 --metadata release-metadata.json \
@@ -443,6 +504,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete "${{ steps.version.outputs.tag }}" \
-            --repo "${{ github.repository }}" \
-            --yes
+          release_id="${{ steps.create_release.outputs.release_id }}"
+          if [[ -z "$release_id" ]]; then
+            gh api --paginate --slurp \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "repos/${{ github.repository }}/releases?per_page=100" \
+              > release-list.json
+            release_id="$(python3 tools/release_lookup.py \
+              --metadata release-list.json \
+              --tag "${{ steps.version.outputs.tag }}" \
+              --state draft)"
+          fi
+          gh api --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases/$release_id"
