@@ -254,18 +254,29 @@ async function waitForVisualStyle(page) {
   // Navigation intentionally waits only for the committed document because
   // Firefox can leave DOMContentLoaded pending on a fresh CI context.  The
   // application data can become ready before independently loaded stylesheets
-  // have finished applying, so use stable computed values as the CSS barrier.
-  await page.waitForFunction(() => {
-    const rootStyle = getComputedStyle(document.documentElement);
-    const search = document.querySelector("#search");
-    const dsuTitle = document.querySelector(".dsuTitle > small");
-    const dsuEngine = document.querySelector("#dsuEngineLabel");
-    if (!search || !dsuTitle || !dsuEngine) return false;
-    return rootStyle.getPropertyValue("--muted").trim().toLowerCase() === "#91a29e" &&
-      search.getBoundingClientRect().height >= 40 &&
-      getComputedStyle(dsuTitle).color === "rgb(213, 183, 101)" &&
-      getComputedStyle(dsuEngine).color === "rgb(145, 162, 158)";
-  }, null, {timeout: 45000});
+  // have finished applying.  Link.sheet is the browser's direct signal that
+  // a linked stylesheet has loaded; computed colors and control heights are
+  // deliberately not used because responsive rules and native form rendering
+  // legitimately differ between Windows, macOS, and browser engines.
+  const expectedStylePaths = ["/style.css", "/metrics.css", "/armor.css"];
+  try {
+    await page.waitForFunction(paths => paths.every(path =>
+      Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(link =>
+        new URL(link.href, document.baseURI).pathname === path && Boolean(link.sheet)
+      )
+    ), expectedStylePaths, {timeout: 45000});
+  } catch (error) {
+    const styleState = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => ({
+        path: new URL(link.href, document.baseURI).pathname,
+        loaded: Boolean(link.sheet)
+      }))
+    );
+    throw new Error(
+      `Les feuilles de style attendues ne sont pas toutes chargées : ${JSON.stringify(styleState)}; ` +
+      `cause initiale : ${String(error)}`
+    );
+  }
   await page.evaluate(() => new Promise(resolve => {
     requestAnimationFrame(() => requestAnimationFrame(resolve));
   }));
