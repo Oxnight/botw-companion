@@ -665,8 +665,11 @@ async function runDisplayPreferences(browser, baseUrl, browserName) {
   `La lune de sang reste animée en mouvement réduit : ${JSON.stringify(motion)}`);
 
   progress(browserName, "accessibilite:zoom-200");
-  await page.evaluate(() => { document.documentElement.style.zoom = "2"; });
-  await page.waitForTimeout(50);
+  // Browser page zoom reduces the CSS viewport. CSS `zoom` only magnifies the
+  // rendered canvas and does not trigger responsive reflow, so it creates an
+  // artificial overflow that users do not encounter with 200% browser zoom.
+  await page.setViewportSize({width: 640, height: 360});
+  await page.waitForTimeout(100);
   const zoom = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
     documentWidth: document.documentElement.scrollWidth,
@@ -676,6 +679,8 @@ async function runDisplayPreferences(browser, baseUrl, browserName) {
   }));
   assert(zoom.documentWidth <= zoom.viewport + 2,
     `Débordement horizontal à 200 % : ${JSON.stringify(zoom)}`);
+  assert(zoom.viewport === 640,
+    `Le viewport équivalent au zoom 200 % n'est pas appliqué : ${JSON.stringify(zoom)}`);
   assert(zoom.mainWidth > 0 && zoom.helpButton >= 24 && zoom.updateButton >= 24,
     `Des commandes disparaissent à 200 % : ${JSON.stringify(zoom)}`);
   await assertAccessible(page, "zoom à 200 % et mouvement réduit");

@@ -20,8 +20,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Added a release-candidate sign-off record for native hardware, emulators,
   real controllers, update recovery, data retention, and product review.
-- Made 200% zoom, reduced motion, offline operation, and simulated slow update
-  transfers explicit release gates.
+- Made 200% browser zoom, reduced motion, offline operation, and simulated slow
+  update transfers explicit release gates, using the effective CSS viewport for
+  standards-compliant reflow validation.
 
 ## [0.40.0-alpha.41] - 2026-09-29
 
