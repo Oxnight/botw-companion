@@ -112,28 +112,39 @@ class ReleaseSecurityTests(unittest.TestCase):
         assets = directory / "assets"
         assets.mkdir(parents=True)
         payload = {
+            "id": 321,
             "tag_name": CURRENT_VERSION.tag,
             "name": CURRENT_VERSION.title,
             "draft": True,
             "prerelease": CURRENT_VERSION.is_prerelease,
+            "url": "https://api.github.com/repos/Oxnight/botw-companion/releases/321",
+            "assets_url": (
+                "https://api.github.com/repos/Oxnight/botw-companion/"
+                "releases/321/assets"
+            ),
             "assets": [],
         }
-        for name, content_type in (
-            (CURRENT_VERSION.installer_name, "application/x-msdownload"),
-            (CURRENT_VERSION.dmg_name, "application/x-apple-diskimage"),
+        for asset_id, name, content_type in (
+            (1001, CURRENT_VERSION.installer_name, "application/x-msdownload"),
+            (1002, CURRENT_VERSION.dmg_name, "application/x-apple-diskimage"),
         ):
             path = assets / name
             path.write_bytes((name + "\n").encode("utf-8"))
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             payload["assets"].append({
+                "id": asset_id,
                 "name": name,
                 "state": "uploaded",
                 "size": path.stat().st_size,
                 "digest": f"sha256:{digest}",
                 "content_type": content_type,
+                "url": (
+                    "https://api.github.com/repos/Oxnight/botw-companion/"
+                    f"releases/assets/{asset_id}"
+                ),
                 "browser_download_url": (
                     "https://github.com/Oxnight/botw-companion/releases/download/"
-                    f"{CURRENT_VERSION.tag}/{name}"
+                    f"untagged-0123456789abcdefabcd/{name}"
                 ),
             })
         return payload, assets
@@ -145,6 +156,11 @@ class ReleaseSecurityTests(unittest.TestCase):
                 payload, assets, "Oxnight/botw-companion", published=False
             )
             payload["draft"] = False
+            for asset in payload["assets"]:
+                asset["browser_download_url"] = (
+                    "https://github.com/Oxnight/botw-companion/releases/download/"
+                    f"{CURRENT_VERSION.tag}/{asset['name']}"
+                )
             verify_release_assets(
                 payload, assets, "Oxnight/botw-companion", published=True
             )
@@ -157,6 +173,28 @@ class ReleaseSecurityTests(unittest.TestCase):
             payload["assets"].append(json.loads(json.dumps(payload["assets"][0])))
             payload["assets"][-1]["name"] = "unexpected.txt"
             with self.assertRaisesRegex(ReleaseAssetError, "exactly two"):
+                verify_release_assets(
+                    payload, assets, "Oxnight/botw-companion", published=False
+                )
+
+    def test_release_asset_verifier_rejects_untrusted_or_mixed_draft_urls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            payload, assets = self._release_fixture(Path(directory))
+            payload["assets"][0]["browser_download_url"] = (
+                "https://evil.example/Oxnight/botw-companion/releases/download/"
+                f"untagged-0123456789abcdefabcd/{payload['assets'][0]['name']}"
+            )
+            with self.assertRaisesRegex(ReleaseAssetError, "draft asset URL"):
+                verify_release_assets(
+                    payload, assets, "Oxnight/botw-companion", published=False
+                )
+
+            payload, assets = self._release_fixture(Path(directory) / "mixed")
+            payload["assets"][1]["browser_download_url"] = (
+                "https://github.com/Oxnight/botw-companion/releases/download/"
+                f"untagged-fedcba9876543210abcd/{payload['assets'][1]['name']}"
+            )
+            with self.assertRaisesRegex(ReleaseAssetError, "one release URL"):
                 verify_release_assets(
                     payload, assets, "Oxnight/botw-companion", published=False
                 )

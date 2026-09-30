@@ -6,6 +6,15 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.2] - 2026-09-30
+
+### Fixed
+
+- Accept GitHub's repository-scoped temporary download URLs while a Release is
+  still a draft, then require the final immutable tag URLs after publication.
+- Bind draft verification to the exact Release and asset database IDs in
+  addition to names, media types, sizes, and GitHub-provided SHA-256 digests.
+
 ## [1.0.0-rc.1] - 2026-09-29
 
 ### Changed
