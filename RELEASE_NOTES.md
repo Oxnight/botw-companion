@@ -6,6 +6,8 @@ installation, upgrade, accessibility, save-analysis, and hardware testing.
 RC 2 corrects draft-asset verification in the publication pipeline. GitHub's
 temporary draft URLs are now checked before publication and the final tagged
 URLs are checked immediately afterwards. Application behavior is unchanged.
+It also makes the cross-browser accessibility gate wait for fully applied
+styles instead of auditing a transient unstyled frame on Windows.
 
 Automated package validation now covers clean installation and upgrades from
 both alpha 34 and the latest published alpha on Windows and macOS. No player-facing

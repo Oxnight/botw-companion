@@ -250,12 +250,34 @@ async function navigateToApplication(page, browserName) {
   }
 }
 
+async function waitForVisualStyle(page) {
+  // Navigation intentionally waits only for the committed document because
+  // Firefox can leave DOMContentLoaded pending on a fresh CI context.  The
+  // application data can become ready before independently loaded stylesheets
+  // have finished applying, so use stable computed values as the CSS barrier.
+  await page.waitForFunction(() => {
+    const rootStyle = getComputedStyle(document.documentElement);
+    const search = document.querySelector("#search");
+    const dsuTitle = document.querySelector(".dsuTitle > small");
+    const dsuEngine = document.querySelector("#dsuEngineLabel");
+    if (!search || !dsuTitle || !dsuEngine) return false;
+    return rootStyle.getPropertyValue("--muted").trim().toLowerCase() === "#91a29e" &&
+      search.getBoundingClientRect().height >= 40 &&
+      getComputedStyle(dsuTitle).color === "rgb(213, 183, 101)" &&
+      getComputedStyle(dsuEngine).color === "rgb(145, 162, 158)";
+  }, null, {timeout: 45000});
+  await page.evaluate(() => new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  }));
+}
+
 async function waitForApplication(page, browserName) {
   await navigateToApplication(page, browserName);
   await page.waitForFunction(() =>
     document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
     document.querySelectorAll("#categories [data-filter-type]").length > 0,
   null, {timeout: 45000});
+  await waitForVisualStyle(page);
 }
 
 async function runDesktop(browser, baseUrl, browserName) {

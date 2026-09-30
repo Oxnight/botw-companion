@@ -14,6 +14,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   still a draft, then require the final immutable tag URLs after publication.
 - Bind draft verification to the exact Release and asset database IDs in
   addition to names, media types, sizes, and GitHub-provided SHA-256 digests.
+- Wait for all visual styles to be applied before running browser accessibility
+  audits, preventing a Windows Chrome loading race from testing unstyled text
+  and controls.
 
 ## [1.0.0-rc.1] - 2026-09-29
 
