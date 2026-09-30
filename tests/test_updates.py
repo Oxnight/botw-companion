@@ -1,6 +1,6 @@
 import json
 import unittest
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 from botw_companion.updates import MAX_RESPONSE_BYTES, RELEASES_API, UpdateChecker
 from botw_companion.versioning import ReleaseVersion
@@ -54,7 +54,12 @@ class UpdateCheckerTests(unittest.TestCase):
             calls.append((request.full_url, timeout))
             return FakeResponse(json.dumps(releases).encode())
 
-        return UpdateChecker(opener=opener, timeout=0.25, **kwargs), calls
+        return UpdateChecker(
+            opener=opener,
+            timeout=0.25,
+            sleeper=lambda _seconds: None,
+            **kwargs,
+        ), calls
 
     def test_prerelease_selects_newest_release_and_exact_windows_asset(self):
         current = ReleaseVersion.parse("0.40.0-alpha.7")
@@ -164,12 +169,61 @@ class UpdateCheckerTests(unittest.TestCase):
             calls.append(timeout)
             raise URLError("offline")
 
-        checker = UpdateChecker(system="Windows", opener=failing, timeout=0.2)
+        checker = UpdateChecker(
+            system="Windows", opener=failing, timeout=0.2,
+            sleeper=lambda _seconds: None,
+        )
+        first = checker.check()
+        self.assertEqual(first["status"], "unavailable")
+        self.assertEqual(first["reason"], "network")
         self.assertEqual(checker.check()["status"], "unavailable")
-        self.assertEqual(checker.check()["status"], "unavailable")
-        self.assertEqual(len(calls), 1)
-        self.assertEqual(checker.check(force=True)["status"], "unavailable")
         self.assertEqual(len(calls), 2)
+        self.assertEqual(checker.check(force=True)["status"], "unavailable")
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(calls, [0.2] * 4)
+
+    def test_transient_timeout_is_retried_then_succeeds(self):
+        calls = []
+
+        def opener(_request, timeout):
+            calls.append(timeout)
+            if len(calls) == 1:
+                raise TimeoutError("slow GitHub response")
+            return FakeResponse(json.dumps([release("1.0.1-rc.1")]).encode())
+
+        checker = UpdateChecker(
+            current=ReleaseVersion.parse("1.0.0-rc.2"),
+            system="Darwin",
+            opener=opener,
+            timeout=15,
+            sleeper=lambda _seconds: None,
+        )
+        # The fixture exposes a Windows asset, so use the Windows platform here;
+        # this test targets retry behavior rather than asset selection.
+        checker.system = "Windows"
+        payload = checker.check()
+        self.assertEqual(payload["latest_version"], "1.0.1-rc.1")
+        self.assertEqual(calls, [15, 15])
+
+    def test_rate_limit_is_not_retried_and_stays_offline_safe(self):
+        calls = []
+
+        def opener(request, timeout):
+            calls.append(timeout)
+            raise HTTPError(
+                request.full_url, 429, "rate limited",
+                {"Retry-After": "60", "X-RateLimit-Remaining": "0"}, None,
+            )
+
+        checker = UpdateChecker(
+            system="Windows", opener=opener,
+            sleeper=lambda _seconds: None,
+        )
+        payload = checker.check()
+        self.assertEqual(payload["status"], "unavailable")
+        self.assertEqual(payload["reason"], "rate_limited")
+        self.assertIn("quelques minutes", payload["message"])
+        self.assertEqual(len(calls), 1)
 
     def test_unsupported_platform_never_opens_network(self):
         checker = UpdateChecker(

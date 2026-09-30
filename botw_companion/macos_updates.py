@@ -150,6 +150,7 @@ class MacOSUpdateInstaller:
                 "rollback_performed": False,
                 "updated_at": int(time.time()),
             }, stream)
+        temporary.chmod(0o600)
         os.replace(temporary, self.state_path)
 
     def start(self, candidate: UpdateInstallCandidate, *, parent_pid: int, port: int) -> dict:
@@ -218,6 +219,7 @@ class MacOSUpdateInstaller:
         temporary = self.state_path.with_suffix(".tmp")
         with temporary.open("wb") as stream:
             plistlib.dump(scheduled, stream)
+        temporary.chmod(0o600)
         os.replace(temporary, self.state_path)
 
         command = [

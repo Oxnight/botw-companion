@@ -6,6 +6,26 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.3] - 2026-09-30
+
+### Fixed
+
+- Allow enough time for GitHub's Releases API on slower connections and retry
+  one transient timeout without affecting offline operation.
+- Keep the browser request alive for the bounded server-side check instead of
+  cancelling a valid response after five seconds.
+- Stop immediate retries when GitHub applies a rate limit and preserve any
+  valid partial download for a later attempt.
+
+### Security
+
+- Revalidate Windows download metadata, package size, and SHA-256 identity in
+  both the coordinator and detached updater before Setup can run.
+- Restrict macOS update-state files to the current user before atomically
+  publishing them.
+- Validate RC 2 as the primary upgrade baseline while retaining alpha 34 as
+  the legacy migration test.
+
 ## [1.0.0-rc.2] - 2026-09-30
 
 ### Fixed

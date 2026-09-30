@@ -46,8 +46,14 @@ class WindowsUpdateTests(unittest.TestCase):
         self.installer = self.root / f"BOTW_Companion_{self.VERSION}_Setup.exe"
         self.installer.write_bytes(b"verified setup")
         self.metadata = self.root / f"{self.installer.name}.metadata.json"
-        self.metadata.write_text("{}", encoding="utf-8")
         self.digest = hashlib.sha256(self.installer.read_bytes()).hexdigest()
+        self.metadata.write_text(json.dumps({
+            "ready": True,
+            "version": self.VERSION,
+            "filename": self.installer.name,
+            "size": self.installer.stat().st_size,
+            "digest": f"sha256:{self.digest}",
+        }), encoding="utf-8")
         self.release_url = f"https://github.com/Oxnight/botw-companion/releases/tag/v{self.VERSION}"
 
     def tearDown(self):
@@ -245,6 +251,19 @@ class WindowsUpdateTests(unittest.TestCase):
         self.assertTrue(self.installer.exists())
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "failed")
+
+    def test_tampered_metadata_blocks_coordinator_and_relay(self):
+        self.metadata.write_text("{}", encoding="utf-8")
+        coordinator = WindowsUpdateInstaller(
+            data_root=self.root, application=self.application, helper=self.helper,
+            system="Windows", frozen=True,
+        )
+        with self.assertRaisesRegex(WindowsUpdateError, "sécurité"):
+            coordinator.start(self.candidate(), parent_pid=321, port=8765)
+        with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
+             patch("botw_companion.windows_updates.subprocess.run") as setup:
+            self.assertEqual(run_relay(self.args()), 2)
+        setup.assert_not_called()
 
     def test_cancelled_setup_keeps_verified_installer_and_reopens_app(self):
         with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \

@@ -363,6 +363,16 @@ class UpdateDownloadManager:
             except UpdateDownloadError:
                 raise
             except HTTPError as exc:
+                headers = getattr(exc, "headers", None)
+                remaining = headers.get("X-RateLimit-Remaining") if headers is not None else None
+                retry_after = headers.get("Retry-After") if headers is not None else None
+                if exc.code == 429 or (
+                    exc.code == 403 and (remaining == "0" or retry_after is not None)
+                ):
+                    raise DownloadInterrupted(
+                        "GitHub limite temporairement les téléchargements. "
+                        "Le fragment valide est conservé ; réessaie dans quelques minutes."
+                    ) from exc
                 if exc.code not in {408, 429, 500, 502, 503, 504}:
                     raise UpdateDownloadError("GitHub a refusé le téléchargement de cette mise à jour") from exc
                 last_error = exc

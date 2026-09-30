@@ -16,17 +16,26 @@ from .versioning import CURRENT_VERSION, ReleaseVersion
 
 
 REPOSITORY = "Oxnight/botw-companion"
-RELEASES_API = f"https://api.github.com/repos/{REPOSITORY}/releases?per_page=30"
+RELEASES_API = f"https://api.github.com/repos/{REPOSITORY}/releases?per_page=10"
 RELEASES_PAGE = f"https://github.com/{REPOSITORY}/releases"
 MAX_RESPONSE_BYTES = 1_000_000
 MAX_ASSET_BYTES = 1_073_741_824
-DEFAULT_TIMEOUT_SECONDS = 3.0
+DEFAULT_TIMEOUT_SECONDS = 15.0
+MAX_CHECK_ATTEMPTS = 2
+CHECK_RETRY_DELAY_SECONDS = 0.75
+RETRYABLE_HTTP_STATUSES = {408, 500, 502, 503, 504}
 SUCCESS_CACHE_SECONDS = 15 * 60
 FAILURE_CACHE_SECONDS = 60
 
 
 class UpdateCheckError(RuntimeError):
     """Unusable remote response that does not affect offline operation."""
+
+    def __init__(self, message: str, *, reason: str = "invalid_response",
+                 retryable: bool = False) -> None:
+        super().__init__(message)
+        self.reason = reason
+        self.retryable = retryable
 
 
 def _safe_release_url(tag: str) -> str:
@@ -66,12 +75,16 @@ class UpdateChecker:
         opener: Callable = urlopen,
         monotonic: Callable[[], float] = time.monotonic,
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
+        max_attempts: int = MAX_CHECK_ATTEMPTS,
+        sleeper: Callable[[float], None] = time.sleep,
     ) -> None:
         self.current = current
         self.system = system
         self.opener = opener
         self.monotonic = monotonic
         self.timeout = timeout
+        self.max_attempts = max(1, int(max_attempts))
+        self.sleeper = sleeper
         self._lock = RLock()
         self._cached_at: float | None = None
         self._cached_payload: dict | None = None
@@ -84,7 +97,27 @@ class UpdateChecker:
             return target, version.dmg_name
         return target, None
 
-    def _request_releases(self) -> list[dict]:
+    @staticmethod
+    def _rate_limited(error: HTTPError) -> bool:
+        headers = getattr(error, "headers", None)
+        remaining = headers.get("X-RateLimit-Remaining") if headers is not None else None
+        retry_after = headers.get("Retry-After") if headers is not None else None
+        return error.code == 429 or (
+            error.code == 403 and (remaining == "0" or retry_after is not None)
+        )
+
+    @staticmethod
+    def _network_error(exc: BaseException) -> UpdateCheckError:
+        reason = getattr(exc, "reason", None)
+        timed_out = isinstance(exc, TimeoutError) or isinstance(reason, TimeoutError)
+        return UpdateCheckError(
+            "GitHub met trop de temps à répondre" if timed_out
+            else "GitHub est momentanément inaccessible",
+            reason="timeout" if timed_out else "network",
+            retryable=True,
+        )
+
+    def _request_releases_once(self) -> list[dict]:
         request = Request(
             RELEASES_API,
             headers={
@@ -99,7 +132,11 @@ class UpdateChecker:
                 if status is None:
                     status = response.getcode()
                 if status != 200:
-                    raise UpdateCheckError("Réponse GitHub inattendue")
+                    raise UpdateCheckError(
+                        "Réponse GitHub inattendue",
+                        reason="remote_error",
+                        retryable=status in RETRYABLE_HTTP_STATUSES,
+                    )
                 final_url = (
                     response.geturl()
                     if callable(getattr(response, "geturl", None))
@@ -108,8 +145,19 @@ class UpdateChecker:
                 if final_url != RELEASES_API:
                     raise UpdateCheckError("Redirection GitHub non reconnue")
                 raw = response.read(MAX_RESPONSE_BYTES + 1)
-        except (HTTPError, URLError, TimeoutError, OSError) as exc:
-            raise UpdateCheckError("GitHub est momentanément inaccessible") from exc
+        except HTTPError as exc:
+            if self._rate_limited(exc):
+                raise UpdateCheckError(
+                    "GitHub limite temporairement les vérifications",
+                    reason="rate_limited",
+                ) from exc
+            raise UpdateCheckError(
+                "Réponse GitHub momentanément indisponible",
+                reason="remote_error",
+                retryable=exc.code in RETRYABLE_HTTP_STATUSES,
+            ) from exc
+        except (URLError, TimeoutError, OSError) as exc:
+            raise self._network_error(exc) from exc
         if len(raw) > MAX_RESPONSE_BYTES:
             raise UpdateCheckError("Réponse GitHub trop volumineuse")
         try:
@@ -119,6 +167,19 @@ class UpdateChecker:
         if not isinstance(payload, list):
             raise UpdateCheckError("Liste des versions GitHub invalide")
         return [item for item in payload if isinstance(item, dict)]
+
+    def _request_releases(self) -> list[dict]:
+        last_error: UpdateCheckError | None = None
+        for attempt in range(self.max_attempts):
+            try:
+                return self._request_releases_once()
+            except UpdateCheckError as exc:
+                last_error = exc
+                if not exc.retryable or attempt + 1 >= self.max_attempts:
+                    raise
+                self.sleeper(CHECK_RETRY_DELAY_SECONDS * (2 ** attempt))
+        assert last_error is not None
+        raise last_error
 
     def _candidate(self, releases: list[dict]) -> tuple[ReleaseVersion, dict] | None:
         candidates: list[tuple[ReleaseVersion, dict]] = []
@@ -230,14 +291,33 @@ class UpdateChecker:
                     return dict(self._cached_payload)
             try:
                 payload = self._fresh_payload()
-            except UpdateCheckError:
+            except UpdateCheckError as exc:
+                messages = {
+                    "timeout": (
+                        "GitHub met plus de temps que prévu à répondre. "
+                        "Réessaie dans un instant ; BOTW Companion reste utilisable hors ligne."
+                    ),
+                    "rate_limited": (
+                        "GitHub limite temporairement les vérifications. "
+                        "Réessaie dans quelques minutes ; BOTW Companion reste utilisable hors ligne."
+                    ),
+                    "network": (
+                        "Connexion à GitHub indisponible. "
+                        "BOTW Companion reste entièrement utilisable hors ligne."
+                    ),
+                }
                 payload = {
                     "status": "unavailable",
                     "update_available": False,
                     "current_version": self.current.display,
                     "platform": platform_id(self.system),
                     "release_url": RELEASES_PAGE,
-                    "message": "Vérification impossible pour le moment. BOTW Companion reste entièrement utilisable hors ligne.",
+                    "reason": exc.reason,
+                    "message": messages.get(
+                        exc.reason,
+                        "Vérification impossible pour le moment. "
+                        "BOTW Companion reste entièrement utilisable hors ligne.",
+                    ),
                 }
             self._cached_at = now
             self._cached_payload = dict(payload)

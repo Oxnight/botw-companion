@@ -235,6 +235,8 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn('aria-label="Commandes de synchronisation"', html)
         self.assertIn('aria-labelledby="appActionsTitle"', html)
         self.assertIn("function checkForUpdates", script)
+        self.assertIn("const UPDATE_CHECK_TIMEOUT_MS = 45000;", script)
+        self.assertIn("controller.abort(), UPDATE_CHECK_TIMEOUT_MS", script)
         self.assertIn("function startUpdateDownload", script)
         self.assertIn("function installVerifiedUpdate", script)
         self.assertIn('runtimePlatform.id === "macos"', script)

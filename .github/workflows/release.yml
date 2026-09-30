@@ -127,7 +127,7 @@ jobs:
             --dir build/upgrade-reference/legacy `
             --clobber
 
-      - name: Test self-contained installation and latest-alpha upgrade
+      - name: Test self-contained installation and latest-release upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: pwsh
         run: |
@@ -296,7 +296,7 @@ jobs:
             --dir build/upgrade-reference/legacy \
             --clobber
 
-      - name: Test self-contained DMG and latest-alpha upgrade
+      - name: Test self-contained DMG and latest-release upgrade
         if: env.BUILD_PACKAGES == 'true'
         shell: bash
         timeout-minutes: 15

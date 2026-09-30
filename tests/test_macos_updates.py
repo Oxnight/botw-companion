@@ -101,6 +101,10 @@ class MacOSUpdateTests(unittest.TestCase):
         # represent the POSIX 0700 mode used by the real macOS relay.
         if os.name == "posix":
             self.assertEqual(relay.stat().st_mode & 0o777, 0o700)
+            self.assertEqual(
+                (self.root / INSTALL_STATE_NAME).stat().st_mode & 0o777,
+                0o600,
+            )
 
     def test_only_a_frozen_apple_silicon_bundle_is_supported(self):
         self.assertTrue(self.installer().supported())

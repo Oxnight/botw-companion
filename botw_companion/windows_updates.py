@@ -54,6 +54,21 @@ def _safe_state(path: Path) -> dict:
     return value if isinstance(value, dict) else {}
 
 
+def _valid_candidate_metadata(candidate: UpdateInstallCandidate) -> bool:
+    try:
+        metadata = json.loads(candidate.metadata.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    return bool(
+        isinstance(metadata, dict)
+        and metadata.get("ready") is True
+        and metadata.get("version") == candidate.version
+        and metadata.get("filename") == candidate.installer.name
+        and metadata.get("size") == candidate.size
+        and metadata.get("digest") == f"sha256:{candidate.digest}"
+    )
+
+
 class WindowsUpdateInstaller:
     """Copy and launch the small updater relay before the main app exits."""
 
@@ -121,6 +136,22 @@ class WindowsUpdateInstaller:
         parsed = ReleaseVersion.parse(candidate.version)
         if candidate.installer.name != parsed.installer_name:
             raise WindowsUpdateError("Nom d’installateur incohérent")
+        if (
+            candidate.release_url != (
+                f"https://github.com/Oxnight/botw-companion/releases/tag/{parsed.tag}"
+            )
+            or not _inside_root(candidate.installer, self.root)
+            or not _inside_root(candidate.metadata, self.root)
+            or candidate.metadata.resolve() != candidate.installer.resolve().with_name(
+                f"{candidate.installer.name}.metadata.json"
+            )
+            or re.fullmatch(r"[0-9a-f]{64}", candidate.digest) is None
+            or not candidate.installer.is_file()
+            or candidate.installer.stat().st_size != candidate.size
+            or sha256_file(candidate.installer) != candidate.digest
+            or not _valid_candidate_metadata(candidate)
+        ):
+            raise WindowsUpdateError("La vérification de sécurité avant installation a échoué")
         self._cleanup_stale_relays()
         relay_dir = self.root / "relay" / f"{candidate.version}-{uuid.uuid4().hex}"
         relay = relay_dir / UPDATER_EXE_NAME
@@ -365,6 +396,14 @@ def _run_relay(args) -> int:
     application = Path(args.application).resolve()
     log_path = Path(args.log).resolve()
     parsed = ReleaseVersion.parse(args.version)
+    candidate = UpdateInstallCandidate(
+        version=args.version,
+        installer=installer,
+        size=args.size,
+        digest=args.digest,
+        metadata=metadata,
+        release_url=args.release_url,
+    )
     if (
         platform.system() != "Windows"
         or not _inside_root(installer, root)
@@ -377,6 +416,7 @@ def _run_relay(args) -> int:
         or not installer.is_file()
         or installer.stat().st_size != args.size
         or re.fullmatch(r"[0-9a-f]{64}", args.digest) is None
+        or not _valid_candidate_metadata(candidate)
         or args.release_url != (
             f"https://github.com/Oxnight/botw-companion/releases/tag/{parsed.tag}"
         )

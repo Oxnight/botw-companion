@@ -36,6 +36,7 @@ const MODE_FILTER_KEY = "botw-companion-game-mode-filter";
 const DSU_SOURCE_KEY = "botw-companion-dsu-source";
 const UPDATE_DISMISSED_KEY = "botw-companion-update-dismissed";
 const UPDATE_INSTALL_NOTICE_KEY = "botw-companion-update-install-notice";
+const UPDATE_CHECK_TIMEOUT_MS = 45000;
 const TUTORIAL_VERSION = "1";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
@@ -233,7 +234,9 @@ async function handleUpdatePrimaryAction() {
 async function checkForUpdates(manual = false) {
     const button = $("#checkUpdates");
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
+    // The local endpoint performs bounded retries against GitHub. Keep the UI
+    // responsive while allowing that complete server-side budget to finish.
+    const timer = setTimeout(() => controller.abort(), UPDATE_CHECK_TIMEOUT_MS);
     if (manual) {
         button.disabled = true;
         button.textContent = "Vérification…";

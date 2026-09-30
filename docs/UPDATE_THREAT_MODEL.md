@@ -35,6 +35,8 @@ default.
 | Threat | Preventive control | Detection or recovery | Remaining limitation |
 | --- | --- | --- | --- |
 | Repository or download impersonation | Repository, HTTPS host, tag, asset name, version, architecture, media type, and redirect hosts are allowlisted | Invalid metadata becomes a non-blocking unavailable state | Update checks require temporary network access |
+| Slow or temporarily unavailable Releases API | Checks use a bounded 15-second operation timeout and one delayed retry; the browser allows the complete bounded server check | Failures are cached briefly and reported without disabling offline features | A manual retry may still be needed after a prolonged outage |
+| GitHub rate limiting | Checks and downloads stop retrying when GitHub returns 429 or an exhausted rate-limit response | The interface keeps partial download data and asks the user to retry later | Anonymous API limits remain controlled by GitHub |
 | Downgrade or wrong release channel | Versions use strict semantic precedence; stable builds ignore prereleases | Deterministic tests cover prerelease-to-prerelease, prerelease-to-stable, and stable-to-stable transitions | Users may still install an older package manually |
 | Truncation or asset substitution | Expected length and GitHub's SHA-256 digest are mandatory | Invalid files never become ready to install and are removed | The release owner remains part of the trust model |
 | Interrupted or changed download | Partial data uses Range, ETag, and If-Range only for the same validated target | Changed or unsatisfiable ranges restart safely from zero | A server that does not support Range requires a full restart |
@@ -43,6 +45,7 @@ default.
 | Insufficient disk space | Space is checked before and during download and before bundle replacement | The operation stops without altering user data | Available-space reporting can change between checks |
 | Insufficient installation rights | Windows installs per user; macOS uses normal authorization or guided replacement | Failure remains retryable and exposes a local diagnostic log | Gatekeeper and SmartScreen prompts cannot be removed without trusted signing |
 | New application fails to restart | Relays retain the old installation until the local health check | Windows preserves the installer; macOS restores the previous bundle | Recovery cannot repair unrelated operating-system damage |
+| Download metadata is modified before execution | Both platform coordinators require exact ready-state metadata; the Windows relay checks it again and the macOS relay independently checks every supplied value | Any mismatch stops before executing or replacing an application | Local administrator-level tampering is outside the application trust boundary |
 | Personal data is overwritten | User data lives outside the installed application and is never part of package replacement | Clean-install and upgrade tests use preservation markers | Users remain responsible for independent device backups |
 
 ## Release operator checklist

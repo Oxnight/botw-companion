@@ -1,19 +1,19 @@
 ## Release candidate
 
-This build freezes the feature set planned for 1.0. It is intended for final
-installation, upgrade, accessibility, save-analysis, and hardware testing.
+RC 3 fixes update checks on slower connections. The previous build could stop
+waiting before GitHub returned its release data, especially on macOS. Checks
+now have a realistic time budget, retry one temporary network failure, and
+report rate limits without repeatedly contacting GitHub. BOTW Companion still
+starts and works normally when the network is unavailable.
 
-RC 2 corrects draft-asset verification in the publication pipeline. GitHub's
-temporary draft URLs are now checked before publication and the final tagged
-URLs are checked immediately afterwards. Application behavior is unchanged.
-It also makes the cross-browser accessibility gate wait for all three linked
-stylesheets instead of auditing a transient unstyled frame on Windows. The
-readiness check uses the browser's stylesheet state rather than computed colors
-or native control dimensions, which legitimately vary by platform and engine.
+The Windows updater now validates the saved release metadata as well as the
+installer itself, both before the application closes and again in the detached
+updater. macOS update-state files are restricted to the current user. Package
+validation covers clean installs, upgrades from RC 2, and the legacy alpha 34
+migration path on both supported platforms.
 
-Automated package validation now covers clean installation and upgrades from
-both alpha 34 and the latest published alpha on Windows and macOS. No player-facing
-features or completion rules have changed since alpha 41.
+No save-analysis, completion, map, guide, tracking, or JoyConDSU behavior has
+changed in this release candidate.
 
 ## Installation
 
@@ -30,8 +30,9 @@ the visible Setup assistant. macOS uses the detached relay introduced in alpha
 40 and may display its normal authorization or Gatekeeper prompts. Neither
 platform removes the previous installation before a replacement is ready.
 
-An unavailable connection does not affect save analysis, the offline map,
-guides, tracking, or JoyConDSU.
+If a check or download is interrupted, use **Réessayer** after the connection
+returns. Valid partial data is retained. An unavailable connection does not
+affect save analysis, the offline map, guides, tracking, or JoyConDSU.
 
 ## Known limitations
 

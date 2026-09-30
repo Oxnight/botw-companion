@@ -241,6 +241,26 @@ class UpdateDownloadManagerTests(unittest.TestCase):
         self.assertEqual(next(self.root.glob("*.part")).stat().st_size, 25)
         self.assertTrue(state["can_retry"])
 
+    def test_rate_limited_download_does_not_retry_immediately(self):
+        content = b"rate limited package"
+        calls = []
+
+        def opener(request, timeout):
+            calls.append((request.full_url, timeout))
+            raise HTTPError(
+                request.full_url, 429, "rate limited",
+                FakeHeaders({"Retry-After": "60", "X-RateLimit-Remaining": "0"}),
+                None,
+            )
+
+        manager, _checker = self.manager(content, opener)
+        manager.start()
+        state = self.wait(manager, {"interrupted", "failed"})
+        self.assertEqual(state["status"], "interrupted")
+        self.assertTrue(state["can_retry"])
+        self.assertIn("quelques minutes", state["message"])
+        self.assertEqual(len(calls), 1)
+
     def test_bad_digest_is_deleted_and_never_becomes_ready(self):
         content = b"expected package"
         wrong = b"tampered package"
