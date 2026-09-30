@@ -185,12 +185,27 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
     $updater = Join-Path $relayDirectory "BOTW Companion Updater.exe"
     Copy-Item -LiteralPath $installedUpdater -Destination $updater -Force
     Copy-Item -LiteralPath $SourceInstaller -Destination $installer -Force
-    Set-Content -LiteralPath $installerMetadata -Value '{"ready":true}' -Encoding ASCII -NoNewline
     [ordered]@{ port = $Port } | ConvertTo-Json | Set-Content `
         (Join-Path $DataRoot "launcher.json") -Encoding UTF8
     $digest = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
     $size = (Get-Item -LiteralPath $installer).Length
     $releaseUrl = "https://github.com/Oxnight/botw-companion/releases/tag/$($metadata.tag)"
+    $downloadUrl = (
+        "https://github.com/Oxnight/botw-companion/releases/download/" +
+        "$($metadata.tag)/$($metadata.installer_name)"
+    )
+    [ordered]@{
+        schema_version = 1
+        version = $metadata.display_version
+        filename = $metadata.installer_name
+        url = $downloadUrl
+        size = $size
+        digest = "sha256:$digest"
+        etag = $null
+        last_modified = $null
+        ready = $true
+    } | ConvertTo-Json -Compress | Set-Content `
+        -LiteralPath $installerMetadata -Encoding UTF8 -NoNewline
     $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
     try {
         $env:BOTW_COMPANION_DATA_DIR = $DataRoot

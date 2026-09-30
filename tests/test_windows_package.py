@@ -236,6 +236,20 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertGreaterEqual(script.count('textContent.trim()'), 2)
         self.assertIn("baseMarkerBox?.width >= 24", script)
 
+    def test_assisted_update_validation_uses_real_download_metadata(self):
+        script = (self.root / "tools" / "test_windows_installation.ps1").read_text(
+            encoding="utf-8"
+        )
+        for marker in (
+            "schema_version = 1",
+            "version = $metadata.display_version",
+            "filename = $metadata.installer_name",
+            'digest = "sha256:$digest"',
+            "ready = $true",
+        ):
+            self.assertIn(marker, script)
+        self.assertNotIn("'{\"ready\":true}'", script)
+
     def test_narrow_layout_cannot_restore_wide_grids(self):
         styles = (self.root / "botw_companion" / "web" / "armor.css").read_text(
             encoding="utf-8"
