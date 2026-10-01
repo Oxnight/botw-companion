@@ -91,11 +91,36 @@ async function assertTutorialDoesNotCoverTarget(page, context) {
     return width * height;
   });
   assert(overlap <= 1, `La carte du parcours masque sa cible (${context}, chevauchement ${overlap}px²)`);
+  const complete = await page.evaluate(() => {
+    const card = document.querySelector("#tutorialCard"),
+      spotlight = document.querySelector("#tutorialSpotlight");
+    if (spotlight.hidden) return true;
+    const frame = spotlight.getBoundingClientRect(),
+      cardBounds = card.getBoundingClientRect(),
+      target = document.querySelector(card.dataset.target)?.getBoundingClientRect();
+    if (cardBounds.left < -1 || cardBounds.top < -1 || cardBounds.right > innerWidth + 1
+        || cardBounds.bottom > innerHeight + 1) return false;
+    if (!target || frame.left < -1 || frame.top < -1
+        || frame.right > innerWidth + 1 || frame.bottom > innerHeight + 1) return false;
+    if (card.dataset.layout === "direct") {
+      return frame.left <= target.left && frame.top <= target.top
+        && frame.right >= target.right && frame.bottom >= target.bottom;
+    }
+    const preview = document.querySelector("#tutorialPreview"),
+      copy = preview.shadowRoot?.lastElementChild?.getBoundingClientRect(),
+      scale = Number(preview.dataset.scale);
+    return !preview.hidden && copy && Math.abs(copy.width - target.width * scale) < 2
+      && Math.abs(copy.height - target.height * scale) < 2
+      && copy.left >= frame.left && copy.top >= frame.top
+      && copy.right <= frame.right && copy.bottom <= frame.bottom;
+  });
+  assert(complete, `La cible du parcours est tronquée (${context})`);
 }
 
 async function waitForTutorialPosition(page, expectedIndex) {
   await page.waitForFunction(index =>
-    document.querySelector("#tutorialCard")?.dataset.positionedStep === String(index),
+    document.querySelector("#tutorialCard")?.dataset.positionedStep === String(index)
+      && !document.querySelector("#tutorialCard")?.dataset.transitioning,
   expectedIndex);
 }
 
@@ -126,6 +151,7 @@ async function exerciseOnboarding(page) {
     await assertTutorialDoesNotCoverTarget(page, "étape 1");
     await assertAccessible(page, "parcours de premier lancement");
     await page.locator("#nextTutorial").click();
+    await waitForTutorialPosition(page, 1);
     assert((await page.locator("#tutorialTitle").textContent()).includes("sauvegarde"),
       "La deuxième étape du premier lancement est absente");
     await waitForTutorialPosition(page, 1);
@@ -726,6 +752,41 @@ async function runResponsive(browser, baseUrl, browserName) {
   await page.locator("#closeHelp").click();
   await page.locator("#helpDialog").waitFor({state: "hidden"});
 
+  // Validate complete targets throughout the mobile tour, then rotate the viewport.
+  await page.locator("#openHelp").click();
+  await page.locator("#startTutorial").click();
+  await waitForTutorialPosition(page, 0);
+  await assertTutorialDoesNotCoverTarget(page, "mobile étape 1");
+  await page.evaluate(() => {
+    const next = document.querySelector("#nextTutorial");
+    next.click();
+    next.click();
+  });
+  await waitForTutorialPosition(page, 1);
+  assert((await page.locator("#tutorialStepLabel").textContent()).includes("2 sur 10"),
+    "Un double clic a sauté une étape du parcours");
+  for (let index = 1; index < 10; index += 1) {
+    await assertTutorialDoesNotCoverTarget(page, `mobile étape ${index + 1}`);
+    if (index === 3) {
+      await saveDiagnosticScreenshot(page, browserName, "responsive-complete-highlight");
+      await page.setViewportSize({width: 844, height: 390});
+      await page.waitForFunction(() => document.querySelector("#tutorialCard")?.dataset.viewport === "844:390");
+      await waitForTutorialPosition(page, index);
+      await assertTutorialDoesNotCoverTarget(page, "paysage étape 4");
+      await page.setViewportSize({width: 390, height: 844});
+      await page.waitForFunction(() => document.querySelector("#tutorialCard")?.dataset.viewport === "390:844");
+      await assertTutorialDoesNotCoverTarget(page, "retour portrait étape 4");
+    }
+    if (index < 9) {
+      await page.locator("#nextTutorial").click();
+      await waitForTutorialPosition(page, index + 1);
+    }
+  }
+  await page.locator("#nextTutorial").click();
+  await page.locator("#helpDialog").waitFor({state: "visible"});
+  await page.locator("#closeHelp").click();
+  await page.locator("#helpDialog").waitFor({state: "hidden"});
+
   await page.locator("#toggleRoute").click();
   await page.waitForFunction(() => !document.querySelector("#routeBody").hidden);
   const routeWidth = await page.evaluate(() => document.body.scrollWidth);
@@ -766,6 +827,18 @@ async function runDisplayPreferences(browser, baseUrl, browserName) {
   assert(motion.moonAnimationName === "none" ||
     motion.moonAnimations.every(value => value <= 0.02),
   `La lune de sang reste animée en mouvement réduit : ${JSON.stringify(motion)}`);
+
+  await page.locator("#openHelp").click();
+  await page.locator("#startTutorial").click();
+  await waitForTutorialPosition(page, 0);
+  await page.locator("#nextTutorial").click();
+  await waitForTutorialPosition(page, 1);
+  assert(await page.locator("#tutorialCard").getAttribute("data-transitioning") === null,
+    "Le changement d’étape reste animé en mouvement réduit");
+  await assertTutorialDoesNotCoverTarget(page, "mouvement réduit");
+  await page.keyboard.press("Escape");
+  await page.locator("#helpDialog").waitFor({state: "visible"});
+  await page.locator("#closeHelp").click();
 
   progress(browserName, "accessibilite:zoom-200");
   // Browser page zoom reduces the CSS viewport. CSS `zoom` only magnifies the

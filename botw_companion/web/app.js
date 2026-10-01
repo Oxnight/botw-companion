@@ -38,6 +38,7 @@ let preferenceSaveQueue = Promise.resolve();
 let onboardingShown = false, helpReturnFocus = null;
 let helpChapterId = null, tutorialResume = null, tutorialInertState = [];
 let tutorialState = null, tutorialPositionFrame = null, tutorialResizeObserver = null;
+let tutorialTransition = null;
 let detailReturnTarget = null, manualReviewReturnFocus = null;
 const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
@@ -717,43 +718,96 @@ function tutorialRectangle(left, top, right, bottom) {
     };
 }
 
-function visibleTutorialRectangle(targetRectangle, cardRectangle, gap) {
-    const overlapWidth = Math.max(0, Math.min(targetRectangle.right, cardRectangle.right)
-        - Math.max(targetRectangle.left, cardRectangle.left));
-    const overlapHeight = Math.max(0, Math.min(targetRectangle.bottom, cardRectangle.bottom)
-        - Math.max(targetRectangle.top, cardRectangle.top));
-    if (overlapWidth * overlapHeight <= 1) return targetRectangle;
+function createTutorialPreview(target) {
+    const preview = $("#tutorialPreview"), clone = target.cloneNode(true),
+        root = preview.shadowRoot || preview.attachShadow({ mode: "open" }),
+        originals = [target, ...target.querySelectorAll("*")],
+        copies = [clone, ...clone.querySelectorAll("*")], pseudoRules = [];
+    // Isolate the frozen layout from application selectors. The preview is visual only:
+    // it cannot submit forms, receive focus, or change the application's state.
+    originals.forEach((original, index) => {
+        const copy = copies[index], computed = getComputedStyle(original);
+        for (const property of computed) {
+            copy.style.setProperty(property, computed.getPropertyValue(property));
+        }
+        copy.style.setProperty("animation", "none");
+        copy.style.setProperty("transition", "none");
+        copy.removeAttribute("name");
+        copy.removeAttribute("autofocus");
+        copy.setAttribute("data-preview-node", String(index));
+        for (const pseudo of ["::before", "::after"]) {
+            const pseudoStyle = getComputedStyle(original, pseudo);
+            if (!pseudoStyle.content || ["none", "normal"].includes(pseudoStyle.content)) continue;
+            const declarations = Array.from(pseudoStyle, property =>
+                `${property}:${pseudoStyle.getPropertyValue(property)};`).join("");
+            pseudoRules.push(`[data-preview-node="${index}"]${pseudo}{${declarations}}`);
+        }
+        if (original instanceof HTMLInputElement) {
+            copy.value = original.value;
+            copy.checked = original.checked;
+        } else if (original instanceof HTMLTextAreaElement
+            || original instanceof HTMLSelectElement) {
+            copy.value = original.value;
+        } else if (original instanceof HTMLCanvasElement) {
+            copy.getContext("2d")?.drawImage(original, 0, 0);
+        }
+        copy.scrollTop = original.scrollTop;
+        copy.scrollLeft = original.scrollLeft;
+    });
+    clone.querySelectorAll("script").forEach(script => script.remove());
+    Object.assign(clone.style, {
+        position: "absolute", left: "0", top: "0", margin: "0",
+        transform: "none", transformOrigin: "top left"
+    });
+    const style = document.createElement("style");
+    style.textContent = pseudoRules.join("\n");
+    root.replaceChildren(style, clone);
+    preview.dataset.sourceSize = `${target.offsetWidth}:${target.offsetHeight}`;
+    // Scroll offsets must be restored after insertion into the rendering tree.
+    originals.forEach((original, index) => {
+        copies[index].scrollTop = original.scrollTop;
+        copies[index].scrollLeft = original.scrollLeft;
+    });
+    return clone;
+}
 
-    const candidates = [
-        tutorialRectangle(
-            targetRectangle.left,
-            targetRectangle.top,
-            targetRectangle.right,
-            Math.min(targetRectangle.bottom, cardRectangle.top - gap)
-        ),
-        tutorialRectangle(
-            targetRectangle.left,
-            Math.max(targetRectangle.top, cardRectangle.bottom + gap),
-            targetRectangle.right,
-            targetRectangle.bottom
-        ),
-        tutorialRectangle(
-            targetRectangle.left,
-            targetRectangle.top,
-            Math.min(targetRectangle.right, cardRectangle.left - gap),
-            targetRectangle.bottom
-        ),
-        tutorialRectangle(
-            Math.max(targetRectangle.left, cardRectangle.right + gap),
-            targetRectangle.top,
-            targetRectangle.right,
-            targetRectangle.bottom
-        )
-    ].filter(rectangle => rectangle.width >= 48 && rectangle.height >= 48);
-    candidates.sort((first, second) =>
-        second.width * second.height - first.width * first.height
-    );
-    return candidates[0] || targetRectangle;
+function positionTutorialOverview(target, raw, viewportWidth, viewportHeight) {
+    const card = $("#tutorialCard"), preview = $("#tutorialPreview"),
+        margin = 12, gap = 16, padding = 9,
+        sideBySide = viewportWidth >= 900,
+        availableWidth = sideBySide
+            ? viewportWidth - card.offsetWidth - margin * 2 - gap
+            : viewportWidth - margin * 2,
+        availableHeight = sideBySide ? viewportHeight - margin * 2
+            : Math.min((viewportHeight - margin * 2 - gap) * .42,
+                raw.height * (availableWidth - padding * 2) / raw.width + padding * 2),
+        scale = Math.min(1, Math.max(1, availableWidth - padding * 2) / raw.width,
+            Math.max(1, availableHeight - padding * 2) / raw.height),
+        width = raw.width * scale + padding * 2,
+        height = raw.height * scale + padding * 2,
+        slotLeft = sideBySide ? card.offsetWidth + margin + gap : margin,
+        left = slotLeft + (availableWidth - width) / 2,
+        top = sideBySide ? (viewportHeight - height) / 2 : margin;
+    preview.hidden = false;
+    preview.style.width = `${raw.width * scale}px`;
+    preview.style.height = `${raw.height * scale}px`;
+    if (!preview.shadowRoot?.lastElementChild
+        || preview.dataset.sourceSize !== `${target.offsetWidth}:${target.offsetHeight}`) {
+        createTutorialPreview(target);
+    }
+    Object.assign(preview.shadowRoot.lastElementChild.style, {
+        width: `${raw.width}px`, height: `${raw.height}px`,
+        minWidth: `${raw.width}px`, maxWidth: `${raw.width}px`,
+        minHeight: `${raw.height}px`, maxHeight: `${raw.height}px`,
+        transform: `scale(${scale})`
+    });
+    preview.dataset.scale = String(scale);
+    if (!sideBySide) card.style.maxHeight = `${Math.max(1,
+        viewportHeight - margin * 2 - height - gap)}px`;
+    card.style.left = `${sideBySide ? margin : (viewportWidth - card.offsetWidth) / 2}px`;
+    card.style.top = `${sideBySide ? (viewportHeight - card.offsetHeight) / 2
+        : top + height + gap}px`;
+    return tutorialRectangle(left, top, left + width, top + height);
 }
 
 function positionTutorial() {
@@ -763,6 +817,12 @@ function positionTutorial() {
         masks = [...layer.querySelectorAll(".tutorialMask")],
         viewportWidth = window.innerWidth, viewportHeight = window.innerHeight,
         margin = 12, gap = 16;
+    card.style.maxHeight = "";
+    $("#tutorialPreview").hidden = true;
+    spotlight.classList.remove("tutorialSpotlight--overview");
+    card.dataset.target = currentTutorialStep().target || "";
+    card.dataset.layout = "direct";
+    card.dataset.viewport = `${viewportWidth}:${viewportHeight}`;
 
     if (!target) {
         setTutorialRectangle(masks[0], 0, 0, viewportWidth, viewportHeight);
@@ -776,10 +836,10 @@ function positionTutorial() {
     }
 
     const raw = target.getBoundingClientRect(), padding = 9,
-        left = Math.min(viewportWidth - 7, Math.max(7, raw.left - padding)),
-        top = Math.min(viewportHeight - 7, Math.max(7, raw.top - padding)),
-        right = Math.max(7, Math.min(viewportWidth - 7, raw.right + padding)),
-        bottom = Math.max(7, Math.min(viewportHeight - 7, raw.bottom + padding)),
+        left = raw.left - padding,
+        top = raw.top - padding,
+        right = raw.right + padding,
+        bottom = raw.bottom + padding,
         targetRectangle = tutorialRectangle(left, top, right, bottom),
         width = targetRectangle.width, height = targetRectangle.height;
 
@@ -819,35 +879,40 @@ function positionTutorial() {
     );
     card.style.left = `${candidates[0].left}px`;
     card.style.top = `${candidates[0].top}px`;
-    const cardRectangle = tutorialRectangle(
-            candidates[0].left,
-            candidates[0].top,
-            candidates[0].left + cardWidth,
-            candidates[0].top + cardHeight
-        ),
-        focusRectangle = visibleTutorialRectangle(targetRectangle, cardRectangle, gap);
-    setTutorialRectangle(masks[0], 0, 0, viewportWidth, focusRectangle.top);
-    setTutorialRectangle(
-        masks[1],
-        focusRectangle.right,
-        focusRectangle.top,
-        viewportWidth - focusRectangle.right,
-        focusRectangle.height
-    );
-    setTutorialRectangle(
-        masks[2],
-        0,
-        focusRectangle.bottom,
-        viewportWidth,
-        viewportHeight - focusRectangle.bottom
-    );
-    setTutorialRectangle(
-        masks[3],
-        0,
-        focusRectangle.top,
-        focusRectangle.left,
-        focusRectangle.height
-    );
+    const overview = overlap(candidates[0], gap) > 1 || left < margin || top < margin
+        || right > viewportWidth - margin || bottom > viewportHeight - margin,
+        focusRectangle = overview
+            ? positionTutorialOverview(target, raw, viewportWidth, viewportHeight)
+            : targetRectangle;
+    if (overview) {
+        card.dataset.layout = "overview";
+        spotlight.classList.add("tutorialSpotlight--overview");
+        setTutorialRectangle(masks[0], 0, 0, viewportWidth, viewportHeight);
+        masks.slice(1).forEach(mask => setTutorialRectangle(mask, 0, 0, 0, 0));
+    } else {
+        setTutorialRectangle(masks[0], 0, 0, viewportWidth, focusRectangle.top);
+        setTutorialRectangle(
+            masks[1],
+            focusRectangle.right,
+            focusRectangle.top,
+            viewportWidth - focusRectangle.right,
+            focusRectangle.height
+        );
+        setTutorialRectangle(
+            masks[2],
+            0,
+            focusRectangle.bottom,
+            viewportWidth,
+            viewportHeight - focusRectangle.bottom
+        );
+        setTutorialRectangle(
+            masks[3],
+            0,
+            focusRectangle.top,
+            focusRectangle.left,
+            focusRectangle.height
+        );
+    }
     spotlight.hidden = false;
     setTutorialRectangle(
         spotlight,
@@ -865,6 +930,7 @@ function renderTutorialStep(focusHeading = false) {
         last = tutorialState.index === total - 1,
         target = visibleTutorialTarget(step);
     delete $("#tutorialCard").dataset.positionedStep;
+    $("#tutorialPreview").shadowRoot?.replaceChildren();
     $("#tutorialKind").textContent = tutorialState.kind === "essential"
         ? "PARCOURS ESSENTIEL"
         : "AIDE CONTEXTUELLE";
@@ -890,6 +956,49 @@ function renderTutorialStep(focusHeading = false) {
     if (target) tutorialResizeObserver?.observe(target);
     queueTutorialPosition();
     if (focusHeading) requestAnimationFrame(() => $("#tutorialTitle").focus({ preventScroll: true }));
+}
+
+async function changeTutorialStep(index) {
+    if (!tutorialState || tutorialTransition || index === tutorialState.index) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        tutorialState.index = index;
+        renderTutorialStep(true);
+        return;
+    }
+    const session = tutorialState, card = $("#tutorialCard"),
+        spotlight = $("#tutorialSpotlight"), token = { animations: [] };
+    tutorialTransition = token;
+    card.dataset.transitioning = "true";
+    card.setAttribute("aria-busy", "true");
+    const animate = async (frames, duration) => {
+        token.animations = [card, spotlight].map(element => element.animate(frames, {
+            duration, easing: "cubic-bezier(.2,.7,.2,1)", fill: "both"
+        }));
+        await Promise.all(token.animations.map(animation => animation.finished.catch(() => {})));
+    };
+    try {
+        await animate([{ opacity: 1 }, { opacity: 0 }], 100);
+        if (tutorialState !== session || tutorialTransition !== token) return;
+        session.index = index;
+        renderTutorialStep();
+        // Keep the outgoing view invisible until scrolling and layout have settled.
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        if (tutorialState !== session || tutorialTransition !== token) return;
+        positionTutorial();
+        token.animations.forEach(animation => animation.cancel());
+        await animate([{ opacity: 0 }, { opacity: 1 }], 200);
+    } finally {
+        if (tutorialTransition === token) {
+            token.animations.forEach(animation => animation.cancel());
+            tutorialTransition = null;
+            delete card.dataset.transitioning;
+            card.removeAttribute("aria-busy");
+            if (tutorialState === session) {
+                positionTutorial();
+                $("#tutorialTitle").focus({ preventScroll: true });
+            }
+        }
+    }
 }
 
 function openTutorial(steps, options = {}) {
@@ -944,6 +1053,11 @@ async function closeTutorial({ persist = false, returnToHelp } = {}) {
     if (!tutorialState) return;
     const previous = tutorialState;
     tutorialState = null;
+    tutorialTransition?.animations.forEach(animation => animation.cancel());
+    tutorialTransition = null;
+    delete $("#tutorialCard").dataset.transitioning;
+    $("#tutorialCard").removeAttribute("aria-busy");
+    $("#tutorialPreview").shadowRoot?.replaceChildren();
     cancelAnimationFrame(tutorialPositionFrame);
     tutorialResizeObserver?.disconnect();
     tutorialResizeObserver = null;
@@ -5824,16 +5938,14 @@ $("#skipTutorial").onclick =
 $("#previousTutorial").onclick =
     () => {
         if (!tutorialState) return;
-        tutorialState.index = Math.max(0, tutorialState.index - 1);
-        renderTutorialStep();
+        changeTutorialStep(Math.max(0, tutorialState.index - 1));
     };
 
 $("#nextTutorial").onclick =
     () => {
-        if (!tutorialState) return;
+        if (!tutorialState || tutorialTransition) return;
         if (tutorialState.index < tutorialState.steps.length - 1) {
-            tutorialState.index += 1;
-            renderTutorialStep();
+            changeTutorialStep(tutorialState.index + 1);
         } else {
             closeTutorial({ persist: tutorialState.kind === "essential" });
         }

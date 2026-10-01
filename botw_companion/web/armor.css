@@ -2396,6 +2396,22 @@ html[data-input-modality="pointer"]
     pointer-events: auto;
 }
 
+.tutorialSpotlight--overview {
+    background: #0b1418;
+}
+
+.tutorialPreview {
+    position: absolute;
+    left: 9px;
+    top: 9px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.tutorialPreview[hidden] {
+    display: none;
+}
+
 .tutorialCard {
     z-index: 1002;
     width: min(440px, calc(100vw - 24px));

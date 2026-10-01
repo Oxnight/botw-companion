@@ -1,16 +1,13 @@
 ## Release candidate
 
-RC 4 fixes the update connection failure seen in the self-contained macOS
-application. Windows and macOS now carry their own reviewed certificate store,
-combine it with system trust for managed networks, use it for both release
-checks and installer downloads, and run a real GitHub
-HTTPS check from the packaged application during the release workflow.
+RC 5 keeps the complete guided-tour target visible without letting the
+explanation card cover it. When there is not enough room for both at their
+original size, the tour shows a complete, proportionally scaled overview
+beside or above the card. This visual overview does not change application data.
 
-The interface now shows save dates and times in the computer's current time
-zone. Pointer clicks no longer leave keyboard-style yellow outlines, while
-keyboard focus remains visible. The help center and guided tour cover the
-left-hand category filters, and tour cards avoid the highlighted area. The
-update action also remains on one line.
+Moving between steps now uses a short fade transition. Devices requesting
+reduced motion switch immediately. Repeated clicks during a transition cannot
+skip steps, and closing the tour cancels any running animation.
 
 No save-analysis, completion, map, guide, tracking, or JoyConDSU result has
 changed in this release candidate.

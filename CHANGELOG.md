@@ -6,6 +6,20 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.5] - 2026-10-01
+
+### Changed
+
+- Fade between guided-tour steps, with immediate navigation when reduced
+  motion is requested and protection against repeated clicks during a transition.
+
+### Fixed
+
+- Highlight the complete guided-tour target instead of cropping it around the
+  explanation card. When both do not fit at their original size, display an
+  isolated, proportionally scaled overview beside or above the card.
+- Check full target visibility as well as card overlap in browser tests.
+
 ## [1.0.0-rc.4] - 2026-09-30
 
 ### Added
