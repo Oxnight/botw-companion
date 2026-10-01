@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from botw_companion.backup import CompanionBackup
 from botw_companion.manual_tracking import ManualTrackingError, ManualTrackingStore
-from botw_companion.preferences import PreferenceStore
+from botw_companion.preferences import ALLOWED_VALUES, PreferenceStore
 from botw_companion.route_sessions import RouteSessionStore
 from botw_companion.runtime_state import RuntimeStateStore
 
@@ -110,9 +110,14 @@ class PreferenceStoreTests(unittest.TestCase):
         self.assertEqual(self.store.load(), saved)
 
     def test_tutorial_completion_is_versioned_and_strict(self):
-        saved = self.store.update({"tutorial_completed_version": "1"}, 0)
-        self.assertEqual(saved["values"]["tutorial_completed_version"], "1")
-        for invalid in (True, 1, "0", "2", None):
+        legacy = self.store.update({"tutorial_completed_version": "1"}, 0)
+        self.assertEqual(legacy["values"]["tutorial_completed_version"], "1")
+        saved = self.store.update(
+            {"tutorial_completed_version": "2"},
+            legacy["revision"],
+        )
+        self.assertEqual(saved["values"]["tutorial_completed_version"], "2")
+        for invalid in (True, 1, "0", "3", None):
             with self.subTest(value=invalid):
                 with self.assertRaisesRegex(ManualTrackingError, "Préférence invalide"):
                     self.store.update(
@@ -120,6 +125,12 @@ class PreferenceStoreTests(unittest.TestCase):
                         saved["revision"],
                     )
         self.assertEqual(self.store.load(), saved)
+
+    def test_current_tutorial_version_is_the_latest_allowed_value(self):
+        self.assertEqual(
+            max(ALLOWED_VALUES["tutorial_completed_version"], key=int),
+            "2",
+        )
 
     def test_corrupted_primary_uses_the_last_valid_backup(self):
         first = self.store.update({"sync_interval": 15}, 0)

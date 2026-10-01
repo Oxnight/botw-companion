@@ -1,6 +1,9 @@
+import re
 import unittest
 from importlib.resources import files
 from pathlib import Path
+
+from botw_companion.preferences import ALLOWED_VALUES
 
 
 class WebAssetsTests(unittest.TestCase):
@@ -49,12 +52,23 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("/api/save-caption?revision=", script)
         self.assertIn("function closeDetails", script)
         self.assertIn("function showOnboarding", script)
-        self.assertIn('const TUTORIAL_VERSION = "2"', script)
+        tutorial_version = re.search(
+            r'const TUTORIAL_VERSION = "([0-9]+)";',
+            script,
+        )
+        self.assertIsNotNone(tutorial_version)
+        self.assertEqual(
+            tutorial_version.group(1),
+            max(ALLOWED_VALUES["tutorial_completed_version"], key=int),
+        )
         self.assertIn("tutorial_completed_version", script)
         self.assertIn("const HELP_CHAPTERS = [", script)
         self.assertIn("const ESSENTIAL_TUTORIAL_STEPS = [", script)
         self.assertIn("function setTutorialBackgroundInert", script)
         self.assertIn("function positionTutorial", script)
+        self.assertIn("function visibleTutorialRectangle", script)
+        self.assertIn('target: "#categories"', script)
+        self.assertIn("card.dataset.positionedStep", script)
         self.assertIn("function tutorialFocusableElements", script)
         self.assertIn('event.key !== "Escape"', script)
         self.assertIn("event.stopPropagation()", script)
@@ -68,6 +82,8 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("test-results/browser", smoke)
         self.assertIn("responsive-help", smoke)
         self.assertIn("responsive-tutorial", smoke)
+        self.assertIn("waitForTutorialPosition", smoke)
+        self.assertNotIn("transition: left .18s ease, top .18s ease", armor)
         self.assertIn('openedChapter.heading === "Mises à jour, aide et fermeture"', smoke)
         self.assertEqual(script.count('id: "privacy"'), 1)
         self.assertEqual(script.count('id: "application"'), 1)

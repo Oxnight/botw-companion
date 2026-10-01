@@ -2248,6 +2248,11 @@ html[data-input-modality="pointer"]
     background: #17292e;
 }
 
+.helpNavigation button:hover span,
+.helpNavigation button.active span {
+    color: #82948f;
+}
+
 .helpNavigation button.active {
     border-left-color: var(--gold);
 }
@@ -2389,7 +2394,6 @@ html[data-input-modality="pointer"]
     border-radius: 14px;
     box-shadow: 0 0 0 4px #e1c56f24, 0 0 32px #e1c56f30;
     pointer-events: auto;
-    transition: left .18s ease, top .18s ease, width .18s ease, height .18s ease;
 }
 
 .tutorialCard {

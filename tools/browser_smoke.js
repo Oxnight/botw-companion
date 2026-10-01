@@ -61,8 +61,8 @@ async function saveDiagnosticScreenshot(page, browserName, name) {
 }
 
 async function assertAccessible(page, context) {
-  // Browser-protocol injection does not weaken the CSP policy.
-  // stricte de l’application (script-src 'self').
+  // Browser-protocol injection does not weaken the application's strict CSP
+  // policy (script-src 'self').
   await page.evaluate(axeSource);
   const result = await page.evaluate(async () => window.axe.run(document, {
     runOnly: {
@@ -92,6 +92,12 @@ async function assertTutorialDoesNotCoverTarget(page, context) {
   assert(overlap <= 1, `La carte du parcours masque sa cible (${context}, chevauchement ${overlap}px²)`);
 }
 
+async function waitForTutorialPosition(page, expectedIndex) {
+  await page.waitForFunction(index =>
+    document.querySelector("#tutorialCard")?.dataset.positionedStep === String(index),
+  expectedIndex);
+}
+
 async function exerciseOnboarding(page) {
   const tutorial = page.locator("#tutorialLayer");
   const help = page.locator("#helpDialog");
@@ -115,11 +121,13 @@ async function exerciseOnboarding(page) {
       "Le parcours de premier lancement ne commence pas à la première des dix étapes");
     assert((await page.locator("#tutorialSpotlight").boundingBox())?.width > 0,
       "La première cible du parcours n’est pas mise en évidence");
+    await waitForTutorialPosition(page, 0);
     await assertTutorialDoesNotCoverTarget(page, "étape 1");
     await assertAccessible(page, "parcours de premier lancement");
     await page.locator("#nextTutorial").click();
     assert((await page.locator("#tutorialTitle").textContent()).includes("sauvegarde"),
       "La deuxième étape du premier lancement est absente");
+    await waitForTutorialPosition(page, 1);
     await assertTutorialDoesNotCoverTarget(page, "étape 2");
 
     await page.evaluate(() => document.activeElement?.blur());
@@ -145,18 +153,16 @@ async function exerciseOnboarding(page) {
       await page.waitForFunction(step =>
         document.querySelector("#tutorialStepLabel")?.textContent.includes(`${step} sur 10`),
       expectedStep);
+      await waitForTutorialPosition(page, expectedStep - 1);
       await assertTutorialDoesNotCoverTarget(page, `étape ${expectedStep}`);
     }
     await page.locator("#nextTutorial").click();
     await tutorial.waitFor({state: "hidden"});
     await page.waitForFunction(async () => {
-      const response = await fetch("/api/preferences");
+      const response = await fetch("/api/preferences", {cache: "no-store"});
       const data = await response.json();
       return data.values.tutorial_completed_version === "2";
     });
-    preferences = await fetchJson(page, "/api/preferences");
-    assert(preferences.body.values.tutorial_completed_version === "2",
-      "La version terminée du tutoriel n’est pas conservée");
     await help.waitFor({state: "visible"});
     await page.locator("#closeHelp").click();
     await help.waitFor({state: "hidden"});

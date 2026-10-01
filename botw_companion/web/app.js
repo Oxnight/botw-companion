@@ -391,7 +391,7 @@ const HELP_CHAPTERS = [
         id: "sidebar",
         title: "Filtres de carte et navigation latérale",
         summary: "Choisir rapidement les familles d’objectifs affichées.",
-        target: "aside",
+        target: "#categories",
         points: [
             "La colonne située à gauche de l’écran regroupe les grandes familles : voyage et lieux, quêtes et souvenirs, trésors et autres objectifs.",
             "Chaque case active ou masque une catégorie entière. « Tout » sélectionne toutes les catégories et « Aucun » permet de repartir d’une vue vide.",
@@ -536,7 +536,7 @@ const ESSENTIAL_TUTORIAL_STEPS = [
         title: "Choisis les catégories dans la colonne gauche",
         description: "Les cases de la navigation latérale affichent ou masquent des familles entières d’objectifs dans la liste et sur la carte.",
         detail: "Utilise « Tout » ou « Aucun » pour partir rapidement d’une vue complète ou vide. Les compteurs et la légende résument la progression de chaque famille.",
-        target: "aside"
+        target: "#categories"
     },
     {
         chapter: "navigation",
@@ -706,6 +706,56 @@ function setTutorialRectangle(element, left, top, width, height) {
     });
 }
 
+function tutorialRectangle(left, top, right, bottom) {
+    return {
+        left,
+        top,
+        right,
+        bottom,
+        width: Math.max(0, right - left),
+        height: Math.max(0, bottom - top)
+    };
+}
+
+function visibleTutorialRectangle(targetRectangle, cardRectangle, gap) {
+    const overlapWidth = Math.max(0, Math.min(targetRectangle.right, cardRectangle.right)
+        - Math.max(targetRectangle.left, cardRectangle.left));
+    const overlapHeight = Math.max(0, Math.min(targetRectangle.bottom, cardRectangle.bottom)
+        - Math.max(targetRectangle.top, cardRectangle.top));
+    if (overlapWidth * overlapHeight <= 1) return targetRectangle;
+
+    const candidates = [
+        tutorialRectangle(
+            targetRectangle.left,
+            targetRectangle.top,
+            targetRectangle.right,
+            Math.min(targetRectangle.bottom, cardRectangle.top - gap)
+        ),
+        tutorialRectangle(
+            targetRectangle.left,
+            Math.max(targetRectangle.top, cardRectangle.bottom + gap),
+            targetRectangle.right,
+            targetRectangle.bottom
+        ),
+        tutorialRectangle(
+            targetRectangle.left,
+            targetRectangle.top,
+            Math.min(targetRectangle.right, cardRectangle.left - gap),
+            targetRectangle.bottom
+        ),
+        tutorialRectangle(
+            Math.max(targetRectangle.left, cardRectangle.right + gap),
+            targetRectangle.top,
+            targetRectangle.right,
+            targetRectangle.bottom
+        )
+    ].filter(rectangle => rectangle.width >= 48 && rectangle.height >= 48);
+    candidates.sort((first, second) =>
+        second.width * second.height - first.width * first.height
+    );
+    return candidates[0] || targetRectangle;
+}
+
 function positionTutorial() {
     if (!tutorialState) return;
     const layer = $("#tutorialLayer"), card = $("#tutorialCard"),
@@ -721,6 +771,7 @@ function positionTutorial() {
         card.classList.add("tutorialCard--centered");
         card.style.left = `${Math.max(margin, (viewportWidth - card.offsetWidth) / 2)}px`;
         card.style.top = `${Math.max(margin, (viewportHeight - card.offsetHeight) / 2)}px`;
+        card.dataset.positionedStep = String(tutorialState.index);
         return;
     }
 
@@ -729,14 +780,9 @@ function positionTutorial() {
         top = Math.min(viewportHeight - 7, Math.max(7, raw.top - padding)),
         right = Math.max(7, Math.min(viewportWidth - 7, raw.right + padding)),
         bottom = Math.max(7, Math.min(viewportHeight - 7, raw.bottom + padding)),
-        width = Math.max(0, right - left), height = Math.max(0, bottom - top);
+        targetRectangle = tutorialRectangle(left, top, right, bottom),
+        width = targetRectangle.width, height = targetRectangle.height;
 
-    setTutorialRectangle(masks[0], 0, 0, viewportWidth, top);
-    setTutorialRectangle(masks[1], right, top, viewportWidth - right, height);
-    setTutorialRectangle(masks[2], 0, bottom, viewportWidth, viewportHeight - bottom);
-    setTutorialRectangle(masks[3], 0, top, left, height);
-    spotlight.hidden = false;
-    setTutorialRectangle(spotlight, left, top, width, height);
     card.classList.remove("tutorialCard--centered");
 
     const cardWidth = card.offsetWidth, cardHeight = card.offsetHeight,
@@ -773,6 +819,44 @@ function positionTutorial() {
     );
     card.style.left = `${candidates[0].left}px`;
     card.style.top = `${candidates[0].top}px`;
+    const cardRectangle = tutorialRectangle(
+            candidates[0].left,
+            candidates[0].top,
+            candidates[0].left + cardWidth,
+            candidates[0].top + cardHeight
+        ),
+        focusRectangle = visibleTutorialRectangle(targetRectangle, cardRectangle, gap);
+    setTutorialRectangle(masks[0], 0, 0, viewportWidth, focusRectangle.top);
+    setTutorialRectangle(
+        masks[1],
+        focusRectangle.right,
+        focusRectangle.top,
+        viewportWidth - focusRectangle.right,
+        focusRectangle.height
+    );
+    setTutorialRectangle(
+        masks[2],
+        0,
+        focusRectangle.bottom,
+        viewportWidth,
+        viewportHeight - focusRectangle.bottom
+    );
+    setTutorialRectangle(
+        masks[3],
+        0,
+        focusRectangle.top,
+        focusRectangle.left,
+        focusRectangle.height
+    );
+    spotlight.hidden = false;
+    setTutorialRectangle(
+        spotlight,
+        focusRectangle.left,
+        focusRectangle.top,
+        focusRectangle.width,
+        focusRectangle.height
+    );
+    card.dataset.positionedStep = String(tutorialState.index);
 }
 
 function renderTutorialStep(focusHeading = false) {
@@ -780,6 +864,7 @@ function renderTutorialStep(focusHeading = false) {
         detail = typeof step.detail === "function" ? step.detail() : step.detail,
         last = tutorialState.index === total - 1,
         target = visibleTutorialTarget(step);
+    delete $("#tutorialCard").dataset.positionedStep;
     $("#tutorialKind").textContent = tutorialState.kind === "essential"
         ? "PARCOURS ESSENTIEL"
         : "AIDE CONTEXTUELLE";
@@ -795,7 +880,7 @@ function renderTutorialStep(focusHeading = false) {
     $("#nextTutorial").textContent = last ? "Terminer" : "Suivant";
     if (target) {
         target.scrollIntoView({
-            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+            behavior: "auto",
             block: "center",
             inline: "nearest"
         });

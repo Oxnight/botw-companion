@@ -17,7 +17,7 @@ ALLOWED_VALUES = {
     "completion_profile": {"automatique", "base", "dlc", "amiibo", "expert", "automatic_only"},
     "game_mode_filter": {"save", "all", "normal", "expert"},
     "dsu_mode": {"integrated", "external", "disabled"},
-    "tutorial_completed_version": {"1"},
+    "tutorial_completed_version": {"1", "2"},
 }
 BOOLEAN_PREFERENCES = {"onboarding_completed"}
 
