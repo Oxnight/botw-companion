@@ -39,6 +39,7 @@ let onboardingShown = false, helpReturnFocus = null;
 let helpChapterId = null, tutorialResume = null, tutorialInertState = [];
 let tutorialState = null, tutorialPositionFrame = null, tutorialResizeObserver = null;
 let tutorialTransition = null;
+let tutorialReadyFrame = null;
 let detailReturnTarget = null, manualReviewReturnFocus = null;
 const SYNC_INTERVAL_KEY = "botw-companion-sync-interval";
 const MAP_MODE_KEY = "botw-companion-map-formula";
@@ -692,6 +693,8 @@ function visibleTutorialTarget(step) {
 
 function queueTutorialPosition() {
     if (!tutorialState) return;
+    delete $("#tutorialCard").dataset.positionedStep;
+    cancelAnimationFrame(tutorialReadyFrame);
     cancelAnimationFrame(tutorialPositionFrame);
     tutorialPositionFrame = requestAnimationFrame(() => {
         tutorialPositionFrame = requestAnimationFrame(positionTutorial);
@@ -716,6 +719,28 @@ function tutorialRectangle(left, top, right, bottom) {
         width: Math.max(0, right - left),
         height: Math.max(0, bottom - top)
     };
+}
+
+function publishTutorialPosition(target) {
+    const card = $("#tutorialCard"), session = tutorialState, index = session.index,
+        rectangle = target?.getBoundingClientRect(),
+        viewport = `${window.innerWidth}:${window.innerHeight}`;
+    cancelAnimationFrame(tutorialReadyFrame);
+    // Scrolling and ResizeObserver delivery can follow the layout calculation.
+    // Publish readiness only after the target has kept the same geometry.
+    tutorialReadyFrame = requestAnimationFrame(() => {
+        tutorialReadyFrame = requestAnimationFrame(() => {
+            if (tutorialState !== session || session.index !== index) return;
+            const current = target?.getBoundingClientRect(),
+                unchanged = !rectangle || ["left", "top", "width", "height"]
+                    .every(key => Math.abs(rectangle[key] - current[key]) < .25);
+            if (!unchanged || viewport !== `${window.innerWidth}:${window.innerHeight}`) {
+                queueTutorialPosition();
+                return;
+            }
+            card.dataset.positionedStep = String(index);
+        });
+    });
 }
 
 function createTutorialPreview(target) {
@@ -831,7 +856,7 @@ function positionTutorial() {
         card.classList.add("tutorialCard--centered");
         card.style.left = `${Math.max(margin, (viewportWidth - card.offsetWidth) / 2)}px`;
         card.style.top = `${Math.max(margin, (viewportHeight - card.offsetHeight) / 2)}px`;
-        card.dataset.positionedStep = String(tutorialState.index);
+        publishTutorialPosition(null);
         return;
     }
 
@@ -921,7 +946,7 @@ function positionTutorial() {
         focusRectangle.width,
         focusRectangle.height
     );
-    card.dataset.positionedStep = String(tutorialState.index);
+    publishTutorialPosition(target);
 }
 
 function renderTutorialStep(focusHeading = false) {
@@ -1053,6 +1078,7 @@ async function closeTutorial({ persist = false, returnToHelp } = {}) {
     if (!tutorialState) return;
     const previous = tutorialState;
     tutorialState = null;
+    cancelAnimationFrame(tutorialReadyFrame);
     tutorialTransition?.animations.forEach(animation => animation.cancel());
     tutorialTransition = null;
     delete $("#tutorialCard").dataset.transitioning;

@@ -82,39 +82,42 @@ async function assertAccessible(page, context) {
 }
 
 async function assertTutorialDoesNotCoverTarget(page, context) {
-  const overlap = await page.evaluate(() => {
-    const card = document.querySelector("#tutorialCard")?.getBoundingClientRect();
-    const spotlight = document.querySelector("#tutorialSpotlight")?.getBoundingClientRect();
-    if (!card || !spotlight || document.querySelector("#tutorialSpotlight")?.hidden) return 0;
-    const width = Math.max(0, Math.min(card.right, spotlight.right) - Math.max(card.left, spotlight.left));
-    const height = Math.max(0, Math.min(card.bottom, spotlight.bottom) - Math.max(card.top, spotlight.top));
-    return width * height;
-  });
-  assert(overlap <= 1, `La carte du parcours masque sa cible (${context}, chevauchement ${overlap}px²)`);
-  const complete = await page.evaluate(() => {
+  // Read every rectangle in the same rendering task, never across two frames.
+  const geometry = await page.evaluate(() => {
     const card = document.querySelector("#tutorialCard"),
-      spotlight = document.querySelector("#tutorialSpotlight");
-    if (spotlight.hidden) return true;
+      spotlight = document.querySelector("#tutorialSpotlight"),
+      insideViewport = rectangle => rectangle.left >= -1 && rectangle.top >= -1
+        && rectangle.right <= innerWidth + 1 && rectangle.bottom <= innerHeight + 1;
     const frame = spotlight.getBoundingClientRect(),
       cardBounds = card.getBoundingClientRect(),
       target = document.querySelector(card.dataset.target)?.getBoundingClientRect();
-    if (cardBounds.left < -1 || cardBounds.top < -1 || cardBounds.right > innerWidth + 1
-        || cardBounds.bottom > innerHeight + 1) return false;
-    if (!target || frame.left < -1 || frame.top < -1
-        || frame.right > innerWidth + 1 || frame.bottom > innerHeight + 1) return false;
-    if (card.dataset.layout === "direct") {
-      return frame.left <= target.left && frame.top <= target.top
-        && frame.right >= target.right && frame.bottom >= target.bottom;
-    }
     const preview = document.querySelector("#tutorialPreview"),
       copy = preview.shadowRoot?.lastElementChild?.getBoundingClientRect(),
-      scale = Number(preview.dataset.scale);
-    return !preview.hidden && copy && Math.abs(copy.width - target.width * scale) < 2
-      && Math.abs(copy.height - target.height * scale) < 2
-      && copy.left >= frame.left && copy.top >= frame.top
-      && copy.right <= frame.right && copy.bottom <= frame.bottom;
+      scale = Number(preview.dataset.scale),
+      width = Math.max(0, Math.min(cardBounds.right, frame.right) - Math.max(cardBounds.left, frame.left)),
+      height = Math.max(0, Math.min(cardBounds.bottom, frame.bottom) - Math.max(cardBounds.top, frame.top)),
+      directComplete = target && frame.left <= target.left && frame.top <= target.top
+        && frame.right >= target.right && frame.bottom >= target.bottom,
+      overviewComplete = target && !preview.hidden && copy
+        && Math.abs(copy.width - target.width * scale) < 2
+        && Math.abs(copy.height - target.height * scale) < 2
+        && copy.left >= frame.left && copy.top >= frame.top
+        && copy.right <= frame.right && copy.bottom <= frame.bottom;
+    return {
+      overlap: spotlight.hidden ? 0 : width * height,
+      complete: insideViewport(cardBounds) && (spotlight.hidden
+        || (insideViewport(frame) && (card.dataset.layout === "direct"
+          ? Boolean(directComplete) : Boolean(overviewComplete)))),
+      layout: card.dataset.layout, selector: card.dataset.target,
+      step: card.dataset.positionedStep, viewport: {width: innerWidth, height: innerHeight},
+      card: cardBounds.toJSON(), frame: frame.toJSON(), target: target?.toJSON(),
+      copy: copy?.toJSON(), scale
+    };
   });
-  assert(complete, `La cible du parcours est tronquée (${context})`);
+  const diagnostic = JSON.stringify(geometry);
+  assert(geometry.overlap <= 1,
+    `La carte du parcours masque sa cible (${context}) : ${diagnostic}`);
+  assert(geometry.complete, `La cible du parcours est tronquée (${context}) : ${diagnostic}`);
 }
 
 async function waitForTutorialPosition(page, expectedIndex) {
@@ -775,6 +778,7 @@ async function runResponsive(browser, baseUrl, browserName) {
       await assertTutorialDoesNotCoverTarget(page, "paysage étape 4");
       await page.setViewportSize({width: 390, height: 844});
       await page.waitForFunction(() => document.querySelector("#tutorialCard")?.dataset.viewport === "390:844");
+      await waitForTutorialPosition(page, index);
       await assertTutorialDoesNotCoverTarget(page, "retour portrait étape 4");
     }
     if (index < 9) {

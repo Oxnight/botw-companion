@@ -27,6 +27,7 @@ function layout(width, height, raw, cardHeight = 480) {
     "#tutorialSpotlight": spotlight, "#tutorialLayer": {querySelectorAll: () => masks}};
   const context = vm.createContext({$: id => nodes[id],
     tutorialState: {index: 0}, currentTutorialStep: () => ({target: ".hero"}),
+    tutorialReadyFrame: null, requestAnimationFrame: () => 1, cancelAnimationFrame() {},
     visibleTutorialTarget: () => target, window: {innerWidth: width, innerHeight: height}});
   vm.runInContext(layoutSource, context);
   vm.runInContext("positionTutorial()", context);
@@ -79,6 +80,58 @@ test("use the actual target when the viewport has enough room", () => {
     {left: 50, top: 200, right: 250, bottom: 350, width: 200, height: 150}, 350);
   assert.equal(result.mode, "direct");
   assert.equal(result.preview.hidden, true);
+});
+
+function readiness() {
+  const card = {dataset: {}}, callbacks = [], session = {index: 0},
+    rectangle = {left: 12, top: 12, width: 430, height: 110},
+    target = {getBoundingClientRect: () => ({...rectangle})};
+  let repositions = 0;
+  const context = vm.createContext({$: () => card,
+    tutorialState: session, tutorialReadyFrame: null,
+    window: {innerWidth: 1280, innerHeight: 720}, cancelAnimationFrame() {},
+    requestAnimationFrame: callback => { callbacks.push(callback); return callbacks.length; },
+    queueTutorialPosition: () => { repositions++; }});
+  vm.runInContext(layoutSource, context);
+  context.target = target;
+  vm.runInContext("publishTutorialPosition(target)", context);
+  return {card, callbacks, rectangle, context, session, repositions: () => repositions};
+}
+
+test("publish readiness only after the target has settled across frames", () => {
+  const state = readiness();
+  assert.equal(state.card.dataset.positionedStep, undefined);
+  state.callbacks.shift()();
+  assert.equal(state.card.dataset.positionedStep, undefined);
+  state.callbacks.shift()();
+  assert.equal(state.card.dataset.positionedStep, "0");
+});
+
+test("late scrolling invalidates placement and requests another calculation", () => {
+  const state = readiness();
+  state.callbacks.shift()();
+  state.rectangle.top += 70;
+  state.callbacks.shift()();
+  assert.equal(state.card.dataset.positionedStep, undefined);
+  assert.equal(state.repositions(), 1);
+});
+
+test("a late resize cannot publish a stale placement", () => {
+  const state = readiness();
+  state.callbacks.shift()();
+  state.context.window.innerWidth = 640;
+  state.callbacks.shift()();
+  assert.equal(state.card.dataset.positionedStep, undefined);
+  assert.equal(state.repositions(), 1);
+});
+
+test("closing a tour invalidates its pending readiness callback", () => {
+  const state = readiness();
+  state.callbacks.shift()();
+  state.context.tutorialState = null;
+  state.callbacks.shift()();
+  assert.equal(state.card.dataset.positionedStep, undefined);
+  assert.equal(state.repositions(), 0);
 });
 
 function transition(reducedMotion = false) {

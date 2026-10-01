@@ -19,6 +19,8 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   explanation card. When both do not fit at their original size, display an
   isolated, proportionally scaled overview beside or above the card.
 - Check full target visibility as well as card overlap in browser tests.
+- Wait for scrolling and target geometry to settle before publishing guided-tour
+  placement readiness, and include all rectangles in failed visibility checks.
 
 ## [1.0.0-rc.4] - 2026-09-30
 
