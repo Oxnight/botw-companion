@@ -22,6 +22,12 @@ def packaged_resource_errors() -> list[str]:
 
 def package_network_self_test() -> int:
     result = UpdateChecker(system="Darwin").check(force=True)
+    # A rate-limit response proves that the verified HTTPS connection worked.
+    # Release discovery remains rate-limited; only this transport smoke test passes.
+    if result.get("status") == "unavailable" and result.get("reason") == "rate_limited":
+        if sys.stdout is not None:
+            print("Connexion HTTPS GitHub vérifiée ; quota API temporairement épuisé")
+        return 0
     if result.get("status") not in {"up_to_date", "update_available"}:
         if sys.stderr is not None:
             print(

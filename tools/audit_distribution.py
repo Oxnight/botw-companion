@@ -30,6 +30,15 @@ LEGAL_DOCUMENTS = (
     "LICENSE", "licenses/PYTHON-3.12.txt", "licenses/SDL3-3.4.14.txt",
     "licenses/CERTIFI-MPL-2.0.txt",
 )
+REQUIRED_RELEASE_SOURCES = (
+    "tools/browser_smoke.js", "tools/browser_test_server.py",
+    "tools/run_browser_smoke.ps1", "tests/test_windows_package.py",
+    "tools/build_windows_app.ps1", "tools/build_macos_app.sh",
+    "tools/test_windows_installation.ps1", "tools/test_macos_installation.sh",
+    "tools/verify_release_assets.py", "tools/verify_release_ref.py",
+    "tools/release_metadata.py", "tools/release_lookup.py",
+    "package.json", "package-lock.json", ".github/workflows/release.yml",
+)
 FORBIDDEN_PARTS = {
     ".idea", ".venv", "venv", "env", "__MACOSX", "__pycache__",
     ".pytest_cache", "node_modules", "build", "dist", "test-results",
@@ -195,8 +204,22 @@ def repository_hygiene_errors(root: Path = ROOT) -> list[str]:
     return findings
 
 
+def release_source_errors(root: Path = ROOT) -> list[str]:
+    """Reject incomplete release source trees before tests or native builds."""
+    findings: list[str] = []
+    repository_files = set(_repository_files(root))
+    for relative in REQUIRED_RELEASE_SOURCES:
+        path = root / relative
+        if not path.is_file() or not path.stat().st_size:
+            findings.append(f"missing or empty release source: {relative}")
+        elif path not in repository_files:
+            findings.append(f"release source is not tracked by Git: {relative}")
+    return findings
+
+
 def audit() -> list[str]:
     errors: list[str] = []
+    errors.extend(release_source_errors())
     required = (".gitattributes", *LEGAL_DOCUMENTS, *PUBLIC_DOCUMENTS)
     for relative in required:
         path = ROOT / relative

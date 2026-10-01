@@ -4,15 +4,35 @@ import unittest
 
 from tools.audit_distribution import (
     PUBLIC_DOCUMENTS,
+    REQUIRED_RELEASE_SOURCES,
     audit,
     documentation_errors,
     public_language_errors,
     repository_hygiene_errors,
+    release_source_errors,
     source_comment_language_errors,
 )
 
 
 class DistributionAuditTests(unittest.TestCase):
+    def test_release_source_audit_rejects_missing_browser_script(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for relative in REQUIRED_RELEASE_SOURCES:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("source\n", encoding="utf-8")
+            self.assertEqual(release_source_errors(root), [])
+            (root / "tools/browser_smoke.js").unlink()
+            self.assertIn("missing or empty release source: tools/browser_smoke.js",
+                          release_source_errors(root))
+
+    def test_release_source_audit_rejects_missing_package_tests(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.assertIn("missing or empty release source: tests/test_windows_package.py",
+                          release_source_errors(root))
+
     def test_distribution_metadata_is_complete(self):
         self.assertEqual(audit(), [])
 

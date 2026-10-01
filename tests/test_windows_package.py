@@ -6,6 +6,10 @@ from botw_companion.versioning import CURRENT_VERSION
 
 
 class WindowsPackageTests(unittest.TestCase):
+    def test_inno_setup_verifies_the_exact_downloaded_release(self):
+        script = (self.root / "tools/install_inno_setup_ci.ps1").read_text(encoding="utf-8")
+        self.assertIn('release verify-asset $ReleaseTag $installer --repo "jrsoftware/issrc"', script)
+
     @classmethod
     def setUpClass(cls):
         cls.root = Path(__file__).resolve().parents[1]
@@ -219,6 +223,8 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn('expectedStylePaths = ["/style.css", "/metrics.css", "/armor.css"]', script)
         self.assertIn("Boolean(link.sheet)", script)
         self.assertIn("Les feuilles de style attendues ne sont pas toutes chargées", script)
+        self.assertIn('controls = ["#search", "#status", "#dlc"]', script)
+        self.assertIn('document.querySelector("#search")).paddingTop) >= 8', script)
         self.assertNotIn('getPropertyValue("--muted")', script)
         self.assertNotIn("search.getBoundingClientRect().height >= 40", script)
         self.assertIn("requestAnimationFrame(() => requestAnimationFrame(resolve))", script)

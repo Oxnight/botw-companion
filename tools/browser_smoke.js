@@ -61,6 +61,7 @@ async function saveDiagnosticScreenshot(page, browserName, name) {
 }
 
 async function assertAccessible(page, context) {
+  await waitForVisualStyle(page);
   // Browser-protocol injection does not weaken the application's strict CSP
   // policy (script-src 'self').
   await page.evaluate(axeSource);
@@ -199,15 +200,18 @@ async function exerciseOnboarding(page) {
   }));
   assert(pointerSelectOutline.modality === "pointer" && pointerSelectOutline.outline === "none",
     `La sélection DSU garde un focus souris : ${JSON.stringify(pointerSelectOutline)}`);
+  await page.keyboard.press("Escape");
   await page.keyboard.press("Tab");
   const keyboardFocus = await page.evaluate(() => {
     const element = document.activeElement;
     return {
       modality: document.documentElement.dataset.inputModality,
+      outlineStyle: element ? getComputedStyle(element).outlineStyle : "none",
       outlineWidth: element ? Number.parseFloat(getComputedStyle(element).outlineWidth) : 0
     };
   });
-  assert(keyboardFocus.modality === "keyboard" && keyboardFocus.outlineWidth >= 2,
+  assert(keyboardFocus.modality === "keyboard" &&
+      keyboardFocus.outlineStyle !== "none" && keyboardFocus.outlineWidth >= 2,
     `Le focus clavier n’est plus visible : ${JSON.stringify(keyboardFocus)}`);
   page.off("request", observeRequest);
   assert(externalRequests.length === 0,
@@ -296,20 +300,31 @@ async function navigateToApplication(page, browserName) {
 }
 
 async function waitForVisualStyle(page) {
-  // Navigation intentionally waits only for the committed document because
-  // Firefox can leave DOMContentLoaded pending on a fresh CI context.  The
-  // application data can become ready before independently loaded stylesheets
-  // have finished applying.  Link.sheet is the browser's direct signal that
-  // a linked stylesheet has loaded; computed colors and control heights are
-  // deliberately not used because responsive rules and native form rendering
-  // legitimately differ between Windows, macOS, and browser engines.
+  // Navigation waits only for the committed document. A stylesheet object
+  // alone is not sufficient: audit the page only after the existing theme
+  // and toolbar rules are reflected in computed styles on every engine.
   const expectedStylePaths = ["/style.css", "/metrics.css", "/armor.css"];
   try {
-    await page.waitForFunction(paths => paths.every(path =>
-      Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(link =>
-        new URL(link.href, document.baseURI).pathname === path && Boolean(link.sheet)
-      )
-    ), expectedStylePaths, {timeout: 45000});
+    await page.waitForFunction(paths => {
+      const sheetsReady = paths.every(path =>
+        Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(link =>
+          new URL(link.href, document.baseURI).pathname === path && Boolean(link.sheet)
+        )
+      );
+      if (!sheetsReady) return false;
+      const rootStyle = getComputedStyle(document.documentElement);
+      if (!rootStyle.getPropertyValue("--text").trim() ||
+          !rootStyle.getPropertyValue("--gold").trim()) return false;
+      const themedLabels = [".dsuTitle > small", "#dsuEngineLabel", ".dsuSourceLabel"];
+      const controls = ["#search", "#status", "#dlc"];
+      return themedLabels.every(selector => {
+        const element = document.querySelector(selector);
+        return element && getComputedStyle(element).color !== "rgb(0, 0, 0)";
+      }) && controls.every(selector => {
+        const element = document.querySelector(selector);
+        return element && getComputedStyle(element).color !== "rgb(0, 0, 0)";
+      }) && parseFloat(getComputedStyle(document.querySelector("#search")).paddingTop) >= 8;
+    }, expectedStylePaths, {timeout: 45000});
   } catch (error) {
     const styleState = await page.evaluate(() =>
       Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => ({
@@ -317,9 +332,19 @@ async function waitForVisualStyle(page) {
         loaded: Boolean(link.sheet)
       }))
     );
+    const renderedState = await page.evaluate(() =>
+      [".dsuTitle > small", "#dsuEngineLabel", ".dsuSourceLabel", "#search", "#status", "#dlc"]
+        .map(selector => {
+          const element = document.querySelector(selector);
+          if (!element) return {selector, missing: true};
+          const style = getComputedStyle(element);
+          return {selector, color: style.color, paddingTop: style.paddingTop,
+            height: element.getBoundingClientRect().height};
+        })
+    );
     throw new Error(
-      `Les feuilles de style attendues ne sont pas toutes chargées : ${JSON.stringify(styleState)}; ` +
-      `cause initiale : ${String(error)}`
+      `Les feuilles de style attendues ne sont pas toutes chargées ou appliquées : ${JSON.stringify(styleState)}; ` +
+      `rendu : ${JSON.stringify(renderedState)}; cause initiale : ${String(error)}`
     );
   }
   await page.evaluate(() => new Promise(resolve => {

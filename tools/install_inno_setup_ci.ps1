@@ -47,7 +47,7 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $installer -PathType Le
     exit 1
 }
 
-& gh.exe release verify-asset $installer --repo "jrsoftware/issrc"
+& gh.exe release verify-asset $ReleaseTag $installer --repo "jrsoftware/issrc"
 if ($LASTEXITCODE -ne 0) {
     Write-Error "L'attestation GitHub de l'installateur Inno Setup est invalide."
     exit 1
