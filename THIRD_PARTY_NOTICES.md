@@ -28,6 +28,16 @@ Copyright © Sam Lantinga and the SDL contributors.
 Official sources: <https://www.libsdl.org/license.php> and
 <https://github.com/libsdl-org/SDL/tree/release-3.4.14>
 
+### certifi 2025.8.3
+
+The applications include certifi's Mozilla CA certificate bundle so update
+checks and installer downloads can verify GitHub's TLS certificates
+consistently in self-contained packages. The bundle is covered by the Mozilla
+Public License 2.0; its notice is reproduced in
+[`licenses/CERTIFI-MPL-2.0.txt`](licenses/CERTIFI-MPL-2.0.txt).
+
+Official source: <https://github.com/certifi/python-certifi/tree/2025.08.03>
+
 ### BOTW Companion and JoyConDSU
 
 Project-authored BOTW Companion code, including the JoyConDSU engine in this

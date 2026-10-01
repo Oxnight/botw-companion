@@ -70,7 +70,8 @@ if (-not (Test-Path -LiteralPath $environmentPython -PathType Leaf)) {
     exit 1
 }
 
-& $environmentPython -m pip install --disable-pip-version-check --quiet "pyinstaller==6.22.2"
+& $environmentPython -m pip install --disable-pip-version-check --quiet `
+    "pyinstaller==6.22.2" "certifi==2025.8.3"
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $metadata = (& $environmentPython (Join-Path $projectRoot "tools\release_metadata.py") | ConvertFrom-Json)
@@ -143,7 +144,8 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "PRIVACY.md"),
     (Join-Path $applicationDirectory "SECURITY.md"),
     (Join-Path $applicationDirectory "licenses\PYTHON-3.12.txt"),
-    (Join-Path $applicationDirectory "licenses\SDL3-3.4.14.txt")
+    (Join-Path $applicationDirectory "licenses\SDL3-3.4.14.txt"),
+    (Join-Path $applicationDirectory "licenses\CERTIFI-MPL-2.0.txt")
 )) {
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
         Write-Error "Paquet incomplet : $required"
@@ -154,6 +156,11 @@ foreach ($required in @(
 & $applicationExecutable --package-self-test
 if ($LASTEXITCODE -ne 0) {
     Write-Error "L'auto-test du paquet Windows a échoué."
+    exit $LASTEXITCODE
+}
+& $applicationExecutable --package-network-self-test
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "L'auto-test HTTPS du paquet Windows a échoué."
     exit $LASTEXITCODE
 }
 

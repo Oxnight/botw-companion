@@ -6,6 +6,37 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.4] - 2026-09-30
+
+### Added
+
+- Added the left-hand category filters to both the guided tour and the help
+  center, with dedicated explanations of category counters and bulk controls.
+- Added a packaged HTTPS self-test that contacts the Releases API from the
+  final Windows and macOS applications before an installer can be published.
+
+### Changed
+
+- Display save dates and times in the device's current time zone while keeping
+  the save data itself untouched.
+- Shortened the application action to **Mises à jour** so it stays on one line.
+
+### Fixed
+
+- Bundle certifi's Mozilla CA store in both applications and combine it with
+  operating-system trust so update checks work on clean and managed devices.
+- Keep pointer clicks free of keyboard focus rings while preserving a visible
+  focus indicator for keyboard navigation.
+- Position guided-tour cards on the side with the least overlap and reject
+  layouts that cover the highlighted target in browser tests.
+
+### Security
+
+- Require hostname verification, certificate validation, and TLS 1.2 or later
+  for release discovery and installer downloads.
+- Distinguish certificate, DNS, timeout, rate-limit, and general connectivity
+  failures without exposing internal exception details.
+
 ## [1.0.0-rc.3] - 2026-09-30
 
 ### Fixed

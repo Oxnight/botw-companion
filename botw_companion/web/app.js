@@ -3,6 +3,16 @@ const launchFragment = new URLSearchParams(window.location.hash.slice(1));
 const sessionToken = launchFragment.get("session") ||
     document.querySelector('meta[name="botw-session-token"]')?.content || "";
 
+document.documentElement.dataset.inputModality = "pointer";
+document.addEventListener("pointerdown", () => {
+    document.documentElement.dataset.inputModality = "pointer";
+}, true);
+document.addEventListener("keydown", event => {
+    if (!["Shift", "Control", "Alt", "Meta", "CapsLock"].includes(event.key)) {
+        document.documentElement.dataset.inputModality = "keyboard";
+    }
+}, true);
+
 if (window.location.hash) {
     history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
 }
@@ -37,7 +47,7 @@ const DSU_SOURCE_KEY = "botw-companion-dsu-source";
 const UPDATE_DISMISSED_KEY = "botw-companion-update-dismissed";
 const UPDATE_INSTALL_NOTICE_KEY = "botw-companion-update-install-notice";
 const UPDATE_CHECK_TIMEOUT_MS = 45000;
-const TUTORIAL_VERSION = "1";
+const TUTORIAL_VERSION = "2";
 let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(localStorage.getItem(SYNC_INTERVAL_KEY) || 30));
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
@@ -264,7 +274,7 @@ async function checkForUpdates(manual = false) {
         clearTimeout(timer);
         if (manual) {
             button.disabled = false;
-            button.textContent = "Vérifier les mises à jour";
+            button.textContent = "Mises à jour";
         }
     }
 }
@@ -378,12 +388,24 @@ const HELP_CHAPTERS = [
         tip: "Déplie « éléments empêchant le 100 % » pour voir précisément ce qui manque au profil sélectionné."
     },
     {
+        id: "sidebar",
+        title: "Filtres de carte et navigation latérale",
+        summary: "Choisir rapidement les familles d’objectifs affichées.",
+        target: "aside",
+        points: [
+            "La colonne située à gauche de l’écran regroupe les grandes familles : voyage et lieux, quêtes et souvenirs, trésors et autres objectifs.",
+            "Chaque case active ou masque une catégorie entière. « Tout » sélectionne toutes les catégories et « Aucun » permet de repartir d’une vue vide.",
+            "Les compteurs placés à droite indiquent la progression détectée dans chaque catégorie. La légende en bas rappelle la différence entre à faire, en cours, terminé et informatif."
+        ],
+        tip: "Commence par cocher une ou deux catégories dans la colonne gauche, puis utilise les filtres détaillés au-dessus de la liste."
+    },
+    {
         id: "navigation",
-        title: "Catégories, recherche et filtres",
-        summary: "Réduire la liste aux objectifs utiles.",
+        title: "Recherche et filtres détaillés",
+        summary: "Affiner les catégories choisies dans la colonne gauche.",
         target: ".toolbar",
         points: [
-            "La navigation latérale choisit les catégories visibles. La recherche accepte un nom, une région ou un terme présent dans une fiche.",
+            "Après avoir choisi les catégories dans la colonne gauche, la recherche accepte un nom, une région ou un terme présent dans une fiche.",
             "Les filtres séparent les états, contenus additionnels, modes de jeu, localisations, variantes et régions.",
             "Un objectif peut être automatique, manuel, mixte ou informatif. Le bandeau de portée signale les limites du filtre actif afin d’éviter une interprétation incorrecte."
         ],
@@ -467,7 +489,7 @@ const HELP_CHAPTERS = [
         summary: "Gérer l’application sans perdre tes données.",
         target: ".appActions",
         points: [
-            "« Vérifier les mises à jour » consulte la dernière Release compatible avec un délai court. Le téléchargement démarre uniquement après confirmation, peut reprendre après une coupure et doit être vérifié avant toute installation.",
+            "« Mises à jour » consulte la dernière Release compatible avec un délai court. Le téléchargement démarre uniquement après confirmation, peut reprendre après une coupure et doit être vérifié avant toute installation.",
             "Le bouton Aide rouvre ce centre et permet de reprendre le parcours ou d’afficher directement un chapitre.",
             "Utilise « Quitter » pour arrêter proprement le serveur local et JoyConDSU. Les données personnelles restent dans le dossier de données de l’application, séparé de l’installation."
         ],
@@ -510,9 +532,16 @@ const ESSENTIAL_TUTORIAL_STEPS = [
         target: ".hero"
     },
     {
+        chapter: "sidebar",
+        title: "Choisis les catégories dans la colonne gauche",
+        description: "Les cases de la navigation latérale affichent ou masquent des familles entières d’objectifs dans la liste et sur la carte.",
+        detail: "Utilise « Tout » ou « Aucun » pour partir rapidement d’une vue complète ou vide. Les compteurs et la légende résument la progression de chaque famille.",
+        target: "aside"
+    },
+    {
         chapter: "navigation",
         title: "Trouve ce qui t’intéresse",
-        description: "Combine catégories, recherche et filtres pour définir les objectifs affichés dans la liste et sur la carte.",
+        description: "Après les catégories de gauche, combine recherche et filtres détaillés pour préciser les objectifs affichés dans la liste et sur la carte.",
         detail: "Les états automatique, manuel, mixte et informatif restent distincts afin de ne jamais confondre une preuve de sauvegarde avec une case personnelle.",
         target: ".toolbar"
     },
@@ -541,7 +570,7 @@ const ESSENTIAL_TUTORIAL_STEPS = [
         chapter: "dsu",
         title: "Active le gyroscope seulement si nécessaire",
         description: "JoyConDSU est inclus, mais reste désactivé tant que ton émulateur n’a pas besoin des mouvements de la manette.",
-        detail: "Le bouton Aide permet de retrouver les 12 chapitres, dont la configuration DSU, les itinéraires, les sauvegardes et les mises à jour.",
+        detail: "Le bouton Aide permet de retrouver les 13 chapitres, dont les filtres latéraux, la configuration DSU, les itinéraires, les sauvegardes et les mises à jour.",
         target: "#dsuControl"
     }
 ];
@@ -574,10 +603,10 @@ function renderHelpOverview() {
     $("#helpContent").innerHTML =
         `<p class="eyebrow">BIEN DÉMARRER</p>` +
         `<h3>Choisis le niveau d’aide qui te convient</h3>` +
-        `<p>Le parcours essentiel présente neuf repères directement dans l’interface. Les chapitres détaillés restent disponibles ici à tout moment.</p>` +
+        `<p>Le parcours essentiel présente dix repères directement dans l’interface. Les chapitres détaillés restent disponibles ici à tout moment.</p>` +
         `<div class="helpOverviewCards">` +
-        `<article><b>Parcours guidé</b><span>9 étapes contextuelles • environ 3 minutes</span></article>` +
-        `<article><b>Centre d’aide</b><span>12 chapitres complets • entièrement hors ligne</span></article>` +
+        `<article><b>Parcours guidé</b><span>10 étapes contextuelles • environ 3 minutes</span></article>` +
+        `<article><b>Centre d’aide</b><span>13 chapitres complets • entièrement hors ligne</span></article>` +
         `</div>` +
         `<p class="helpPrivacyNote"><b>Aucune action n’est déclenchée pendant le parcours.</b> Les éléments sont seulement mis en évidence ; tes filtres, validations et sauvegardes ne sont jamais modifiés.</p>`;
 }
@@ -710,27 +739,40 @@ function positionTutorial() {
     setTutorialRectangle(spotlight, left, top, width, height);
     card.classList.remove("tutorialCard--centered");
 
-    const cardWidth = card.offsetWidth, cardHeight = card.offsetHeight;
-    let cardLeft = Math.min(
-        Math.max(margin, left + width / 2 - cardWidth / 2),
-        viewportWidth - cardWidth - margin
+    const cardWidth = card.offsetWidth, cardHeight = card.offsetHeight,
+        clampLeft = value => Math.min(
+            Math.max(margin, value),
+            Math.max(margin, viewportWidth - cardWidth - margin)
+        ),
+        clampTop = value => Math.min(
+            Math.max(margin, value),
+            Math.max(margin, viewportHeight - cardHeight - margin)
+        ),
+        candidates = [
+            { left: left + width / 2 - cardWidth / 2, top: bottom + gap },
+            { left: left + width / 2 - cardWidth / 2, top: top - cardHeight - gap },
+            { left: right + gap, top: top + height / 2 - cardHeight / 2 },
+            { left: left - cardWidth - gap, top: top + height / 2 - cardHeight / 2 }
+        ].map((candidate, index) => ({
+            left: clampLeft(candidate.left),
+            top: clampTop(candidate.top),
+            index
+        })),
+        overlap = (candidate, extra = 0) => {
+            const overlapWidth = Math.max(0, Math.min(candidate.left + cardWidth, right + extra)
+                - Math.max(candidate.left, left - extra));
+            const overlapHeight = Math.max(0, Math.min(candidate.top + cardHeight, bottom + extra)
+                - Math.max(candidate.top, top - extra));
+            return overlapWidth * overlapHeight;
+        };
+
+    candidates.sort((first, second) =>
+        overlap(first) - overlap(second) ||
+        overlap(first, gap) - overlap(second, gap) ||
+        first.index - second.index
     );
-    let cardTop;
-    if (viewportHeight - bottom >= cardHeight + gap) {
-        cardTop = bottom + gap;
-    } else if (top >= cardHeight + gap) {
-        cardTop = top - cardHeight - gap;
-    } else if (viewportWidth - right >= cardWidth + gap) {
-        cardLeft = right + gap;
-        cardTop = Math.min(Math.max(margin, top + height / 2 - cardHeight / 2), viewportHeight - cardHeight - margin);
-    } else if (left >= cardWidth + gap) {
-        cardLeft = left - cardWidth - gap;
-        cardTop = Math.min(Math.max(margin, top + height / 2 - cardHeight / 2), viewportHeight - cardHeight - margin);
-    } else {
-        cardTop = Math.max(margin, viewportHeight - cardHeight - margin);
-    }
-    card.style.left = `${cardLeft}px`;
-    card.style.top = `${Math.min(cardTop, viewportHeight - cardHeight - margin)}px`;
+    card.style.left = `${candidates[0].left}px`;
+    card.style.top = `${candidates[0].top}px`;
 }
 
 function renderTutorialStep(focusHeading = false) {
@@ -1510,8 +1552,10 @@ function renderBloodMoon() {
     const duration = bloodMoonDuration(
         moon.active_seconds_until_event
     ),
-        savedAt =
-            report?.synchronisation?.save_time;
+        savedAt = localSaveTime(
+            report?.synchronisation?.save_timestamp,
+            report?.synchronisation?.save_timestamp_at
+        );
 
     const phase =
         moon.scheduled
@@ -1553,7 +1597,7 @@ function renderBloodMoon() {
         `dans ≈ ${duration}`;
 
     $("#bloodMoonMeasuredAt").textContent =
-        savedAt
+        savedAt !== "-"
             ? `Mesure exacte de la sauvegarde à ${savedAt}`
             : "Mesure exacte de la dernière sauvegarde";
 
@@ -2021,12 +2065,7 @@ function renderAll() {
         score = selectedCompletionScore(),
         mapScore = selectedMapScore();
 
-    const saveDate = s.date
-        ? s.date.replace(
-            /^(\d{4})-(\d{2})-(\d{2}) (.*)$/,
-            "$3/$2/$1 à $4"
-        )
-        : "-";
+    const saveDate = localSaveDateTime(s.timestamp, s.date);
 
     $("#saveInfo").textContent =
         `Slot ${s.slot} • ${
@@ -2211,6 +2250,34 @@ function syncDate(value) {
         : "-"
 }
 
+function localSaveDateTime(timestamp, fallback = null) {
+    const numeric = Number(timestamp);
+    const date = Number.isFinite(numeric) && numeric > 0
+        ? new Date(numeric * 1000)
+        : (fallback ? new Date(fallback) : null);
+    if (!date || Number.isNaN(date.getTime())) return "-";
+    const localDate = new Intl.DateTimeFormat("fr-FR", {
+        dateStyle: "short"
+    }).format(date);
+    const localTime = new Intl.DateTimeFormat("fr-FR", {
+        timeStyle: "medium"
+    }).format(date);
+    return `${localDate} à ${localTime}`;
+}
+
+function localSaveTime(timestamp, fallback = null) {
+    const numeric = Number(timestamp);
+    const date = Number.isFinite(numeric) && numeric > 0
+        ? new Date(numeric * 1000)
+        : (fallback ? new Date(fallback) : null);
+    if (!date || Number.isNaN(date.getTime())) return "-";
+    return new Intl.DateTimeFormat("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    }).format(date);
+}
+
 function updateSync(meta, error = null) {
     meta = meta || {};
 
@@ -2243,7 +2310,7 @@ function updateSync(meta, error = null) {
     $("#syncTimes").textContent =
         error
             ? `${error} • dernier rapport conservé`
-            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${meta.save_time || "-"} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
+            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${localSaveTime(meta.save_timestamp, meta.save_timestamp_at)} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
 
     const events = meta.events || [];
 

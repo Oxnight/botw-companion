@@ -55,7 +55,8 @@ fi
 "$BUILD_PYTHON" -m pip install \
   --disable-pip-version-check \
   --quiet \
-  "pyinstaller==6.22.2"
+  "pyinstaller==6.22.2" \
+  "certifi==2025.8.3"
 
 cd "$PROJECT_ROOT"
 "$BUILD_PYTHON" -m PyInstaller --noconfirm --clean "$SPEC_PATH"
@@ -75,7 +76,7 @@ PACKAGED_NOMENCLATURE="$(find "$APPLICATION" -path '*/botw_companion/data/nomenc
   exit 1
 }
 for document in LICENSE CHANGELOG.md THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
-  licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt; do
+  licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt licenses/CERTIFI-MPL-2.0.txt; do
   find "$APPLICATION" -path "*/$document" -type f -print -quit | grep -q . || {
     echo "Document absent de l'application macOS : $document" >&2; exit 1;
   }
@@ -102,6 +103,7 @@ PY
 /usr/bin/codesign --force --sign - "$APPLICATION"
 /usr/bin/codesign --verify --deep --strict --verbose=2 "$APPLICATION"
 "$APPLICATION/Contents/MacOS/BOTW Companion" --package-self-test
+"$APPLICATION/Contents/MacOS/BOTW Companion" --package-network-self-test
 
 /usr/bin/ditto "$APPLICATION" "$DMG_ROOT/BOTW Companion.app"
 /bin/ln -s /Applications "$DMG_ROOT/Applications"

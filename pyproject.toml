@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 authors = [{name = "BOTW Companion contributors"}]
-dependencies = []
+dependencies = ["certifi==2025.8.3"]
 
 [project.scripts]
 botw-companion = "botw_companion.cli:main"

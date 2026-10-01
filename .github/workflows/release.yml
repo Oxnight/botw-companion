@@ -62,6 +62,9 @@ jobs:
             python tools/verify_release_ref.py --tag $env:BUILD_REF_NAME --commit $env:GITHUB_SHA
           }
 
+      - name: Install runtime dependencies
+        run: python -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
+
       - name: Audit licenses and distribution contents
         run: python tools/audit_distribution.py
 
@@ -206,6 +209,9 @@ jobs:
           if [[ "$BUILD_REF" == refs/tags/* ]]; then
             python3 tools/verify_release_ref.py --tag "$BUILD_REF_NAME" --commit "$GITHUB_SHA"
           fi
+
+      - name: Install runtime dependencies
+        run: python3 -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
 
       - name: Audit licenses and distribution contents
         run: python3 tools/audit_distribution.py

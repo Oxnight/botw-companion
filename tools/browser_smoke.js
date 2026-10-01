@@ -80,6 +80,18 @@ async function assertAccessible(page, context) {
   throw new Error(`Audit d’accessibilité échoué (${context})\n${summary}`);
 }
 
+async function assertTutorialDoesNotCoverTarget(page, context) {
+  const overlap = await page.evaluate(() => {
+    const card = document.querySelector("#tutorialCard")?.getBoundingClientRect();
+    const spotlight = document.querySelector("#tutorialSpotlight")?.getBoundingClientRect();
+    if (!card || !spotlight || document.querySelector("#tutorialSpotlight")?.hidden) return 0;
+    const width = Math.max(0, Math.min(card.right, spotlight.right) - Math.max(card.left, spotlight.left));
+    const height = Math.max(0, Math.min(card.bottom, spotlight.bottom) - Math.max(card.top, spotlight.top));
+    return width * height;
+  });
+  assert(overlap <= 1, `La carte du parcours masque sa cible (${context}, chevauchement ${overlap}px²)`);
+}
+
 async function exerciseOnboarding(page) {
   const tutorial = page.locator("#tutorialLayer");
   const help = page.locator("#helpDialog");
@@ -99,14 +111,16 @@ async function exerciseOnboarding(page) {
   page.on("request", observeRequest);
 
   if (await tutorial.isVisible()) {
-    assert((await page.locator("#tutorialStepLabel").textContent()).includes("1 sur 9"),
-      "Le parcours de premier lancement ne commence pas à la première des neuf étapes");
+    assert((await page.locator("#tutorialStepLabel").textContent()).includes("1 sur 10"),
+      "Le parcours de premier lancement ne commence pas à la première des dix étapes");
     assert((await page.locator("#tutorialSpotlight").boundingBox())?.width > 0,
       "La première cible du parcours n’est pas mise en évidence");
+    await assertTutorialDoesNotCoverTarget(page, "étape 1");
     await assertAccessible(page, "parcours de premier lancement");
     await page.locator("#nextTutorial").click();
     assert((await page.locator("#tutorialTitle").textContent()).includes("sauvegarde"),
       "La deuxième étape du premier lancement est absente");
+    await assertTutorialDoesNotCoverTarget(page, "étape 2");
 
     await page.evaluate(() => document.activeElement?.blur());
     await page.keyboard.press("Escape");
@@ -117,30 +131,31 @@ async function exerciseOnboarding(page) {
 
     await page.locator("#openHelp").click();
     await help.waitFor({state: "visible"});
-    assert(await page.locator("[data-help-chapter]").count() === 12,
-      "Le centre d’aide ne contient pas ses douze chapitres");
+    assert(await page.locator("[data-help-chapter]").count() === 13,
+      "Le centre d’aide ne contient pas ses treize chapitres");
     assert((await page.locator("#resumeTutorial").textContent()).includes("étape 2"),
       "Le parcours interrompu ne peut pas être repris à la bonne étape");
     await page.locator("#resumeTutorial").click();
     await tutorial.waitFor({state: "visible"});
-    assert((await page.locator("#tutorialStepLabel").textContent()).includes("2 sur 9"),
+    assert((await page.locator("#tutorialStepLabel").textContent()).includes("2 sur 10"),
       "La reprise du parcours a perdu la progression en mémoire");
 
-    for (let expectedStep = 3; expectedStep <= 9; expectedStep += 1) {
+    for (let expectedStep = 3; expectedStep <= 10; expectedStep += 1) {
       await page.locator("#nextTutorial").click();
       await page.waitForFunction(step =>
-        document.querySelector("#tutorialStepLabel")?.textContent.includes(`${step} sur 9`),
+        document.querySelector("#tutorialStepLabel")?.textContent.includes(`${step} sur 10`),
       expectedStep);
+      await assertTutorialDoesNotCoverTarget(page, `étape ${expectedStep}`);
     }
     await page.locator("#nextTutorial").click();
     await tutorial.waitFor({state: "hidden"});
     await page.waitForFunction(async () => {
       const response = await fetch("/api/preferences");
       const data = await response.json();
-      return data.values.tutorial_completed_version === "1";
+      return data.values.tutorial_completed_version === "2";
     });
     preferences = await fetchJson(page, "/api/preferences");
-    assert(preferences.body.values.tutorial_completed_version === "1",
+    assert(preferences.body.values.tutorial_completed_version === "2",
       "La version terminée du tutoriel n’est pas conservée");
     await help.waitFor({state: "visible"});
     await page.locator("#closeHelp").click();
@@ -149,8 +164,15 @@ async function exerciseOnboarding(page) {
 
   await page.locator("#openHelp").click();
   await help.waitFor({state: "visible"});
-  assert(await page.locator("[data-help-chapter]").count() === 12,
-    "Le centre d’aide ne contient pas ses douze chapitres");
+  const pointerHelpOutline = await page.locator("#helpTitle").evaluate(element =>
+    getComputedStyle(element).outlineStyle);
+  assert(pointerHelpOutline === "none",
+    `Le titre d’aide garde un encadré après un clic souris : ${pointerHelpOutline}`);
+  assert(await page.locator("[data-help-chapter]").count() === 13,
+    "Le centre d’aide ne contient pas ses treize chapitres");
+  await page.locator('[data-help-chapter="sidebar"]').click();
+  assert((await page.locator("#helpContent").textContent()).includes("colonne située à gauche"),
+    "Le centre d’aide n’explique pas les filtres de la colonne gauche");
   await assertAccessible(page, "centre d’aide");
   await page.locator('[data-help-chapter="completion"]').click();
   assert((await page.locator("#helpContent h3").textContent()).includes("pourcentages"),
@@ -164,6 +186,23 @@ async function exerciseOnboarding(page) {
   await page.keyboard.press("Escape");
   await help.waitFor({state: "hidden"});
   await page.waitForFunction(() => document.activeElement?.id === "openHelp");
+  await page.locator("#dsuSource").click();
+  const pointerSelectOutline = await page.locator("#dsuSource").evaluate(element => ({
+    modality: document.documentElement.dataset.inputModality,
+    outline: getComputedStyle(element).outlineStyle
+  }));
+  assert(pointerSelectOutline.modality === "pointer" && pointerSelectOutline.outline === "none",
+    `La sélection DSU garde un focus souris : ${JSON.stringify(pointerSelectOutline)}`);
+  await page.keyboard.press("Tab");
+  const keyboardFocus = await page.evaluate(() => {
+    const element = document.activeElement;
+    return {
+      modality: document.documentElement.dataset.inputModality,
+      outlineWidth: element ? Number.parseFloat(getComputedStyle(element).outlineWidth) : 0
+    };
+  });
+  assert(keyboardFocus.modality === "keyboard" && keyboardFocus.outlineWidth >= 2,
+    `Le focus clavier n’est plus visible : ${JSON.stringify(keyboardFocus)}`);
   page.off("request", observeRequest);
   assert(externalRequests.length === 0,
     `L’aide a effectué un appel externe inattendu : ${externalRequests.join(", ")}`);
@@ -619,8 +658,8 @@ async function runResponsive(browser, baseUrl, browserName) {
     region.display === "none" || region.width === 0 || region.height === 0);
   assert(!collapsedHelpRegion,
     `Une zone du centre d’aide mobile est masquée : ${JSON.stringify(helpLayout)}`);
-  assert(await page.locator("[data-help-chapter]").count() === 12,
-    "Le sommaire mobile ne contient pas les douze chapitres");
+  assert(await page.locator("[data-help-chapter]").count() === 13,
+    "Le sommaire mobile ne contient pas les treize chapitres");
   const applicationChapter = page.locator('[data-help-chapter="application"]');
   const mobileNavigation = page.locator(".helpNavigation");
   assert(helpLayout.navigation.scrollHeight > helpLayout.navigation.height,
@@ -720,6 +759,24 @@ async function runDisplayPreferences(browser, baseUrl, browserName) {
   await closeWithTimeout(context, "la fermeture du contexte accessibilité");
 }
 
+async function runLocalTimezone(browser, baseUrl, browserName) {
+  const context = await browser.newContext({
+    viewport: {width: 1280, height: 720},
+    timezoneId: "Asia/Taipei"
+  });
+  context.setDefaultTimeout(ACTION_TIMEOUT_MS);
+  context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
+  const page = await context.newPage();
+  page.baseUrl = baseUrl;
+  progress(browserName, "dates:fuseau-local");
+  await waitForApplication(page, browserName);
+  assert((await page.locator("#saveSlotDate").textContent()).includes("16/08/2026 à 05:00:00"),
+    "La date de sauvegarde ne suit pas le fuseau horaire du navigateur");
+  assert((await page.locator("#syncTimes").textContent()).includes("sauvegarde interne à 05:00:00"),
+    "L’heure de synchronisation ne suit pas le fuseau horaire du navigateur");
+  await closeWithTimeout(context, "la fermeture du contexte de fuseau horaire");
+}
+
 (async () => {
   const url = process.argv[2] || "http://127.0.0.1:8765";
   const target = String(process.argv[3] || process.env.BOTW_BROWSER || "chromium").toLowerCase();
@@ -750,9 +807,10 @@ async function runDisplayPreferences(browser, baseUrl, browserName) {
     const desktop = await runDesktop(browser, url, target);
     await runResponsive(browser, url, target);
     await runDisplayPreferences(browser, url, target);
+    await runLocalTimezone(browser, url, target);
     console.log(JSON.stringify({
       status: "ok", browser: target, ...desktop, responsive: true,
-      zoom_200: true, reduced_motion: true
+      zoom_200: true, reduced_motion: true, local_timezone: true
     }));
   } finally {
     progress(target, "navigateur:fermeture");

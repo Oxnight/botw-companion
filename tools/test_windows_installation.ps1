@@ -86,7 +86,8 @@ function Assert-InstalledLayout([string]$InstallRoot) {
         (Join-Path $InstallRoot "PRIVACY.md"),
         (Join-Path $InstallRoot "SECURITY.md"),
         (Join-Path $InstallRoot "licenses\PYTHON-3.12.txt"),
-        (Join-Path $InstallRoot "licenses\SDL3-3.4.14.txt")
+        (Join-Path $InstallRoot "licenses\SDL3-3.4.14.txt"),
+        (Join-Path $InstallRoot "licenses\CERTIFI-MPL-2.0.txt")
     )
     foreach ($path in $required) {
         if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {

@@ -49,7 +49,7 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("/api/save-caption?revision=", script)
         self.assertIn("function closeDetails", script)
         self.assertIn("function showOnboarding", script)
-        self.assertIn('const TUTORIAL_VERSION = "1"', script)
+        self.assertIn('const TUTORIAL_VERSION = "2"', script)
         self.assertIn("tutorial_completed_version", script)
         self.assertIn("const HELP_CHAPTERS = [", script)
         self.assertIn("const ESSENTIAL_TUTORIAL_STEPS = [", script)
@@ -76,7 +76,8 @@ class WebAssetsTests(unittest.TestCase):
             "Sauvegarde et slot analysé",
             "Synchronisation de la sauvegarde",
             "Les deux pourcentages",
-            "Catégories, recherche et filtres",
+            "Filtres de carte et navigation latérale",
+            "Recherche et filtres détaillés",
             "Carte d’Hyrule",
             "Fiches, preuves et guides",
             "Suivi manuel et sauvegarde des données",

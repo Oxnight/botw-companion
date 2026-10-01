@@ -1,18 +1,18 @@
 ## Release candidate
 
-RC 3 fixes update checks on slower connections. The previous build could stop
-waiting before GitHub returned its release data, especially on macOS. Checks
-now have a realistic time budget, retry one temporary network failure, and
-report rate limits without repeatedly contacting GitHub. BOTW Companion still
-starts and works normally when the network is unavailable.
+RC 4 fixes the update connection failure seen in the self-contained macOS
+application. Windows and macOS now carry their own reviewed certificate store,
+combine it with system trust for managed networks, use it for both release
+checks and installer downloads, and run a real GitHub
+HTTPS check from the packaged application during the release workflow.
 
-The Windows updater now validates the saved release metadata as well as the
-installer itself, both before the application closes and again in the detached
-updater. macOS update-state files are restricted to the current user. Package
-validation covers clean installs, upgrades from RC 2, and the legacy alpha 34
-migration path on both supported platforms.
+The interface now shows save dates and times in the computer's current time
+zone. Pointer clicks no longer leave keyboard-style yellow outlines, while
+keyboard focus remains visible. The help center and guided tour cover the
+left-hand category filters, and tour cards avoid the highlighted area. The
+update action also remains on one line.
 
-No save-analysis, completion, map, guide, tracking, or JoyConDSU behavior has
+No save-analysis, completion, map, guide, tracking, or JoyConDSU result has
 changed in this release candidate.
 
 ## Installation

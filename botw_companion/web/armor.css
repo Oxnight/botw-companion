@@ -113,8 +113,8 @@
     font: inherit;
 }
 
-.manualReviewToolbar input:focus,
-.manualReviewToolbar select:focus {
+.manualReviewToolbar input:focus-visible,
+.manualReviewToolbar select:focus-visible {
     outline: none;
     border-color: var(--gold);
 }
@@ -1536,7 +1536,7 @@ aside {
     border-color: #3b555b;
 }
 
-.dsuControl select:focus {
+.dsuControl select:focus-visible {
     outline: none;
 
     border-color: var(--gold);
@@ -1973,6 +1973,7 @@ aside {
     background: #14252a;
     line-height: 1.25;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .appActionButtons button:hover {
@@ -2020,6 +2021,17 @@ aside {
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
     outline: 3px solid #f2d681 !important;
     outline-offset: 3px !important;
+}
+
+html[data-input-modality="pointer"]
+    :where(a, button, input, select, textarea, summary, [tabindex]):focus {
+    outline: none !important;
+}
+
+#helpTitle:focus,
+#helpContent:focus,
+#tutorialTitle:focus {
+    outline: none !important;
 }
 
 .item {

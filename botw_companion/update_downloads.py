@@ -15,10 +15,11 @@ import time
 from typing import Callable
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
-from urllib.request import HTTPRedirectHandler, Request, build_opener
+from urllib.request import HTTPRedirectHandler, Request
 
 from .persistence import atomic_write_json
 from .platforms import companion_data_dir
+from .secure_transport import CertificateBundleError, secure_redirect_opener
 from .updates import MAX_ASSET_BYTES, UpdateChecker
 from .versioning import ReleaseVersion
 
@@ -94,7 +95,9 @@ class SafeDownloadRedirectHandler(HTTPRedirectHandler):
 
 
 def _default_opener(request: Request, *, timeout: float):
-    return build_opener(SafeDownloadRedirectHandler()).open(request, timeout=timeout)
+    return secure_redirect_opener(
+        SafeDownloadRedirectHandler(), request, timeout=timeout
+    )
 
 
 def _header(response, name: str) -> str | None:
@@ -376,6 +379,10 @@ class UpdateDownloadManager:
                 if exc.code not in {408, 429, 500, 502, 503, 504}:
                     raise UpdateDownloadError("GitHub a refusé le téléchargement de cette mise à jour") from exc
                 last_error = exc
+            except CertificateBundleError as exc:
+                raise UpdateDownloadError(
+                    "La connexion sécurisée ne peut pas être vérifiée. Réinstalle BOTW Companion."
+                ) from exc
             except (URLError, TimeoutError, OSError) as exc:
                 last_error = exc
             if attempt + 1 >= self.max_attempts:

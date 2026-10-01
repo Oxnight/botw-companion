@@ -17,6 +17,7 @@ datas = collect_data_files(
         "dsu/macos/libSDL3.0.dylib",
     ],
 )
+datas.extend(collect_data_files("certifi"))
 datas.extend([
     (str(project_root / "LICENSE"), "."),
     (str(project_root / "CHANGELOG.md"), "."),

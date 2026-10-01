@@ -9,9 +9,10 @@ import time
 from typing import Callable
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import Request
 
 from .platforms import platform_id
+from .secure_transport import CertificateBundleError, network_failure_reason, secure_urlopen
 from .versioning import CURRENT_VERSION, ReleaseVersion
 
 
@@ -72,7 +73,7 @@ class UpdateChecker:
         *,
         current: ReleaseVersion = CURRENT_VERSION,
         system: str | None = None,
-        opener: Callable = urlopen,
+        opener: Callable = secure_urlopen,
         monotonic: Callable[[], float] = time.monotonic,
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
         max_attempts: int = MAX_CHECK_ATTEMPTS,
@@ -108,12 +109,16 @@ class UpdateChecker:
 
     @staticmethod
     def _network_error(exc: BaseException) -> UpdateCheckError:
-        reason = getattr(exc, "reason", None)
-        timed_out = isinstance(exc, TimeoutError) or isinstance(reason, TimeoutError)
+        reason = network_failure_reason(exc)
+        labels = {
+            "timeout": "GitHub met trop de temps à répondre",
+            "tls": "La connexion sécurisée à GitHub n'a pas pu être vérifiée",
+            "dns": "L'adresse de GitHub n'a pas pu être résolue",
+            "network": "GitHub est momentanément inaccessible",
+        }
         return UpdateCheckError(
-            "GitHub met trop de temps à répondre" if timed_out
-            else "GitHub est momentanément inaccessible",
-            reason="timeout" if timed_out else "network",
+            labels[reason],
+            reason=reason,
             retryable=True,
         )
 
@@ -156,7 +161,7 @@ class UpdateChecker:
                 reason="remote_error",
                 retryable=exc.code in RETRYABLE_HTTP_STATUSES,
             ) from exc
-        except (URLError, TimeoutError, OSError) as exc:
+        except (URLError, TimeoutError, OSError, CertificateBundleError) as exc:
             raise self._network_error(exc) from exc
         if len(raw) > MAX_RESPONSE_BYTES:
             raise UpdateCheckError("Réponse GitHub trop volumineuse")
@@ -304,6 +309,14 @@ class UpdateChecker:
                     "network": (
                         "Connexion à GitHub indisponible. "
                         "BOTW Companion reste entièrement utilisable hors ligne."
+                    ),
+                    "dns": (
+                        "L’adresse de GitHub est introuvable. Vérifie le réseau ou le DNS ; "
+                        "BOTW Companion reste utilisable hors ligne."
+                    ),
+                    "tls": (
+                        "La connexion sécurisée à GitHub n’a pas pu être vérifiée. "
+                        "BOTW Companion reste utilisable hors ligne."
                     ),
                 }
                 payload = {

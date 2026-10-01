@@ -270,7 +270,7 @@ input {
     height: 42px;
 }
 
-.toolbar input:focus {
+.toolbar input:focus-visible {
     border-color: #4d756f
 }
 

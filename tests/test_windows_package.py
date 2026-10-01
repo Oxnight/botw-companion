@@ -35,6 +35,7 @@ class WindowsPackageTests(unittest.TestCase):
     def test_every_required_offline_resource_is_collected(self):
         spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
         self.assertIn('collect_data_files(', spec)
+        self.assertIn('collect_data_files("certifi")', spec)
         self.assertIn('"botw_companion"', spec)
         self.assertIn("JoyConDSU.exe", spec)
         self.assertIn("SDL3.dll", spec)
@@ -73,7 +74,9 @@ class WindowsPackageTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn('"pyinstaller==6.22.2"', script)
+        self.assertIn('"certifi==2025.8.3"', script)
         self.assertIn("--package-self-test", script)
+        self.assertIn("--package-network-self-test", script)
         self.assertIn("cartography_reference_fr_compiled.json", script)
         self.assertIn("localization_fr.json", script)
         self.assertIn("nomenclature_fr_reference.json", script)
@@ -88,6 +91,7 @@ class WindowsPackageTests(unittest.TestCase):
         self.assertIn("Copy-Item -LiteralPath $documentSource", script)
         self.assertIn('"licenses\\PYTHON-3.12.txt"', script)
         self.assertIn('"licenses\\SDL3-3.4.14.txt"', script)
+        self.assertIn('"licenses\\CERTIFI-MPL-2.0.txt"', script)
         self.assertNotIn('project_root / "LICENSE"', (
             self.windows / "BOTW Companion.spec"
         ).read_text(encoding="utf-8"))

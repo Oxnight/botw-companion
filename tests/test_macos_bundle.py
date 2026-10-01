@@ -25,6 +25,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("JoyConDSU", spec)
         self.assertIn("libSDL3.0.dylib", spec)
         self.assertIn("collect_data_files", spec)
+        self.assertIn('collect_data_files("certifi")', spec)
         self.assertIn("sys.stdout is None", entry)
         self.assertIn("os.devnull", entry)
 
@@ -106,7 +107,7 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("nomenclature_fr_reference.json", validation)
         for document in (
             "CHANGELOG.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md",
-            "PYTHON-3.12.txt", "SDL3-3.4.14.txt",
+            "PYTHON-3.12.txt", "SDL3-3.4.14.txt", "CERTIFI-MPL-2.0.txt",
         ):
             self.assertIn(document, build)
             self.assertIn(document, validation)
@@ -120,6 +121,8 @@ class MacOSBundleTests(unittest.TestCase):
         self.assertIn("MACOSX_DEPLOYMENT_TARGET: \"14.0\"", workflow)
         self.assertGreaterEqual(workflow.count("timeout-minutes: 5"), 2)
         self.assertIn("./tools/build_macos_app.sh", workflow)
+        self.assertEqual(workflow.count('"certifi==2025.8.3"'), 2)
+        self.assertGreaterEqual(workflow.count("Install runtime dependencies"), 2)
         self.assertIn("./tools/test_macos_installation.sh", workflow)
         self.assertGreaterEqual(workflow.count("timeout-minutes: 15"), 3)
         self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS=120000", workflow)

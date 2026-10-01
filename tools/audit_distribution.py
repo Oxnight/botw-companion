@@ -28,6 +28,7 @@ PUBLIC_DOCUMENTS = (
 )
 LEGAL_DOCUMENTS = (
     "LICENSE", "licenses/PYTHON-3.12.txt", "licenses/SDL3-3.4.14.txt",
+    "licenses/CERTIFI-MPL-2.0.txt",
 )
 FORBIDDEN_PARTS = {
     ".idea", ".venv", "venv", "env", "__MACOSX", "__pycache__",
@@ -217,9 +218,13 @@ def audit() -> list[str]:
             "This software is provided 'as-is'",
             "The origin of this software must not be misrepresented",
         ),
+        "licenses/CERTIFI-MPL-2.0.txt": (
+            "Bundle of CA Root Certificates", "Mozilla Public License",
+            "http://mozilla.org/MPL/2.0/",
+        ),
         "THIRD_PARTY_NOTICES.md": (
             "CPython 3.12", "Simple DirectMedia Layer 3.4.14",
-            "PyInstaller 6.22.2", "Inno Setup 6", "Playwright 1.62.0",
+            "certifi 2025.8.3", "PyInstaller 6.22.2", "Inno Setup 6", "Playwright 1.62.0",
             "axe-core 4.13.0",
         ),
         "CHANGELOG.md": ("## [Unreleased]", "Keep a Changelog", "Semantic Versioning"),
@@ -268,7 +273,7 @@ def audit() -> list[str]:
         errors.append("CHANGELOG.md does not contain the current version")
 
     project = tomllib.loads(_text("pyproject.toml"))["project"]
-    if project.get("license") != "MIT" or project.get("dependencies") != []:
+    if project.get("license") != "MIT" or project.get("dependencies") != ["certifi==2025.8.3"]:
         errors.append("Python dependency scope changed without an audit update")
     node = json.loads(_text("package.json"))
     expected_dev = {"axe-core": "4.13.0", "playwright": "1.62.0"}

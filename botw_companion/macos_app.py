@@ -8,10 +8,31 @@ from . import __version__
 from .cli import main as cli_main
 from .macos_launcher import main as launcher_main
 from .offline_runtime import offline_resource_errors, remote_runtime_dependencies
+from .secure_transport import certificate_bundle_errors
+from .updates import UpdateChecker
 
 
 def packaged_resource_errors() -> list[str]:
-    return [*offline_resource_errors(macos_dsu=True), *remote_runtime_dependencies()]
+    return [
+        *offline_resource_errors(macos_dsu=True),
+        *remote_runtime_dependencies(),
+        *certificate_bundle_errors(),
+    ]
+
+
+def package_network_self_test() -> int:
+    result = UpdateChecker(system="Darwin").check(force=True)
+    if result.get("status") not in {"up_to_date", "update_available"}:
+        if sys.stderr is not None:
+            print(
+                "Auto-test HTTPS impossible : "
+                + str(result.get("reason") or result.get("status") or "inconnu"),
+                file=sys.stderr,
+            )
+        return 1
+    if sys.stdout is not None:
+        print("Connexion HTTPS GitHub vérifiée depuis l'application macOS")
+    return 0
 
 
 def _server_arguments(argv: list[str]) -> list[str]:
@@ -53,6 +74,8 @@ def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if "--package-self-test" in arguments:
         return package_self_test()
+    if "--package-network-self-test" in arguments:
+        return package_network_self_test()
     if "--server" in arguments:
         return cli_main(_server_arguments(arguments))
     return launcher_main(arguments)
