@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import socket
 import threading
 import time
 from typing import Callable
@@ -32,6 +34,40 @@ def probe_companion_server(port: int = 8765, timeout: float = 0.8,
     if not isinstance(payload.get("version"), str):
         return None
     return payload
+
+
+def loopback_port_available(port: int) -> bool:
+    """Match the server's POSIX bind policy without mistaking TIME_WAIT for a listener."""
+    try:
+        with socket.socket() as listener:
+            if os.name != "nt":
+                listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            listener.bind(("127.0.0.1", port))
+        return True
+    except OSError:
+        return False
+
+
+def resolve_loopback_startup(port: int, *, probe=probe_companion_server,
+                             available=loopback_port_available, timeout: float = 3.0,
+                             clock=time.monotonic, sleep=time.sleep) -> tuple[dict | None, bool]:
+    """Reuse a live Companion, or briefly wait for an instance finishing shutdown.
+
+    Never stop or replace an unidentified listener. Windows deliberately keeps
+    its strict bind check: SO_REUSEADDR has different sharing semantics there.
+    """
+    deadline = clock() + timeout
+    while True:
+        identity = probe(port, timeout=0.3)
+        lifecycle = identity.get("lifecycle") if identity else None
+        closing = isinstance(lifecycle, dict) and lifecycle.get("shutdown_reason") is not None
+        if identity is not None and not closing:
+            return identity, False
+        if available(port):
+            return None, True
+        if clock() >= deadline:
+            return None, False
+        sleep(0.05)
 
 
 class WebLifecycle:

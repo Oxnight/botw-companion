@@ -6,7 +6,6 @@ import json
 import logging
 import os
 from pathlib import Path
-import socket
 import subprocess
 import sys
 import time
@@ -16,7 +15,10 @@ from urllib.request import Request
 import webbrowser
 
 from . import __version__
-from .lifecycle import open_loopback, probe_companion_server
+from .lifecycle import (
+    loopback_port_available as port_available,
+    open_loopback, probe_companion_server, resolve_loopback_startup,
+)
 from .platforms import companion_data_dir
 
 
@@ -159,15 +161,6 @@ def request_shutdown(port: int, session_token: str | None = None, *,
         return False
 
 
-def port_available(port: int) -> bool:
-    try:
-        with socket.socket() as listener:
-            listener.bind(("127.0.0.1", port))
-        return True
-    except OSError:
-        return False
-
-
 def wait_until_stopped(port: int, timeout: float = 8.0, *,
                        probe=probe_companion_server,
                        clock: Callable[[], float] = time.monotonic,
@@ -283,7 +276,7 @@ def run(*, explicit_project: str | None = None,
     port = int(config.get("port", DEFAULT_PORT))
     if not 1 <= port <= 65535:
         raise LauncherError("Le port configuré doit être compris entre 1 et 65535")
-    identity = probe(port, timeout=0.5)
+    identity, available = resolve_loopback_startup(port, probe=probe, available=port_available)
     if identity is not None:
         if identity.get("version") == __version__:
             if not focus():
@@ -296,7 +289,7 @@ def run(*, explicit_project: str | None = None,
             raise LauncherError(
                 "L’ancienne version du Companion n’a pas pu être arrêtée proprement"
             )
-    elif not port_available(port):
+    elif not available:
         raise LauncherError(
             f"Le port local {port} est déjà occupé par une autre application"
         )

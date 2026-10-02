@@ -118,6 +118,10 @@ async function assertTutorialDoesNotCoverTarget(page, context) {
   assert(geometry.overlap <= 1,
     `La carte du parcours masque sa cible (${context}) : ${diagnostic}`);
   assert(geometry.complete, `La cible du parcours est tronquée (${context}) : ${diagnostic}`);
+  if (geometry.selector === "#categories" && geometry.viewport.width >= 900) {
+    assert(geometry.frame.right <= geometry.card.left,
+      `Les filtres ne restent pas à gauche de l’explication (${context}) : ${diagnostic}`);
+  }
 }
 
 async function waitForTutorialPosition(page, expectedIndex) {
@@ -409,6 +413,14 @@ async function runDesktop(browser, baseUrl, browserName) {
   progress(browserName, "bureau:chargement");
   await waitForApplication(page, browserName);
   await exerciseOnboarding(page);
+  const bulkFilterBorders = await page.locator("#categories .filterHeading button").evaluateAll(buttons =>
+    buttons.map(button => {
+      const style = getComputedStyle(button);
+      return {width: parseFloat(style.borderTopWidth), style: style.borderTopStyle};
+    }));
+  assert(bulkFilterBorders.length === 2 && bulkFilterBorders.every(border =>
+    border.width >= 1 && border.style === "solid"),
+  `Les boutons Tout/Aucun n’ont pas de bordure visible : ${JSON.stringify(bulkFilterBorders)}`);
   await page.locator("#updateBanner").waitFor({state: "visible"});
   const downloadUpdate = page.locator("#downloadUpdate");
   assert(await downloadUpdate.getAttribute("href") === null,

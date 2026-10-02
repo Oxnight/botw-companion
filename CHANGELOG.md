@@ -6,6 +6,17 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.6] - 2026-10-02
+
+### Fixed
+
+- Keep the category-filter overview near its original left edge, with the
+  guided-tour explanation on the right when space permits.
+- Give the filter header's All and None actions a subtle visible border.
+- Allow immediate POSIX relaunch after closed HTTP connections enter TIME_WAIT,
+  and briefly wait for a server finishing shutdown instead of reopening it.
+- Preserve strict port ownership checks for unrelated applications and Windows.
+
 ## [1.0.0-rc.5] - 2026-10-01
 
 ### Changed

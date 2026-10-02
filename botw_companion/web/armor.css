@@ -611,6 +611,15 @@ aside {
     padding: 3px 0;
 }
 
+#categories .filterHeading button {
+    border: 1px solid #385158;
+    border-radius: 6px;
+}
+
+#categories .filterHeading button:hover {
+    border-color: #6d765a;
+}
+
 .filterGroup summary {
     display: flex;
     align-items: center;

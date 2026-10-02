@@ -800,6 +800,7 @@ function positionTutorialOverview(target, raw, viewportWidth, viewportHeight) {
     const card = $("#tutorialCard"), preview = $("#tutorialPreview"),
         margin = 12, gap = 16, padding = 9,
         sideBySide = viewportWidth >= 900,
+        keepTargetLeft = sideBySide && target === document.querySelector("#categories"),
         availableWidth = sideBySide
             ? viewportWidth - card.offsetWidth - margin * 2 - gap
             : viewportWidth - margin * 2,
@@ -810,8 +811,10 @@ function positionTutorialOverview(target, raw, viewportWidth, viewportHeight) {
             Math.max(1, availableHeight - padding * 2) / raw.height),
         width = raw.width * scale + padding * 2,
         height = raw.height * scale + padding * 2,
-        slotLeft = sideBySide ? card.offsetWidth + margin + gap : margin,
-        left = slotLeft + (availableWidth - width) / 2,
+        slotLeft = sideBySide && !keepTargetLeft ? card.offsetWidth + margin + gap : margin,
+        left = keepTargetLeft
+            ? Math.min(slotLeft + availableWidth - width, Math.max(slotLeft, raw.left - padding))
+            : slotLeft + (availableWidth - width) / 2,
         top = sideBySide ? (viewportHeight - height) / 2 : margin;
     preview.hidden = false;
     preview.style.width = `${raw.width * scale}px`;
@@ -829,7 +832,9 @@ function positionTutorialOverview(target, raw, viewportWidth, viewportHeight) {
     preview.dataset.scale = String(scale);
     if (!sideBySide) card.style.maxHeight = `${Math.max(1,
         viewportHeight - margin * 2 - height - gap)}px`;
-    card.style.left = `${sideBySide ? margin : (viewportWidth - card.offsetWidth) / 2}px`;
+    card.style.left = `${sideBySide
+        ? (keepTargetLeft ? viewportWidth - card.offsetWidth - margin : margin)
+        : (viewportWidth - card.offsetWidth) / 2}px`;
     card.style.top = `${sideBySide ? (viewportHeight - card.offsetHeight) / 2
         : top + height + gap}px`;
     return tutorialRectangle(left, top, left + width, top + height);

@@ -1,13 +1,13 @@
 ## Release candidate
 
-RC 5 keeps the complete guided-tour target visible without letting the
-explanation card cover it. When there is not enough room for both at their
-original size, the tour shows a complete, proportionally scaled overview
-beside or above the card. This visual overview does not change application data.
+RC 6 keeps the guided-tour category filters on the left, with their explanation
+on the right when there is enough room. The All and None filter actions now
+have a subtle border so they are easier to find.
 
-Moving between steps now uses a short fade transition. Devices requesting
-reduced motion switch immediately. Repeated clicks during a transition cannot
-skip steps, and closing the tour cancels any running animation.
+The macOS launcher no longer mistakes recently closed HTTP connections for an
+unrelated application occupying the local port. Relaunch can reuse that port
+without waiting for the TCP cooldown, and the launchers briefly wait for an
+instance already finishing shutdown. An unrelated listener is never stopped.
 
 No save-analysis, completion, map, guide, tracking, or JoyConDSU result has
 changed in this release candidate.

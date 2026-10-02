@@ -11,7 +11,7 @@ const layoutSource = source.slice(source.indexOf("function setTutorialRectangle(
 const transitionSource = source.slice(source.indexOf("async function changeTutorialStep("),
   source.indexOf("function openTutorial("));
 
-function layout(width, height, raw, cardHeight = 480) {
+function layout(width, height, raw, cardHeight = 480, selector = ".hero") {
   const node = () => ({style: {}, dataset: {}, hidden: false,
     classList: {add() {}, remove() {}}});
   const card = node(), preview = node(), spotlight = node(), masks = Array.from({length: 4}, node);
@@ -26,7 +26,8 @@ function layout(width, height, raw, cardHeight = 480) {
   const nodes = {"#tutorialCard": card, "#tutorialPreview": preview,
     "#tutorialSpotlight": spotlight, "#tutorialLayer": {querySelectorAll: () => masks}};
   const context = vm.createContext({$: id => nodes[id],
-    tutorialState: {index: 0}, currentTutorialStep: () => ({target: ".hero"}),
+    tutorialState: {index: 0}, currentTutorialStep: () => ({target: selector}),
+    document: {querySelector: id => id === selector ? target : null},
     tutorialReadyFrame: null, requestAnimationFrame: () => 1, cancelAnimationFrame() {},
     visibleTutorialTarget: () => target, window: {innerWidth: width, innerHeight: height}});
   vm.runInContext(layoutSource, context);
@@ -80,6 +81,18 @@ test("use the actual target when the viewport has enough room", () => {
     {left: 50, top: 200, right: 250, bottom: 350, width: 200, height: 150}, 350);
   assert.equal(result.mode, "direct");
   assert.equal(result.preview.hidden, true);
+});
+
+test("the sidebar overview stays left of the explanation at its original edge", () => {
+  for (const [width, height] of [[900, 600], [1280, 720], [1440, 900], [2048, 1000]]) {
+    const raw = {left: 16, top: 100, right: 270, bottom: height + 100,
+      width: 254, height};
+    const result = layout(width, height, raw, 480, "#categories");
+    assert.equal(result.mode, "overview");
+    assert.equal(result.frame.left, 12);
+    assert(result.frame.right + 16 <= result.card.left);
+    assert(result.card.right <= width - 12);
+  }
 });
 
 function readiness() {
