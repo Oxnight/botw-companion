@@ -12,6 +12,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import traceback
 import uuid
@@ -89,6 +90,7 @@ class WindowsUpdateInstaller:
         self.frozen = bool(getattr(sys, "frozen", False)) if frozen is None else frozen
         self.popen = popen
         self._process = None
+        self._start_lock = threading.Lock()
 
     @property
     def state_path(self) -> Path:
@@ -127,6 +129,12 @@ class WindowsUpdateInstaller:
                 shutil.rmtree(path, ignore_errors=True)
 
     def start(self, candidate: WindowsInstallCandidate, *, parent_pid: int, port: int) -> dict:
+        # The HTTP server handles requests concurrently, including requests
+        # from different browser tabs. Serialize validation and relay creation.
+        with self._start_lock:
+            return self._start(candidate, parent_pid=parent_pid, port=port)
+
+    def _start(self, candidate: WindowsInstallCandidate, *, parent_pid: int, port: int) -> dict:
         if not self.supported():
             raise WindowsUpdateError(
                 "L’installation assistée est disponible uniquement dans l’application Windows installée."
@@ -142,6 +150,8 @@ class WindowsUpdateInstaller:
             )
             or not _inside_root(candidate.installer, self.root)
             or not _inside_root(candidate.metadata, self.root)
+            or candidate.installer.is_symlink()
+            or candidate.metadata.is_symlink()
             or candidate.metadata.resolve() != candidate.installer.resolve().with_name(
                 f"{candidate.installer.name}.metadata.json"
             )
@@ -212,6 +222,8 @@ class WindowsUpdateInstaller:
                 close_fds=True,
                 env={**os.environ, "PYINSTALLER_RESET_ENVIRONMENT": "1"},
             )
+            if self._process.poll() is not None:
+                raise OSError("The updater relay exited before the handoff")
         except OSError as exc:
             try:
                 atomic_write_json(self.state_path, {
@@ -255,7 +267,7 @@ def _write_relay_state(root: Path, *, status: str, version: str, message: str,
 
 
 def _wait_for_parent(pid: int, timeout: float = 30.0) -> bool:
-    if os.name != "nt":
+    if os.name != "nt" or pid == 0:
         return True
     import ctypes
     from ctypes import wintypes
@@ -269,7 +281,9 @@ def _wait_for_parent(pid: int, timeout: float = 30.0) -> bool:
     kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
     handle = kernel32.OpenProcess(synchronize, False, pid)
     if not handle:
-        return True
+        # A missing process and a process we cannot inspect are different.
+        # Access denied must never authorize replacing a running application.
+        return ctypes.get_last_error() == 87  # ERROR_INVALID_PARAMETER
     try:
         return kernel32.WaitForSingleObject(handle, int(timeout * 1000)) == wait_object_0
     finally:
@@ -388,6 +402,8 @@ def _probe_version(port: int, expected: str) -> bool:
 
 
 def _run_relay(args) -> int:
+    args._parent_stopped = False
+    args._relaunch_attempted = False
     root = Path(args.root).resolve()
     installer_source = Path(args.installer)
     metadata_source = Path(args.metadata)
@@ -435,6 +451,7 @@ def _run_relay(args) -> int:
                            release_url=args.release_url, can_retry=True, log_available=False,
                            log_path=log_path)
         return 3
+    args._parent_stopped = True
     if sha256_file(installer) != args.digest:
         _write_relay_state(root, status="failed", version=args.version,
                            message="La vérification de sécurité juste avant installation a échoué.",
@@ -464,6 +481,7 @@ def _run_relay(args) -> int:
         "/NOFORCECLOSEAPPLICATIONS", "/NORESTARTAPPLICATIONS", "/SP-",
         # Pass one argv value and let subprocess quote paths containing spaces.
         "/ASSISTEDUPDATE=1", f"/LOG={log_path}",
+        f"/DIR={application.parent}",
     ]
     if getattr(args, "silent", False):
         setup_command.extend(("/VERYSILENT", "/SUPPRESSMSGBOXES"))
@@ -486,6 +504,7 @@ def _run_relay(args) -> int:
                 silent=False,
                 log_path=log_path,
             )
+            args._relaunch_attempted = True
         return setup.returncode or 5
     _write_relay_state(root, status="restarting", version=args.version,
                        message="Installation terminée. Vérification du redémarrage…",
@@ -498,6 +517,7 @@ def _run_relay(args) -> int:
         silent=silent_restart,
         log_path=log_path,
     )
+    args._relaunch_attempted = True
     deadline = time.monotonic() + 45.0
     restart_exit_code = None
     while time.monotonic() < deadline:
@@ -527,10 +547,32 @@ def _run_relay(args) -> int:
     return 6
 
 
+def _recover_stopped_application(args) -> None:
+    if (not getattr(args, "_parent_stopped", False)
+            or getattr(args, "_relaunch_attempted", False)):
+        return
+    try:
+        application = Path(args.application).resolve()
+        if application.is_file():
+            _launch_updated_application(
+                application, port=args.port,
+                silent=bool(getattr(args, "silent", False)),
+                log_path=Path(args.log).resolve(),
+            )
+            args._relaunch_attempted = True
+    except Exception:
+        # Preserve the installation error and its diagnostic even if Windows
+        # cannot reopen the installed application automatically.
+        pass
+
+
 def run_relay(args) -> int:
     """Run the relay and preserve actionable diagnostics for unexpected failures."""
     try:
-        return _run_relay(args)
+        result = _run_relay(args)
+        if result != 0:
+            _recover_stopped_application(args)
+        return result
     except Exception as exc:
         try:
             root = Path(args.root).resolve()
@@ -552,4 +594,5 @@ def run_relay(args) -> int:
             )
         except Exception:
             pass
+        _recover_stopped_application(args)
         return 1

@@ -19,6 +19,10 @@ LOG=""
 RELEASE_URL=""
 OWNER_UID=""
 OWNER_GID=""
+PARENT_STOPPED=0
+RECOVERY_HANDLED=0
+COMMITTED=0
+LAUNCHED_PID=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -62,12 +66,16 @@ done
 [[ "$LOG" == "$ROOT"/* && "$APPLICATION" == /* ]] || exit 2
 [[ "$APPLICATION" == */"BOTW Companion.app" ]] || exit 2
 [[ "$DMG" == */"$EXPECTED_NAME" ]] || exit 2
+[[ "$METADATA" == "$DMG.metadata.json" && ! -L "$DMG" && ! -L "$METADATA" ]] || exit 2
 [[ "$DIGEST" =~ ^[0-9a-f]{64}$ && "$SIZE" =~ ^[1-9][0-9]*$ ]] || exit 2
 [[ "$PARENT_PID" =~ ^[0-9]+$ && "$PORT" =~ ^[0-9]+$ ]] || exit 2
+(( PORT >= 1 && PORT <= 65535 )) || exit 2
+[[ "$RELEASE_URL" == "https://github.com/Oxnight/botw-companion/releases/tag/v$VERSION" ]] || exit 2
 [[ "$OWNER_UID" =~ ^[0-9]+$ && "$OWNER_GID" =~ ^[0-9]+$ ]] || exit 2
 
 /bin/mkdir -p "$(/usr/bin/dirname "$LOG")" "$ROOT"
 exec >>"$LOG" 2>&1
+printf 'Application: %s\nStaging: %s\nBackup: %s\n' "$APPLICATION" "$STAGING" "$BACKUP"
 
 write_state() {
   local status="$1" message="$2" can_retry="$3" rollback="$4"
@@ -103,7 +111,36 @@ cleanup() {
     /bin/rm -rf "$relay_directory" >/dev/null 2>&1 || true
   fi
 }
-trap cleanup EXIT HUP INT TERM
+
+finish_relay() {
+  local result=$?
+  trap - EXIT HUP INT TERM
+  set +e
+  if (( result != 0 && PARENT_STOPPED == 1 && RECOVERY_HANDLED == 0 && COMMITTED == 0 )); then
+    if [[ -d "$BACKUP" ]]; then
+      if restore_backup; then
+        write_state failed "La mise à jour a échoué ; l’ancienne version a été restaurée." true true
+      else
+        write_state failed "La restauration n’a pas pu être terminée. La sauvegarde est conservée ; consulte le journal." true false
+      fi
+    else
+      launch_application || true
+      if [[ "$TEST_MODE" == "1" ]]; then
+        wait_for_version "$RUNTIME_VERSION" || true
+      fi
+      current_status="$(/usr/bin/plutil -extract status raw -o - "$STATE" 2>/dev/null)"
+      if [[ "$current_status" != "failed" && "$current_status" != "cancelled" ]]; then
+        write_state failed "Le relais macOS a été interrompu. L’application actuelle est conservée." true false
+      fi
+    fi
+  fi
+  cleanup
+  exit "$result"
+}
+trap finish_relay EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # Build the privileged command in JavaScript for Automation. JSON serialization
 # handles quotes in paths without asking a shell to reinterpret user data.
@@ -169,15 +206,15 @@ wait_for_parent() {
   done
 }
 
-probe_version() {
-  if [[ "$TEST_MODE" == "1" && "${BOTW_UPDATE_FORCE_RESTART_FAILURE:-0}" == "1" ]]; then
-    return 1
-  fi
+wait_for_version() {
+  local expected="$1"
   local deadline=$((SECONDS + (TEST_MODE == 1 ? 45 : 180)))
   while (( SECONDS < deadline )); do
-    if /usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
-        "http://127.0.0.1:$PORT/api/version" | \
-        /usr/bin/grep -F "\"version\": \"$RUNTIME_VERSION\"" >/dev/null; then
+    local identity
+    identity="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
+        "http://127.0.0.1:$PORT/api/version" 2>/dev/null || true)"
+    if [[ "$(printf '%s' "$identity" | /usr/bin/plutil -extract application raw -o - - 2>/dev/null)" == "BOTW Companion" \
+      && "$(printf '%s' "$identity" | /usr/bin/plutil -extract version raw -o - - 2>/dev/null)" == "$expected" ]]; then
       return 0
     fi
     /bin/sleep 0.5
@@ -185,14 +222,73 @@ probe_version() {
   return 1
 }
 
+probe_version() {
+  if [[ "$TEST_MODE" == "1" && "${BOTW_UPDATE_FORCE_RESTART_FAILURE:-0}" == "1" ]]; then
+    return 1
+  fi
+  wait_for_version "$RUNTIME_VERSION"
+}
+
 launch_application() {
   if [[ "$TEST_MODE" == "1" ]]; then
     "$APPLICATION/Contents/MacOS/BOTW Companion" --server --port "$PORT" \
       --sans-navigateur >>"$LOG" 2>&1 &
+    LAUNCHED_PID=$!
   elif [[ "$(/usr/bin/id -u)" == "0" ]]; then
-    /bin/launchctl asuser "$OWNER_UID" /usr/bin/open "$APPLICATION"
+    # asuser selects the GUI session; sudo also drops root credentials.
+    /bin/launchctl asuser "$OWNER_UID" /usr/bin/sudo -H -u "#$OWNER_UID" \
+      /usr/bin/open "$APPLICATION"
   else
     /usr/bin/open "$APPLICATION"
+  fi
+}
+
+stop_new_application() {
+  local deadline=$((SECONDS + 45))
+  if [[ -n "$LAUNCHED_PID" ]]; then
+    /bin/kill -TERM "$LAUNCHED_PID" 2>/dev/null || true
+    while /bin/kill -0 "$LAUNCHED_PID" 2>/dev/null; do
+      if (( SECONDS >= deadline )); then
+        /bin/kill -KILL "$LAUNCHED_PID" 2>/dev/null || true
+        break
+      fi
+      /bin/sleep 0.2
+    done
+    wait "$LAUNCHED_PID" 2>/dev/null || true
+    LAUNCHED_PID=""
+    return 0
+  fi
+  local identity application_name version token pid
+  identity="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    "http://127.0.0.1:$PORT/api/version" 2>/dev/null || true)"
+  application_name="$(printf '%s' "$identity" | /usr/bin/plutil -extract application raw -o - - 2>/dev/null)"
+  version="$(printf '%s' "$identity" | /usr/bin/plutil -extract version raw -o - - 2>/dev/null)"
+  token="$(printf '%s' "$identity" | /usr/bin/plutil -extract session_token raw -o - - 2>/dev/null)"
+  pid="$(printf '%s' "$identity" | /usr/bin/plutil -extract process_id raw -o - - 2>/dev/null)"
+  # An unconfirmed process must never trigger destructive bundle replacement.
+  [[ "$application_name" == "BOTW Companion" && "$version" == "$RUNTIME_VERSION" \
+    && "$token" =~ ^[a-zA-Z0-9_-]+$ && "$pid" =~ ^[1-9][0-9]*$ ]] || return 1
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 10 \
+    -H "X-BOTW-Session-Token: $token" -X POST \
+    "http://127.0.0.1:$PORT/api/shutdown" >/dev/null || return 1
+  while /bin/kill -0 "$pid" 2>/dev/null; do
+    (( SECONDS < deadline )) || return 1
+    /bin/sleep 0.2
+  done
+}
+
+restore_backup() {
+  [[ -d "$BACKUP" ]] || return 1
+  if [[ -d "$APPLICATION" ]]; then
+    stop_new_application || return 1
+    /bin/rm -rf "$APPLICATION" || return 1
+  fi
+  /bin/mv "$BACKUP" "$APPLICATION" || return 1
+  launch_application || return 1
+  # CI must prove that the restored server, rather than a stale new process,
+  # can answer before it moves on to the next installation check.
+  if [[ "$TEST_MODE" == "1" ]]; then
+    wait_for_version "$RUNTIME_VERSION" || return 1
   fi
 }
 
@@ -202,17 +298,23 @@ if ! wait_for_parent; then
   write_state failed "BOTW Companion ne s’est pas arrêté dans le délai prévu." true false
   exit 3
 fi
+PARENT_STOPPED=1
 
 if [[ ! -w "$DESTINATION_PARENT" && "$AUTHORIZED" == "0" && "$TEST_MODE" == "0" ]]; then
   write_state installing "Autorisation macOS nécessaire pour remplacer l’application…" false false
+  # The authorized relay owns recovery while the authorization call is active.
+  # A signal to this waiting wrapper must not reopen the bundle mid-replacement.
+  RECOVERY_HANDLED=1
   if request_authorization_safe; then
+    RECOVERY_HANDLED=1
     exit 0
   fi
   privileged_status="$(/usr/bin/plutil -extract status raw -o - "$STATE" 2>/dev/null || true)"
   if [[ "$privileged_status" == "failed" || "$privileged_status" == "cancelled" ]]; then
+    RECOVERY_HANDLED=1
     exit 4
   fi
-  /usr/bin/open "$APPLICATION" >/dev/null 2>&1 || true
+  RECOVERY_HANDLED=0
   write_state cancelled "La mise à jour a été annulée. L’application actuelle est conservée." true false
   exit 4
 fi
@@ -271,23 +373,22 @@ write_state restarting "Installation terminée. Vérification du redémarrage…
   exit 14
 }
 if ! /bin/mv "$STAGING" "$APPLICATION"; then
-  /bin/mv "$BACKUP" "$APPLICATION" || true
-  write_state failed "Le remplacement a échoué ; l’ancienne version a été restaurée." true true
+  write_state failed "Le remplacement a échoué ; restauration de l’ancienne version…" true false
   exit 15
 fi
 
 if launch_application && probe_version; then
-  /bin/rm -rf "$BACKUP"
-  /bin/rm -f "$DMG" "$METADATA"
+  COMMITTED=1
   write_state succeeded "BOTW Companion a été mis à jour et redémarré." false false
+  /bin/rm -rf "$BACKUP" || true
+  /bin/rm -f "$DMG" "$METADATA" || true
   exit 0
 fi
 
-/bin/rm -rf "$APPLICATION"
-if /bin/mv "$BACKUP" "$APPLICATION"; then
-  launch_application || true
+RECOVERY_HANDLED=1
+if restore_backup; then
   write_state failed "La nouvelle version n’a pas démarré ; l’ancienne a été restaurée." true true
   exit 16
 fi
-write_state failed "La mise à jour et la restauration ont échoué. Consulte le journal avant toute nouvelle tentative." true true
+write_state failed "Le redémarrage et la restauration n’ont pas pu être confirmés. La sauvegarde est conservée ; consulte le journal." true false
 exit 17

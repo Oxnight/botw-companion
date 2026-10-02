@@ -612,6 +612,12 @@ aside {
 }
 
 #categories .filterHeading button {
+    width: auto;
+    margin: 0;
+    padding: 3px 11px;
+    min-height: 24px;
+    line-height: 16px;
+    justify-content: center;
     border: 1px solid #385158;
     border-radius: 6px;
 }

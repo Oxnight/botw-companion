@@ -6,8 +6,9 @@ import os
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
+import threading
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from botw_companion.windows_updates import (
     INSTALL_STATE_NAME,
@@ -18,6 +19,7 @@ from botw_companion.windows_updates import (
     WindowsUpdateInstaller,
     _probe_version,
     _external_process_environment,
+    _wait_for_parent,
     run_relay,
 )
 
@@ -101,6 +103,46 @@ class WindowsUpdateTests(unittest.TestCase):
         self.assertIn("321", command)
         self.assertFalse(kwargs.get("shell", False))
 
+    def test_concurrent_install_requests_launch_only_one_relay(self):
+        entered = threading.Event()
+        release = threading.Event()
+        launches = []
+        results = []
+
+        def popen(*args, **kwargs):
+            launches.append(True)
+            entered.set()
+            if not release.wait(3):
+                raise OSError("test relay did not release")
+            return FakeProcess()
+
+        coordinator = WindowsUpdateInstaller(
+            data_root=self.root, application=self.application, helper=self.helper,
+            system="Windows", frozen=True, popen=popen,
+        )
+
+        def install():
+            try:
+                results.append(coordinator.start(self.candidate(), parent_pid=1, port=8765))
+            except WindowsUpdateError:
+                results.append("blocked")
+
+        first = threading.Thread(target=install)
+        second = threading.Thread(target=install)
+        first.start()
+        try:
+            self.assertTrue(entered.wait(3))
+            second.start()
+        finally:
+            release.set()
+            first.join(3)
+            if second.ident is not None:
+                second.join(3)
+        self.assertFalse(first.is_alive())
+        self.assertFalse(second.is_alive())
+        self.assertEqual(len(launches), 1)
+        self.assertIn("blocked", results)
+
     def test_portable_or_source_tree_never_offers_assisted_installation(self):
         self.uninstaller.unlink()
         coordinator = WindowsUpdateInstaller(
@@ -108,6 +150,27 @@ class WindowsUpdateTests(unittest.TestCase):
             system="Windows", frozen=True,
         )
         self.assertFalse(coordinator.supported())
+
+    def test_windows_access_denied_is_not_treated_as_a_stopped_parent(self):
+        import ctypes
+        kernel = SimpleNamespace(OpenProcess=MagicMock(return_value=0),
+                                 WaitForSingleObject=MagicMock(), CloseHandle=MagicMock())
+        with patch.object(ctypes, "WinDLL", return_value=kernel, create=True), \
+             patch.object(ctypes, "get_last_error", return_value=5, create=True), \
+             patch("botw_companion.windows_updates.os.name", "nt"):
+            self.assertFalse(_wait_for_parent(123))
+        kernel.WaitForSingleObject.assert_not_called()
+
+    def test_windows_relay_exiting_before_handoff_is_a_recoverable_error(self):
+        installer = WindowsUpdateInstaller(
+            data_root=self.root, application=self.application, helper=self.helper,
+            system="Windows", frozen=True,
+            popen=lambda *args, **kwargs: FakeProcess(returncode=2),
+        )
+        with self.assertRaisesRegex(WindowsUpdateError, "démarrer"):
+            installer.start(self.candidate(), parent_pid=1, port=8765)
+        self.assertEqual(installer.status()["status"], "failed")
+        self.assertTrue(installer.status()["can_retry"])
 
     def test_relay_copy_failure_is_recoverable_and_never_starts_a_process(self):
         launches = []
@@ -152,6 +215,7 @@ class WindowsUpdateTests(unittest.TestCase):
         self.assertIn("/NORESTART", command)
         self.assertIn("/NOFORCECLOSEAPPLICATIONS", command)
         self.assertIn("/ASSISTEDUPDATE=1", command)
+        self.assertIn(f"/DIR={self.application.parent.resolve()}", command)
         log_arguments = [argument for argument in command if argument.startswith("/LOG=")]
         self.assertEqual(log_arguments, [f"/LOG={Path(args.log).resolve()}"])
         self.assertNotIn('"', log_arguments[0])
@@ -217,9 +281,11 @@ class WindowsUpdateTests(unittest.TestCase):
              patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
              patch("botw_companion.windows_updates._prepare_installer_log",
                    side_effect=OSError("disk is read-only")), \
+             patch("botw_companion.windows_updates._launch_updated_application") as reopen, \
              patch("botw_companion.windows_updates.subprocess.run") as setup:
             self.assertEqual(run_relay(args), RELAY_LOG_PREPARATION_FAILED)
         setup.assert_not_called()
+        reopen.assert_called_once()
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "failed")
         self.assertTrue(state["can_retry"])
@@ -245,9 +311,11 @@ class WindowsUpdateTests(unittest.TestCase):
         self.installer.write_bytes(b"tampered setup")
         with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
              patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
+             patch("botw_companion.windows_updates._launch_updated_application") as reopen, \
              patch("botw_companion.windows_updates.subprocess.run") as setup:
             self.assertEqual(run_relay(args), 4)
         setup.assert_not_called()
+        reopen.assert_called_once()
         self.assertTrue(self.installer.exists())
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         self.assertEqual(state["status"], "failed")
@@ -314,8 +382,10 @@ class WindowsUpdateTests(unittest.TestCase):
         with patch("botw_companion.windows_updates.platform.system", return_value="Windows"), \
              patch("botw_companion.windows_updates._wait_for_parent", return_value=True), \
              patch("botw_companion.windows_updates.subprocess.run",
-                   side_effect=RuntimeError("native launch failed")):
+                   side_effect=RuntimeError("native launch failed")), \
+             patch("botw_companion.windows_updates._launch_updated_application") as reopen:
             self.assertEqual(run_relay(self.args()), 1)
+        reopen.assert_called_once()
         state = json.loads((self.root / INSTALL_STATE_NAME).read_text(encoding="utf-8"))
         diagnostic = Path(state["log_path"])
         self.assertEqual(state["status"], "failed")

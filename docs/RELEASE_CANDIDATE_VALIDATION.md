@@ -20,7 +20,7 @@ unchecked until it has been reproduced on the stated system.
 - [ ] Chromium, Firefox, and WebKit flows pass with axe-core, keyboard,
   responsive layout, 200% zoom, and reduced motion checks.
 - [ ] Windows x64 and macOS arm64 packages build and pass their self-tests.
-- [ ] Clean installation and upgrades from alpha 34 and the latest published alpha pass
+- [ ] Clean installation and upgrades from alpha 34 and the configured published baseline pass
   on both platforms while preserving user data.
 - [ ] Simulated updates cover offline, slow, interrupted, resumed, corrupted,
   wrong-digest, restart-failure, and rollback paths.

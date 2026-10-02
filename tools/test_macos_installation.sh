@@ -370,6 +370,51 @@ PY
     -X POST http://127.0.0.1:18770/api/shutdown >/dev/null
   /bin/sleep 1
 
+  # A corrupt image must fail before replacement and reopen the installed
+  # application. Matching local metadata cannot make an invalid DMG valid.
+  printf 'invalid disk image\n' >"$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True, "version": version, "filename": filename,
+    "size": int(size), "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  if BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" \
+      /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+        --test-mode --root "$UPDATE_ROOT" --dmg "$update_dmg" \
+        --metadata "$update_metadata" --version "$EXPECTED_DISPLAY" \
+        --runtime-version "$EXPECTED_PEP440" --short-version "$EXPECTED_MACOS_SHORT" \
+        --bundle-version "$EXPECTED_MACOS_BUNDLE" --digest "$update_digest" \
+        --size "$update_size" --parent-pid 0 --application "$UPGRADE_APPLICATION" \
+        --port 18771 --log "$UPDATE_ROOT/invalid-image.log" \
+        --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+        --owner-uid "$(/usr/bin/id -u)" --owner-gid "$(/usr/bin/id -g)"; then
+    echo "Une image disque invalide ne doit jamais être installée." >&2
+    exit 1
+  fi
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "failed" \
+    && "$(/usr/bin/plutil -extract rollback_performed raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "false" ]] || {
+    /bin/cat "$UPDATE_ROOT/invalid-image.log" >&2
+    echo "L'échec avant remplacement n'a pas été conservé." >&2
+    exit 1
+  }
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18771/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18771/api/shutdown >/dev/null
+  /bin/sleep 1
+
   # On macOS, uninstalling means removing the bundle from Applications.
   cmake -E remove_directory "$UPGRADE_APPLICATION"
   [[ ! -e "$UPGRADE_APPLICATION" ]] || { echo "Le bundle n'a pas été supprimé." >&2; exit 1; }

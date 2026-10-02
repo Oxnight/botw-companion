@@ -416,11 +416,16 @@ async function runDesktop(browser, baseUrl, browserName) {
   const bulkFilterBorders = await page.locator("#categories .filterHeading button").evaluateAll(buttons =>
     buttons.map(button => {
       const style = getComputedStyle(button);
-      return {width: parseFloat(style.borderTopWidth), style: style.borderTopStyle};
+      const rectangle = button.getBoundingClientRect();
+      return {width: parseFloat(style.borderTopWidth), style: style.borderTopStyle,
+        height: rectangle.height, buttonWidth: rectangle.width};
     }));
   assert(bulkFilterBorders.length === 2 && bulkFilterBorders.every(border =>
     border.width >= 1 && border.style === "solid"),
   `Les boutons Tout/Aucun n’ont pas de bordure visible : ${JSON.stringify(bulkFilterBorders)}`);
+  assert(bulkFilterBorders.every(border => border.height >= 24 && border.height <= 28 &&
+    border.buttonWidth > border.height),
+  `Les boutons Tout/Aucun doivent rester fins et accessibles : ${JSON.stringify(bulkFilterBorders)}`);
   await page.locator("#updateBanner").waitFor({state: "visible"});
   const downloadUpdate = page.locator("#downloadUpdate");
   assert(await downloadUpdate.getAttribute("href") === null,

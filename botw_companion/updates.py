@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from http.client import HTTPException
 import re
 from threading import RLock
 import time
@@ -161,7 +162,7 @@ class UpdateChecker:
                 reason="remote_error",
                 retryable=exc.code in RETRYABLE_HTTP_STATUSES,
             ) from exc
-        except (URLError, TimeoutError, OSError, CertificateBundleError) as exc:
+        except (URLError, TimeoutError, OSError, HTTPException, CertificateBundleError) as exc:
             raise self._network_error(exc) from exc
         if len(raw) > MAX_RESPONSE_BYTES:
             raise UpdateCheckError("Réponse GitHub trop volumineuse")

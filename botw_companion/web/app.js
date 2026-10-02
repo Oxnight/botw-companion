@@ -54,6 +54,7 @@ let syncTimer = null, syncPaused = false, syncInterval = Math.max(5, Number(loca
 let heartbeatTimer = null;
 let dsuTimer = null, dsuBusy = false;
 let updateDownloadTimer = null;
+let updatePrimaryBusy = false, updateInstallationPending = false;
 let availableUpdateVersion = null;
 let runtimePlatform = {
     label: "Système local",
@@ -127,6 +128,7 @@ function formatUpdateBytes(value) {
 }
 
 function renderUpdateDownload(state) {
+    if (updateInstallationPending) return;
     if (!state || typeof state.status !== "string") return;
     const active = ["checking", "downloading", "verifying"].includes(state.status);
     const progressVisible = state.status !== "inactive";
@@ -135,7 +137,7 @@ function renderUpdateDownload(state) {
     $("#updateProgressBar").value = progress;
     $("#cancelUpdateDownload").hidden = !state.can_cancel;
     $("#retryUpdateDownload").hidden = !state.can_retry;
-    $("#downloadUpdate").disabled = active ||
+    $("#downloadUpdate").disabled = active || updatePrimaryBusy || updateInstallationPending ||
         (state.status === "ready_to_install" && !state.can_install);
     if (state.status === "ready_to_install") {
         $("#downloadUpdate").textContent = state.can_install
@@ -207,11 +209,13 @@ async function installVerifiedUpdate() {
           "puis la redémarrera. macOS peut demander ton autorisation."
         : "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
           "Windows ne sera pas redémarré.";
-    if (!confirm(
+    if (updateInstallationPending || !confirm(
         "Installer cette mise à jour maintenant ?\n\n" +
         "BOTW Companion et JoyConDSU vont s’arrêter proprement. " +
         platformMessage
-    )) return;
+    )) return false;
+    updateInstallationPending = true;
+    clearTimeout(updateDownloadTimer);
     const button = $("#downloadUpdate");
     button.disabled = true;
     button.textContent = "Préparation de l’installation…";
@@ -221,14 +225,20 @@ async function installVerifiedUpdate() {
         if (!response.ok) throw Error(state.erreur || "service indisponible");
         $("#updateProgressText").textContent =
             state.message || "Arrêt sécurisé avant l’installation…";
+        return true;
     } catch (error) {
+        updateInstallationPending = false;
         button.disabled = false;
         button.textContent = "Installer et redémarrer";
         toast(error.message || "L’installation ne peut pas démarrer", true);
+        return false;
     }
 }
 
 async function handleUpdatePrimaryAction() {
+    if (updatePrimaryBusy || updateInstallationPending) return;
+    updatePrimaryBusy = true;
+    $("#downloadUpdate").disabled = true;
     try {
         const response = await fetch("/api/update/download");
         if (!response.ok) throw Error("service indisponible");
@@ -240,6 +250,9 @@ async function handleUpdatePrimaryAction() {
         await startUpdateDownload();
     } catch (_error) {
         toast("La mise à jour ne peut pas démarrer pour le moment", true);
+    } finally {
+        updatePrimaryBusy = false;
+        if (!updateInstallationPending) await refreshUpdateDownload();
     }
 }
 

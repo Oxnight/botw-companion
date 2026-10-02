@@ -1,13 +1,17 @@
 ## Release candidate
 
-RC 6 keeps the guided-tour category filters on the left, with their explanation
-on the right when there is enough room. The All and None filter actions now
-have a subtle border so they are easier to find.
+RC 7 improves update handoffs on Windows and macOS. Repeated clicks cannot
+start multiple installers, interrupted HTTP responses can be retried, and
+download cleanup preserves installation diagnostics.
 
-The macOS launcher no longer mistakes recently closed HTTP connections for an
-unrelated application occupying the local port. Relaunch can reuse that port
-without waiting for the TCP cooldown, and the launchers briefly wait for an
-instance already finishing shutdown. An unrelated listener is never stopped.
+Windows assisted updates target the existing application folder. The macOS
+relay reopens the installed application after an error before replacement,
+stops the new instance before restoring a backup, and keeps that backup if
+shutdown cannot be confirmed. Elevated replacement returns to the user's
+session for relaunch.
+
+The update panel keeps its existing appearance. The All and None filter
+actions are lower and slightly wider.
 
 No save-analysis, completion, map, guide, tracking, or JoyConDSU result has
 changed in this release candidate.

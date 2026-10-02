@@ -5,7 +5,7 @@ import tempfile
 import threading
 import unittest
 from unittest.mock import patch
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request
 
 from botw_companion import __version__
@@ -411,6 +411,31 @@ class ServerLifecycleIntegrationTests(unittest.TestCase):
         self.assertTrue(dsu.stopped)
         self.assertEqual(len(installer.calls), 1)
         self.assertEqual(installer.calls[0][2], port)
+
+    def test_install_handoff_rejects_duplicate_install_and_cache_mutation(self):
+        downloads = ReadyUpdateDownloadManager()
+        installer = FakeUpdateInstaller()
+        with patch("botw_companion.server.threading.Timer"), self.running_server(
+            lambda: {}, instance_guard=FakeInstanceGuard(),
+            update_download_manager=downloads, update_installer=installer,
+        ) as (_thread, port):
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/install", data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN}, method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 202)
+            for endpoint in ("/api/update/install", "/api/update/download/start",
+                             "/api/update/download/retry"):
+                with self.assertRaises(HTTPError) as rejected:
+                    open_loopback(Request(
+                        f"http://127.0.0.1:{port}{endpoint}", data=b"",
+                        headers={"X-BOTW-Session-Token": self.SESSION_TOKEN}, method="POST",
+                    ), timeout=1)
+                self.assertEqual(rejected.exception.code, 409)
+                rejected.exception.close()
+        self.assertEqual(len(installer.calls), 1)
+        self.assertNotIn("start", downloads.actions)
+        self.assertNotIn("retry", downloads.actions)
 
     def test_selected_save_caption_is_served_as_a_private_jpeg(self):
         with tempfile.TemporaryDirectory() as directory:

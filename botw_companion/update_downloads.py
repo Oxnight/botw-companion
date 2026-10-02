@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+from http.client import HTTPException
 import json
 import os
 from pathlib import Path
@@ -383,7 +384,7 @@ class UpdateDownloadManager:
                 raise UpdateDownloadError(
                     "La connexion sécurisée ne peut pas être vérifiée. Réinstalle BOTW Companion."
                 ) from exc
-            except (URLError, TimeoutError, OSError) as exc:
+            except (URLError, TimeoutError, OSError, HTTPException) as exc:
                 last_error = exc
             if attempt + 1 >= self.max_attempts:
                 break
@@ -453,7 +454,9 @@ class UpdateDownloadManager:
             if status == 206:
                 content_range = _header(response, "Content-Range")
                 match = CONTENT_RANGE_PATTERN.fullmatch(content_range or "")
-                if match is None or int(match.group(1)) != offset or int(match.group(3)) != target.size:
+                if (match is None or int(match.group(1)) != offset
+                        or int(match.group(2)) != target.size - 1
+                        or int(match.group(3)) != target.size):
                     raise UpdateDownloadError("Réponse de reprise incohérente")
             elif offset:
                 append = False
@@ -552,6 +555,20 @@ class UpdateDownloadManager:
             f"{target.filename}.metadata.json",
         }
         for path in self.root.iterdir():
+            # Installation states and diagnostics share this directory. Only
+            # obsolete release assets belong to download-cache cleanup.
+            asset_name = re.fullmatch(
+                r"(BOTW_Companion_(.+)_(?:Setup\.exe|macOS_arm64\.dmg))"
+                r"(?:\.part|\.metadata\.json)?", path.name,
+            )
+            if asset_name is None:
+                continue
+            try:
+                version = ReleaseVersion.parse(asset_name.group(2))
+            except ValueError:
+                continue
+            if asset_name.group(1) not in {version.installer_name, version.dmg_name}:
+                continue
             if path.is_file() and path.name not in allowed:
                 path.unlink(missing_ok=True)
 

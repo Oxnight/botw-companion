@@ -111,6 +111,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
     update_checker = update_checker or UpdateChecker()
     update_download_manager = update_download_manager or UpdateDownloadManager(update_checker)
     update_installer = update_installer or default_update_installer()
+    update_install_lock = threading.Lock()
+    update_install_scheduled = threading.Event()
     session_token = session_token or secrets.token_urlsafe(32)
     if not isinstance(session_token, str) or not session_token:
         raise ValueError("Le jeton de session local ne peut pas être vide")
@@ -134,9 +136,16 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
         installation = update_installer.status()
         state["can_install"] = bool(
             state.get("ready_to_install") and installation.get("supported")
+            and not update_install_scheduled.is_set()
         )
         state["installation"] = installation
         return state
+
+    def finish_update_handoff() -> None:
+        try:
+            dsu_manager.stop()
+        finally:
+            request_server_shutdown("mise_a_jour")
 
     class Handler(BaseHTTPRequestHandler):
         def end_headers(self) -> None:
@@ -294,6 +303,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     "application": APPLICATION_NAME,
                     "api_schema_version": 1,
                     "version": __version__,
+                    "process_id": os.getpid(),
                     "session_token": session_token,
                     "platform": platform_metadata(),
                     "emulators": {
@@ -419,32 +429,38 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             if path == "/api/heartbeat":
                 self._json_response(200, lifecycle.heartbeat())
                 return
-            if path == "/api/update/download/start":
-                update_download_manager.start()
-                self._json_response(202, update_download_status())
-                return
-            if path == "/api/update/download/retry":
-                update_download_manager.retry()
-                self._json_response(202, update_download_status())
-                return
-            if path == "/api/update/download/cancel":
-                update_download_manager.cancel()
-                self._json_response(200, update_download_status())
+            if path in {"/api/update/download/start", "/api/update/download/retry",
+                        "/api/update/download/cancel"}:
+                with update_install_lock:
+                    if update_install_scheduled.is_set():
+                        self._json_response(409, {"erreur": "Une installation est déjà en cours"})
+                        return
+                    action = path.rsplit("/", 1)[1]
+                    getattr(update_download_manager, action)()
+                    self._json_response(200 if action == "cancel" else 202, update_download_status())
                 return
             if path == "/api/update/install":
+                with update_install_lock:
+                    if update_install_scheduled.is_set():
+                        self._json_response(409, {"erreur": "Une installation est déjà en cours"})
+                        return
+                    try:
+                        candidate = update_download_manager.installation_candidate()
+                        result = update_installer.start(
+                            candidate,
+                            parent_pid=os.getpid(),
+                            port=int(self.server.server_port),
+                        )
+                    except (UpdateDownloadError, *INSTALLATION_ERRORS, OSError, ValueError) as exc:
+                        self._json_response(409, {"erreur": str(exc)})
+                        return
+                    update_install_scheduled.set()
                 try:
-                    candidate = update_download_manager.installation_candidate()
-                    result = update_installer.start(
-                        candidate,
-                        parent_pid=os.getpid(),
-                        port=int(self.server.server_port),
-                    )
-                except (UpdateDownloadError, *INSTALLATION_ERRORS, OSError, ValueError) as exc:
-                    self._json_response(409, {"erreur": str(exc)})
-                    return
-                dsu_manager.stop()
-                self._json_response(202, result)
-                threading.Timer(0.2, lambda: request_server_shutdown("mise_a_jour")).start()
+                    self._json_response(202, result)
+                finally:
+                    # Once the detached relay owns the handoff, a closed tab
+                    # must not leave it waiting for this server indefinitely.
+                    threading.Timer(0.2, finish_update_handoff).start()
                 return
             if path == "/api/shutdown":
                 update_download_manager.cancel()

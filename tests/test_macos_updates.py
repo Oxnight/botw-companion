@@ -3,6 +3,8 @@ import os
 import plistlib
 from pathlib import Path
 import tempfile
+import threading
+from dataclasses import replace
 import unittest
 
 from botw_companion.macos_updates import (
@@ -111,6 +113,57 @@ class MacOSUpdateTests(unittest.TestCase):
         self.assertFalse(self.installer(machine="x86_64").supported())
         self.assertFalse(self.installer(system="Windows").supported())
         self.assertFalse(self.installer(frozen=False).supported())
+
+    def test_concurrent_requests_cannot_launch_two_macos_relays(self):
+        entered, release = threading.Event(), threading.Event()
+        calls, blocked = [], []
+
+        def popen(*args, **kwargs):
+            calls.append(True)
+            entered.set()
+            if not release.wait(3):
+                raise OSError("test relay did not release")
+            return FakeProcess()
+
+        installer = self.installer(popen=popen)
+
+        def start():
+            try:
+                installer.start(self.candidate(), parent_pid=1, port=8765)
+            except MacOSUpdateError:
+                blocked.append(True)
+
+        first, second = threading.Thread(target=start), threading.Thread(target=start)
+        first.start()
+        try:
+            self.assertTrue(entered.wait(3))
+            second.start()
+        finally:
+            release.set()
+            first.join(3)
+            if second.ident is not None:
+                second.join(3)
+        self.assertFalse(first.is_alive())
+        self.assertFalse(second.is_alive())
+        self.assertEqual(calls, [True])
+        self.assertEqual(blocked, [True])
+
+    def test_metadata_must_be_the_verified_dmgs_adjacent_file(self):
+        other = self.root / "other.metadata.json"
+        other.write_bytes(self.metadata.read_bytes())
+        with self.assertRaisesRegex(MacOSUpdateError, "sécurité"):
+            self.installer().start(replace(self.candidate(), metadata=other), parent_pid=1, port=8765)
+
+    def test_relay_exiting_before_handoff_does_not_schedule_shutdown(self):
+        class ExitedProcess:
+            def poll(self):
+                return 2
+
+        installer = self.installer(popen=lambda *args, **kwargs: ExitedProcess())
+        with self.assertRaisesRegex(MacOSUpdateError, "démarrer"):
+            installer.start(self.candidate(), parent_pid=1, port=8765)
+        self.assertEqual(installer.status()["status"], "failed")
+        self.assertTrue(installer.status()["can_retry"])
 
     def test_tampering_after_download_blocks_the_relay(self):
         self.dmg.write_bytes(b"tampered")

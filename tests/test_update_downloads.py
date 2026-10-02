@@ -1,4 +1,5 @@
 import hashlib
+from http.client import IncompleteRead
 import json
 from pathlib import Path
 import shutil
@@ -438,6 +439,54 @@ class UpdateDownloadManagerTests(unittest.TestCase):
                 manager.start()
                 self.assertEqual(self.wait(manager, {"failed", "interrupted"})["status"], "failed")
                 self.assertFalse((case_root / candidate(content)["filename"]).exists())
+
+    def test_download_cleanup_preserves_installation_states_and_unrelated_files(self):
+        content = b"new package"
+        preserved = ["installation.json", "installation-macos.plist", "personal.json"]
+        for name in preserved:
+            (self.root / name).write_bytes(b"keep")
+        obsolete = candidate(content, version="0.40.0-alpha." + "38")["filename"]
+        for suffix in ("", ".part", ".metadata.json"):
+            (self.root / (obsolete + suffix)).write_bytes(b"obsolete")
+        manager, _ = self.manager(content, lambda *args, **kwargs: FakeResponse(content))
+        manager.start()
+        self.assertEqual(self.wait(manager, {"ready_to_install", "failed"})["status"], "ready_to_install")
+        for name in preserved:
+            self.assertEqual((self.root / name).read_bytes(), b"keep")
+        self.assertFalse(any(path.name.startswith(obsolete) for path in self.root.iterdir()))
+
+    def test_invalid_end_of_resumed_range_is_rejected_before_appending(self):
+        content = b"resumed package"
+        target = DownloadTarget.from_check(candidate(content))
+        part = self.root / f"{target.filename}.part"
+        part.write_bytes(content[:4])
+        (self.root / f"{target.filename}.metadata.json").write_text(
+            json.dumps(target.metadata(etag='"v1"')), encoding="utf-8",
+        )
+        manager, _ = self.manager(content, lambda *args, **kwargs: FakeResponse(
+            content[4:], status=206,
+            headers={"Content-Range": f"bytes 4-3/{len(content)}"},
+        ))
+        manager.start()
+        self.assertEqual(self.wait(manager, {"ready_to_install", "failed"})["status"], "failed")
+        self.assertEqual(part.read_bytes(), content[:4])
+
+    def test_http_protocol_interruption_retries_and_verifies_the_package(self):
+        content = b"retry interrupted HTTP read"
+        calls = []
+
+        class BrokenProtocolResponse(FakeResponse):
+            def read(self, size=-1):
+                raise IncompleteRead(b"", len(content))
+
+        def opener(*args, **kwargs):
+            calls.append(True)
+            return BrokenProtocolResponse(content) if len(calls) == 1 else FakeResponse(content)
+
+        manager, _ = self.manager(content, opener)
+        manager.start()
+        self.assertEqual(self.wait(manager, {"ready_to_install", "failed"})["status"], "ready_to_install")
+        self.assertEqual(len(calls), 2)
 
 
 if __name__ == "__main__":

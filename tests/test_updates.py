@@ -1,4 +1,5 @@
 import json
+from http.client import IncompleteRead
 import unittest
 from urllib.error import HTTPError, URLError
 
@@ -47,6 +48,18 @@ def release(version, *, prerelease=True, draft=False, asset_platform="windows"):
 
 
 class UpdateCheckerTests(unittest.TestCase):
+    def test_truncated_github_response_is_retried_without_breaking_offline_operation(self):
+        calls = []
+
+        def opener(*args, **kwargs):
+            calls.append(True)
+            raise IncompleteRead(b"[", 100)
+
+        checker = UpdateChecker(system="Windows", opener=opener, sleeper=lambda seconds: None)
+        result = checker.check(force=True)
+        self.assertEqual(result["status"], "unavailable")
+        self.assertEqual(len(calls), 2)
+
     def checker(self, releases, **kwargs):
         calls = []
 

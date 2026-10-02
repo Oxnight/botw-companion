@@ -6,6 +6,22 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.7] - 2026-10-02
+
+### Fixed
+
+- Make the All and None filter actions lower and slightly wider.
+- Serialize installation handoffs and prevent duplicate clicks or downloads
+  from changing the package after a relay has been launched.
+- Retry interrupted HTTP responses and validate the complete resumed byte range.
+- Preserve installation states and unrelated files when cleaning download caches.
+- Keep Windows assisted updates in the existing installation directory and
+  reopen the application after unexpected relay errors.
+- Reopen the existing macOS application after failures before replacement;
+  stop the new instance before rollback and preserve its backup if shutdown
+  cannot be confirmed.
+- Keep macOS relaunch in the user's GUI session and drop elevated credentials.
+
 ## [1.0.0-rc.6] - 2026-10-02
 
 ### Fixed

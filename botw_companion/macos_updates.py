@@ -13,6 +13,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import uuid
 
@@ -105,6 +106,7 @@ class MacOSUpdateInstaller:
         self.owner_gid = owner_gid
         self.popen = popen
         self._process = None
+        self._start_lock = threading.Lock()
 
     @property
     def state_path(self) -> Path:
@@ -154,6 +156,10 @@ class MacOSUpdateInstaller:
         os.replace(temporary, self.state_path)
 
     def start(self, candidate: UpdateInstallCandidate, *, parent_pid: int, port: int) -> dict:
+        with self._start_lock:
+            return self._start(candidate, parent_pid=parent_pid, port=port)
+
+    def _start(self, candidate: UpdateInstallCandidate, *, parent_pid: int, port: int) -> dict:
         if not self.supported() or self.application is None:
             raise MacOSUpdateError(
                 "L’installation assistée est disponible uniquement dans l’application macOS Apple Silicon."
@@ -179,6 +185,11 @@ class MacOSUpdateInstaller:
             )
             or not _inside_root(candidate.installer, self.root)
             or not _inside_root(candidate.metadata, self.root)
+            or candidate.installer.is_symlink()
+            or candidate.metadata.is_symlink()
+            or candidate.metadata.resolve() != candidate.installer.resolve().with_name(
+                f"{candidate.installer.name}.metadata.json"
+            )
             or not DIGEST_PATTERN.fullmatch(candidate.digest)
             or not candidate.installer.is_file()
             or candidate.installer.stat().st_size != candidate.size
@@ -256,6 +267,8 @@ class MacOSUpdateInstaller:
                     "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
                 },
             )
+            if self._process.poll() is not None:
+                raise OSError("The macOS relay exited before the handoff")
         except OSError as exc:
             self._write_failed_state(
                 candidate,
