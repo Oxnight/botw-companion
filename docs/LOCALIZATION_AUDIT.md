@@ -83,6 +83,11 @@ content retain their original language. Exports retain the original data.
 
 The tests above are evidence for the checked corpus and scenarios, not a
 linguistic certification of every future sentence or every runtime input.
+The supplied Windows/macOS workflow logs confirm all 423 Python tests and
+localization checks passed on both platforms. Browser checks then failed on
+WebKit native select style reporting and the Windows language/reload sequence.
+The browser harness now waits for each language document to initialize, uses
+portable stylesheet readiness probes, and records readiness failure snapshots.
 Native Windows/macOS installer and updater jobs, Edge, and WebKit remain to be
 confirmed by the release workflow. WebKit could not be run locally because
 the execution host lacked its required system libraries. External sites and

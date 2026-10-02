@@ -30,6 +30,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   enemy, weapon, and ability terminology.
 - Correct Jitato/Jiahto and Poréa/Torfeau in Zora quest instructions.
 - Translate rare payload and save diagnostics; audit 158 raised messages.
+- Wait for the new language document to initialize before testing persistence.
+- Use themed labels and the search input for stylesheet readiness across native
+  select implementations; preserve readiness screenshots and document state.
 - Preserve literal file paths in translated diagnostics.
 - Localize generated export download filenames without changing personal data.
 - Keep language presentation separate from save analysis, protocol identifiers,

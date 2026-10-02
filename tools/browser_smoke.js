@@ -365,7 +365,10 @@ async function waitForVisualStyle(page) {
       if (!rootStyle.getPropertyValue("--text").trim() ||
           !rootStyle.getPropertyValue("--gold").trim()) return false;
       const themedLabels = [".dsuTitle > small", "#dsuEngineLabel", ".dsuSourceLabel"];
-      const controls = ["#search", "#status", "#dlc"];
+      // Native select metrics/colors vary by OS and WebKit viewport. The
+      // styled text input and themed labels prove that toolbar/theme rules
+      // are applied without treating native select painting as a load signal.
+      const controls = ["#search"];
       return themedLabels.every(selector => {
         const element = document.querySelector(selector);
         return element && getComputedStyle(element).color !== "rgb(0, 0, 0)";
@@ -401,14 +404,46 @@ async function waitForVisualStyle(page) {
   }));
 }
 
+async function waitForApplicationReady(page) {
+  try {
+    await page.waitForFunction(() =>
+      document.querySelector("#runtimePlatform") &&
+      !["CHARGEMENT…", "LOADING…"].includes(document.querySelector("#runtimePlatform").textContent) &&
+      document.querySelectorAll("#categories [data-filter-type]").length > 0,
+    null, {timeout: 45000});
+    await waitForVisualStyle(page);
+  } catch (error) {
+    const state = await page.evaluate(() => ({
+      url: location.origin + location.pathname + location.search,
+      readyState: document.readyState,
+      language: document.documentElement.lang,
+      selectedLanguage: document.querySelector("#languageSelect")?.value,
+      runtime: document.querySelector("#runtimePlatform")?.textContent,
+      categories: document.querySelectorAll("#categories [data-filter-type]").length,
+      scripts: Array.from(document.scripts, script => new URL(script.src || location.href).pathname)
+    })).catch(() => ({url: page.url(), documentReplaced: true}));
+    const engine = page.context().browser()?.browserType().name() || "browser";
+    await saveDiagnosticScreenshot(page, engine, "application-not-ready");
+    throw new Error(`Application readiness failed at ${currentStage}: ${JSON.stringify(state)}; ${String(error)}`);
+  }
+}
+
 async function waitForApplication(page, browserName) {
   await navigateToApplication(page, browserName);
-  await page.waitForFunction(() =>
-    document.querySelector("#runtimePlatform") &&
-    !["CHARGEMENT…", "LOADING…"].includes(document.querySelector("#runtimePlatform").textContent) &&
-    document.querySelectorAll("#categories [data-filter-type]").length > 0,
-  null, {timeout: 45000});
-  await waitForVisualStyle(page);
+  await waitForApplicationReady(page);
+}
+
+async function changeLanguage(page, language) {
+  // URL commitment alone precedes parsing and application startup. Finish
+  // the new document before starting another navigation or using its controls.
+  await Promise.all([
+    page.waitForURL(url => url.searchParams.get("lang") === language, {waitUntil: "commit"}),
+    page.locator("#languageSelect").selectOption(language)
+  ]);
+  await page.waitForFunction(expected => document.documentElement.lang === expected
+    && document.querySelector("#languageSelect")?.value === expected,
+  language);
+  await waitForApplicationReady(page);
 }
 
 async function runDesktop(browser, baseUrl, browserName) {
@@ -936,6 +971,23 @@ async function runBilingual(browser, baseUrl, browserName) {
   await waitForApplication(page, browserName);
   assert(await page.locator("html").getAttribute("lang") === "en", "English document expected");
   assert((await page.locator("#openHelp").textContent()).trim() === "Help", "Help is not translated");
+  // Reproduce the valid native select values reported by macOS WebKit. They
+  // must not block stylesheet readiness while themed custom controls are ready.
+  const nativeStyles = await page.evaluate(() => ["#status", "#dlc"].map(selector => {
+    const element = document.querySelector(selector), previous = element.getAttribute("style");
+    element.style.color = "rgb(0, 0, 0)";
+    element.style.paddingTop = "0px";
+    element.style.height = "22px";
+    return {selector, previous};
+  }));
+  try {
+    await waitForVisualStyle(page);
+  } finally {
+    await page.evaluate(saved => saved.forEach(({selector, previous}) => {
+      const element = document.querySelector(selector);
+      previous === null ? element.removeAttribute("style") : element.setAttribute("style", previous);
+    }), nativeStyles);
+  }
   const catalog = await fetchJson(page, "/api/catalog");
   assert(catalog.ok && catalog.body.elements.some(x => x.name === "Tah Muhl Shrine"), "Official English shrine name missing");
   const detail = await fetchJson(page, "/api/detail/sanctuaires%3ADungeon000");
@@ -996,13 +1048,18 @@ async function runBilingual(browser, baseUrl, browserName) {
   await page.locator("#toggleRoute").click();
   await assertAccessible(page, "English main page");
   progress(browserName, "languages:French-English-persistence");
-  await page.locator("#languageSelect").selectOption("fr");
-  await page.waitForFunction(() => document.documentElement.lang === "fr" && document.querySelector("#openHelp")?.textContent.trim() === "Aide");
-  await page.waitForFunction(() => document.querySelectorAll("#categories [data-filter-type]").length > 0);
-  await page.locator("#languageSelect").selectOption("en");
-  await page.waitForFunction(() => document.documentElement.lang === "en" && document.querySelector("#openHelp")?.textContent.trim() === "Help");
+  await changeLanguage(page, "fr");
+  assert((await page.locator("#openHelp").textContent()).trim() === "Aide", "French document expected");
+  await changeLanguage(page, "en");
+  assert((await page.locator("#openHelp").textContent()).trim() === "Help", "English document expected");
+  // Exercise remembered selection with a slow language bootstrap resource.
+  await page.route("**/language.js", async route => {
+    await new Promise(resolve => setTimeout(resolve, 600));
+    await route.continue();
+  });
   page.baseUrl = baseUrl;
   await waitForApplication(page, browserName);
+  await page.unroute("**/language.js");
   assert(await page.locator("html").getAttribute("lang") === "en", "Language was not remembered");
   await page.setViewportSize({width: 390, height: 844});
   await page.locator("#openHelp").click();
