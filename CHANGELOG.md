@@ -6,6 +6,35 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.0-rc.8] - 2026-10-02
+
+### Added
+
+- Switch between French and English throughout the offline interface, help,
+  guided tour, map details, completion guides, and update messages.
+- Remember the selected language across application restarts.
+- Resolve English game terminology through stable identifiers and official
+  names, including shrine trials, equipment variants, characters, and DLC.
+- Check generated English assets during release validation and exercise both
+  languages in browser and server tests.
+- Audit complete conditional templates, accessible labels, stable HTML
+  attributes, and API paths during release validation.
+
+### Changed
+
+- Translate whole UI phrases before applying English plural rules, preserving
+  technical attributes and template expressions.
+- Correct Guardian weapon and shield variants, terminology inside guides,
+  and the quest characters Della/Bedoli and Onag/Prima.
+- Correct Trial of the Sword strategies and room summaries, including official
+  enemy, weapon, and ability terminology.
+- Correct Jitato/Jiahto and Poréa/Torfeau in Zora quest instructions.
+- Translate rare payload and save diagnostics; audit 158 raised messages.
+- Preserve literal file paths in translated diagnostics.
+- Localize generated export download filenames without changing personal data.
+- Keep language presentation separate from save analysis, protocol identifiers,
+  personal notes, routes, and backup contents.
+
 ## [1.0.0-rc.7] - 2026-10-02
 
 ### Fixed

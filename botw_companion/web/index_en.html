@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -14,9 +14,9 @@
 </head>
 
 <body>
-    <a class="skipLink" href="#mainContent">Aller au contenu principal</a>
+    <a class="skipLink" href="#mainContent">Skip to main content</a>
 
-    <aside aria-label="Navigation des catégories">
+    <aside aria-label="Navigation of categories">
         <div class="brand">
             <span class="triforce">▲</span>
 
@@ -28,25 +28,25 @@
 
         <nav id="categories"></nav>
 
-        <div class="legend" aria-label="Légende des états">
+        <div class="legend" aria-label="Legend of the States">
             <p>
                 <i class="dot todo"></i>
-                À faire
+                To do
             </p>
 
             <p>
                 <i class="dot doing"></i>
-                En cours
+                In progress
             </p>
 
             <p>
                 <i class="dot done"></i>
-                Terminé
+                Completed
             </p>
 
             <p>
                 <i class="dot info"></i>
-                Informatif
+                Informational
             </p>
         </div>
     </aside>
@@ -54,12 +54,12 @@
     <main id="mainContent" tabindex="-1">
         <header>
             <div>
-                <p class="eyebrow">SAUVEGARDE <span id="runtimeEmulator">ÉMULATEUR</span> • <span id="runtimePlatform">CHARGEMENT…</span></p>
+                <p class="eyebrow">SAVE <span id="runtimeEmulator">EMULATOR</span> • <span id="runtimePlatform">LOADING…</span></p>
 
-                <h1>Progression vers le 100 %</h1>
+                <h1>Progress towards 100%</h1>
 
                 <p id="saveInfo">
-                    Chargement de la dernière sauvegarde…
+                    Loading the latest save...
                 </p>
 
                 <figure
@@ -80,18 +80,18 @@
                     </div>
 
                     <figcaption>
-                        <small>SLOT ANALYSÉ</small>
+                        <small>SLOT ANALYSIS</small>
 
                         <strong id="saveSlotTitle">
-                            Sélection en cours…
+                            Selection in progress...
                         </strong>
 
                         <span id="saveSlotDate">
-                            Date inconnue
+                            Date Unknown
                         </span>
 
                         <span id="saveSlotSource">
-                            Émulateur local
+                            Local Emulator
                         </span>
                     </figcaption>
                 </figure>
@@ -114,24 +114,24 @@
                 <div class="dsuMain">
                     <div class="dsuSource">
                         <label class="dsuSourceLabel" for="dsuSource">
-                            Source du gyroscope
+                            Source of the gyroscope
                         </label>
 
-                        <select id="dsuSource" aria-label="Source du gyroscope">
-                            <option value="">Détection des manettes…</option>
+                        <select id="dsuSource" aria-label="Source of the gyroscope">
+                            <option value="">Detection of the controllers...</option>
                         </select>
                     </div>
 
                     <button id="toggleDsu" type="button">
-                        Activer
+                        Enable
                     </button>
                 </div>
 
                 <div class="dsuStatusBlock">
-                    <b id="dsuStatus">Désactivé</b>
+                    <b id="dsuStatus">Disabled</b>
 
                     <span id="dsuMessage">
-                        Serveur local arrêté.
+                        Local server stopped.
                     </span>
 
                     <span id="dsuCapabilities"></span>
@@ -139,55 +139,55 @@
 
                 <details id="dsuDiagnostic" class="dsuDiagnostic">
                     <summary>
-                        <span>QUALITÉ DU SIGNAL</span>
+                        <span>QUALITY OF SIGNAL</span>
 
-                        <b id="dsuQuality" class="quality-inactive">Diagnostic inactif</b>
+                        <b id="dsuQuality" class="quality-inactive">Diagnostic inactive</b>
                     </summary>
 
                     <p id="dsuQualitySummary">
-                        Active le gyroscope pour mesurer la qualité du signal.
+                        Activate the gyroscope to measure signal quality.
                     </p>
 
-                    <div class="dsuMetrics" aria-label="Mesures de qualité du gyroscope">
-                        <span>Fréquence reçue <b id="dsuReceivedRate">-</b></span>
-                        <span>Fréquence envoyée <b id="dsuSentRate">-</b></span>
-                        <span>Âge de l’échantillon <b id="dsuSampleAge">-</b></span>
-                        <span>Jitter reçu <b id="dsuReceivedJitter">-</b></span>
-                        <span>Jitter envoyé <b id="dsuSentJitter">-</b></span>
-                        <span>Timestamps anormaux <b id="dsuTimestampErrors">-</b></span>
-                        <span>Paquets envoyés <b id="dsuSentPackets">-</b></span>
-                        <span>Erreurs réseau <b id="dsuNetworkErrors">-</b></span>
-                        <span>Déconnexions / reconnexions <b id="dsuReconnects">-</b></span>
-                        <span>Calibrations valides / refusées <b id="dsuCalibrations">-</b></span>
+                    <div class="dsuMetrics" aria-label="Gyro quality measurements">
+                        <span>Frequency received <b id="dsuReceivedRate">-</b></span>
+                        <span>Frequency sent <b id="dsuSentRate">-</b></span>
+                        <span>Age of the sample <b id="dsuSampleAge">-</b></span>
+                        <span>Jitter <b id="dsuReceivedJitter">-</b></span>
+                        <span>Jitter sent <b id="dsuSentJitter">-</b></span>
+                        <span>Abnormal timestamps <b id="dsuTimestampErrors">-</b></span>
+                        <span>Packages sent <b id="dsuSentPackets">-</b></span>
+                        <span>Network Errors <b id="dsuNetworkErrors">-</b></span>
+                        <span>Disconnections / Reconnections <b id="dsuReconnects">-</b></span>
+                        <span>Valid/refused calibrations <b id="dsuCalibrations">-</b></span>
                     </div>
                 </details>
 
             </div>
         </header>
 
-        <section class="panel syncBar" aria-label="Synchronisation et application">
+        <section class="panel syncBar" aria-label="Synchronization and application">
             <div class="syncSaveArea">
                 <div class="syncState">
                     <i id="syncDot"></i>
 
                     <div>
                         <p class="metricLabel">
-                            SYNCHRONISATION RYUJINX
+                            RYUJINX SYNC
                         </p>
 
                         <h2 id="syncStatus">
-                            Première lecture en attente
+                            First Reading Pending
                         </h2>
 
                         <p id="syncTimes">
-                            Vérification de la sauvegarde…
+                            Checking the save...
                         </p>
                     </div>
                 </div>
 
-                <div class="syncControls" aria-label="Commandes de synchronisation">
+                <div class="syncControls" aria-label="Synchronization commands">
                     <label>
-                        Vérifier toutes les
+                        Check all
 
                         <select id="syncInterval">
                             <option value="5">5 s</option>
@@ -203,7 +203,7 @@
                     </button>
 
                     <button id="refresh">
-                        ↻ Lire maintenant
+                        ↻ Read now
                     </button>
                 </div>
             </div>
@@ -212,56 +212,56 @@
                 <p id="appActionsTitle" class="metricLabel">APPLICATION</p>
 
                 <label class="languageControl" for="languageSelect">
-                    <span>Langue</span>
-                    <select id="languageSelect"><option value="fr">Français</option><option value="en">English</option></select>
+                    <span>Language</span>
+                    <select id="languageSelect"><option value="fr">French</option><option value="en">English</option></select>
                 </label>
 
                 <div class="appActionButtons">
                     <button id="openHelp" type="button">
-                        Aide
+                        Help
                     </button>
 
                     <button id="checkUpdates" type="button">
-                        Mises à jour
+                        Updates
                     </button>
 
                     <button id="quitCompanion" class="dangerButton">
-                        Quitter
+                        Quit
                     </button>
                 </div>
             </div>
 
             <details class="syncHistory">
                 <summary>
-                    Historique récent
+                    Recent history
                 </summary>
 
                 <div id="syncEvents">
-                    <p>Aucun événement.</p>
+                    <p>No event.</p>
                 </div>
             </details>
         </section>
 
         <section id="updateBanner" class="panel updateBanner" aria-live="polite" hidden>
             <div>
-                <p class="metricLabel">MISE À JOUR DISPONIBLE</p>
-                <h2 id="updateTitle">Une nouvelle version est disponible</h2>
+                <p class="metricLabel">UPDATE AVAILABLE</p>
+                <h2 id="updateTitle">A new version is available</h2>
                 <p id="updateVersions"></p>
                 <div id="updateProgress" class="updateProgress" hidden>
                     <progress id="updateProgressBar" max="100" value="0"></progress>
-                    <p id="updateProgressText" role="status">Préparation du téléchargement…</p>
+                    <p id="updateProgressText" role="status">Preparing the download...</p>
                 </div>
             </div>
             <div class="updateActions">
                 <button id="downloadUpdate" class="primaryAction" type="button">
-                    Télécharger la mise à jour
+                    Download the update
                 </button>
-                <button id="cancelUpdateDownload" type="button" hidden>Annuler</button>
-                <button id="retryUpdateDownload" type="button" hidden>Réessayer</button>
+                <button id="cancelUpdateDownload" type="button" hidden>Cancel</button>
+                <button id="retryUpdateDownload" type="button" hidden>Try again</button>
                 <a id="updateReleaseNotes" href="#" target="_blank" rel="noopener noreferrer">
-                    Notes de version
+                    Release Notes
                 </a>
-                <button id="dismissUpdate" type="button">Plus tard</button>
+                <button id="dismissUpdate" type="button">Later</button>
             </div>
         </section>
 
@@ -341,11 +341,11 @@
                 <div class="bloodMoonHeading">
                     <div>
                         <p class="metricLabel">
-                            PROCHAINE LUNE DE SANG
+                            NEXT BLOOD MOON
                         </p>
 
                         <h2 id="bloodMoonCountdown">
-                            Lecture du compteur interne…
+                            Reading the internal counter...
                         </h2>
                     </div>
 
@@ -353,18 +353,18 @@
                         id="bloodMoonPhase"
                         class="bloodMoonPhase"
                     >
-                        Analyse…
+                        Analyzing…
                     </span>
                 </div>
 
                 <p id="bloodMoonStatus">
-                    Analyse de la dernière sauvegarde.
+                    Analysis of the last save.
                 </p>
 
                 <div class="bloodMoonTimeline">
                     <div>
                         <small>
-                            Seuil des 7 jours
+                            7-day threshold
                         </small>
 
                         <b id="bloodMoonThreshold">-</b>
@@ -372,7 +372,7 @@
 
                     <div>
                         <small>
-                            Programmation
+                            Schedule
                         </small>
 
                         <b id="bloodMoonScheduled">-</b>
@@ -380,7 +380,7 @@
 
                     <div class="bloodMoonFinal">
                         <small>
-                            Déclenchement
+                            Trigger
                         </small>
 
                         <b id="bloodMoonEvent">-</b>
@@ -397,7 +397,7 @@
 
             <div class="bloodMoonDetails">
                 <p id="bloodMoonMeasuredAt">
-                    Mesure de la dernière sauvegarde
+                    Measurement of the last save
                 </p>
 
                 <p id="bloodMoonInternal">-</p>
@@ -409,34 +409,34 @@
             <article class="metric officialMetric">
                 <div class="ring officialRing">
                     <span id="mapPercent">-</span>
-                    <small>carte BOTW</small>
+                    <small>BOTW map</small>
                 </div>
 
                 <div>
                     <p class="metricLabel">
-                        POURCENTAGE OFFICIEL DE LA CARTE
+                        OFFICIAL PERCENTAGE OF THE MAP
                     </p>
 
                     <h2 id="mapScore">
-                        Analyse en cours
+                        Ongoing analysis
                     </h2>
 
                     <p id="mapStatus"></p>
 
                     <label>
-                        Formule
+                        Formula
 
                         <select id="mapDlcMode">
                             <option value="automatique">
-                                Automatique
+                                Automatic
                             </option>
 
                             <option value="base">
-                                Jeu de base
+                                Base game
                             </option>
 
                             <option value="dlc">
-                                Jeu + DLC
+                                Base game + DLC
                             </option>
                         </select>
                     </label>
@@ -451,22 +451,22 @@
             <article class="metric companionMetric">
                 <div class="ring companionRing">
                     <span id="percent">-</span>
-                    <small>couverture</small>
+                    <small>Cover</small>
                 </div>
 
                 <div>
                     <p class="metricLabel">
-                        PROFIL DE COMPLÉTION
+                        COMPLETION PROFILE
                     </p>
 
                     <h2 id="score">
-                        Analyse en cours
+                        Ongoing analysis
                     </h2>
 
                     <p id="scoreNote"></p>
 
                     <label>
-                        Profil
+                        Profile
 
                         <select id="completionProfile"></select>
                     </label>
@@ -477,7 +477,7 @@
                     ></div>
 
                     <details id="completionBlockers" class="completionBlockers">
-                        <summary id="completionBlockerSummary">Éléments empêchant le 100 %</summary>
+                        <summary id="completionBlockerSummary">Elements that prevent 100%</summary>
                         <ul id="completionBlockerList"></ul>
                     </details>
                 </div>
@@ -487,15 +487,15 @@
         <section class="manualBar panel">
             <div>
                 <p class="metricLabel">
-                    SUIVI MANUEL LOCAL
+                    TRACKING MANUEL LOCAL
                 </p>
 
                 <h2 id="manualScore">
-                    Chargement…
+                    Loading…
                 </h2>
 
                 <p id="manualNote">
-                    Séparé de l’analyse automatique et du pourcentage officiel.
+                    Separated from the automatic analysis and the official percentage.
                 </p>
             </div>
 
@@ -505,15 +505,15 @@
                     aria-expanded="false"
                     aria-controls="manualReview"
                 >
-                    Voir les validations
+                    See the validations
                 </button>
 
                 <button id="exportManual">
-                    Exporter
+                    Export
                 </button>
 
                 <button id="importManual">
-                    Importer
+                    Import
                 </button>
 
                 <input
@@ -533,24 +533,24 @@
             <div class="manualReviewHeader">
                 <div>
                     <p class="metricLabel">
-                        CONTRÔLE DES CASES PERSONNELLES
+                        CONTROL OF PERSONAL CASES
                     </p>
 
                     <h2>
-                        Objectifs validés manuellement
+                        Manually validated objectives
                     </h2>
 
                     <p id="manualReviewSummary">
-                        Aucun objectif coché manuellement.
+                        No lens manually checked.
                     </p>
                 </div>
 
                 <button
                     id="closeManualReview"
                     type="button"
-                    aria-label="Fermer la liste des validations manuelles"
+                    aria-label="Close the list of manual validations"
                 >
-                    Fermer
+                    Close
                 </button>
             </div>
 
@@ -558,16 +558,16 @@
                 <input
                     id="manualReviewSearch"
                     type="search"
-                    aria-label="Rechercher dans les validations manuelles"
-                    placeholder="Rechercher un objectif, une note, une région…"
+                    aria-label="Search in manual validations"
+                    placeholder="Search for a goal, a note, a region..."
                 >
 
                 <select
                     id="manualReviewCategory"
-                    aria-label="Filtrer les validations manuelles par catégorie"
+                    aria-label="Filter manual validations by category"
                 >
                     <option value="all">
-                        Toutes les catégories
+                        All categories
                     </option>
                 </select>
             </div>
@@ -582,131 +582,131 @@
             <input
                 id="search"
                 type="search"
-                aria-label="Rechercher un objectif"
-                placeholder="Rechercher un sanctuaire, une quête, une région…"
+                aria-label="Search for a goal"
+                placeholder="Search for a shrine, a quest, a region..."
             >
 
-            <select id="status" aria-label="Filtrer par état de progression">
+            <select id="status" aria-label="Filter by progress status">
                 <option value="todo">
-                    À faire, en cours et infos
+                    To do, in progress and info
                 </option>
 
                 <option value="all">
-                    Tout afficher
+                    Show all
                 </option>
 
                 <option value="done">
-                    Terminés (tous)
+                    Completed (all)
                 </option>
 
                 <option value="automatic">
-                    Validés automatiquement
+                    Validated automatically
                 </option>
 
                 <option value="manual">
-                    Validés manuellement
+                    Validated manually
                 </option>
 
                 <option value="mixed">
-                    Validés automatiquement + manuellement
+                    Automatically validated + manually
                 </option>
 
                 <option value="info">
-                    Points informatifs
+                    Informational markers
                 </option>
             </select>
 
-            <select id="dlc" aria-label="Filtrer par contenu additionnel">
+            <select id="dlc" aria-label="Filter by Additional Content">
                 <option value="all">
-                    Tous les contenus
+                    All contents
                 </option>
 
                 <option value="base">
-                    Jeu de base
+                    Base game
                 </option>
 
                 <option value="expansion">
-                    Expansion Pass complet
+                    Expansion Pass Complete
                 </option>
 
                 <option value="expansion_bonus">
-                    Bonus Expansion Pass
+                    Expansion Pass bonus
                 </option>
 
                 <option value="master_trials">
-                    DLC 1 - Les épreuves légendaires
+                    DLC 1 - The Master Trials
                 </option>
 
                 <option value="champions_ballad">
-                    DLC 2 - L'Ode aux Prodiges
+                    DLC 2 - The Champions' Ballad
                 </option>
 
                 <option value="amiibo">
-                    Extension amiibo
+                    amiibo content
                 </option>
 
                 <option value="master_mode">
-                    Mode expert
+                    Master Mode
                 </option>
 
                 <option value="free_update">
-                    Mise à jour Xenoblade
+                    Updated Xenoblade
                 </option>
             </select>
 
-            <select id="gameMode" aria-label="Filtrer par mode de jeu">
+            <select id="gameMode" aria-label="Filter by game mode">
                 <option value="save">
-                    Mode de la sauvegarde
+                    Mode of save
                 </option>
 
                 <option value="all">
-                    Tous les modes (averti)
+                    All modes (warned)
                 </option>
 
                 <option value="normal">
-                    Placements du mode normal
+                    Placements in normal mode
                 </option>
 
                 <option value="expert">
-                    Placements du mode Expert
+                    Placements in Expert Mode
                 </option>
             </select>
 
-            <select id="location" aria-label="Filtrer par type de localisation">
+            <select id="location" aria-label="Filter by Location Type">
                 <option value="all">
-                    Toutes les localisations
+                    All Locations
                 </option>
 
                 <option value="map_and_list">
-                    Affichables sur Hyrule
+                    Displayable on Hyrule
                 </option>
 
                 <option value="interior_only">
-                    Cartes intérieures
+                    Interior maps
                 </option>
 
                 <option value="list_only">
-                    Liste seulement
+                    List only
                 </option>
 
                 <option value="coordinates_missing">
-                    Sans coordonnées renseignées
+                    Without contact information
                 </option>
 
                 <option value="no_natural_location">
-                    Sans localisation naturelle
+                    Without natural location
                 </option>
             </select>
 
-            <select id="variant" aria-label="Filtrer par variante">
+            <select id="variant" aria-label="Filter by variant">
                 <option value="all">
-                    Toutes les variantes
+                    All variants
                 </option>
             </select>
 
-            <select id="region" aria-label="Filtrer par région">
+            <select id="region" aria-label="Filter by Region">
                 <option value="all">
-                    Toutes les régions
+                    All regions
                 </option>
             </select>
         </section>
@@ -724,15 +724,15 @@
             <div class="routeHeader">
                 <div>
                     <p class="metricLabel">
-                        SESSION DE JEU
+                        GAME SESSION
                     </p>
 
                     <h2>
-                        Planificateur d’itinéraire
+                        Route planner
                     </h2>
 
                     <p id="routeSummary">
-                        Aucune étape sélectionnée.
+                        No steps selected.
                     </p>
                 </div>
 
@@ -741,7 +741,7 @@
                     aria-expanded="false"
                     aria-controls="routeBody"
                 >
-                    Afficher
+                    Show
                 </button>
             </div>
 
@@ -754,7 +754,7 @@
                     </label>
 
                     <label>
-                        Nom
+                        Name
 
                         <input
                             id="routeSessionName"
@@ -764,31 +764,31 @@
                     </label>
 
                     <button id="newRouteSession">
-                        Nouvelle
+                        New
                     </button>
 
                     <button id="duplicateRouteSession">
-                        Dupliquer
+                        Duplicate
                     </button>
 
                     <button id="deleteRouteSession">
-                        Supprimer
+                        Delete
                     </button>
 
                     <label>
-                        Optimisation
+                        Optimization
 
                         <select id="routeStrategy">
                             <option value="distance">
-                                Distance directe
+                                Direct distance
                             </option>
 
                             <option value="region">
-                                Priorité régionale
+                                Regional priority
                             </option>
 
                             <option value="teleport">
-                                Téléportations privilégiées
+                                Privileged Teleports
                             </option>
                         </select>
                     </label>
@@ -796,29 +796,29 @@
 
                 <div class="routeToolbar">
                     <div class="routeToolGroup">
-                        <span class="routeToolTitle">OBJECTIFS</span>
+                        <span class="routeToolTitle">OBJECTIVES</span>
 
                         <div class="routeToolControls">
                             <button id="addFiltered">
-                                + Ajouter les résultats filtrés
+                                + Add filtered results
                             </button>
 
                             <button id="optimizeRoute">
-                                Optimiser l’itinéraire
+                                Optimize the route
                             </button>
                         </div>
                     </div>
 
                     <div class="routeToolGroup">
-                        <span class="routeToolTitle">POINT DE DÉPART</span>
+                        <span class="routeToolTitle">POINT OF START</span>
 
                         <div class="routeToolControls">
                             <button id="pickRouteStart">
-                                Choisir sur la carte
+                                Choose on the map
                             </button>
 
                             <button id="useSelectedStart">
-                                Utiliser la fiche ouverte
+                                Use the open form
                             </button>
 
                             <label>
@@ -844,11 +844,11 @@
                             </label>
 
                             <button id="applyRouteStart">
-                                Utiliser ces coordonnées
+                                Use these coordinates
                             </button>
 
                             <button id="clearRouteStart">
-                                Réinitialiser le départ
+                                Reset the Start
                             </button>
                         </div>
                     </div>
@@ -860,7 +860,7 @@
                         class="routeList"
                     >
                         <div class="empty">
-                            Ajoute des objectifs depuis les résultats ou une fiche.
+                            Add goals from results or a record.
                         </div>
                     </div>
 
@@ -868,24 +868,24 @@
                         <h3>Session</h3>
 
                         <p id="routeStartLabel">
-                            Départ : premier objectif
+                            Start: first objective
                         </p>
 
                         <p id="routeRegions">
-                            Régions : -
+                            Regions: -
                         </p>
 
                         <p class="routeWarning">
-                            Calcul indicatif : le relief, la météo, l’escalade et les dangers ne sont pas simulés.
+                            Indicative calculation: terrain, weather, climbing and hazards are not simulated.
                         </p>
 
                         <div class="routeExportActions">
                             <button id="exportRouteJson">
-                                Exporter la session
+                                Export the session
                             </button>
 
                             <button id="importRouteJson">
-                                Importer une session
+                                Import a session
                             </button>
 
                             <input
@@ -896,15 +896,15 @@
                             >
 
                             <button id="exportRouteText">
-                                Exporter en texte
+                                Export to text
                             </button>
 
                             <button id="exportAllData">
-                                Sauvegarder toutes les données
+                                Back up all data
                             </button>
 
                             <button id="clearRoute" class="routeClearButton">
-                                Vider la session
+                                Emptying the session
                             </button>
                         </div>
                     </div>
@@ -917,7 +917,7 @@
                 <div class="panelTitle">
                     <div>
                         <h3>
-                            Carte d’Hyrule
+                            Hyrule map
                         </h3>
 
                         <span id="mapCount"></span>
@@ -926,24 +926,24 @@
                     <div class="mapControls">
                         <button
                             id="zoomOut"
-                            title="Dézoomer"
-                            aria-label="Dézoomer la carte"
+                            title="Dezoomer"
+                            aria-label="Zoom out the map"
                         >
                             −
                         </button>
 
                         <button
                             id="mapReset"
-                            title="Voir toute la carte"
-                            aria-label="Afficher toute la carte"
+                            title="See the full map"
+                            aria-label="Show All Map"
                         >
                             ⌂
                         </button>
 
                         <button
                             id="zoomIn"
-                            title="Zoomer"
-                            aria-label="Zoomer la carte"
+                            title="Zoom in"
+                            aria-label="Zoom the map"
                         >
                             +
                         </button>
@@ -956,7 +956,7 @@
                             id="mapFallback"
                             class="mapFallback"
                             src="/hyrule-map.webp"
-                            alt="Carte topographique d’Hyrule"
+                            alt="Topographic map of Hyrule"
                             draggable="false"
                         >
 
@@ -975,7 +975,7 @@
                         id="mapCoords"
                         class="mapCoords"
                     >
-                        Déplace la carte • molette pour zoomer
+                        Move the map  =  wheel to zoom
                     </p>
                 </div>
             </div>
@@ -983,7 +983,7 @@
             <div class="panel listPanel">
                 <div class="panelTitle">
                     <h3 id="listTitle">
-                        Éléments restants
+                        Remaining items
                     </h3>
 
                     <span id="resultCount" role="status" aria-live="polite"></span>
@@ -1006,7 +1006,7 @@
         <button
             id="closeDetails"
             class="detailClose"
-            aria-label="Fermer"
+            aria-label="Close"
         >
             ×
         </button>
@@ -1024,20 +1024,20 @@
     >
         <header class="helpHeader">
             <div>
-                <p class="eyebrow">CENTRE D’AIDE</p>
-                <h2 id="helpTitle" tabindex="-1">Découvrir BOTW Companion</h2>
+                <p class="eyebrow">HELP CENTER</p>
+                <h2 id="helpTitle" tabindex="-1">Discover BOTW Companion</h2>
                 <p id="helpIntroduction">
-                    Retrouve une explication de chaque fonction ou lance le parcours guidé dans l’interface.
+                    Find an explanation of each function or launch the guided route in the interface.
                 </p>
             </div>
 
-            <button id="closeHelp" type="button" aria-label="Fermer le centre d’aide">×</button>
+            <button id="closeHelp" type="button" aria-label="Close the Help Center">×</button>
         </header>
 
         <div class="helpWorkspace">
-            <nav class="helpNavigation" aria-label="Chapitres du centre d’aide">
+            <nav class="helpNavigation" aria-label="Chapters of the Help Center">
                 <button id="helpOverview" class="active" type="button" aria-current="page">
-                    Vue d’ensemble
+                    Overview
                 </button>
                 <div id="helpChapterList"></div>
             </nav>
@@ -1052,9 +1052,9 @@
         </div>
 
         <footer class="helpActions">
-            <button id="resumeTutorial" type="button" hidden>Reprendre le parcours</button>
+            <button id="resumeTutorial" type="button" hidden>Resume the tour</button>
             <button id="startTutorial" class="primaryHelpAction" type="button">
-                Lancer le parcours essentiel
+                Launching the essential journey
             </button>
         </footer>
     </dialog>
@@ -1078,10 +1078,10 @@
         >
             <div class="tutorialHeading">
                 <div>
-                    <span id="tutorialKind">PARCOURS ESSENTIEL</span>
-                    <span id="tutorialStepLabel" role="status" aria-live="polite">Étape 1 sur 10</span>
+                    <span id="tutorialKind">ESSENTIAL TOUR</span>
+                    <span id="tutorialStepLabel" role="status" aria-live="polite">Step 1 of 10</span>
                 </div>
-                <button id="closeTutorial" type="button" aria-label="Fermer le parcours guidé">×</button>
+                <button id="closeTutorial" type="button" aria-label="Close the guided tour">×</button>
             </div>
 
             <span class="tutorialProgressTrack" aria-hidden="true">
@@ -1095,15 +1095,15 @@
             </div>
 
             <div class="tutorialActions">
-                <button id="skipTutorial" type="button">Passer le parcours</button>
+                <button id="skipTutorial" type="button">Skip the tour</button>
                 <span></span>
-                <button id="previousTutorial" type="button">Précédent</button>
-                <button id="nextTutorial" type="button">Suivant</button>
+                <button id="previousTutorial" type="button">Previous</button>
+                <button id="nextTutorial" type="button">Next</button>
             </div>
         </section>
     </div>
 
-    <script src="/route_planner.js?lang=fr"></script>
-    <script src="/app.js?lang=fr"></script>
+    <script src="/route_planner.js?lang=en"></script>
+    <script src="/app.js?lang=en"></script>
 </body>
 </html>

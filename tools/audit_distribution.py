@@ -299,7 +299,7 @@ def audit() -> list[str]:
     if project.get("license") != "MIT" or project.get("dependencies") != ["certifi==2025.8.3"]:
         errors.append("Python dependency scope changed without an audit update")
     node = json.loads(_text("package.json"))
-    expected_dev = {"axe-core": "4.13.0", "playwright": "1.62.0"}
+    expected_dev = {"acorn": "8.15.0", "axe-core": "4.13.0", "playwright": "1.62.0"}
     if node.get("devDependencies") != expected_dev or not node.get("private"):
         errors.append("Node dependency scope changed without an audit update")
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from http.cookies import SimpleCookie, CookieError
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from hmac import compare_digest
 from importlib.resources import files
@@ -15,6 +16,7 @@ import threading
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
 
+from .english import english_presentation
 from .backup import CompanionBackup
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
 from .dsu import DsuManager
@@ -162,19 +164,48 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
             self.send_header("X-Permitted-Cross-Domain-Policies", "none")
             super().end_headers()
 
+        def _language(self) -> str:
+            query = parse_qs(urlsplit(self.path).query).get("lang", [None])[0]
+            if query in {"fr", "en"}:
+                return query
+            supplied = self.headers.get("X-BOTW-Language")
+            if supplied in {"fr", "en"}:
+                return supplied
+            cookie = SimpleCookie()
+            try:
+                cookie.load(self.headers.get("Cookie", ""))
+            except CookieError:
+                return "fr"
+            saved = cookie.get("botw-language")
+            return saved.value if saved and saved.value in {"fr", "en"} else "fr"
+
         def _json_response(self, status: int, payload: object, **headers: str) -> None:
+            language = self._language()
+            path = urlsplit(self.path).path
+            personal = any(path == prefix or path.startswith(prefix + "/")
+                           for prefix in ("/api/manual", "/api/routes", "/api/preferences", "/api/backup"))
+            if language == "en" and (not personal or status >= 400):
+                payload = english_presentation(payload)
             body = json.dumps(payload, ensure_ascii=False).encode()
             compressed = len(body) >= 1024 and "gzip" in self.headers.get("Accept-Encoding", "").lower()
             if compressed:
                 body = gzip.compress(body, compresslevel=5)
             self.send_response(status)
             self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Language", language)
             self.send_header("Cache-Control", "no-store")
             if compressed:
                 self.send_header("Content-Encoding", "gzip")
-                self.send_header("Vary", "Accept-Encoding")
+                self.send_header("Vary", "Accept-Encoding, X-BOTW-Language, Cookie")
             self.send_header("Content-Length", str(len(body)))
             for name, value in headers.items():
+                if language == "en" and name == "Content_Disposition":
+                    for french, english in {
+                        'botw-companion-suivi-manuel.json': 'botw-companion-manual-tracking.json',
+                        'botw-companion-itineraires.json': 'botw-companion-routes.json',
+                        'botw-companion-sauvegarde.json': 'botw-companion-backup.json',
+                    }.items():
+                        value = value.replace(french, english)
                 self.send_header(name.replace("_", "-"), value)
             self.end_headers()
             self.wfile.write(body)
@@ -361,10 +392,15 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 return
             name = path.lstrip("/") or "index.html"
             tile_request = re.fullmatch(r"map-tiles/z[1-3]/\d+_\d+\.webp", name)
-            if name not in {"index.html", "app.js", "route_planner.js", "style.css", "metrics.css", "armor.css", "hyrule-map.webp"} and not tile_request:
+            if name not in {"index.html", "app.js", "route_planner.js", "language.js", "style.css", "metrics.css", "armor.css", "hyrule-map.webp"} and not tile_request:
                 self.send_error(404)
                 return
-            content = web_root.joinpath(*name.split("/")).read_bytes()
+            language = self._language()
+            resource = name
+            if language == "en" and name in {"index.html", "app.js", "route_planner.js"}:
+                stem, extension = name.rsplit(".", 1)
+                resource = stem + "_en." + extension
+            content = web_root.joinpath(*resource.split("/")).read_bytes()
             if name == "index.html":
                 content = content.replace(
                     SESSION_PLACEHOLDER.encode(), session_token.encode()
@@ -373,6 +409,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     "webp": "image/webp"}[name.rsplit(".", 1)[1]]
             self.send_response(200)
             self.send_header("Content-Type", f"{mime}; charset=utf-8")
+            self.send_header("Content-Language", language)
+            self.send_header("Vary", "X-BOTW-Language, Cookie")
             if name == "index.html":
                 self.send_header("Cache-Control", "no-store")
             elif tile_request:

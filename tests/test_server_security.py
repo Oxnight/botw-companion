@@ -54,9 +54,11 @@ class ServerSecurityTests(unittest.TestCase):
     TOKEN = "security-integration-token"
 
     @contextmanager
-    def running_server(self, *, token: str | None = TOKEN):
+    def running_server(self, *, token: str | None = TOKEN, payload_factory=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            if payload_factory is not None:
+                (root / "routes.json").write_text(json.dumps(RouteSessionStore._empty()), encoding="utf-8")
             ready = threading.Event()
             ports: list[int] = []
             dsu = FakeDsuManager()
@@ -81,7 +83,7 @@ class ServerSecurityTests(unittest.TestCase):
                 kwargs["session_token"] = token
             thread = threading.Thread(
                 target=serve,
-                args=(lambda: {},),
+                args=(payload_factory or (lambda: {}),),
                 kwargs=kwargs,
                 daemon=True,
             )

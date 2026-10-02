@@ -31,3 +31,16 @@ project must either obtain written redistribution permission or replace the map
 with an original background under terms that explicitly allow inclusion in the
 installers. This requires a maintainer decision; an automated test cannot grant
 missing rights.
+
+## English terminology
+
+English names are aligned by game identifiers with the original catalog and
+ActorType, Dungeon, and LocationMarker name tables published in
+[MrCheeze/botw-tools](https://github.com/MrCheeze/botw-tools/tree/39e57e4731add15b9a0dcedb5dd136215aaba7c7)
+(revision `39e57e4731add15b9a0dcedb5dd136215aaba7c7`). Only factual names
+are used, not game dialogue or descriptions. Nintendo's
+[Explorer's Guide](https://media.nintendo.com/zelda/breath-of-the-wild/assets/ExplorersGuide.pdf)
+and [Expansion Pass page](https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-expansion-pass-70070000000041-switch/)
+provide checks for game concepts and expansion terminology. The project's
+editorial guides are translated separately. All final references are offline;
+changing language never fetches a dictionary from a third party.

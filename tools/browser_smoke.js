@@ -125,10 +125,26 @@ async function assertTutorialDoesNotCoverTarget(page, context) {
 }
 
 async function waitForTutorialPosition(page, expectedIndex) {
-  await page.waitForFunction(index =>
-    document.querySelector("#tutorialCard")?.dataset.positionedStep === String(index)
-      && !document.querySelector("#tutorialCard")?.dataset.transitioning,
-  expectedIndex);
+  // A resize can invalidate the published position between browser commands.
+  // Wait for the current target/frame relation in the same DOM observation;
+  // the geometry assertions below still reject persistent clipping/overlap.
+  await page.waitForFunction(index => {
+    const card = document.querySelector("#tutorialCard"),
+      spotlight = document.querySelector("#tutorialSpotlight");
+    if (card?.dataset.positionedStep !== String(index) || card.dataset.transitioning
+        || !spotlight) return false;
+    if (spotlight.hidden) return true;
+    const target = document.querySelector(card.dataset.target)?.getBoundingClientRect(),
+      frame = spotlight.getBoundingClientRect(), preview = document.querySelector("#tutorialPreview");
+    if (card.dataset.layout === "direct") {
+      return target && preview.hidden && frame.left <= target.left && frame.top <= target.top
+        && frame.right >= target.right && frame.bottom >= target.bottom;
+    }
+    const copy = preview.shadowRoot?.lastElementChild?.getBoundingClientRect();
+    return !preview.hidden && copy && copy.width > 0 && copy.height > 0
+      && copy.left >= frame.left && copy.top >= frame.top
+      && copy.right <= frame.right && copy.bottom <= frame.bottom;
+  }, expectedIndex);
 }
 
 async function exerciseOnboarding(page) {
@@ -388,14 +404,15 @@ async function waitForVisualStyle(page) {
 async function waitForApplication(page, browserName) {
   await navigateToApplication(page, browserName);
   await page.waitForFunction(() =>
-    document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
+    document.querySelector("#runtimePlatform") &&
+    !["CHARGEMENT…", "LOADING…"].includes(document.querySelector("#runtimePlatform").textContent) &&
     document.querySelectorAll("#categories [data-filter-type]").length > 0,
   null, {timeout: 45000});
   await waitForVisualStyle(page);
 }
 
 async function runDesktop(browser, baseUrl, browserName) {
-  const context = await browser.newContext({viewport: {width: 1440, height: 900}, acceptDownloads: true});
+  const context = await browser.newContext({viewport: {width: 1440, height: 900}, timezoneId: "UTC", acceptDownloads: true});
   context.setDefaultTimeout(ACTION_TIMEOUT_MS);
   context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
   const page = await context.newPage();
@@ -591,7 +608,8 @@ async function runDesktop(browser, baseUrl, browserName) {
   documentReloadStarted = true;
   await page.reload({waitUntil: "domcontentloaded"});
   await page.waitForFunction(id =>
-    document.querySelector("#runtimePlatform").textContent !== "CHARGEMENT…" &&
+    document.querySelector("#runtimePlatform") &&
+    !["CHARGEMENT…", "LOADING…"].includes(document.querySelector("#runtimePlatform").textContent) &&
     Boolean(manualTracking.entries[id]?.completed), selectedTrackingId, {timeout: 45000});
   const dsuAfterReload = await fetchJson(page, "/api/dsu");
   assert(dsuAfterReload.ok && typeof dsuAfterReload.body?.state === "string",
@@ -902,6 +920,100 @@ async function runLocalTimezone(browser, baseUrl, browserName) {
   await closeWithTimeout(context, "la fermeture du contexte de fuseau horaire");
 }
 
+async function runBilingual(browser, baseUrl, browserName) {
+  const context = await browser.newContext({viewport: {width: 1440, height: 900}});
+  context.setDefaultTimeout(ACTION_TIMEOUT_MS);
+  context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  const external = [];
+  page.on("request", request => {
+    if (new URL(request.url()).origin !== new URL(baseUrl).origin) external.push(request.url());
+  });
+  page.baseUrl = baseUrl + "/?lang=en";
+  progress(browserName, "languages:English");
+  await waitForApplication(page, browserName);
+  assert(await page.locator("html").getAttribute("lang") === "en", "English document expected");
+  assert((await page.locator("#openHelp").textContent()).trim() === "Help", "Help is not translated");
+  const catalog = await fetchJson(page, "/api/catalog");
+  assert(catalog.ok && catalog.body.elements.some(x => x.name === "Tah Muhl Shrine"), "Official English shrine name missing");
+  const detail = await fetchJson(page, "/api/detail/sanctuaires%3ADungeon000");
+  assert(detail.ok && detail.body.item.name === "Tah Muhl Shrine", "English detail expected");
+  assert(!/[éèàçœ]/.test(JSON.stringify(detail.body.item.guide)), "French text remains in English shrine guide");
+  const tutorial = page.locator("#tutorialLayer");
+  if (await tutorial.isVisible()) {
+    await waitForTutorialPosition(page, 0);
+    await assertTutorialDoesNotCoverTarget(page, "English tutorial");
+    await page.locator("#skipTutorial").click();
+  }
+  await page.locator("#openHelp").click();
+  await page.locator("#helpDialog").waitFor({state: "visible"});
+  assert(/help/i.test(await page.locator("#helpDialog").innerText()), "English help expected");
+  const assertEnglish = async selector => {
+    const text = await page.locator(selector).innerText();
+    assert(!/[éèêàùçœ]|\b(?:Carte|Personnel|Filtres|Zoomer|Cinetis|Tetralame|Marmite|Radeau|coffres|rejoins)\b/.test(text),
+      "French remains in " + selector + ": " + text.slice(0, 250));
+  };
+  const chapterIds = await page.locator("[data-help-chapter]").evaluateAll(nodes => nodes.map(x => x.dataset.helpChapter));
+  assert(chapterIds.length === 13, "English help must have all 13 chapters");
+  for (const chapter of chapterIds) {
+    await page.locator(`[data-help-chapter="${chapter}"]`).click();
+    await assertEnglish("#helpContent");
+  }
+  await assertAccessible(page, "English help");
+  await page.locator("#startTutorial").click();
+  for (let step = 0; step < 10; step++) {
+    await waitForTutorialPosition(page, step);
+    await assertEnglish("#tutorialCard");
+    await assertTutorialDoesNotCoverTarget(page, `English step ${step + 1}`);
+    await page.locator("#nextTutorial").click();
+  }
+  await tutorial.waitFor({state: "hidden"});
+  await page.locator("#closeHelp").click();
+  progress(browserName, "languages:English-details-and-routes");
+  await page.locator("#categories [data-filter-type]").first().check();
+  await page.locator("#list .itemOpen").first().click();
+  await page.locator("#detailContent h2").waitFor({timeout: 10000});
+  await assertEnglish("#detailContent");
+  await assertAccessible(page, "English objective detail");
+  const personalNote = "Ma note en français — Cocorico";
+  const trackingId = await page.evaluate(() => selectedId);
+  await page.locator("#manualNoteInput").fill(personalNote);
+  await page.locator("#saveManualNote").click();
+  await page.waitForFunction(({id, note}) => manualTracking.entries[id]?.note === note,
+    {id: trackingId, note: personalNote});
+  await page.locator("#detailRoute").click();
+  await page.waitForFunction(id => routeState.entries.some(x => x.tracking_id === id), trackingId);
+  await page.locator("#closeDetails").click();
+  await page.locator("#toggleRoute").click();
+  await page.locator("[data-route-lock]").first().waitFor({state: "visible"});
+  const routeAttributes = await page.locator("#routeBody button").evaluateAll(nodes => nodes.flatMap(x => [x.title, x.getAttribute('aria-label') || '']));
+  assert(routeAttributes.every(value => !/[éèêàùçœ]|\b(?:Carte|Filtres|Zoomer|cette|sur|itinéraire)\b/.test(value)), "French route controls remain");
+  await assertEnglish("#routeBody");
+  const personal = await fetchJson(page, "/api/manual");
+  assert(personal.body.entries[trackingId].note === personalNote, "English mode translated a personal note");
+  await page.locator("#toggleRoute").click();
+  await assertAccessible(page, "English main page");
+  progress(browserName, "languages:French-English-persistence");
+  await page.locator("#languageSelect").selectOption("fr");
+  await page.waitForFunction(() => document.documentElement.lang === "fr" && document.querySelector("#openHelp")?.textContent.trim() === "Aide");
+  await page.waitForFunction(() => document.querySelectorAll("#categories [data-filter-type]").length > 0);
+  await page.locator("#languageSelect").selectOption("en");
+  await page.waitForFunction(() => document.documentElement.lang === "en" && document.querySelector("#openHelp")?.textContent.trim() === "Help");
+  page.baseUrl = baseUrl;
+  await waitForApplication(page, browserName);
+  assert(await page.locator("html").getAttribute("lang") === "en", "Language was not remembered");
+  await page.setViewportSize({width: 390, height: 844});
+  await page.locator("#openHelp").click();
+  await assertAccessible(page, "English mobile help");
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 2);
+  assert(!overflow, "English content overflows on mobile");
+  assert(external.length === 0, "Changing language made an external request");
+  assert(errors.length === 0, "English browser errors: " + errors.join("; "));
+  await closeWithTimeout(context, "bilingual context");
+}
+
 (async () => {
   const url = process.argv[2] || "http://127.0.0.1:8765";
   const target = String(process.argv[3] || process.env.BOTW_BROWSER || "chromium").toLowerCase();
@@ -933,9 +1045,10 @@ async function runLocalTimezone(browser, baseUrl, browserName) {
     await runResponsive(browser, url, target);
     await runDisplayPreferences(browser, url, target);
     await runLocalTimezone(browser, url, target);
+    await runBilingual(browser, url, target);
     console.log(JSON.stringify({
       status: "ok", browser: target, ...desktop, responsive: true,
-      zoom_200: true, reduced_motion: true, local_timezone: true
+      zoom_200: true, reduced_motion: true, local_timezone: true, bilingual: true
     }));
   } finally {
     progress(target, "navigateur:fermeture");

@@ -8,6 +8,8 @@ import re
 
 DATA_FILES = (
     "localization_fr.json",
+    "localization_en.json",
+    "localization_en_ui.json",
     "nomenclature_fr_reference.json",
     "catalog_fr_compiled.json",
     "cartography_reference_fr_compiled.json",
@@ -21,6 +23,10 @@ DATA_FILES = (
 )
 WEB_FILES = (
     "index.html",
+    "index_en.html",
+    "app_en.js",
+    "route_planner_en.js",
+    "language.js",
     "app.js",
     "route_planner.js",
     "style.css",

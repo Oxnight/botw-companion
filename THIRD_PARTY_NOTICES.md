@@ -61,3 +61,9 @@ with the same name.
 
 `tools/audit_distribution.py` checks component versions and scope before every
 build.
+
+## Acorn
+
+Acorn 8.15.0 is an MIT-licensed JavaScript parser used only to compile English
+browser assets during development. Its parser and Node.js dependencies are not
+bundled in the application. See [Acorn](https://github.com/acornjs/acorn).

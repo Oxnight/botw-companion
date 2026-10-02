@@ -132,3 +132,22 @@ add it to `tools/audit_distribution.py`.
 
 Only the maintainer prepares releases. See [`RELEASING.md`](../RELEASING.md)
 for the complete process.
+
+## English presentation assets
+
+French browser sources remain canonical. After editing UI text, update the
+English reference in `botw_companion/data/localization_en.json` and curated
+translations in `localization_en_ui.json`, then rebuild:
+
+```bash
+npm ci --ignore-scripts
+python tools/build_english_assets.py
+python tools/build_english_assets.py --check
+python tools/audit_localization.py
+```
+
+The compiler uses Acorn only during development. Generated assets, reference
+strings, and dynamic message patterns are packaged with the application; no
+translation service or model is used at runtime. Run the English tests and
+browser smoke suite after modifying either language. API identifiers and
+personal-data endpoints are not presentation translations.

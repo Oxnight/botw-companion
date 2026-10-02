@@ -1,20 +1,14 @@
 ## Release candidate
 
-RC 7 improves update handoffs on Windows and macOS. Repeated clicks cannot
-start multiple installers, interrupted HTTP responses can be retried, and
-download cleanup preserves installation diagnostics.
+RC 8 adds an English interface alongside French. The language selector is in
+Application, and the selected language is remembered the next time the app
+opens. Help, the guided tour, game guides, map details, and update messages
+follow the selection. Both languages work offline.
 
-Windows assisted updates target the existing application folder. The macOS
-relay reopens the installed application after an error before replacement,
-stops the new instance before restoring a backup, and keeps that backup if
-shutdown cannot be confirmed. Elevated replacement returns to the user's
-session for relaunch.
-
-The update panel keeps its existing appearance. The All and None filter
-actions are lower and slightly wider.
-
-No save-analysis, completion, map, guide, tracking, or JoyConDSU result has
-changed in this release candidate.
+English names use the game's terminology, including quests, shrine trials,
+equipment variants, characters, places, and expansion content. French remains
+the default. Personal notes, route names, save data, and backups retain their
+original contents.
 
 ## Installation
 

@@ -256,6 +256,8 @@ input {
 
 .toolbar input,
 .toolbar select {
+    min-width: 0;
+    max-width: 100%;
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -523,3 +525,6 @@ input {
         height: 370px
     }
 }
+
+.languageControl { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-size: .85rem; min-width: 0; max-width: 100%; }
+.languageControl select { min-width: 0; max-width: min(9rem, 100%); min-height: 2rem; }

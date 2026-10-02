@@ -82,7 +82,7 @@ class VersioningTests(unittest.TestCase):
             )
             self.assertEqual(values["installer_name"], CURRENT_VERSION.installer_name)
             self.assertEqual(values["dmg_name"], CURRENT_VERSION.dmg_name)
-            self.assertEqual(values["upgrade_version"], "1.0.0-rc.6")
+            self.assertEqual(values["upgrade_version"], "1.0.0-rc.7")
             self.assertEqual(values["legacy_upgrade_version"], "0.40.0-alpha.34")
             self.assertNotEqual(values["upgrade_tag"], values["legacy_upgrade_tag"])
 

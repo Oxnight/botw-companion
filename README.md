@@ -6,6 +6,10 @@ files from Ryujinx or Cemu and helps players track a complete playthrough.
 This is an unofficial fan project. It is not affiliated with, endorsed by,
 sponsored by, or supported by Nintendo.
 
+The offline interface is available in French and English. Choose a language
+from the Application controls; help, the guided tour, and game guides follow
+that selection. Personal notes and route names retain the text you entered.
+
 ## Download
 
 Download the current version from

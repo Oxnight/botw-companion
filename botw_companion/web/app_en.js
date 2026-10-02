@@ -1,7 +1,7 @@
 const nativeFetch = window.fetch.bind(window);
 const launchFragment = new URLSearchParams(window.location.hash.slice(1));
 const sessionToken = launchFragment.get("session") ||
-    document.querySelector('meta[name="botw-session-token"]')?.content || "";
+    document.querySelector("meta[name=\"botw-session-token\"]")?.content || "";
 
 document.documentElement.dataset.inputModality = "pointer";
 document.addEventListener("pointerdown", () => {
@@ -58,9 +58,9 @@ let updateDownloadTimer = null;
 let updatePrimaryBusy = false, updateInstallationPending = false;
 let availableUpdateVersion = null;
 let runtimePlatform = {
-    label: "Système local",
+    label: "Local system",
     native_dsu_engine: "DSU",
-    relaunch_hint: "Tu peux fermer cet onglet. Relance BOTW Companion pour redémarrer l’application."
+    relaunch_hint: "You can close this tab. Restart BOTW Companion to restart the application."
 };
 const LIST_PAGE_SIZE = 300;
 let listRenderLimit = LIST_PAGE_SIZE;
@@ -106,16 +106,16 @@ function rememberDismissedUpdate(version) {
 function showAvailableUpdate(data, manual = false) {
     const releaseUrl = trustedGitHubReleaseUrl(data.release_url, "release");
     if (!releaseUrl || typeof data.latest_version !== "string") {
-        if (manual) toast("La réponse de mise à jour n’est pas valide", true);
+        if (manual) toast("The update response is not valid", true);
         return;
     }
     if (!manual && dismissedUpdateVersion() === data.latest_version) return;
     $("#updateTitle").textContent = data.title || `BOTW Companion ${data.latest_version}`;
     $("#updateVersions").textContent =
-        `Version installée : ${data.current_version} • Nouvelle version : ${data.latest_version}`;
+        `Installed version: ${data.current_version} • New version: ${data.latest_version}`;
     availableUpdateVersion = data.latest_version;
     $("#downloadUpdate").disabled = false;
-    $("#downloadUpdate").textContent = "Télécharger la mise à jour";
+    $("#downloadUpdate").textContent = "Download the update";
     $("#updateReleaseNotes").href = releaseUrl;
     $("#updateBanner").hidden = false;
     refreshUpdateDownload();
@@ -142,15 +142,15 @@ function renderUpdateDownload(state) {
         (state.status === "ready_to_install" && !state.can_install);
     if (state.status === "ready_to_install") {
         $("#downloadUpdate").textContent = state.can_install
-            ? "Installer et redémarrer"
-            : "Téléchargement vérifié";
+            ? "Install and restart"
+            : "Verified download";
     } else if (active) {
-        $("#downloadUpdate").textContent = state.status === "verifying" ? "Vérification…" : "Téléchargement…";
+        $("#downloadUpdate").textContent = state.status === "verifying" ? "Checking..." : "Downloading...";
     } else {
-        $("#downloadUpdate").textContent = "Télécharger la mise à jour";
+        $("#downloadUpdate").textContent = "Download the update";
     }
     const amount = state.bytes_total > 0
-        ? `${formatUpdateBytes(state.bytes_received)} sur ${formatUpdateBytes(state.bytes_total)} (${progress.toFixed(1)} %)`
+        ? `${formatUpdateBytes(state.bytes_received)} of ${formatUpdateBytes(state.bytes_total)} (${progress.toFixed(1)}%)`
         : "";
     const rate = state.bytes_per_second > 0
         ? ` • ${formatUpdateBytes(state.bytes_per_second)}/s`
@@ -163,9 +163,9 @@ function renderUpdateDownload(state) {
         try { previous = sessionStorage.getItem(UPDATE_INSTALL_NOTICE_KEY); } catch (_error) {}
         if (notice !== previous && ["succeeded", "failed", "cancelled"].includes(installation.status)) {
             const logHint = installation.log_available && installation.log_path
-                ? ` Journal : ${installation.log_path}`
+                ? ` Log: ${installation.log_path}`
                 : "";
-            toast((installation.message || "État de la mise à jour disponible") + logHint,
+            toast((installation.message || "Update status available") + logHint,
                 installation.status !== "succeeded");
             try { sessionStorage.setItem(UPDATE_INSTALL_NOTICE_KEY, notice); } catch (_error) {}
         }
@@ -181,7 +181,7 @@ function scheduleUpdateDownloadPoll() {
 async function refreshUpdateDownload() {
     try {
         const response = await fetch("/api/update/download");
-        if (!response.ok) throw Error("service indisponible");
+        if (!response.ok) throw Error("service unavailable");
         renderUpdateDownload(await response.json());
     } catch (_error) {
         clearTimeout(updateDownloadTimer);
@@ -191,7 +191,7 @@ async function refreshUpdateDownload() {
 async function updateDownloadAction(action) {
     const response = await fetch(`/api/update/download/${action}`, { method: "POST" });
     const state = await response.json();
-    if (!response.ok) throw Error(state.erreur || "service indisponible");
+    if (!response.ok) throw Error(state.erreur || "service unavailable");
     renderUpdateDownload(state);
     scheduleUpdateDownloadPoll();
 }
@@ -200,38 +200,38 @@ async function startUpdateDownload() {
     try {
         await updateDownloadAction("start");
     } catch (_error) {
-        toast("Le téléchargement ne peut pas démarrer pour le moment", true);
+        toast("Download cannot start at this time", true);
     }
 }
 
 async function installVerifiedUpdate() {
     const platformMessage = runtimePlatform.id === "macos"
-        ? "Un relais macOS séparé vérifiera le DMG Apple Silicon, remplacera l’application, " +
-          "puis la redémarrera. macOS peut demander ton autorisation."
-        : "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
-          "Windows ne sera pas redémarré.";
+        ? "A separate macOS stable will check the DMG Apple Silicon, replace the app, " +
+          "Then restart it. macOS can ask for your permission."
+        : "The Windows wizard will then open and the application will restart after installation. " +
+          "Windows will not be restarted.";
     if (updateInstallationPending || !confirm(
-        "Installer cette mise à jour maintenant ?\n\n" +
-        "BOTW Companion et JoyConDSU vont s’arrêter proprement. " +
+        "Install this update now?\n\n" +
+        "BOTW Companion and JoyConDSU will shut down cleanly. " +
         platformMessage
     )) return false;
     updateInstallationPending = true;
     clearTimeout(updateDownloadTimer);
     const button = $("#downloadUpdate");
     button.disabled = true;
-    button.textContent = "Préparation de l’installation…";
+    button.textContent = "Preparing installation…";
     try {
         const response = await fetch("/api/update/install", { method: "POST" });
         const state = await response.json();
-        if (!response.ok) throw Error(state.erreur || "service indisponible");
+        if (!response.ok) throw Error(state.erreur || "service unavailable");
         $("#updateProgressText").textContent =
-            state.message || "Arrêt sécurisé avant l’installation…";
+            state.message || "Secure shutdown before installation...";
         return true;
     } catch (error) {
         updateInstallationPending = false;
         button.disabled = false;
-        button.textContent = "Installer et redémarrer";
-        toast(error.message || "L’installation ne peut pas démarrer", true);
+        button.textContent = "Install and restart";
+        toast(error.message || "Installation cannot start", true);
         return false;
     }
 }
@@ -242,7 +242,7 @@ async function handleUpdatePrimaryAction() {
     $("#downloadUpdate").disabled = true;
     try {
         const response = await fetch("/api/update/download");
-        if (!response.ok) throw Error("service indisponible");
+        if (!response.ok) throw Error("service unavailable");
         const state = await response.json();
         if (state.status === "ready_to_install" && state.can_install) {
             await installVerifiedUpdate();
@@ -250,7 +250,7 @@ async function handleUpdatePrimaryAction() {
         }
         await startUpdateDownload();
     } catch (_error) {
-        toast("La mise à jour ne peut pas démarrer pour le moment", true);
+        toast("The update cannot start at this time", true);
     } finally {
         updatePrimaryBusy = false;
         if (!updateInstallationPending) await refreshUpdateDownload();
@@ -265,32 +265,32 @@ async function checkForUpdates(manual = false) {
     const timer = setTimeout(() => controller.abort(), UPDATE_CHECK_TIMEOUT_MS);
     if (manual) {
         button.disabled = true;
-        button.textContent = "Vérification…";
+        button.textContent = "Checking...";
     }
     try {
         const response = await fetch(`/api/update${manual ? "?force=1" : ""}`, {
             signal: controller.signal
         });
-        if (!response.ok) throw Error("service indisponible");
+        if (!response.ok) throw Error("service unavailable");
         const data = await response.json();
         if (data.update_available === true) {
             showAvailableUpdate(data, manual);
         } else if (manual && data.status === "up_to_date") {
-            toast("BOTW Companion est à jour");
+            toast("BOTW Companion is up to date");
         } else if (manual && data.status === "unsupported") {
-            toast("La vérification automatique n’est pas disponible sur ce système", true);
+            toast("Automatic verification is not available on this system", true);
         } else if (manual) {
-            toast(data.message || "Vérification impossible pour le moment", true);
+            toast(data.message || "Unable to verify at the moment", true);
         }
     } catch (_error) {
         if (manual) {
-            toast("Connexion indisponible. BOTW Companion reste utilisable hors ligne.", true);
+            toast("Connection unavailable. BOTW Companion remains usable offline.", true);
         }
     } finally {
         clearTimeout(timer);
         if (manual) {
             button.disabled = false;
-            button.textContent = "Mises à jour";
+            button.textContent = "Updates";
         }
     }
 }
@@ -307,7 +307,7 @@ function loadRouteState() {
 
     return {
         schema_version: 1,
-        name: "Session BOTW",
+        name: "BOTW session",
         start: null,
         entries: [],
         updated_at: null
@@ -346,7 +346,7 @@ function savePreference(name, value) {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw Error(data.erreur || "Préférences impossibles à enregistrer");
+                throw Error(data.erreur || "Unable to save preferences");
             }
             preferencesData = data;
         })
@@ -357,236 +357,236 @@ function savePreference(name, value) {
 const HELP_CHAPTERS = [
     {
         id: "privacy",
-        title: "Confidentialité et mode hors ligne",
-        summary: "Ce qui reste sur ton appareil et ce qui nécessite Internet.",
+        title: "Privacy and offline mode",
+        summary: "What stays on your device and what requires Internet access.",
         target: "header",
         points: [
-            "L’analyse de la sauvegarde, la carte, les guides, le suivi manuel et les itinéraires fonctionnent localement.",
-            "La sauvegarde et les données personnelles du Companion ne sont envoyées à aucun service distant.",
-            "Une connexion est utilisée uniquement lorsque tu demandes une vérification de mise à jour ou ouvres une source externe. Une panne de réseau ne bloque pas le Companion."
+            "Save analysis, the map, guides, manual tracking and routes work locally.",
+            "Your game saves and personal Companion data are never sent to a remote service.",
+            "A connection is used only when you request an update check or open an external source. A network failure does not block the Companion."
         ],
-        tip: "Les services locaux du Companion écoutent seulement sur 127.0.0.1, c’est-à-dire ton propre ordinateur."
+        tip: "The Companion’s local services only listen to 127.0.0.1, i.e. your own computer."
     },
     {
         id: "save",
-        title: "Sauvegarde et slot analysé",
-        summary: "Comprendre la détection de Ryujinx ou Cemu et le choix du slot.",
+        title: "save and Slot Analyzed",
+        summary: "Understand the detection of Ryujinx or Cemu and the choice of the slot.",
         target: "#savePreview",
         points: [
-            "Le bandeau supérieur indique l’émulateur détecté, la plateforme et le slot actuellement conservé.",
-            "BOTW Companion compare les sauvegardes prises en charge et retient la progression la plus récente d’après les informations internes du jeu.",
-            "L’aperçu, la date et la source permettent de vérifier que tu consultes bien la partie attendue. Une écriture incomplète n’écrase jamais le dernier rapport valide."
+            "The top panel shows the detected emulator, platform and active save slot.",
+            "BOTW Companion compares supported save files and retains the most recent progress based on the game’s internal information.",
+            "The preview, date and source help you check that you are viewing the expected save. Incomplete data never overwrites the last valid report."
         ],
-        tip: "Si la mauvaise partie apparaît, vérifie le chemin de sauvegarde de l’émulateur puis utilise « Lire maintenant »."
+        tip: "If the wrong part appears, check the emulator's save path and then use \"Read now\"."
     },
     {
         id: "sync",
-        title: "Synchronisation de la sauvegarde",
-        summary: "Intervalle, pause, lecture immédiate et historique.",
+        title: "Synchronization of the save",
+        summary: "Interval, pause, immediate and historical reading.",
         target: ".syncSaveArea",
         points: [
-            "Choisis l’intervalle auquel le Companion vérifie si la sauvegarde a réellement changé.",
-            "« Pause » suspend les lectures automatiques sans arrêter l’application. « Lire maintenant » déclenche une vérification immédiate.",
-            "L’historique récent distingue une lecture réussie, une sauvegarde inchangée et une erreur temporaire. Le dernier résultat valide reste affiché en cas d’échec."
+            "Choose the interval at which the Companion checks whether the save has actually changed.",
+            "“Pause” suspends automatic readings without stopping the application. “Read now” triggers an immediate check.",
+            "Recent history distinguishes between a successful read, an unchanged save and a temporary error. The last valid result remains displayed on failure."
         ],
-        tip: "Une vérification fréquente n’accélère pas l’écriture de l’émulateur ; 30 secondes convient dans la plupart des cas."
+        tip: "Frequent checking does not speed up the emulator writing; 30 seconds is suitable in most cases."
     },
     {
         id: "completion",
-        title: "Les deux pourcentages",
-        summary: "Distinguer la carte officielle du profil de complétion.",
+        title: "The two percentages",
+        summary: "Understand the difference between map completion and the completion profile.",
         target: ".hero",
         points: [
-            "Le pourcentage officiel reproduit le compteur de carte de BOTW : Korogus, sanctuaires, lieux, tours, créatures cartographiques et contenu DLC applicable.",
-            "Le profil de complétion est un indicateur plus large propre au Companion. Il mesure les objectifs que la sauvegarde permet de confirmer automatiquement.",
-            "Les deux nombres n’ont donc ni le même total ni le même rôle. Le sélecteur de formule ou de profil permet d’examiner le jeu de base, le DLC et les profils spécialisés."
+            "The official percentage reproduces BOTW’s map completion counter: Koroks, shrines, locations, towers, Divine Beasts and applicable DLC content.",
+            "The completion profile is a broader indicator specific to the Companion and measures the objectives that the save automatically confirms.",
+            "The two numbers do not have the same total or role, and the formula or profile selector allows you to examine the base set, the DLC and the specialized profiles."
         ],
-        tip: "Déplie « éléments empêchant le 100 % » pour voir précisément ce qui manque au profil sélectionné."
+        tip: "Expand “items preventing 100%” to see exactly what is missing from the selected profile."
     },
     {
         id: "sidebar",
-        title: "Filtres de carte et navigation latérale",
-        summary: "Choisir rapidement les familles d’objectifs affichées.",
+        title: "Map filters and side navigation",
+        summary: "Quickly choose the families of objectives displayed.",
         target: "#categories",
         points: [
-            "La colonne située à gauche de l’écran regroupe les grandes familles : voyage et lieux, quêtes et souvenirs, trésors et autres objectifs.",
-            "Chaque case active ou masque une catégorie entière. « Tout » sélectionne toutes les catégories et « Aucun » permet de repartir d’une vue vide.",
-            "Les compteurs placés à droite indiquent la progression détectée dans chaque catégorie. La légende en bas rappelle la différence entre à faire, en cours, terminé et informatif."
+            "The column to the left of the screen includes the big families: travel and places, quests and memories, treasures and other objectives.",
+            "Each checkbox shows or hides an entire category. “All” selects every category, and “None” clears the selection.",
+            "The counters on the right indicate the progress detected in each category. The caption at the bottom recalls the difference between doing, going, finished and informative."
         ],
-        tip: "Commence par cocher une ou deux catégories dans la colonne gauche, puis utilise les filtres détaillés au-dessus de la liste."
+        tip: "Start by checking one or two categories in the left column, and then use the detailed filters above the list."
     },
     {
         id: "navigation",
-        title: "Recherche et filtres détaillés",
-        summary: "Affiner les catégories choisies dans la colonne gauche.",
+        title: "Detailed search and filters",
+        summary: "Refine the selected categories in the left column.",
         target: ".toolbar",
         points: [
-            "Après avoir choisi les catégories dans la colonne gauche, la recherche accepte un nom, une région ou un terme présent dans une fiche.",
-            "Les filtres séparent les états, contenus additionnels, modes de jeu, localisations, variantes et régions.",
-            "Un objectif peut être automatique, manuel, mixte ou informatif. Le bandeau de portée signale les limites du filtre actif afin d’éviter une interprétation incorrecte."
+            "After choosing the categories in the left column, the search accepts a name, a region or a term present in a file.",
+            "Filters separate states, additional content, game modes, locations, variants, and regions.",
+            "A lens can be automatic, manual, mixed or informative. The scope banner indicates the limits of the active filter in order to avoid incorrect interpretation."
         ],
-        tip: "Commence par une catégorie, puis affine avec la recherche : la carte et la liste utilisent exactement le même périmètre."
+        tip: "Start with a category, then refine with the search: the map and the list use exactly the same perimeter."
     },
     {
         id: "map",
-        title: "Carte d’Hyrule",
-        summary: "Déplacement, zoom, marqueurs et ouverture des fiches.",
+        title: "Hyrule map",
+        summary: "Pan and zoom the map, use markers and open objective details.",
         target: ".mapPanel",
         points: [
-            "Déplace la carte par glisser-déposer, utilise la molette ou les boutons pour zoomer, et le bouton maison pour revenir à la vue d’ensemble.",
-            "Les marqueurs reprennent l’état des objectifs filtrés. Sélectionner un marqueur ouvre la même fiche que son entrée dans la liste.",
-            "Certains objectifs se déroulent dans un intérieur ou ne possèdent pas de coordonnées fiables : ils restent accessibles dans la liste sans faux emplacement sur Hyrule."
+            "Drag and drop the map, use the wheel or buttons to zoom, and the home button to return to the overview.",
+            "Markers return the status of filtered objectives. Selecting a marker opens the same record as its entry in the list.",
+            "Some objectives take place in an interior or do not have reliable coordinates: they remain accessible in the list without false location on Hyrule."
         ],
-        tip: "La carte et toutes ses tuiles sont intégrées à l’application et restent disponibles hors ligne."
+        tip: "The map and all its tiles are integrated into the application and remain available offline."
     },
     {
         id: "guides",
-        title: "Fiches, preuves et guides",
-        summary: "Lire le statut, les solutions et leurs limites.",
+        title: "Objective details, evidence and guides",
+        summary: "Read the status, solutions and their limitations.",
         target: ".listPanel",
         points: [
-            "Chaque fiche rassemble l’état détecté, la position disponible, les étapes utiles, les récompenses, coffres ou conditions associées.",
-            "Une preuve automatique vient de la sauvegarde ; elle n’affirme jamais une action que les données du jeu ne permettent pas de distinguer.",
-            "Les guides peuvent inclure des sources externes. Leur consultation nécessite Internet, mais le contenu essentiel de la fiche est déjà embarqué."
+            "Each detail panel shows the detected status, available location, useful steps, rewards, chests and relevant conditions.",
+            "Automatic proof comes from the save; it never asserts an action that the game data does not allow to distinguish.",
+            "The guides may include external sources. Their consultation requires the Internet, but the essential content of the sheet is already embedded."
         ],
-        tip: "Les mentions de limite ou de validation manuelle sont volontaires : elles évitent de transformer une absence de preuve en faux résultat."
+        tip: "Limit or manual validation statements are voluntary: they avoid turning a lack of evidence into a false result."
     },
     {
         id: "manual",
-        title: "Suivi manuel et sauvegarde des données",
-        summary: "Cases personnelles, notes, import et export.",
+        title: "Manual tracking and data backups",
+        summary: "Personal checkboxes, notes, import and export.",
         target: ".manualBar",
         points: [
-            "Le suivi manuel complète l’analyse sans modifier le pourcentage officiel ni prétendre provenir de la sauvegarde du jeu.",
-            "Tu peux revoir les validations, ajouter des notes et retirer une case depuis le panneau de contrôle.",
-            "Les exports permettent de transférer ou sauvegarder tes validations et les données du Companion. Un import vérifie le format avant de remplacer les données locales."
+            "Manual tracking completes the analysis without changing the official percentage or claiming to come from the game save.",
+            "You can review validations, add notes, and remove a checkbox from the control panel.",
+            "Exports allow you to transfer or save your validations and Companion data. An import checks the format before replacing the local data."
         ],
-        tip: "Effectue régulièrement « Sauvegarder toutes les données » si tu prévois de changer d’ordinateur."
+        tip: "Regularly “Save all data” if you plan to change computers."
     },
     {
         id: "routes",
-        title: "Planificateur d’itinéraire",
-        summary: "Créer, ordonner et conserver des sessions de jeu.",
+        title: "Route planner",
+        summary: "Create, order and maintain gaming sessions.",
         target: "#routePlanner",
         points: [
-            "Ajoute les résultats filtrés ou un objectif précis à une session, puis choisis un point de départ facultatif.",
-            "L’optimisation peut privilégier la distance directe, les régions ou les téléportations. Les étapes verrouillées conservent leur position.",
-            "Le calcul est indicatif : il ne simule ni relief, météo, escalade, ennemis ni ressources consommées. Les sessions peuvent être dupliquées, importées ou exportées."
+            "Add filtered results or a specific goal to a session, and then choose an optional starting point.",
+            "Optimization can focus on direct distance, regions, or teleportation. Locked steps retain their position.",
+            "The calculation is indicative: it does not simulate terrain, weather, climbing, enemies or resources consumed. Sessions can be duplicated, imported or exported."
         ],
-        tip: "Verrouille les étapes obligatoires avant d’optimiser pour conserver l’ordre des rendez-vous importants."
+        tip: "Lock mandatory steps before optimizing to keep the order of important appointments."
     },
     {
         id: "blood_moon",
-        title: "Lune de sang",
-        summary: "Interpréter le compteur interne et l’estimation.",
+        title: "Blood Looney",
+        summary: "Interpret the internal counter and estimate.",
         target: "#bloodMoonPanel",
         points: [
-            "Le panneau lit le compteur enregistré par BOTW et estime le temps de jeu actif restant avant le seuil normal des sept jours.",
-            "Une lune peut être programmée puis reportée si les conditions du jeu ne permettent pas la cinématique à minuit.",
-            "L’estimation dépend de la dernière sauvegarde lue : un jeu en pause, un menu ou une période non sauvegardée peut expliquer un écart avec le temps réel."
+            "The panel reads the counter recorded by BOTW and estimates the remaining active play time before the normal seven-day threshold.",
+            "A moon can be programmed and then postponed if the conditions of the game do not allow the kinematics at midnight.",
+            "The estimate depends on the last save read: a paused game, a menu or an unsaved period can explain a gap with real time."
         ],
-        tip: "Le pourcentage représente l’avancement du minuteur connu, pas une probabilité aléatoire de déclenchement."
+        tip: "The percentage represents the progress of the known timer, not a random probability of triggering."
     },
     {
         id: "dsu",
         title: "Gyroscope JoyConDSU",
-        summary: "Manette, calibration, diagnostic et émulateur.",
+        summary: "Controller, calibration, diagnosis and emulator.",
         target: "#dsuControl",
         points: [
-            "Sélectionne une manette compatible, puis active le moteur seulement lorsque ton émulateur doit recevoir ses mouvements.",
-            "Le diagnostic mesure fréquence, retard, jitter, pertes et recalibrations. Une qualité insuffisante peut venir du Bluetooth, de la veille ou d’une autre application utilisant la manette.",
-            "L’émulateur doit être configuré pour le serveur DSU local 127.0.0.1:26760. Le moteur reste désactivé par défaut et s’arrête proprement avec le Companion."
+            "Select a compatible controller, then activate the engine only when your emulator needs to receive its movements.",
+            "The diagnosis measures frequency, delay, jitter, loss and recalibration. Insufficient quality can come from Bluetooth, standby or another application using the controller.",
+            "The emulator must be configured for the local DSU server 127.0.0.1:26760. The engine remains disabled by default and stops cleanly with the Companion."
         ],
-        tip: "Pose la manette immobile pendant la calibration et évite de lancer plusieurs serveurs DSU sur le même port."
+        tip: "Set the controller to stand still during calibration and avoid running multiple DSU servers on the same port."
     },
     {
         id: "application",
-        title: "Mises à jour, aide et fermeture",
-        summary: "Gérer l’application sans perdre tes données.",
+        title: "Updates, help and closure",
+        summary: "Manage the application without losing your data.",
         target: ".appActions",
         points: [
-            "« Mises à jour » consulte la dernière Release compatible avec un délai court. Le téléchargement démarre uniquement après confirmation, peut reprendre après une coupure et doit être vérifié avant toute installation.",
-            "Le bouton Aide rouvre ce centre et permet de reprendre le parcours ou d’afficher directement un chapitre.",
-            "Utilise « Quitter » pour arrêter proprement le serveur local et JoyConDSU. Les données personnelles restent dans le dossier de données de l’application, séparé de l’installation."
+            "\"Updates\" consults the latest release compatible with a short time. The download starts only after confirmation, can resume after a cut and must be checked before any installation.",
+            "The Help button reopens this center so you can resume the tour or open a chapter directly.",
+            "Use “Quit” to cleanly shut down the local server and JoyConDSU. Personal data remains in the application’s data folder, separate from the installation."
         ],
         tip: () => runtimePlatform.data_directory
-            ? `Données et journaux locaux : ${runtimePlatform.data_directory}`
-            : "Les données et journaux sont conservés dans le dossier de données de l’application, séparé du programme installé."
+            ? `Local data and logs: ${runtimePlatform.data_directory}`
+            : "Data and logs are kept in the application data folder, separate from the installed program."
     }
 ];
 
 const ESSENTIAL_TUTORIAL_STEPS = [
     {
         chapter: "privacy",
-        title: "Bienvenue dans BOTW Companion",
-        description: "Le Companion analyse ta progression sur cet ordinateur et reste utilisable sans connexion Internet.",
-        detail: "Ta sauvegarde n’est pas envoyée. Seules les mises à jour et les sources externes utilisent Internet, lorsque tu les demandes.",
+        title: "Welcome to BOTW Companion",
+        description: "The Companion analyzes your progress on this computer and remains usable without an Internet connection.",
+        detail: "Your save is not sent. Only updates and external sources use the Internet, when you request them.",
         target: "header"
     },
     {
         chapter: "save",
-        title: "Vérifie la sauvegarde retenue",
-        description: "L’émulateur, le slot, la date et l’aperçu confirment quelle partie est actuellement analysée.",
+        title: "Check the save retained",
+        description: "The emulator, slot, date and preview confirm which save is being analyzed.",
         detail: () => {
             const save = report?.sauvegarde || {};
-            return `${save.emulateur || "Émulateur détecté"} • ${save.plateforme || runtimePlatform.label || "Système local"} • slot ${save.slot || "en cours de détection"}`;
+            return `${save.emulateur || "Detected Emulator"} • ${save.plateforme || runtimePlatform.label || "Local system"} • slot ${save.slot || "in the process of detection"}`;
         },
         target: "#savePreview"
     },
     {
         chapter: "sync",
-        title: "Garde la progression à jour",
-        description: "Choisis l’intervalle de lecture, mets la synchronisation en pause ou demande une lecture immédiate.",
-        detail: "Une erreur temporaire ne remplace jamais le dernier rapport valide. L’historique récent explique chaque lecture.",
+        title: "Keep progress up to date",
+        description: "Choose the save reading interval, pause synchronization or read the save immediately.",
+        detail: "A temporary error never replaces the last valid report. Recent history explains each read.",
         target: ".syncSaveArea"
     },
     {
         chapter: "completion",
-        title: "Deux mesures, deux usages",
-        description: "L’anneau doré reproduit la carte officielle de BOTW ; l’anneau vert mesure les objectifs automatiquement vérifiables du profil choisi.",
-        detail: "Leurs totaux sont différents. Déplie les éléments bloquants pour comprendre précisément ce qui manque au profil de complétion.",
+        title: "Two measures, two purposes",
+        description: "The golden ring reproduces the official BOTW map; the green ring measures the automatically verifiable objectives of the chosen profile.",
+        detail: "Their totals are different. Expands the blocking elements to understand precisely what is missing from the completion profile.",
         target: ".hero"
     },
     {
         chapter: "sidebar",
-        title: "Choisis les catégories dans la colonne gauche",
-        description: "Les cases de la navigation latérale affichent ou masquent des familles entières d’objectifs dans la liste et sur la carte.",
-        detail: "Utilise « Tout » ou « Aucun » pour partir rapidement d’une vue complète ou vide. Les compteurs et la légende résument la progression de chaque famille.",
+        title: "Select the categories in the left column",
+        description: "The side navigation boxes show or hide entire families of objectives in the list and on the map.",
+        detail: "Use “All” or “None” to quickly start from a complete or empty view. The counters and the legend summarize the progress of each family.",
         target: "#categories"
     },
     {
         chapter: "navigation",
-        title: "Trouve ce qui t’intéresse",
-        description: "Après les catégories de gauche, combine recherche et filtres détaillés pour préciser les objectifs affichés dans la liste et sur la carte.",
-        detail: "Les états automatique, manuel, mixte et informatif restent distincts afin de ne jamais confondre une preuve de sauvegarde avec une case personnelle.",
+        title: "Find out what interests you",
+        description: "After selecting categories on the left, combine search and detailed filters to narrow down the objectives displayed in the list and on the map.",
+        detail: "The automatic, manual, mixed and informative states remain distinct so as never to confuse a save proof with a personal box.",
         target: ".toolbar"
     },
     {
         chapter: "map",
-        title: "Explore la carte et les fiches",
-        description: "Déplace et zoome la carte, puis sélectionne un marqueur ou un résultat pour ouvrir sa fiche détaillée.",
-        detail: "Les objectifs intérieurs ou sans coordonnées fiables restent dans la liste plutôt que d’être placés arbitrairement sur Hyrule.",
+        title: "Explore the map and objective details",
+        description: "Move and zooms the map, then selects a marker or result to open its detailed sheet.",
+        detail: "Internal or untrusted targets remain in the list rather than being arbitrarily placed on Hyrule.",
         target: ".mapPanel"
     },
     {
         chapter: "manual",
-        title: "Conserve tes validations personnelles",
-        description: "Le suivi manuel, les notes et les exports complètent l’analyse automatique sans modifier le compteur officiel.",
-        detail: "Le planificateur situé plus bas permet ensuite de regrouper ces objectifs en sessions et d’en optimiser l’ordre indicatif.",
+        title: "Keep your personal validations",
+        description: "Manual tracking, notes and exports complete the automatic analysis without changing the official counter.",
+        detail: "The planner located below then allows to group these objectives into sessions and optimize the indicative order.",
         target: ".manualBar"
     },
     {
         chapter: "blood_moon",
-        title: "Anticipe la lune de sang",
-        description: "Ce panneau interprète le minuteur enregistré dans la dernière sauvegarde et les étapes de programmation du jeu.",
-        detail: "L’estimation suit le temps de jeu actif connu. Une cinématique peut être reportée si les conditions ne sont pas réunies à minuit.",
+        title: "Anticipate the Blood Moon",
+        description: "This panel interprets the timer in the last save and the game’s scheduling conditions.",
+        detail: "The estimate follows the known active play time. A cinematic can be postponed if conditions are not met at midnight.",
         target: "#bloodMoonPanel"
     },
     {
         chapter: "dsu",
-        title: "Active le gyroscope seulement si nécessaire",
-        description: "JoyConDSU est inclus, mais reste désactivé tant que ton émulateur n’a pas besoin des mouvements de la manette.",
-        detail: "Le bouton Aide permet de retrouver les 13 chapitres, dont les filtres latéraux, la configuration DSU, les itinéraires, les sauvegardes et les mises à jour.",
+        title: "Activate the gyroscope only if necessary",
+        description: "JoyConDSU is included, but remains disabled as long as your emulator doesn’t need the controller’s movements.",
+        detail: "The Help button allows you to find all 13 chapters, including side filters, DSU configuration, routes, save files and updates.",
         target: "#dsuControl"
     }
 ];
@@ -617,14 +617,14 @@ function renderHelpOverview() {
     helpChapterId = null;
     updateHelpNavigation();
     $("#helpContent").innerHTML =
-        `<p class="eyebrow">BIEN DÉMARRER</p>` +
-        `<h3>Choisis le niveau d’aide qui te convient</h3>` +
-        `<p>Le parcours essentiel présente dix repères directement dans l’interface. Les chapitres détaillés restent disponibles ici à tout moment.</p>` +
+        `<p class="eyebrow">GOOD START</p>` +
+        `<h3>Choose the level of help that suits you</h3>` +
+        `<p>The essential tour introduces ten key areas of the interface. Detailed help chapters remain available here at any time.</p>` +
         `<div class="helpOverviewCards">` +
-        `<article><b>Parcours guidé</b><span>10 étapes contextuelles • environ 3 minutes</span></article>` +
-        `<article><b>Centre d’aide</b><span>13 chapitres complets • entièrement hors ligne</span></article>` +
+        `<article><b>Guided tour</b><span>10 contextual steps • about 3 minutes</span></article>` +
+        `<article><b>Help center</b><span>13 complete chapters • fully offline</span></article>` +
         `</div>` +
-        `<p class="helpPrivacyNote"><b>Aucune action n’est déclenchée pendant le parcours.</b> Les éléments sont seulement mis en évidence ; tes filtres, validations et sauvegardes ne sont jamais modifiés.</p>`;
+        `<p class="helpPrivacyNote"><b>No action is triggered during the tour.</b> Items are only highlighted; your filters, validations, and save files are never changed.</p>`;
 }
 
 function renderHelpChapter(id, focus = true) {
@@ -637,12 +637,12 @@ function renderHelpChapter(id, focus = true) {
     helpChapterId = id;
     updateHelpNavigation();
     $("#helpContent").innerHTML =
-        `<p class="eyebrow">CHAPITRE ${String(HELP_CHAPTERS.indexOf(chapter) + 1).padStart(2, "0")}</p>` +
+        `<p class="eyebrow">CHAPTER ${String(HELP_CHAPTERS.indexOf(chapter) + 1).padStart(2, "0")}</p>` +
         `<h3>${esc(chapter.title)}</h3>` +
         `<p>${esc(chapter.summary)}</p>` +
         `<ul>${chapter.points.map(point => `<li>${esc(point)}</li>`).join("")}</ul>` +
-        `<p class="helpTip"><b>À retenir</b>${esc(tip)}</p>` +
-        `<button class="showHelpTarget" type="button" data-start-chapter="${esc(chapter.id)}">Voir dans l’interface</button>`;
+        `<p class="helpTip"><b>To remember</b>${esc(tip)}</p>` +
+        `<button class="showHelpTarget" type="button" data-start-chapter="${esc(chapter.id)}">View in the interface</button>`;
     if (focus) $("#helpContent").focus({ preventScroll: true });
 }
 
@@ -653,7 +653,7 @@ function updateResumeTutorialButton() {
         return;
     }
     button.hidden = false;
-    button.textContent = `Reprendre à l’étape ${tutorialResume.index + 1}`;
+    button.textContent = `Resume at step ${tutorialResume.index + 1}`;
 }
 
 function showHelp(chapterId = null, returnFocus = document.activeElement) {
@@ -976,18 +976,18 @@ function renderTutorialStep(focusHeading = false) {
     delete $("#tutorialCard").dataset.positionedStep;
     $("#tutorialPreview").shadowRoot?.replaceChildren();
     $("#tutorialKind").textContent = tutorialState.kind === "essential"
-        ? "PARCOURS ESSENTIEL"
-        : "AIDE CONTEXTUELLE";
-    $("#tutorialStepLabel").textContent = `Étape ${tutorialState.index + 1} sur ${total}`;
+        ? "ESSENTIAL TOUR"
+        : "CONTEXTUAL HELP";
+    $("#tutorialStepLabel").textContent = `Step ${tutorialState.index + 1} of ${total}`;
     $("#tutorialProgressBar").style.width = `${(tutorialState.index + 1) / total * 100}%`;
     $("#tutorialTitle").textContent = step.title;
     $("#tutorialDescription").textContent = step.description;
     $("#tutorialDetail").textContent = target
         ? detail
-        : `${detail || ""} Cette partie de l’interface n’est pas disponible dans l’état actuel, mais l’explication reste accessible.`.trim();
+        : `${detail || ""} This part of the interface is not available in the current state, but the explanation remains accessible.`.trim();
     $("#previousTutorial").hidden = tutorialState.index === 0;
     $("#skipTutorial").hidden = tutorialState.kind !== "essential";
-    $("#nextTutorial").textContent = last ? "Terminer" : "Suivant";
+    $("#nextTutorial").textContent = last ? "Finish" : "Next";
     if (target) {
         target.scrollIntoView({
             behavior: "auto",
@@ -1163,7 +1163,7 @@ async function migrateBrowserPreferences() {
     });
     const data = await response.json();
     if (!response.ok) {
-        throw Error(data.erreur || "Migration des préférences impossible");
+        throw Error(data.erreur || "Migration of preferences is impossible");
     }
     preferencesData = data;
 }
@@ -1212,14 +1212,14 @@ function filterGroupsForDisplay() {
     ) {
         treasures.types.push({
             id: SHRINE_CHESTS_REMAINING_FILTER,
-            label: "Sanctuaires terminés - coffres restants",
+            label: "Completed Shrines - Remaining Chests",
             count: remaining.length
         });
         treasures.types.sort(
             (left, right) =>
                 left.label.localeCompare(
                     right.label,
-                    "fr"
+                    "en"
                 )
         );
     }
@@ -1294,10 +1294,10 @@ function trackingMode(x) {
 
 function trackingLabel(x) {
     return {
-        mixed: "Automatique + manuel",
-        automatic: "Automatique",
-        manual: "Manuel",
-        none: x.informational ? "Informatif" : "À faire"
+        mixed: "Automatic + manual",
+        automatic: "Automatic",
+        manual: "Manual",
+        none: x.informational ? "Informational" : "To do"
     }[trackingMode(x)]
 }
 
@@ -1399,7 +1399,7 @@ function saveRouteState() {
             if (!response.ok) {
                 throw Error(
                     data.erreur ||
-                    "Enregistrement des itinéraires impossible"
+                    "Routes cannot be recorded"
                 );
             }
 
@@ -1429,10 +1429,10 @@ function refreshVariants() {
                 .map(x => x.subtype)
                 .filter(Boolean)
         )
-    ].sort((a, b) => a.localeCompare(b, "fr"));
+    ].sort((a, b) => a.localeCompare(b, "en"));
 
     select.innerHTML =
-        '<option value="all">Toutes les variantes</option>' +
+        "<option value=\"all\">All variants</option>" +
         variants
             .map(x => `<option value="${esc(x)}">${esc(x)}</option>`)
             .join("");
@@ -1533,11 +1533,11 @@ function refreshProfileSelect() {
         .map(
             profile =>
                 `<option value="${esc(profile.id)}" ${
-                    profile.available === false ? 'disabled' : ''
+                    profile.available === false ? "disabled" : ""
                 }>${esc(profile.label)}${
                     profile.available === false
-                        ? ' - indisponible'
-                        : ''
+                        ? " - unavailable"
+                        : ""
                 }</option>`
         )
         .join("");
@@ -1562,15 +1562,15 @@ function selectedCompletionScore() {
     if (!profile || profile.available === false) {
         return {
             available: false,
-            label: profile?.label || "Profil",
-            note: p.mode || "Profil indisponible"
+            label: profile?.label || "Profile",
+            note: p.mode || "Profile unavailable"
         };
     }
 
     const formula = report.referentiel_100.formula.expression,
         inventory = report.referentiel_100.inventory_constraints,
         inventoryNote = profile.id === "amiibo"
-            ? ` Collection séparée : ${inventory.all_unique_armor} armures existent pour ${inventory.armor_inventory_limit} emplacements.`
+            ? ` Separate collection: ${inventory.all_unique_armor} armor pieces exist for ${inventory.armor_inventory_limit} slots.`
             : "";
     return {
         available: true,
@@ -1580,7 +1580,7 @@ function selectedCompletionScore() {
         pourcentage: p.total
             ? 100 * p.faits / p.total
             : 0,
-        note: `${profile.scope} Formule : ${formula}.${inventoryNote}`,
+        note: `${profile.scope} Formula: ${formula}.${inventoryNote}`,
         blockers: p.blocking_categories || [], remaining: p.remaining || 0,
         effectiveProfile: p.effective_profile || profile.id, profileId: profile.id
     };
@@ -1590,19 +1590,19 @@ function renderCompletionBlockers(score) {
     const summary = $("#completionBlockerSummary"), list = $("#completionBlockerList"),
         details = $("#completionBlockers");
     if (!score.available) {
-        summary.textContent = "Profil indisponible pour cette sauvegarde";
+        summary.textContent = "Profile unavailable for this save";
         list.innerHTML = ""; details.open = false; return;
     }
     if (!score.remaining) {
-        summary.textContent = "Aucun élément n’empêche le 100 %";
-        list.innerHTML = "<li>Ce profil est complet.</li>"; details.open = false; return;
+        summary.textContent = "There is nothing to prevent the 100%";
+        list.innerHTML = "<li>This profile is complete.</li>"; details.open = false; return;
     }
-    summary.textContent = `${score.remaining.toLocaleString("fr-FR")} éléments empêchent le 100 %`;
+    summary.textContent = `${score.remaining.toLocaleString("en-US")} items prevent 100% completion`;
     list.innerHTML = score.blockers.map(category => {
         const examples = category.examples.map(item => esc(item.name)).join(" • "),
             more = Math.max(0, category.remaining - category.examples.length);
-        return `<li><b>${esc(category.label)} : ${category.remaining.toLocaleString("fr-FR")}</b>` +
-            `<span>${examples}${more ? ` • +${more.toLocaleString("fr-FR")} autres` : ""}</span></li>`;
+        return `<li><b>${esc(category.label)} : ${category.remaining.toLocaleString("en-US")}</b>` +
+            `<span>${examples}${more ? ` • +${more.toLocaleString("en-US")} more` : ""}</span></li>`;
     }).join("");
 }
 
@@ -1765,14 +1765,14 @@ function renderBloodMoon() {
 
     if (!moon.available) {
         $("#bloodMoonCountdown").textContent =
-            "Estimation indisponible";
+            "Estimation unavailable";
 
         $("#bloodMoonStatus").textContent =
             moon.status_label ||
-            "Compteur interne absent.";
+            "Internal counter unavailable.";
 
         $("#bloodMoonPhase").textContent =
-            "Indisponible";
+            "Unavailable";
 
         $("#bloodMoonPercent").textContent = "-";
         $("#bloodMoonThreshold").textContent = "-";
@@ -1780,10 +1780,10 @@ function renderBloodMoon() {
         $("#bloodMoonEvent").textContent = "-";
 
         $("#bloodMoonMeasuredAt").textContent =
-            "Aucune mesure disponible";
+            "No measurements available";
 
         $("#bloodMoonInternal").textContent =
-            "Aucune valeur exploitable dans la dernière sauvegarde.";
+            "No value exploitable in the last save.";
 
         $("#bloodMoonAccuracy").textContent =
             moon.accuracy_label || "-";
@@ -1803,13 +1803,13 @@ function renderBloodMoon() {
 
     const phase =
         moon.scheduled
-            ? "Cycle validé • programmée"
+            ? "Validated cycle  =  programmed"
             : moon.status === "just_occurred"
-                ? "Nouveau cycle"
-                : "Cycle en cours • non programmée";
+                ? "New cycle"
+                : "Current cycle  =  unscheduled";
 
     $("#bloodMoonCountdown").textContent =
-        `≈ ${duration} de jeu actif`;
+        `≈ ${duration} of active play`;
 
     $("#bloodMoonPhase").textContent = phase;
 
@@ -1820,47 +1820,47 @@ function renderBloodMoon() {
 
     $("#bloodMoonStatus").textContent =
         moon.scheduled
-            ? "La lune de sang est validée : elle se déclenchera au prochain minuit autorisé."
-            : "Temps restant estimé depuis la dernière sauvegarde avant le déclenchement réel.";
+            ? "The blood moon is validated: it will be triggered at the next authorized midnight."
+            : "Estimated time remaining since the last save before the actual trigger.";
 
     $("#bloodMoonThreshold").textContent =
         moon.scheduled
-            ? "Atteint"
-            : `dans ≈ ${bloodMoonDuration(
+            ? "Reached"
+            : `in ≈ ${bloodMoonDuration(
                 moon.active_seconds_until_threshold
             )}`;
 
     $("#bloodMoonScheduled").textContent =
         moon.scheduled
-            ? "Validée"
-            : `dans ≈ ${bloodMoonDuration(
+            ? "Validated"
+            : `in ≈ ${bloodMoonDuration(
                 moon.active_seconds_until_scheduled
             )}`;
 
     $("#bloodMoonEvent").textContent =
-        `dans ≈ ${duration}`;
+        `in ≈ ${duration}`;
 
     $("#bloodMoonMeasuredAt").textContent =
         savedAt !== "-"
-            ? `Mesure exacte de la sauvegarde à ${savedAt}`
-            : "Mesure exacte de la dernière sauvegarde";
+            ? `Exact value from the save at ${savedAt}`
+            : "Exact measurement of the last save";
 
     $("#bloodMoonInternal").textContent =
-        `Compteur ${
+        `Counter ${
             Number(moon.timer_value).toLocaleString(
-                "fr-FR",
+                "en-US",
                 {
                     maximumFractionDigits: 1
                 }
             )
         } / ${
-            Number(moon.timer_target).toLocaleString("fr-FR")
-        } • heure du jeu ${moon.game_time_label}`;
+            Number(moon.timer_target).toLocaleString("en-US")
+        } • game time ${moon.game_time_label}`;
 
     $("#bloodMoonAccuracy").textContent =
-        `Le compteur baisse uniquement pendant le jeu actif et se recale à chaque sauvegarde.${
+        `The counter decreases only during active play and is updated with each save.${
             moon.may_be_delayed
-                ? " Le déclenchement est actuellement susceptible d’être reporté."
+                ? " The trigger is currently subject to postponement."
                 : ""
         }`;
 
@@ -1894,11 +1894,11 @@ function renderDsuSources(state) {
     if (!controllers.length) {
         const option = document.createElement("option");
         option.value = "";
-        option.textContent = "Aucune manette détectée";
+        option.textContent = "No controller detected";
         select.appendChild(option);
         select.value = "";
         $("#dsuCapabilities").textContent =
-            "Connecte une manette en USB ou Bluetooth puis attends la détection.";
+            "Connect a controller via USB or Bluetooth and wait for it to be detected.";
         return null;
     }
 
@@ -1906,10 +1906,10 @@ function renderDsuSources(state) {
         const option = document.createElement("option");
         option.value = String(controller.id);
         const suffix = controller.compatible
-            ? " - gyroscope disponible"
+            ? " - gyroscope available"
             : controller.kind === "joycon_single"
-                ? " - associe les deux Joy-Con"
-                : " - gyroscope indisponible";
+                ? " Combine the two Joy-Cons."
+                : " - gyroscope unavailable";
         option.textContent = `${controller.name}${suffix}`;
         option.dataset.compatible = controller.compatible ? "1" : "0";
         select.appendChild(option);
@@ -1923,13 +1923,13 @@ function renderDsuSources(state) {
 
     const vidPid = controllerVidPid(chosen);
     const kind = chosen.kind === "joycon_pair"
-        ? "Paire Joy-Con / grip"
-        : chosen.type || "Manette";
+        ? "Joy-Con pair / grip"
+        : chosen.type || "Controller";
     $("#dsuCapabilities").textContent = chosen.compatible
-        ? `${kind}${vidPid} • gyroscope + accéléromètre disponibles`
+        ? `${kind}${vidPid} • gyroscope and accelerometer available`
         : chosen.kind === "joycon_single"
-            ? `${kind}${vidPid} • utilise la paire Joy-Con combinée`
-            : `${kind}${vidPid} • aucun gyroscope exploitable par SDL3`;
+            ? `${kind}${vidPid} • uses the combined Joy-Con pair`
+            : `${kind}${vidPid} =  no gyroscope usable by SDL3`;
     return chosen;
 }
 
@@ -1949,14 +1949,14 @@ function dsuMetric(value, digits = 1, suffix = "") {
 
 function dsuCounter(value) {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "-";
+    return Number.isFinite(numeric) ? numeric.toLocaleString("en-US") : "-";
 }
 
 function renderDsuDiagnostic(state) {
     const diagnostic = state?.diagnostic || {
         status: "inactive",
-        label: "Diagnostic inactif",
-        summary: "Active le gyroscope pour mesurer la qualité du signal."
+        label: "Diagnostic inactive",
+        summary: "Activate the gyroscope to measure signal quality."
     };
     const telemetry = state?.telemetry || {};
     const quality = $("#dsuQuality");
@@ -1965,22 +1965,22 @@ function renderDsuDiagnostic(state) {
     $("#dsuQualitySummary").textContent = diagnostic.summary;
     $("#dsuReceivedRate").textContent = dsuMetric(telemetry.received_hz, 1, " Hz");
     $("#dsuSentRate").textContent = Number(telemetry.clients || 0) === 0 && telemetry.sent_hz !== undefined
-        ? "En attente de l’émulateur"
+        ? "Waiting for the Emulator"
         : dsuMetric(telemetry.sent_hz, 1, " Hz");
     $("#dsuSampleAge").textContent = dsuMetric(telemetry.sample_age_ms, 1, " ms");
     $("#dsuReceivedJitter").textContent = telemetry.received_jitter_mean_ms === undefined
         ? "-"
-        : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
+        : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} avg. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuSentJitter").textContent = telemetry.sent_jitter_mean_ms === undefined
         ? "-"
-        : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
+        : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} avg. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
     $("#dsuTimestampErrors").textContent = telemetry.duplicate_timestamps === undefined
         ? "-"
-        : `${dsuCounter(telemetry.duplicate_timestamps)} doublons • ${dsuCounter(telemetry.regressive_timestamps)} régressifs`;
+        : `${dsuCounter(telemetry.duplicate_timestamps)} duplicates • ${dsuCounter(telemetry.regressive_timestamps)} timestamps out of order`;
     $("#dsuSentPackets").textContent = dsuCounter(telemetry.sent_packets);
     $("#dsuNetworkErrors").textContent = telemetry.send_errors === undefined
         ? "-"
-        : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} requêtes invalides`;
+        : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} Invalid requests`;
     $("#dsuReconnects").textContent = telemetry.disconnects === undefined
         ? "-"
         : `${dsuCounter(telemetry.disconnects)} / ${dsuCounter(telemetry.reconnects)}`;
@@ -1992,8 +1992,8 @@ function renderDsuDiagnostic(state) {
 function renderDsu(state) {
     state = state || {
         state: "error",
-        state_label: "État DSU inaccessible",
-        message: "Le Companion ne peut pas interroger le serveur local.",
+        state_label: "Inaccessible DSU status",
+        message: "The Companion cannot query the local server.",
         running: false
     };
 
@@ -2006,9 +2006,9 @@ function renderDsu(state) {
         state.engine_name || runtimePlatform.native_dsu_engine || "DSU";
     $("#dsuControl").title = [
         state.message,
-        state.log_path ? `Journal : ${state.log_path}` : null
+        state.log_path ? `Log: ${state.log_path}` : null
     ].filter(Boolean).join("\n");
-    $("#toggleDsu").textContent = state.running ? "Désactiver" : "Activer";
+    $("#toggleDsu").textContent = state.running ? "Disable" : "Enable";
     $("#toggleDsu").classList.toggle("active", state.running);
     $("#dsuSource").disabled = dsuBusy || state.running;
     $("#toggleDsu").disabled =
@@ -2022,18 +2022,18 @@ async function loadRuntimePlatform() {
         const response = await fetch("/api/version");
         const data = await response.json();
         if (!response.ok) {
-            throw Error("Plateforme inaccessible");
+            throw Error("Platform unavailable");
         }
         runtimePlatform = {
             ...runtimePlatform,
             ...(data.platform || {})
         };
         $("#runtimePlatform").textContent =
-            String(runtimePlatform.label || "Système local").toUpperCase();
+            String(runtimePlatform.label || "Local system").toUpperCase();
         $("#dsuEngineLabel").textContent =
             runtimePlatform.native_dsu_engine || "DSU";
     } catch (_error) {
-        $("#runtimePlatform").textContent = "SYSTÈME LOCAL";
+        $("#runtimePlatform").textContent = "LOCAL SYSTEM";
     }
 }
 
@@ -2056,7 +2056,7 @@ async function copyText(text) {
     const copied = document.execCommand("copy");
     field.remove();
     if (!copied) {
-        throw Error("Copie impossible dans ce navigateur");
+        throw Error("Impossible to copy in this browser");
     }
 }
 
@@ -2073,13 +2073,13 @@ async function refreshDsu() {
         const response = await fetch(`/api/dsu?t=${Date.now()}`);
         state = await response.json();
         if (!response.ok) {
-            throw Error(state.message || "État DSU inaccessible");
+            throw Error(state.message || "Inaccessible DSU status");
         }
         renderDsu(state);
     } catch (error) {
         renderDsu({
             state: "error",
-            state_label: "État DSU inaccessible",
+            state_label: "Inaccessible DSU status",
             message: error.message,
             running: false
         });
@@ -2106,9 +2106,9 @@ async function toggleDsu() {
         state = await response.json();
         renderDsu(state);
         if (!response.ok) {
-            throw Error(state.message || "Commande DSU impossible");
+            throw Error(state.message || "DSU command failed");
         }
-        toast(stop ? "Gyroscope désactivé" : "Serveur DSU activé - laisse la manette immobile");
+        toast(stop ? "Gyroscope disabled" : "DSU server enabled - leaves the controller motionless");
         scheduleDsu(state);
     } catch (error) {
         toast(error.message, true);
@@ -2146,7 +2146,7 @@ async function load(showToast = false) {
         if (!preferencesResponse.ok) {
             throw Error(
                 preferences.erreur ||
-                "Préférences inaccessibles"
+                "Inaccessible Preferences"
             );
         }
 
@@ -2161,21 +2161,21 @@ async function load(showToast = false) {
         if (!reportResponse.ok) {
             throw Error(
                 data.erreur ||
-                "Analyse impossible"
+                "Analysis failed"
             );
         }
 
         if (!manualResponse.ok) {
             throw Error(
                 manual.erreur ||
-                "Suivi manuel inaccessible"
+                "Manual tracking unavailable"
             );
         }
 
         if (!routesResponse.ok) {
             throw Error(
                 routes.erreur ||
-                "Itinéraires inaccessibles"
+                "Inaccessible routes"
             );
         }
 
@@ -2191,7 +2191,7 @@ async function load(showToast = false) {
         if (!catalogResponse.ok) {
             throw Error(
                 catalog.erreur ||
-                "Catalogue inaccessible"
+                "Catalog unavailable"
             );
         }
 
@@ -2200,7 +2200,7 @@ async function load(showToast = false) {
             data.report_revision_key
         ) {
             throw Error(
-                "La sauvegarde a changé pendant le chargement du catalogue; actualise la page"
+                "The save has changed during catalog loading; refreshes the page"
             );
         }
 
@@ -2252,7 +2252,7 @@ async function load(showToast = false) {
             await saveRouteState();
 
             toast(
-                "Ancien itinéraire transféré dans les données de l’application"
+                "Old route transferred in the application data"
             );
         }
 
@@ -2260,7 +2260,7 @@ async function load(showToast = false) {
 
         if (showToast) {
             toast(
-                "Sauvegarde, suivi et itinéraires relus"
+                "Back up and restore manual tracking and routes"
             );
         }
     } catch (e) {
@@ -2314,13 +2314,13 @@ function renderAll() {
     $("#saveInfo").textContent =
         `Slot ${s.slot} • ${
             s.mode === "expert"
-                ? "Mode Expert"
-                : "Mode normal"
+                ? "Master Mode"
+                : "Normal Mode"
         } • ${saveDate} • ${s.chemin}`;
 
     renderSavePreview(s, saveDate);
 
-    const emulatorLabel = String(s.emulateur || "Émulateur").toUpperCase();
+    const emulatorLabel = String(s.emulateur || "Emulator").toUpperCase();
     const runtimeEmulator = $("#runtimeEmulator");
     if (runtimeEmulator) runtimeEmulator.textContent = emulatorLabel;
 
@@ -2335,35 +2335,35 @@ function renderAll() {
     );
 
     $("#mapScore").textContent =
-        `${mapScore.faits.toLocaleString("fr-FR")} marqueurs sur ${mapScore.total.toLocaleString("fr-FR")}`;
+        `${mapScore.faits.toLocaleString("en-US")} Markers on ${mapScore.total.toLocaleString("en-US")}`;
 
     const formula =
         mapScore.selected_mode === "dlc"
-            ? "Formule jeu + DLC"
-            : "Formule jeu de base";
+            ? "Base game + DLC formula"
+            : "Formula basic game";
 
     $("#mapStatus").textContent =
         mapScore.visible_dans_le_jeu
-            ? `Pourcentage officiel de la carte actuellement visible dans BOTW. ${formula}${
+            ? `Official percentage of the map currently visible in BOTW. ${formula}${
                 mapScore.selection === "automatique"
-                    ? " sélectionnée automatiquement."
-                    : " imposée manuellement."
+                    ? " selected automatically."
+                    : " imposed manually."
             }`
-            : `Prévision exacte du pourcentage de carte. Ce compteur reste masqué dans BOTW jusqu’à la première victoire contre Ganon. ${formula}${
+            : `Exact prediction of map completion. This counter stays hidden in BOTW until you first defeat Ganon. ${formula}${
                 mapScore.selection === "automatique"
-                    ? " sélectionnée automatiquement."
-                    : " imposée manuellement."
+                    ? " selected automatically."
+                    : " imposed manually."
             }`;
 
     const labels = {
-        korogus: "Korogus",
-        sanctuaires_base: "Sanctuaires",
+        korogus: "Koroks",
+        sanctuaires_base: "Shrines",
         marqueurs_carte:
-            "Lieux + tours + créatures",
+            "Places + towers + creatures",
         sanctuaires_dlc:
-            "Sanctuaires DLC",
+            "Shrines DLC",
         donjon_final_dlc:
-            "Donjon final DLC"
+            "Final DLC dungeon"
     };
 
     $("#mapBreakdown").innerHTML =
@@ -2388,8 +2388,8 @@ function renderAll() {
 
     $("#score").textContent =
         score.available
-            ? `${score.faits.toLocaleString("fr-FR")} éléments validés sur ${score.total.toLocaleString("fr-FR")}`
-            : `${score.label} indisponible pour cette sauvegarde`;
+            ? `${score.faits.toLocaleString("en-US")} completed items out of ${score.total.toLocaleString("en-US")}`
+            : `${score.label} Unavailable for this save`;
 
     $("#scoreNote").textContent = score.note;
     renderCompletionBlockers(score);
@@ -2424,7 +2424,7 @@ function renderAll() {
     const old = $("#region").value;
 
     $("#region").innerHTML =
-        '<option value="all">Toutes les régions</option>' +
+        "<option value=\"all\">All regions</option>" +
         regions
             .map(x => `<option>${esc(x)}</option>`)
             .join("");
@@ -2444,17 +2444,17 @@ function renderAll() {
 }
 
 function renderSavePreview(save, saveDate) {
-    const mode = save.mode === "expert" ? "Expert" : "normal",
-        emulator = save.emulateur || "Émulateur",
-        platform = save.plateforme || runtimePlatform.label || "Système local",
+    const mode = save.mode === "expert" ? "Master Mode" : "Normal Mode",
+        emulator = save.emulateur || "Emulator",
+        platform = save.plateforme || runtimePlatform.label || "Local system",
         revision = String(report.report_revision_key || `${save.slot}:${save.date}`),
         image = $("#saveCaption"),
         fallback = $("#saveCaptionFallback");
 
-    $("#saveSlotTitle").textContent = `Slot ${save.slot} • Mode ${mode}`;
-    $("#saveSlotDate").textContent = `Dernière sauvegarde : ${saveDate}`;
+    $("#saveSlotTitle").textContent = `Slot ${save.slot} • ${mode}`;
+    $("#saveSlotDate").textContent = `Latest save: ${saveDate}`;
     $("#saveSlotSource").textContent = `${emulator} • ${platform}`;
-    $("#savePreview").title = save.detection_mode || "Slot sélectionné automatiquement";
+    $("#savePreview").title = save.detection_mode || "Slot selected automatically";
     fallback.textContent = `SLOT ${save.slot}`;
 
     if (saveCaptionRevision === revision) {
@@ -2464,7 +2464,7 @@ function renderSavePreview(save, saveDate) {
     saveCaptionRevision = revision;
     image.hidden = true;
     fallback.hidden = false;
-    image.alt = `Aperçu du slot ${save.slot}, mode ${mode}, sauvegardé le ${saveDate}`;
+    image.alt = `Preview of slot ${save.slot}, ${mode} mode, saved on ${saveDate}`;
     image.dataset.revision = revision;
     image.onload = () => {
         if (image.dataset.revision === revision) {
@@ -2484,7 +2484,7 @@ function renderSavePreview(save, saveDate) {
 function syncDate(value) {
     return value
         ? new Date(value).toLocaleTimeString(
-            "fr-FR",
+            "en-US",
             {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -2500,13 +2500,13 @@ function localSaveDateTime(timestamp, fallback = null) {
         ? new Date(numeric * 1000)
         : (fallback ? new Date(fallback) : null);
     if (!date || Number.isNaN(date.getTime())) return "-";
-    const localDate = new Intl.DateTimeFormat("fr-FR", {
+    const localDate = new Intl.DateTimeFormat("en-US", {
         dateStyle: "short"
     }).format(date);
-    const localTime = new Intl.DateTimeFormat("fr-FR", {
+    const localTime = new Intl.DateTimeFormat("en-US", {
         timeStyle: "medium"
     }).format(date);
-    return `${localDate} à ${localTime}`;
+    return `${localDate} at ${localTime}`;
 }
 
 function localSaveTime(timestamp, fallback = null) {
@@ -2515,7 +2515,7 @@ function localSaveTime(timestamp, fallback = null) {
         ? new Date(numeric * 1000)
         : (fallback ? new Date(fallback) : null);
     if (!date || Number.isNaN(date.getTime())) return "-";
-    return new Intl.DateTimeFormat("fr-FR", {
+    return new Intl.DateTimeFormat("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
@@ -2532,29 +2532,29 @@ function updateSync(meta, error = null) {
 
     $("#syncStatus").textContent =
         error
-            ? "Synchronisation temporairement indisponible"
+            ? "Synchronization temporarily unavailable"
             : meta.status_label ||
-                "Première lecture en attente";
+                "First Reading Pending";
 
     $("#syncDot").className =
         `sync-${status}`;
 
     const mode =
         meta.save_mode === "expert"
-            ? "Expert"
+            ? "Master Mode"
             : meta.save_mode === "normal"
                 ? "normal"
                 : "-";
 
     const candidate =
         meta.candidate_slot
-            ? ` • candidat ${meta.candidate_slot}`
+            ? ` • candidate ${meta.candidate_slot}`
             : "";
 
     $("#syncTimes").textContent =
         error
-            ? `${error} • dernier rapport conservé`
-            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${localSaveTime(meta.save_timestamp, meta.save_timestamp_at)} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
+            ? `${error} • last report retained`
+            : `Last successful read at ${syncDate(meta.last_success_at)} • internal save at ${localSaveTime(meta.save_timestamp, meta.save_timestamp_at)} • slot ${meta.slot || "-"} (${mode})${candidate} • revision ${meta.report_revision || 0}`;
 
     const events = meta.events || [];
 
@@ -2566,7 +2566,7 @@ function updateSync(meta, error = null) {
                         `<p><time>${esc(syncDate(event.at))}</time><span>${esc(event.message)}</span></p>`
                 )
                 .join("")
-            : '<p>Aucun événement.</p>';
+            : "<p>No event.</p>";
 }
 
 function scheduleSync() {
@@ -2612,7 +2612,7 @@ async function sendHeartbeat() {
 async function quitCompanion() {
     if (
         !confirm(
-            "Arrêter BOTW Companion ? Le suivi manuel et les itinéraires déjà enregistrés seront conservés."
+            "Stop BOTW Companion? Manual tracking and previously recorded routes will be retained."
         )
     ) {
         return;
@@ -2633,7 +2633,7 @@ async function quitCompanion() {
     }
 
     document.body.innerHTML =
-        `<main class="shutdownPage"><div class="panel"><h1>BOTW Companion est arrêté</h1><p>${esc(runtimePlatform.relaunch_hint)}</p></div></main>`;
+        `<main class="shutdownPage"><div class="panel"><h1>BOTW Companion has stopped</h1><p>${esc(runtimePlatform.relaunch_hint)}</p></div></main>`;
 }
 
 async function checkSync(force = false) {
@@ -2643,7 +2643,7 @@ async function checkSync(force = false) {
         updateSync({
             status: "analyse",
             status_label:
-                "Lecture immédiate demandée",
+                "Immediate reading required",
             events:
                 report?.synchronisation?.events || []
         });
@@ -2658,7 +2658,7 @@ async function checkSync(force = false) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Synchronisation impossible"
+                "Synchronization failed"
             );
         }
 
@@ -2666,14 +2666,14 @@ async function checkSync(force = false) {
             await load(false);
 
             toast(
-                "Nouvelle sauvegarde analysée et catalogue actualisé"
+                "New save analyzed and updated catalog"
             );
         } else {
             updateSync(data.synchronisation);
 
             if (force) {
                 toast(
-                    "Sauvegarde relue - contenu inchangé"
+                    "Re-read save - unchanged content"
                 );
             }
         }
@@ -2781,23 +2781,23 @@ function renderFilterNav() {
                                     ).length,
                                 progress =
                                     trackable.length
-                                        ? `${done.toLocaleString("fr-FR")}/${trackable.length.toLocaleString("fr-FR")}`
-                                        : `${items.length.toLocaleString("fr-FR")} pts`,
+                                        ? `${done.toLocaleString("en-US")}/${trackable.length.toLocaleString("en-US")}`
+                                        : `${items.length.toLocaleString("en-US")} pts`,
                                 hint =
                                     trackable.length
-                                        ? `${done} terminé${done > 1 ? 's' : ''} sur ${trackable.length}`
-                                        : `${items.length} point${items.length > 1 ? 's' : ''} informatif${items.length > 1 ? 's' : ''} - sans statut terminé`;
+                                        ? `${done} completed of ${trackable.length}`
+                                        : `${items.length} informational point${items.length > 1 ? "s" : ""} - no completion status`;
 
-                            return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${progress}</small></label>`
+                            return `<label class="filterType ${selectedTypes.has(type.id) ? "selected" : ""}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? "checked" : ""}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? "" : "informational"}">${progress}</small></label>`
                         })
                         .join("");
 
-                return `<details class="filterGroup" open><summary><span>${esc(group.label)}</span><small title="Filtres actifs">${checked}/${visibleTypes.length} filtres</small></summary><div>${types}</div></details>`;
+                return `<details class="filterGroup" open><summary><span>${esc(group.label)}</span><small title="Active filters">${checked}/${visibleTypes.length} filters</small></summary><div>${types}</div></details>`;
             })
             .join("");
 
     $("#categories").innerHTML =
-        `<div class="filterHeading"><b>Filtres de carte</b><span><button data-filter-action="all">Tout</button><button data-filter-action="none">Aucun</button></span></div>${groups}`;
+        `<div class="filterHeading"><b>Map Filters</b><span><button data-filter-action="all">All</button><button data-filter-action="none">None</button></span></div>${groups}`;
 
     document
         .querySelectorAll(
@@ -2948,13 +2948,13 @@ function armorLine(x) {
 
     const ready =
         next?.possible
-            ? " • matériaux prêts"
+            ? "  =  materials ready"
             : "";
 
     return `${x.etoiles || "☆☆☆☆"}${
         x.possede
-            ? ` • niveau ${x.niveau}/4`
-            : " • non possédée"
+            ? ` • Level ${x.niveau}/4`
+            : "  =  not possessed"
     }${ready}`;
 }
 
@@ -2964,10 +2964,10 @@ function renderItems() {
     const items = filtered();
 
     $("#resultCount").textContent =
-        `${items.length} résultat${items.length > 1 ? 's' : ''}`;
+        `${items.length} result${items.length > 1 ? "s" : ""}`;
 
     $("#mapCount").textContent =
-        `${items.filter(x => x.x != null && x.z != null).length} localisés`;
+        `${items.filter(x => x.x != null && x.z != null).length} with coordinates`;
 
     renderFilterScopeNotice(items);
 
@@ -2982,7 +2982,7 @@ function renderItems() {
     $("#listTitle").textContent =
         labels.length === 1
             ? labels[0]
-            : "Éléments filtrés";
+            : "Filtered elements";
 
     const planned = routeIds();
 
@@ -3005,28 +3005,28 @@ function renderItems() {
                             x.subtype,
                             x.region,
                             x.nearby
-                                ? `près de ${x.nearby}`
+                                ? `near ${x.nearby}`
                                 : null,
                             x.trial,
                             x.quest,
                             x.section,
                             x.statut,
                             x.mode_expert
-                                ? 'mode expert'
+                                ? "mode expert"
                                 : null,
                             x.content_origin !== "base"
                                 ? x.content_origin_label
                                 : null
-                        ].filter(Boolean).join(" • "))}</span>${x.raison ? `<span class="itemMeta">${esc(x.raison)}</span>` : ""}</span><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span></button>${x.x != null ? `<button type="button" class="routeAdd ${planned.has(itemId(x)) ? 'active' : ''}" data-route-add="${esc(itemId(x))}" aria-label="${planned.has(itemId(x)) ? 'Retirer' : 'Ajouter'} ${esc(x.name || x.display_name || x.id)} ${planned.has(itemId(x)) ? 'de' : 'à'} l’itinéraire" title="${planned.has(itemId(x)) ? 'Retirer de' : 'Ajouter à'} l’itinéraire">${planned.has(itemId(x)) ? '✓' : '+'}</button>` : ""}</div>`
+                        ].filter(Boolean).join(" • "))}</span>${x.raison ? `<span class="itemMeta">${esc(x.raison)}</span>` : ""}</span><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span></button>${x.x != null ? `<button type="button" class="routeAdd ${planned.has(itemId(x)) ? "active" : ""}" data-route-add="${esc(itemId(x))}" aria-label="${planned.has(itemId(x)) ? "Remove" : "Add"} ${esc(x.name || x.display_name || x.id)} ${planned.has(itemId(x)) ? "of" : "at"} the route" title="${planned.has(itemId(x)) ? "Remove from" : "Add to"} the route">${planned.has(itemId(x)) ? "✓" : "+"}</button>` : ""}</div>`
                 )
                 .join("") +
 
                 (
                     more
-                        ? `<button id="showMoreResults" class="showMoreResults">Afficher ${Math.min(LIST_PAGE_SIZE, more)} résultats supplémentaires • ${more.toLocaleString("fr-FR")} restant${more > 1 ? 's' : ''}</button>`
+                        ? `<button id="showMoreResults" class="showMoreResults">Show ${Math.min(LIST_PAGE_SIZE, more)} more results • ${more.toLocaleString("en-US")} remaining</button>`
                         : ""
                 )
-            : '<div class="empty">Aucun élément avec ces filtres.</div>';
+            : "<div class=\"empty\">No items with these filters.</div>";
 
     renderMap(items);
 
@@ -3109,15 +3109,15 @@ function renderFilterScopeNotice(items) {
     const warning =
         mode === "all" &&
         saveMode === "normal"
-            ? `Affichage volontaire de tous les modes : ${expert.toLocaleString("fr-FR")} placement${expert > 1 ? 's' : ''} exclusif${expert > 1 ? 's' : ''} au mode Expert est inclus.`
+            ? `All modes are displayed: ${expert.toLocaleString("en-US")} placement${expert > 1 ? "s" : ""} exclusive to Master Mode included.`
             : mode === "normal"
-                ? "Les placements exclusifs au mode Expert sont masqués."
+                ? "Placements exclusive to Master Mode are hidden."
                 : mode === "expert"
-                    ? "Les placements communs et exclusifs au mode Expert sont affichables."
+                    ? "Common placements and placements exclusive to Master Mode are displayed."
                     : "";
 
     $("#filterScopeNotice").innerHTML =
-        `<b>Périmètre contrôlé</b><span>${esc(warning)} ${map.toLocaleString("fr-FR")} sur Hyrule • ${interior.toLocaleString("fr-FR")} sur cartes intérieures • ${list.toLocaleString("fr-FR")} seulement dans la liste.</span>${audit.status && audit.status !== "complete" ? '<strong>Les compteurs de référence nécessitent une vérification.</strong>' : ''}`;
+        `<b>Verified coverage</b><span>${esc(warning)} ${map.toLocaleString("en-US")} on Hyrule • ${interior.toLocaleString("en-US")} on interior maps • ${list.toLocaleString("en-US")} in the list only.</span>${audit.status && audit.status !== "complete" ? "<strong>The reference counters require verification.</strong>" : ""}`;
 }
 
 async function select(id, fromList = false) {
@@ -3166,7 +3166,7 @@ async function select(id, fromList = false) {
     $("#closeDetails").focus();
 
     $("#detailContent").innerHTML =
-        '<div class="detailLoading"><b id="detailTitle">Chargement de la fiche…</b><small>Les détails sont récupérés localement à la demande.</small></div>';
+        "<div class=\"detailLoading\"><b id=\"detailTitle\">Loading details…</b><small>Details are retrieved locally on request.</small></div>";
 
     try {
         let detailed =
@@ -3183,7 +3183,7 @@ async function select(id, fromList = false) {
             if (!response.ok) {
                 throw Error(
                     payload.erreur ||
-                    "Fiche inaccessible"
+                    "Details unavailable"
                 );
             }
 
@@ -3192,7 +3192,7 @@ async function select(id, fromList = false) {
                 report.report_revision_key
             ) {
                 throw Error(
-                    "Cette fiche appartient à une autre révision de la sauvegarde"
+                    "This sheet belongs to another revision of the save"
                 );
             }
 
@@ -3596,7 +3596,7 @@ function renderMap(items) {
                 // Dense points remain clickable with a mouse. Their keyboard
                 // equivalent is the full row in the filtered list, which also
                 // avoids hundreds of redundant Tab stops.
-                return `<span aria-hidden="true" title="${esc(x.name)}" data-map-id="${esc(id)}" class="marker baseMapMarker ${stateClass(x)} ${selectedId === id ? 'selected' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></span>`
+                return `<span aria-hidden="true" title="${esc(x.name)}" data-map-id="${esc(id)}" class="marker baseMapMarker ${stateClass(x)} ${selectedId === id ? "selected" : ""}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%"></span>`
             }
 
             const points =
@@ -3618,7 +3618,7 @@ function renderMap(items) {
                         points.length
                 };
 
-            return `<button type="button" title="Zoomer sur ${group.length} éléments" aria-label="Zoomer sur ${group.length} éléments" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${group.length}</button>`;
+            return `<button type="button" title="Zoom to ${group.length} items" aria-label="Zoom to ${group.length} items" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${group.length}</button>`;
         }).join("");
 
     const selected =
@@ -3643,7 +3643,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button type="button" title="${esc(point.label)}" aria-label="Étape ${index + 1} : ${esc(point.label)}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return `<button type="button" title="${esc(point.label)}" aria-label="Step ${index + 1} : ${esc(point.label)}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
             }
         ).join("");
 
@@ -3658,7 +3658,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button type="button" title="Étape ${index + 1} - ${esc(point.name)}" aria-label="Étape planifiée ${index + 1} : ${esc(point.name)}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? 'locked' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return `<button type="button" title="Step ${index + 1} - ${esc(point.name)}" aria-label="Planned step ${index + 1}: ${esc(point.name)}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? "locked" : ""}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
             }
         ).join("");
 
@@ -3668,7 +3668,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(start);
 
-                return `<button type="button" title="Départ - ${esc(start.label || 'point personnalisé')}" aria-label="Point de départ : ${esc(start.label || 'point personnalisé')}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">D</button>`
+                return `<button type="button" title="Start - ${esc(start.label || "Custom Point")}" aria-label="Starting point: ${esc(start.label || "Custom Point")}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">D</button>`
             })()
             : "";
 
@@ -3807,66 +3807,66 @@ function renderMap(items) {
 function helpFor(x) {
     const coord =
         x.x != null
-            ? `Le marqueur est placé aux coordonnées X ${x.x.toFixed(1)}, Z ${x.z.toFixed(1)}.`
-            : "Cet objectif n’a pas encore de coordonnées fiables dans la base locale.";
+            ? `The marker is placed at coordinates X ${x.x.toFixed(1)}, Z ${x.z.toFixed(1)}.`
+            : "This objective does not yet have reliable coordinates in the local database.";
 
     if (x.farm) {
-        return `${coord} Ce point de farm reste toujours affiché : l’ennemi réapparaît après une lune de sang, même si une victoire antérieure est enregistrée. ${x.scalable ? "Sa famille et sa position sont fiables, mais sa variante peut avoir évolué avec la difficulté du monde." : "La variante statique indiquée provient des données de placement du jeu."}`;
+        return `${coord} This farm point is always displayed: the enemy reappears after a blood moon, even if a previous victory is recorded. ${x.scalable ? "Its family and location are reliable, but its variant may have changed with world difficulty." : "The static variant shown comes from the game placement data."}`;
     }
 
     const guide = {
         sanctuaires:
-            `${coord} Active le point de téléportation, termine l’épreuve${x.trial ? ` « ${x.trial} »` : ""} et examine l’autel. Pense au coffre facultatif avant de sortir.${x.quest ? ` L’accès dépend de la quête « ${x.quest} ».` : ""}`,
+            `${coord} Activate the travel point, complete the trial${x.trial ? ` « ${x.trial} »` : ""} and examine the altar. Remember the optional chest before leaving.${x.quest ? ` Access depends on the quest “${x.quest}”.` : ""}`,
 
         coffres_sanctuaires:
-            `${coord} Retourne dans ce sanctuaire et vérifie chaque salle avant l’autel. ${x.raison || "Le coffre n’est pas validé dans la sauvegarde."}`,
+            `${coord} Return to this shrine and check every room before the altar. ${x.raison || "The chest is not marked as opened in the save."}`,
 
         coffres_monde:
-            `${coord} Le coffre possède un flag permanent : son ouverture sera détectée à la prochaine sauvegarde.${x.contenu ? ` Contenu identifié : ${x.contenu}.` : ""}`,
+            `${coord} This chest has a permanent flag: opening it will be detected in your next save.${x.contenu ? ` Identified Content: ${x.contenu}.` : ""}`,
 
         coffres_donjons:
-            `Explore le secteur ${x.secteur || "du donjon"} avant de le quitter. Ce coffre possède un flag permanent et sera validé automatiquement après sauvegarde.`,
+            `Explore the ${x.secteur || "the Dungeon"} area before leaving. This chest has a permanent flag and will be marked as completed after you save.`,
 
         korogus:
-            `${coord} Cherche le petit puzzle environnemental autour du point : pierres, cercle, fleurs, moulinet, ballon, souche ou offrande. Le type exact du puzzle n’est pas conservé dans la sauvegarde.`,
+            `${coord} Look for a small environmental puzzle near the point: stones, a circle, flowers, a pinwheel, a balloon, a stump or an offering. The save does not store the exact puzzle type.`,
 
         tours:
-            `${coord} Atteins le sommet puis examine le terminal Sheikah. La prochaine sauvegarde validera automatiquement la tour.`,
+            `${coord} Reach the top and examine the Sheikah terminal. The next save will automatically validate the tower.`,
 
         lieux:
-            `${coord} Traverse précisément cette zone à pied jusqu’à ce que son nom apparaisse à l’écran. Une simple proximité ou un survol peut ne pas déclencher le flag.`,
+            `${coord} Walk through this area until its name appears on screen. Being nearby or flying over it may not trigger the flag.`,
 
         quetes_sanctuaires:
-            `${coord} Ce premier marqueur est le départ de la quête. La destination ${x.sanctuaire ? `« ${x.sanctuaire} »` : "du sanctuaire"} est listée séparément ci-dessous, avec les éventuels objectifs intermédiaires.`,
+            `${coord} This first marker is the start of the quest. The destination ${x.sanctuaire ? `« ${x.sanctuaire} »` : "the Shrine"} is listed separately below, with possible intermediate objectives.`,
 
         quetes_principales:
-            `${coord} Commence par le marqueur de départ puis consulte les objectifs détaillés ci-dessous. Le compagnon attend le flag officiel de fin, pas seulement l’activation de la quête.`,
+            `${coord} Start at the first marker, then check the objectives below. The Companion checks the official completion flag, not just whether the quest has started.`,
 
         quetes_secondaires:
-            `${coord} Le premier marqueur indique où commencer ou, pour le crossover Xenoblade, le premier indice. Le statut actuel est « ${x.statut} »${x.region ? ` dans la région ${x.region}` : ""}.`,
+            `${coord} The first marker shows where to start or, for the Xenoblade crossover, the first clue. Current status: “${x.statut}”${x.region ? ` in the region ${x.region}` : ""}.`,
 
         souvenirs:
-            `${coord} Rejoins précisément le marqueur puis déclenche la scène. Une simple visite du lieu ne suffit pas : la cinématique doit avoir été enregistrée.`,
+            `${coord} Reach the marker and then trigger the scene. A simple visit to the place is not enough: the cinematic must have been recorded.`,
 
         hinox:
-            `${coord} Abats ce Hinox puis effectue une sauvegarde. Son flag individuel est celui utilisé pour la médaille de Kilton.`,
+            `${coord} Defeat this Hinox, then save your game. Its individual flag is used for Kilton’s Medal of Honor.`,
 
         talus:
-            `${coord} Abats ce Lithorok puis effectue une sauvegarde. Attaque le gisement sur son corps pour infliger des dégâts.`,
+            `${coord} Defeat this Stone Talus, then save your game. Attack the ore deposit on its body to deal damage.`,
 
         moldarquors:
-            `${coord} Attire le Moldarquor avec une bombe posée au sol, fais-la exploser lorsqu’il bondit, puis attaque-le et sauvegarde.`,
+            `${coord} Lure the Molduga with a bomb on the ground, detonate it when it leaps, then attack it and save your game.`,
 
         compendium:
-            `Photographie ${x.name} avec le module appareil photo jusqu’à obtenir l’identification, ou achète l’image auprès du laboratoire antique d’Elimith lorsque cette option est disponible.`,
+            `Photograph ${x.name} with the Camera rune until it is identified, or buy its picture at the Hateno Ancient Tech Lab when that option is available.`,
 
         armures:
-            `Obtiens au moins une fois ${x.name}. La possession et son niveau réel (${x.etoiles || "☆☆☆☆"}) sont lus directement dans l’inventaire de la sauvegarde.`,
+            `Obtain ${x.name} at least once. Ownership and its actual level (${x.etoiles || "☆☆☆☆"}) are read directly from the save inventory.`,
 
         armures_max:
             x.possede
-                ? `Améliore ${x.name} chez une Grande Fée jusqu’au niveau 4. Niveau actuellement détecté : ${x.niveau}/4 (${x.etoiles}).`
-                : `Obtiens d’abord ${x.name}, puis améliore-la quatre fois auprès des Grandes Fées.`,
+                ? `Upgrade ${x.name} at a Great Fairy Fountain to level 4. Current detected level: ${x.niveau}/4 (${x.etoiles}).`
+                : `First obtain ${x.name}, then upgrade it four times at Great Fairy Fountains.`,
     };
 
     return guide[x.categorie] || coord;
@@ -3890,22 +3890,22 @@ function guideList(
 
 function frenchSourceName(name, itemName) {
     if (name.startsWith("Zelda Wiki - ")) {
-        return `Zelda Wiki - article sur « ${itemName} »`;
+        return `Zelda Wiki - article about “${itemName}”`;
     }
 
     const exact = {
         "BOTW Event Flow Viewer - flux de quête":
-            "Visualiseur des flux d’événements BOTW",
+            "Viewer of BOTW event flows",
         "BOTW Object Map":
-            "Carte des objets BOTW (ObjMap)",
+            "Map of BOTW objects (ObjMap)",
         "Zelda Dungeon Interactive Map":
-            "Zelda Dungeon - carte interactive",
+            "Zelda Dungeon - interactive map",
         "Zelda Dungeon - Leviathan Bones":
-            "Zelda Dungeon - article sur les fossiles de baleine",
+            "Zelda Dungeon - article on whale fossils",
         "Zelda Dungeon - Sunken Treasure":
-            "Zelda Dungeon - article sur les trésors engloutis",
+            "Zelda Dungeon - article on the sunken treasures",
         "Zelda Dungeon - Épreuves de l'Épée":
-            "Zelda Dungeon - Épreuves de l’épée"
+            "Zelda Dungeon - Trials of the Sword"
     };
 
     return exact[name] || name;
@@ -3916,56 +3916,56 @@ function guideSources(sources, itemName) {
         return "";
     }
 
-    return `<div class="guideSources"><small>SOURCES DE CONTRÔLE</small>${sources.map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(frenchSourceName(source.name, itemName))} ↗</a>`).join("")}</div>`;
+    return `<div class="guideSources"><small>REFERENCE SOURCES</small>${sources.map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(frenchSourceName(source.name, itemName))} ↗</a>`).join("")}</div>`;
 }
 
 function renderDetails(x) {
     const category =
         report.categories[x.categorie]?.label ||
         x.filter_label ||
-        "Information cartographique";
+        "Map information";
 
     const displayLabels = {
         map_and_list:
-            "Carte d'Hyrule et liste",
+            "Hyrule map and list",
         interior_only:
-            "Carte intérieure et liste",
+            "Internal map and list",
         list_only:
-            "Liste seulement"
+            "List only"
     };
 
     const facts = [
-        ["Région", x.region],
-        ["Origine", x.content_origin_label],
-        ["Placement", x.placement_label],
-        ["Couverture", x.coverage_label],
-        ["Affichage", displayLabels[x.display_scope]],
-        ["Localisation", x.location_status_label],
+        ["Region", x.region],
+        ["Origin", x.content_origin_label],
+        ["Position", x.placement_label],
+        ["Coverage", x.coverage_label],
+        ["Display", displayLabels[x.display_scope]],
+        ["Location", x.location_status_label],
         ["Mode", x.game_mode_label],
-        ["Activité", x.activity_scope_label],
-        ["Variante initiale", x.subtype],
-        ["Récompense", x.reward],
+        ["Activity", x.activity_scope_label],
+        ["Initial variant", x.subtype],
+        ["Reward", x.reward],
         [
-            "Farm lune de sang",
+            "Farm blood moon",
             x.farm
-                ? "Toujours affiché"
+                ? "Always displayed"
                 : null
         ],
         [
-            "Évolution",
+            "Developments",
             x.scalable
-                ? "Variante susceptible d’évoluer"
+                ? "Variant that may change"
                 : null
         ],
-        ["Point proche", x.nearby],
-        ["Épreuve", x.trial],
-        ["Quête liée", x.quest],
-        ["Sanctuaire", x.sanctuaire],
-        ["Contenu", x.contenu],
-        ["Secteur", x.secteur || x.section],
-        ["Ensemble", x.set],
+        ["Nearby location", x.nearby],
+        ["Test", x.trial],
+        ["Linked Quest", x.quest],
+        ["Shrine", x.sanctuaire],
+        ["Contents", x.contenu],
+        ["Sector", x.secteur || x.section],
+        ["Set", x.set],
         [
-            "Niveau",
+            "Level",
             x.niveau != null
                 ? `${x.niveau}/4 ${x.etoiles}`
                 : null
@@ -3989,7 +3989,7 @@ function renderDetails(x) {
 
     const recipe =
         upgrade
-            ? `<div class="detailSection"><h3>Matériaux pour atteindre ${"★".repeat(upgrade.niveau_cible)}</h3><div class="recipe">${upgrade.materiaux.map(m => `<div class="recipeRow ${m.disponible ? 'ready' : 'missing'}"><span>${esc(m.name)}</span><b>${m.possede} / ${m.requis}</b><small>${m.manque ? `manque ${m.manque}` : 'prêt'}</small></div>`).join("")}</div></div>`
+            ? `<div class="detailSection"><h3>Materials to reach ${"★".repeat(upgrade.niveau_cible)}</h3><div class="recipe">${upgrade.materiaux.map(m => `<div class="recipeRow ${m.disponible ? "ready" : "missing"}"><span>${esc(m.name)}</span><b>${m.possede} / ${m.requis}</b><small>${m.manque ? `missing ${m.manque}` : "ready"}</small></div>`).join("")}</div></div>`
             : "";
 
     const geo =
@@ -3997,7 +3997,7 @@ function renderDetails(x) {
 
     const geoBlock =
         geo.length
-            ? `<div class="detailSection"><h3>${geo.length > 1 ? "Étapes et localisations" : "Localisation"}</h3><div class="geoPoints">${geo.map((p, i) => `<article class="geoPoint"><div><b>${esc(p.label)}</b><small>${esc(p.nearby ? `Près de ${p.nearby}${p.nearby_distance_m != null ? ` • environ ${p.nearby_distance_m} m` : ""}` : "Coordonnées du monde")}</small><span>X ${Number(p.x).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</span></div><div class="geoActions"><button data-geo-center="${i}">Carte</button><button data-geo-copy="${i}">Copier</button><a href="https://objmap.zeldamods.org/#/map/z6,${p.x},${p.z}" target="_blank" rel="noreferrer">ObjMap ↗</a></div></article>`).join("")}</div></div>`
+            ? `<div class="detailSection"><h3>${geo.length > 1 ? "Steps and Locations" : "Location"}</h3><div class="geoPoints">${geo.map((p, i) => `<article class="geoPoint"><div><b>${esc(p.label)}</b><small>${esc(p.nearby ? `Near ${p.nearby}${p.nearby_distance_m != null ? ` • approximately ${p.nearby_distance_m} m` : ""}` : "Contact details of the world")}</small><span>X ${Number(p.x).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</span></div><div class="geoActions"><button data-geo-center="${i}">Map</button><button data-geo-copy="${i}">Copy</button><a href="https://objmap.zeldamods.org/#/map/z6,${p.x},${p.z}" target="_blank" rel="noreferrer">ObjMap ↗</a></div></article>`).join("")}</div></div>`
             : "";
 
     const guide = x.guide;
@@ -4012,15 +4012,15 @@ function renderDetails(x) {
 
     const interiorBlock =
         interiorPoints.length
-            ? `<div class="detailSection interiorCard"><h3>${esc(x.interior_map_label || "Carte intérieure")}</h3><p>${interiorPoints.length} coffre${interiorPoints.length > 1 ? 's' : ''} physique${interiorPoints.length > 1 ? 's' : ''} référencé${interiorPoints.length > 1 ? 's' : ''} dans les données du jeu.</p><div class="interiorPoints">${interiorPoints.map((p, i) => { const detail = guide?.chest_details?.[i] || p; return `<article><span>${detail.number || i + 1}</span><div><b>${esc(p.content || x.contenu || "Coffre")}</b>${detail.area ? `<small>${esc(detail.area)}</small>` : `<small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small>`}${detail.access_label ? `<em>${esc(detail.access_label)}</em>` : ""}${detail.access ? `<p>${esc(detail.access)}</p>` : ""}</div></article>`; }).join("")}</div><small class="interiorNote">Ces coordonnées appartiennent à ${esc(x.interior_map)} : elles ne sont volontairement pas superposées à la carte d'Hyrule.</small></div>`
+            ? `<div class="detailSection interiorCard"><h3>${esc(x.interior_map_label || "Interior map")}</h3><p>${interiorPoints.length} physical chest${interiorPoints.length > 1 ? "s" : ""} recorded in the game data.</p><div class="interiorPoints">${interiorPoints.map((p, i) => { const detail = guide?.chest_details?.[i] || p; return `<article><span>${detail.number || i + 1}</span><div><b>${esc(p.content || x.contenu || "Treasure Chest")}</b>${detail.area ? `<small>${esc(detail.area)}</small>` : `<small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small>`}${detail.access_label ? `<em>${esc(detail.access_label)}</em>` : ""}${detail.access ? `<p>${esc(detail.access)}</p>` : ""}</div></article>`; }).join("")}</div><small class="interiorNote">These coordinates belong to ${esc(x.interior_map)}: they are intentionally kept separate from the Hyrule map.</small></div>`
             : "";
 
     const stateLabels = {
-        termine: "Terminé",
-        actuel: "Étape actuelle",
-        a_faire: "À faire",
-        a_verifier: "À vérifier",
-        verrouille: "Après activation"
+        termine: "Completed",
+        actuel: "Current stage",
+        a_faire: "To do",
+        a_verifier: "To be checked",
+        verrouille: "After activation"
     };
 
     const qualityBlock =
@@ -4030,44 +4030,44 @@ function renderDetails(x) {
 
     const evidenceBlock =
         guide?.quest_evidence
-            ? `<div class="guideEvidence"><small>PREUVE DU FLUX DE QUÊTE</small><p>${guide.quest_evidence.event_nodes} nœuds • ${guide.quest_evidence.event_actions} actions • ${guide.quest_evidence.message_references} références de dialogue</p></div>`
+            ? `<div class="guideEvidence"><small>PROOF OF THE QUEST FLOW</small><p>${guide.quest_evidence.event_nodes} nodes • ${guide.quest_evidence.event_actions} actions • ${guide.quest_evidence.message_references} dialogue references</p></div>`
             : "";
 
     const trialBlock =
         guide?.trial_rooms?.length
-            ? `<div class="trialRooms"><h3>Salles de ce niveau</h3>${guide.trial_rooms.map(room => `<article class="trialRoom ${esc(room.kind)}"><span>${room.floor}</span><div><small>${esc(room.kind_label)}</small><b>${esc(room.enemies)}</b><p>${esc(room.strategy)}</p></div></article>`).join("")}</div>`
+            ? `<div class="trialRooms"><h3>Rooms at this level</h3>${guide.trial_rooms.map(room => `<article class="trialRoom ${esc(room.kind)}"><span>${room.floor}</span><div><small>${esc(room.kind_label)}</small><b>${esc(room.enemies)}</b><p>${esc(room.strategy)}</p></div></article>`).join("")}</div>`
             : "";
 
     const bossBlock =
         guide?.boss_profile
-            ? `<div class="guideBoss"><small>PROFIL DU COMBAT</small><b>${esc(guide.boss_profile.variant)}</b><p><strong>Point faible :</strong> ${esc(guide.boss_profile.weak_point)}</p>${guide.boss_profile.scaling ? `<p>${esc(guide.boss_profile.scaling)}</p>` : ""}</div>`
+            ? `<div class="guideBoss"><small>COMBAT PROFILE</small><b>${esc(guide.boss_profile.variant)}</b><p><strong>Weak point:</strong> ${esc(guide.boss_profile.weak_point)}</p>${guide.boss_profile.scaling ? `<p>${esc(guide.boss_profile.scaling)}</p>` : ""}</div>`
             : "";
 
     const guideBlock =
         guide
-            ? `<div class="detailSection guideCard"><div class="guideTitle"><h3>Fiche d’accompagnement personnalisée</h3>${guide.specificity_label ? `<span>${esc(guide.specificity_label)}</span>` : ""}</div>${qualityBlock}<p class="guideSummary">${esc(guide.summary)}</p>${guide.mechanic ? `<div class="guideMechanic"><small>MÉCANIQUE</small><b>${esc(guide.mechanic)}</b></div>` : ""}${bossBlock}<div class="currentAction"><small>PROCHAINE ACTION</small><b>${esc(guide.current_action)}</b></div>${guideList("Prérequis", guide.prerequisites)}${guideList("Préparation", guide.preparation)}${evidenceBlock}${trialBlock}${guide?.trial_rooms?.length ? "" : guideList("Solution détaillée", guide.detailed_steps, true, "solution")}${guide.chest_solution ? `<div class="guideChest"><small>COFFRE DU SANCTUAIRE</small><p>${esc(guide.chest_solution)}</p></div>` : ""}${guideList("Récompenses", guide.rewards, false, "rewards")}<div class="guideSteps">${(guide.steps || []).map((s, i) => `<article class="guideStep ${esc(s.state)}"><span>${i + 1}</span><div><b>${esc(s.title)}</b><p>${esc(s.instruction)}</p><small>${esc(stateLabels[s.state] || s.state)}</small></div>${s.geo_point_index != null && geo[s.geo_point_index] ? `<button data-guide-center="${s.geo_point_index}">Carte</button>` : ""}</article>`).join("")}</div>${guideList("Conseils", guide.tips, false, "tips")}${guideList("À savoir", guide.warnings, false, "warnings")}<div class="completionProof"><small>${guide.completion.automatic === false ? "SUIVI" : "VALIDATION AUTOMATIQUE"}</small><p>${esc(guide.completion.condition)}</p></div>${guideSources(guide.sources, x.name || "cet objectif")}</div>`
-            : `<div class="detailSection"><h3>Comment le terminer</h3><p>${esc(helpFor(x))}</p></div>`;
+            ? `<div class="detailSection guideCard"><div class="guideTitle"><h3>Objective guide</h3>${guide.specificity_label ? `<span>${esc(guide.specificity_label)}</span>` : ""}</div>${qualityBlock}<p class="guideSummary">${esc(guide.summary)}</p>${guide.mechanic ? `<div class="guideMechanic"><small>MECHANIC</small><b>${esc(guide.mechanic)}</b></div>` : ""}${bossBlock}<div class="currentAction"><small>NEXT ACTION</small><b>${esc(guide.current_action)}</b></div>${guideList("Prerequisite", guide.prerequisites)}${guideList("Preparation", guide.preparation)}${evidenceBlock}${trialBlock}${guide?.trial_rooms?.length ? "" : guideList("Detailed solution", guide.detailed_steps, true, "solution")}${guide.chest_solution ? `<div class="guideChest"><small>SHRINE CHEST</small><p>${esc(guide.chest_solution)}</p></div>` : ""}${guideList("Awards", guide.rewards, false, "rewards")}<div class="guideSteps">${(guide.steps || []).map((s, i) => `<article class="guideStep ${esc(s.state)}"><span>${i + 1}</span><div><b>${esc(s.title)}</b><p>${esc(s.instruction)}</p><small>${esc(stateLabels[s.state] || s.state)}</small></div>${s.geo_point_index != null && geo[s.geo_point_index] ? `<button data-guide-center="${s.geo_point_index}">Map</button>` : ""}</article>`).join("")}</div>${guideList("Tips", guide.tips, false, "tips")}${guideList("Namely", guide.warnings, false, "warnings")}<div class="completionProof"><small>${guide.completion.automatic === false ? "TRACKING" : "AUTOMATIC COMPLETION"}</small><p>${esc(guide.completion.condition)}</p></div>${guideSources(guide.sources, x.name || "this objective")}</div>`
+            : `<div class="detailSection"><h3>How to finish it</h3><p>${esc(helpFor(x))}</p></div>`;
 
     const manual =
         manualEntry(x),
         farmWarning =
             x.farm
-                ? "Cet état n’enlève jamais ce point de farm de sa catégorie : l’ennemi réapparaît à la lune de sang."
-                : "La validation reste conservée après une nouvelle analyse de la sauvegarde.";
+                ? "This state never removes this farm point from its category: the enemy reappears at the blood moon."
+                : "The validation remains after a new analysis of the save.";
 
     const scopeBlock =
         x.coverage_note
-            ? `<div class="detailSection scopeWarning"><h3>Limite de couverture</h3><p>${esc(x.coverage_note)}</p></div>`
+            ? `<div class="detailSection scopeWarning"><h3>Limit of coverage</h3><p>${esc(x.coverage_note)}</p></div>`
             : "";
 
     const manualBlock =
-        `<div class="detailSection manualTracking"><h3>Suivi manuel persistant</h3><div class="statusSplit"><span><small>Sauvegarde</small><b>${x.termine ? 'Validé automatiquement' : 'Non validé automatiquement'}</b></span><span><small>Personnel</small><b>${manual.completed ? 'Validé manuellement' : 'Non coché'}</b></span></div><label class="manualCheck"><input id="manualComplete" type="checkbox" ${manual.completed ? 'checked' : ''}><span>Marquer cet objectif comme fait manuellement</span></label><label class="manualNoteLabel">Note personnelle<textarea id="manualNoteInput" maxlength="1000" placeholder="Optionnel : record, coffre vérifié, prochaine action…">${esc(manual.note || "")}</textarea></label><button id="saveManualNote">Enregistrer la note</button><p class="manualHint">${esc(farmWarning)}</p></div>`;
+        `<div class="detailSection manualTracking"><h3>Persistent manual tracking</h3><div class="statusSplit"><span><small>Save</small><b>${x.termine ? "Validated automatically" : "Not automatically validated"}</b></span><span><small>Personal</small><b>${manual.completed ? "Validated manually" : "Not checked"}</b></span></div><label class="manualCheck"><input id="manualComplete" type="checkbox" ${manual.completed ? "checked" : ""}><span>Mark this objective as manually completed</span></label><label class="manualNoteLabel">Personal note<textarea id="manualNoteInput" maxlength="1000" placeholder="Optional: personal best, checked chest, next action…">${esc(manual.note || "")}</textarea></label><button id="saveManualNote">Save note</button><p class="manualHint">${esc(farmWarning)}</p></div>`;
 
     const inRoute =
         routeIds().has(itemId(x));
 
     $("#detailContent").innerHTML =
-        `<p class="detailEyebrow">${esc(category)}</p><h2 id="detailTitle">${esc(x.name || x.id)}</h2><p class="detailMeta">${esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))}</p><span class="detailStatus"><i class="dot ${stateClass(x)}" aria-hidden="true"></i>${esc(trackingLabel(x))}</span>${facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""}${scopeBlock}${manualBlock}${guideBlock}${geoBlock}${interiorBlock}${recipe}${coords && !geo.length ? `<div class="detailSection"><h3>Coordonnées BOTW</h3><p>X ${x.x.toFixed(2)} • Z ${x.z.toFixed(2)}</p></div>` : ""}<div class="detailActions">${coords ? `<button id="detailRoute">${inRoute ? 'Retirer de' : 'Ajouter à'} l’itinéraire</button><button id="detailCenter">Centrer sur la carte</button><button id="copyCoords">Copier le point principal</button><a href="${objmap}" target="_blank" rel="noreferrer">ObjMap ↗</a>` : ""}<a href="${search}" target="_blank" rel="noreferrer">Chercher un guide ↗</a></div>`;
+        `<p class="detailEyebrow">${esc(category)}</p><h2 id="detailTitle">${esc(x.name || x.id)}</h2><p class="detailMeta">${esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))}</p><span class="detailStatus"><i class="dot ${stateClass(x)}" aria-hidden="true"></i>${esc(trackingLabel(x))}</span>${facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""}${scopeBlock}${manualBlock}${guideBlock}${geoBlock}${interiorBlock}${recipe}${coords && !geo.length ? `<div class="detailSection"><h3>BOTW coordinates</h3><p>X ${x.x.toFixed(2)} • Z ${x.z.toFixed(2)}</p></div>` : ""}<div class="detailActions">${coords ? `<button id="detailRoute">${inRoute ? "Remove from" : "Add to"} the route</button><button id="detailCenter">Center on the map</button><button id="copyCoords">Copy the main point</button><a href="${objmap}" target="_blank" rel="noreferrer">ObjMap ↗</a>` : ""}<a href="${search}" target="_blank" rel="noreferrer">Find a guide ↗</a></div>`;
 
     const drawer =
         $("#itemDetails");
@@ -4103,7 +4103,7 @@ function renderDetails(x) {
                 );
 
                 toast(
-                    "Coordonnées copiées"
+                    "Coordinates copied"
                 );
             };
     }
@@ -4149,7 +4149,7 @@ function renderDetails(x) {
                         );
 
                         toast(
-                            "Coordonnées copiées"
+                            "Coordinates copied"
                         );
                     }
         );
@@ -4209,13 +4209,13 @@ function renderManualSummary() {
             ).length;
 
     $("#manualScore").textContent =
-        `${completed.toLocaleString("fr-FR")} objectif${completed === 1 ? '' : 's'} coché${completed === 1 ? '' : 's'}`;
+        `${completed.toLocaleString("en-US")} completed objective${completed === 1 ? "" : "s"}`;
 
     $("#manualNote").textContent =
-        `${notes} note${notes === 1 ? '' : 's'} • révision ${manualTracking.revision} • séparé du score automatique`;
+        `${notes} note${notes === 1 ? "" : "s"} • revision ${manualTracking.revision} • separate from the automatic score`;
 
     $("#toggleManualReview").textContent =
-        `Validations (${completed.toLocaleString("fr-FR")})`;
+        `Validations (${completed.toLocaleString("en-US")})`;
 
     renderManualReview();
 }
@@ -4224,7 +4224,7 @@ function manualSearchText(value) {
     return String(value || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .toLocaleLowerCase("fr");
+        .toLocaleLowerCase("en");
 }
 
 function manualCompletedRecords() {
@@ -4268,20 +4268,20 @@ function manualCompletedRecords() {
             const byDate = String(right.entry.updated_at || "")
                 .localeCompare(String(left.entry.updated_at || ""));
 
-            return byDate || left.name.localeCompare(right.name, "fr");
+            return byDate || left.name.localeCompare(right.name, "en");
         });
 }
 
 function manualDate(value) {
     if (!value) {
-        return "date inconnue";
+        return "unknown date";
     }
 
     const date = new Date(value);
 
     return Number.isNaN(date.getTime())
-        ? "date inconnue"
-        : date.toLocaleString("fr-FR", {
+        ? "unknown date"
+        : date.toLocaleString("en-US", {
             dateStyle: "short",
             timeStyle: "short"
         });
@@ -4302,10 +4302,10 @@ function renderManualReview() {
                 record.categoryId,
                 record.categoryLabel
             ])
-        ).entries()].sort((left, right) => left[1].localeCompare(right[1], "fr"));
+        ).entries()].sort((left, right) => left[1].localeCompare(right[1], "en"));
 
     categorySelect.innerHTML =
-        '<option value="all">Toutes les catégories</option>' +
+        "<option value=\"all\">All categories</option>" +
         categories.map(
             ([id, label]) => `<option value="${esc(id)}">${esc(label)}</option>`
         ).join("");
@@ -4331,20 +4331,20 @@ function renderManualReview() {
         });
 
     $("#manualReviewSummary").textContent = records.length
-        ? `${records.length.toLocaleString("fr-FR")} validation${records.length === 1 ? '' : 's'} manuelle${records.length === 1 ? '' : 's'} • ${filtered.length.toLocaleString("fr-FR")} affichée${filtered.length === 1 ? '' : 's'}`
-        : "Aucun objectif coché manuellement.";
+        ? `${records.length.toLocaleString("en-US")} manual completion${records.length === 1 ? "" : "s"} • ${filtered.length.toLocaleString("en-US")} displayed`
+        : "No lens manually checked.";
 
     if (!filtered.length) {
-        list.innerHTML = `<div class="manualReviewEmpty">${records.length ? "Aucune validation ne correspond à cette recherche." : "Les objectifs cochés manuellement apparaîtront ici."}</div>`;
+        list.innerHTML = `<div class="manualReviewEmpty">${records.length ? "No validation matches this search." : "Manually completed objectives will appear here."}</div>`;
         return;
     }
 
     list.innerHTML = filtered.map(record => {
         const status = record.item
             ? record.automatic
-                ? "Aussi validé automatiquement"
-                : "Non validé automatiquement"
-            : "Fiche absente du catalogue actuel",
+                ? "Also automatically validated"
+                : "Not automatically validated"
+            : "Missing from the current catalogue",
             meta = [
                 record.region,
                 status,
@@ -4354,7 +4354,7 @@ function renderManualReview() {
                 ? `<p class="manualReviewNote">Note : ${esc(record.entry.note)}</p>`
                 : "";
 
-        return `<article class="manualReviewItem"><div><span class="manualReviewCategory">${esc(record.categoryLabel)}</span><h3>${esc(record.name)}</h3><p>${esc(meta)}</p>${note}</div><div class="manualReviewItemActions"><button type="button" data-manual-open="${esc(record.trackingId)}"${record.item ? "" : " disabled"}>Ouvrir la fiche</button><label class="manualReviewToggle"><input type="checkbox" checked data-manual-uncheck="${esc(record.trackingId)}"> Validé</label></div></article>`;
+        return `<article class="manualReviewItem"><div><span class="manualReviewCategory">${esc(record.categoryLabel)}</span><h3>${esc(record.name)}</h3><p>${esc(meta)}</p>${note}</div><div class="manualReviewItemActions"><button type="button" data-manual-open="${esc(record.trackingId)}"${record.item ? "" : " disabled"}>Open details</button><label class="manualReviewToggle"><input type="checkbox" checked data-manual-uncheck="${esc(record.trackingId)}"> Completed</label></div></article>`;
     }).join("");
 
     list.querySelectorAll("[data-manual-open]").forEach(button => {
@@ -4402,7 +4402,7 @@ async function uncheckManualFromReview(trackingId, checkbox) {
     }
 
     if (!confirm(
-        `Annuler la validation manuelle de « ${record.name} » ? La note personnelle sera conservée.`
+        `Clear the manual completion of “${record.name}”? Your personal note will be kept.`
     )) {
         checkbox.checked = true;
         return;
@@ -4448,7 +4448,7 @@ async function saveManualById(
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Enregistrement impossible"
+                "Saving failed"
             );
         }
 
@@ -4465,8 +4465,8 @@ async function saveManualById(
 
         toast(
             completed
-                ? "Validation manuelle enregistrée"
-                : "Validation manuelle annulée"
+                ? "Manual validation registered"
+                : "Manual Validation Cancelled"
         );
 
         return true;
@@ -4525,12 +4525,12 @@ async function importManualFile(file) {
             if (!response.ok) {
                 throw Error(
                     data.erreur ||
-                    "Restauration impossible"
+                    "Restore failed"
                 );
             }
             await load(false);
             toast(
-                "Suivi, itinéraires et préférences restaurés"
+                "Restored tracking, routes and preferences"
             );
             return;
         }
@@ -4560,7 +4560,7 @@ async function importManualFile(file) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Import impossible"
+                "Import failed"
             );
         }
 
@@ -4569,13 +4569,13 @@ async function importManualFile(file) {
         renderAll();
 
         toast(
-            "Suivi manuel importé et fusionné"
+            "Imported and merged manual tracking"
         );
 
     } catch (error) {
         toast(
             error.message ||
-            "Fichier invalide",
+            "Invalid file",
             true
         );
     }
@@ -4612,7 +4612,7 @@ function toggleRouteItem(id) {
             item.z == null
         ) {
             toast(
-                "Cet élément n’a pas de coordonnées fiables",
+                "This element does not have reliable coordinates",
                 true
             );
 
@@ -4624,7 +4624,7 @@ function toggleRouteItem(id) {
             ROUTE_LIMIT
         ) {
             toast(
-                `Une session est limitée à ${ROUTE_LIMIT} étapes`,
+                `A session is limited to ${ROUTE_LIMIT} steps`,
                 true
             );
 
@@ -4687,12 +4687,12 @@ function addFilteredToRoute() {
 
     if (!added.length) {
         toast(
-            "Aucun nouveau résultat localisé à ajouter",
+            "No new localized results to add",
             true
         );
     } else {
         toast(
-            `${added.length} étape${added.length > 1 ? 's' : ''} ajoutée${added.length > 1 ? 's' : ''}${available.length > capacity ? ` • limite de ${ROUTE_LIMIT} atteinte` : ''}`
+            `${added.length} step${added.length > 1 ? "s" : ""} added${available.length > capacity ? ` • limit of ${ROUTE_LIMIT} reached` : ""}`
         );
     }
 }
@@ -4740,7 +4740,7 @@ function optimizeCurrentRoute() {
 
     if (points.length < 2) {
         toast(
-            "Ajoute au moins deux étapes",
+            "Add at least two steps",
             true
         );
 
@@ -4782,7 +4782,7 @@ function optimizeCurrentRoute() {
     renderItems();
 
     toast(
-        "Ordre optimisé - étapes verrouillées et indisponibles conservées"
+        "Optimized order - locked and unavailable steps retained"
     );
 }
 
@@ -4795,7 +4795,7 @@ function setRouteStart(point) {
                 label:
                     point.label ||
                     point.name ||
-                    "Point personnalisé"
+                    "Custom Point"
             }
             : null;
 
@@ -4852,8 +4852,8 @@ function renderRoute() {
 
     $("#routeSummary").textContent =
         points.length
-            ? `${points.length} étape${points.length > 1 ? 's' : ''} • ${formatDistance(total)}${missing ? ` • ${missing} indisponible${missing > 1 ? 's' : ''}` : ''}`
-            : "Aucune étape sélectionnée.";
+            ? `${points.length} step${points.length > 1 ? "s" : ""} • ${formatDistance(total)}${missing ? ` • ${missing} unavailable` : ""}`
+            : "No steps selected.";
 
     $("#routeSessionName").value =
         routeState.name;
@@ -4881,14 +4881,14 @@ function renderRoute() {
         routeState.id;
 
     $("#routeStartLabel").textContent =
-        `Départ : ${
+        `Departure: ${
             routeState.start
                 ? `${routeState.start.label} - X ${Math.round(routeState.start.x)}, Z ${Math.round(routeState.start.z)}`
-                : "premier objectif"
+                : "premier objective"
         }`;
 
     $("#routeRegions").textContent =
-        `Régions : ${
+        `Regions: ${
             regions.length
                 ? regions.join(", ")
                 : "-"
@@ -4924,13 +4924,13 @@ function renderRoute() {
                             region =
                                 value.item?.region ||
                                 snapshot.region ||
-                                "Région inconnue";
+                                "Unknown region";
 
-                        return `<article class="routeStep ${value.item ? '' : 'unavailable'}" data-route-step="${stateIndex}"><span>${index + 1}</span><div><b>${esc(name)}</b><small>${value.item ? `${esc(region)} • ${leg.index === 1 && !routeState.start ? "départ" : `+ ${formatDistance(leg.distance)}`} • cumul ${formatDistance(leg.cumulative)}` : `Étape indisponible dans le catalogue actuel • conservée avec ses anciennes informations`}</small></div><div class="routeStepActions">${value.item ? `<button data-route-focus="${esc(entry.tracking_id)}" title="Voir sur la carte" aria-label="Voir ${esc(name)} sur la carte">⌖</button>` : ""}<button data-route-up="${stateIndex}" title="Monter" aria-label="Monter ${esc(name)}">↑</button><button data-route-down="${stateIndex}" title="Descendre" aria-label="Descendre ${esc(name)}">↓</button><button data-route-lock="${stateIndex}" class="${entry.locked ? 'active' : ''}" title="Verrouiller cette position" aria-label="${entry.locked ? 'Déverrouiller' : 'Verrouiller'} la position de ${esc(name)}">${entry.locked ? '🔒' : '○'}</button><button data-route-remove="${esc(entry.tracking_id)}" title="Retirer" aria-label="Retirer ${esc(name)} de l’itinéraire">×</button></div></article>`
+                        return `<article class="routeStep ${value.item ? "" : "unavailable"}" data-route-step="${stateIndex}"><span>${index + 1}</span><div><b>${esc(name)}</b><small>${value.item ? `${esc(region)} • ${leg.index === 1 && !routeState.start ? "start" : `+ ${formatDistance(leg.distance)}`} • total ${formatDistance(leg.cumulative)}` : `Step unavailable in the current catalog • its previous information is retained`}</small></div><div class="routeStepActions">${value.item ? `<button data-route-focus="${esc(entry.tracking_id)}" title="View on map" aria-label="View ${esc(name)} on the map">⌖</button>` : ""}<button data-route-up="${stateIndex}" title="Move up" aria-label="Move up ${esc(name)}">↑</button><button data-route-down="${stateIndex}" title="Move down" aria-label="Move down ${esc(name)}">↓</button><button data-route-lock="${stateIndex}" class="${entry.locked ? "active" : ""}" title="Lock this position" aria-label="${entry.locked ? "Unlock" : "Lock"} the position of ${esc(name)}">${entry.locked ? "🔒" : "○"}</button><button data-route-remove="${esc(entry.tracking_id)}" title="Remove" aria-label="Remove ${esc(name)} from the route">×</button></div></article>`
                     }
                 )
                 .join("")
-            : '<div class="empty">Ajoute des objectifs depuis les résultats ou une fiche.</div>';
+            : "<div class=\"empty\">Add goals from results or a record.</div>";
 
     document
         .querySelectorAll(
@@ -5137,7 +5137,7 @@ function downloadRoute(format) {
 
     if (!payload.steps.length) {
         toast(
-            "L’itinéraire est vide",
+            "The route is empty",
             true
         );
 
@@ -5154,28 +5154,28 @@ function downloadRoute(format) {
             : [
                 `BOTW COMPANION - ${payload.name}`,
 
-                `Départ : ${
+                `Departure: ${
                     payload.start
                         ? `${payload.start.label} (X ${Math.round(payload.start.x)}, Z ${Math.round(payload.start.z)})`
-                        : "premier objectif"
+                        : "premier objective"
                 }`,
 
-                `Distance géographique : ${formatDistance(payload.total_distance_m)}`,
+                `Geographic distance: ${formatDistance(payload.total_distance_m)}`,
 
-                `Régions : ${payload.regions.join(", ")}`,
+                `Regions: ${payload.regions.join(", ")}`,
 
                 "",
 
                 ...payload.steps.map(
                     step =>
                         step.available
-                            ? `${step.order}. ${step.name} - ${step.region || "région non indiquée"} - X ${Number(step.x).toFixed(0)}, Z ${Number(step.z).toFixed(0)} - +${formatDistance(step.distance_from_previous_m)}${step.locked ? " - verrouillée" : ""}`
-                            : `${step.order}. ${step.name} - indisponible dans le catalogue actuel, conservée${step.locked ? " - verrouillée" : ""}`
+                            ? `${step.order}. ${step.name} - ${step.region || "region not indicated"} - X ${Number(step.x).toFixed(0)}, Z ${Number(step.z).toFixed(0)} - +${formatDistance(step.distance_from_previous_m)}${step.locked ? " - locked" : ""}`
+                            : `${step.order}. ${step.name} - unavailable in the current catalog, retained${step.locked ? " - locked" : ""}`
                 ),
 
                 "",
 
-                "Distance indicative : la stratégie organise les objectifs mais ne simule ni relief, météo, escalade ni dangers."
+                "Indicative distance: the strategy organizes the objectives but does not simulate any terrain, weather, climbing or dangers."
 
             ].join("\n");
 
@@ -5217,7 +5217,7 @@ function downloadRoute(format) {
 }
 
 function routeSessionTemplate(
-    name = "Nouvelle session"
+    name = "New session"
 ) {
     const id =
         `session-${
@@ -5267,7 +5267,7 @@ function createRouteSession(
         ).length >= 100
     ) {
         toast(
-            "Le planificateur est limité à 100 sessions",
+            "The planner is limited to 100 sessions",
             true
         );
 
@@ -5277,8 +5277,8 @@ function createRouteSession(
     const session =
         routeSessionTemplate(
             copy
-                ? `${routeState.name} - copie`
-                : "Nouvelle session"
+                ? `${routeState.name} - copy`
+                : "New session"
         );
 
     if (copy) {
@@ -5318,8 +5318,8 @@ function createRouteSession(
 
     toast(
         copy
-            ? "Session dupliquée"
-            : "Nouvelle session créée"
+            ? "Duplicate session"
+            : "New session created"
     );
 }
 
@@ -5330,7 +5330,7 @@ function deleteRouteSession() {
         ).length === 1
     ) {
         toast(
-            "Crée une autre session avant de supprimer celle-ci",
+            "Create another session before deleting it",
             true
         );
 
@@ -5339,7 +5339,7 @@ function deleteRouteSession() {
 
     if (
         !confirm(
-            `Supprimer définitivement la session « ${routeState.name} » ?`
+            `Permanently delete the session “${routeState.name}”?`
         )
     ) {
         return;
@@ -5397,7 +5397,7 @@ async function importRouteFile(file) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Import impossible"
+                "Import failed"
             );
         }
 
@@ -5413,13 +5413,13 @@ async function importRouteFile(file) {
         renderMap(filtered());
 
         toast(
-            "Session importée sans supprimer les itinéraires existants"
+            "Imported session without removing existing routes"
         );
 
     } catch (error) {
         toast(
             error.message ||
-            "Fichier d’itinéraire invalide",
+            "Invalid route file",
             true
         );
     }
@@ -5656,7 +5656,7 @@ mapEl.addEventListener(
                     wy * 10 - 5000
                 ),
             label:
-                "Point choisi sur la carte"
+                "Point chosen on the map"
         });
 
         routePickStart = false;
@@ -5670,7 +5670,7 @@ mapEl.addEventListener(
         );
 
         toast(
-            "Point de départ défini"
+            "Defined starting point"
         );
     }
 );
@@ -5859,7 +5859,7 @@ $("#syncInterval").onchange =
         scheduleSync();
 
         toast(
-            `Vérification toutes les ${syncInterval} secondes`
+            `Check every ${syncInterval} seconds`
         );
     };
 
@@ -5870,7 +5870,7 @@ $("#pauseSync").onclick =
 
         $("#pauseSync").textContent =
             syncPaused
-                ? "Reprendre"
+                ? "Resume"
                 : "Pause";
 
         $("#pauseSync").classList.toggle(
@@ -5884,7 +5884,7 @@ $("#pauseSync").onclick =
 
         if (syncPaused) {
             toast(
-                "Synchronisation automatique en pause"
+                "Automatic pause synchronization"
             )
         }
     };
@@ -5915,7 +5915,7 @@ $("#cancelUpdateDownload").onclick =
         try {
             await updateDownloadAction("cancel");
         } catch (_error) {
-            toast("Impossible d’annuler le téléchargement", true);
+            toast("Unable to cancel download", true);
         }
     };
 
@@ -5924,7 +5924,7 @@ $("#retryUpdateDownload").onclick =
         try {
             await updateDownloadAction("retry");
         } catch (_error) {
-            toast("Impossible de reprendre le téléchargement", true);
+            toast("Unable to resume download", true);
         }
     };
 
@@ -6133,8 +6133,8 @@ $("#pickRouteStart").onclick =
 
         toast(
             routePickStart
-                ? "Clique sur la carte pour placer le départ"
-                : "Sélection du départ annulée"
+                ? "Click on the map to place the start"
+                : "Selection of the cancelled departure"
         );
     };
 
@@ -6152,7 +6152,7 @@ $("#useSelectedStart").onclick =
             item.x == null
         ) {
             toast(
-                "Ouvre d’abord une fiche localisée",
+                "First open a localised file",
                 true
             );
 
@@ -6166,7 +6166,7 @@ $("#useSelectedStart").onclick =
         });
 
         toast(
-            "Départ défini depuis la fiche ouverte"
+            "Starting point set from the open detail panel"
         );
     };
 
@@ -6186,7 +6186,7 @@ $("#applyRouteStart").onclick =
             !Number.isFinite(z)
         ) {
             toast(
-                "Saisis des coordonnées X et Z valides",
+                "Enter valid X and Z coordinates",
                 true
             );
 
@@ -6197,11 +6197,11 @@ $("#applyRouteStart").onclick =
             x,
             z,
             label:
-                "Coordonnées personnalisées"
+                "Contact information"
         });
 
         toast(
-            "Coordonnées de départ appliquées"
+            "Applied Start Coordinates"
         );
     };
 
@@ -6210,7 +6210,7 @@ $("#clearRouteStart").onclick =
         setRouteStart(null);
 
         toast(
-            "Le premier objectif redevient le départ"
+            "The first objective is used as the starting point."
         );
     };
 
@@ -6260,7 +6260,7 @@ $("#routeSessionName").onchange =
                 routeState.name;
 
             toast(
-                "Le nom de session ne peut pas être vide",
+                "The session name cannot be empty",
                 true
             );
 
@@ -6281,7 +6281,7 @@ $("#routeStrategy").onchange =
         saveRouteState();
 
         toast(
-            "Stratégie enregistrée pour cette session"
+            "Strategy recorded for this session"
         );
     };
 
@@ -6301,7 +6301,7 @@ $("#clearRoute").onclick =
         if (
             !routeState.entries.length ||
             confirm(
-                "Vider toutes les étapes de cette session ?"
+                "Empty all the steps of this session?"
             )
         ) {
             routeState.entries = [];
@@ -6323,8 +6323,8 @@ $("#toggleRoute").onclick =
 
         $("#toggleRoute").textContent =
             hidden
-                ? "Masquer"
-                : "Afficher";
+                ? "Hide"
+                : "Show";
 
         $("#toggleRoute").setAttribute(
             "aria-expanded",

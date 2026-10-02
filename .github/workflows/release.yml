@@ -77,6 +77,11 @@ jobs:
           npm ci --ignore-scripts
           npx playwright install firefox
 
+      - name: Check generated English assets
+        run: |
+          python tools/build_english_assets.py --check
+          python tools/audit_localization.py
+
       - name: Test Chrome, Edge, and Firefox
         shell: pwsh
         run: ./tools/run_browser_smoke.ps1
@@ -225,6 +230,11 @@ jobs:
         run: |
           npm ci --ignore-scripts
           npx playwright install chromium firefox webkit
+
+      - name: Check generated English assets
+        run: |
+          python3 tools/build_english_assets.py --check
+          python3 tools/audit_localization.py
 
       - name: Test the site in all three engines
         shell: bash
