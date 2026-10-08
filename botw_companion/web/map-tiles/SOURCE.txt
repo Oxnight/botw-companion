@@ -1,0 +1,10 @@
+BOTW 24000x20000 map background, split into offline WebP tiles.
+
+Source file: https://static.zeldamods.org/botw_map.png
+Context: https://github.com/zeldamods/objmap
+
+The source image was extracted from files for The Legend of Zelda: Breath of
+the Wild. Rights in the map belong to Nintendo and/or their respective owners.
+The GPL-3.0 license covering BOTW Object Map code does not grant rights to this
+game-derived asset. This repository contains no written redistribution
+permission; see DATA_SOURCES.md.

@@ -1,0 +1,14 @@
+* text=auto
+
+# Keep POSIX scripts and audited license bytes consistent on both platforms.
+*.sh text eol=lf
+licenses/*.txt text eol=lf
+
+# Binary resources.
+*.dll binary
+*.dmg binary
+*.exe binary
+*.icns binary
+*.ico binary
+*.png binary
+*.webp binary

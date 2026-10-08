@@ -1,0 +1,567 @@
+name: Windows and macOS tests and releases
+
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      validate_packages:
+        description: Build and test installers without publishing a release
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Test Windows x64
+    runs-on: windows-2022
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install Python 3.12 x64
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          architecture: x64
+          cache: pip
+
+      - name: Read and validate version
+        id: version
+        shell: pwsh
+        env:
+          BUILD_REF: ${{ github.ref }}
+          BUILD_REF_NAME: ${{ github.ref_name }}
+        run: |
+          $arguments = @("tools/release_metadata.py", "--github-output", $env:GITHUB_OUTPUT)
+          if ($env:BUILD_REF -like "refs/tags/*") {
+            $arguments += @("--tag", $env:BUILD_REF_NAME)
+          }
+          python @arguments
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/check_version_consistency.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($env:BUILD_REF -like "refs/tags/*") {
+            python tools/verify_release_ref.py --tag $env:BUILD_REF_NAME --commit $env:GITHUB_SHA
+          }
+
+      - name: Install runtime dependencies
+        run: python -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
+
+      - name: Audit licenses and distribution contents
+        run: python tools/audit_distribution.py
+
+      - name: Test Python code and package
+        timeout-minutes: 5
+        run: python -m unittest discover -s tests -v
+
+      - name: Prepare browsers
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install firefox
+
+      - name: Check generated English assets
+        run: |
+          python tools/build_english_assets.py --check
+          python tools/audit_localization.py
+
+      - name: Test Chrome, Edge, and Firefox
+        shell: pwsh
+        run: ./tools/run_browser_smoke.ps1
+
+      - name: Preserve browser diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: browser-failure-${{ github.run_id }}-windows
+          path: test-results/browser/*.png
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Preserve Blood Moon visual references
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: blood-moon-reference-${{ github.run_id }}-windows
+          path: test-results/blood-moon/*.png
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Install verified official Inno Setup
+        if: env.BUILD_PACKAGES == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./tools/install_inno_setup_ci.ps1
+
+      - name: Build the application and installer
+        if: env.BUILD_PACKAGES == 'true'
+        shell: pwsh
+        run: ./tools/build_windows_app.ps1
+
+      - name: Download the main upgrade reference installer
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.upgrade_tag != ''
+        shell: pwsh
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Force -Path build/upgrade-reference/latest | Out-Null
+          gh release download "${{ steps.version.outputs.upgrade_tag }}" `
+            --repo "${{ github.repository }}" `
+            --pattern "${{ steps.version.outputs.upgrade_installer_name }}" `
+            --dir build/upgrade-reference/latest `
+            --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Download the minimum upgrade reference installer
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.minimum_upgrade_tag != ''
+        shell: pwsh
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Force -Path build/upgrade-reference/minimum | Out-Null
+          gh release download "${{ steps.version.outputs.minimum_upgrade_tag }}" `
+            --repo "${{ github.repository }}" `
+            --pattern "${{ steps.version.outputs.minimum_upgrade_installer_name }}" `
+            --dir build/upgrade-reference/minimum `
+            --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Test installation, replacement, restart and data preservation
+        if: env.BUILD_PACKAGES == 'true'
+        shell: pwsh
+        env:
+          UPGRADE_INSTALLER: ${{ steps.version.outputs.upgrade_installer_name }}
+        run: |
+          $parameters = @{ InstallerPath = "dist/installer/${{ steps.version.outputs.installer_name }}" }
+          if ($env:UPGRADE_INSTALLER) {
+            $parameters.PreviousInstallerPath = "build/upgrade-reference/latest/$env:UPGRADE_INSTALLER"
+          }
+          ./tools/test_windows_installation.ps1 @parameters
+
+      - name: Test minimum supported upgrade
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.minimum_upgrade_tag != ''
+        shell: pwsh
+        run: |
+          ./tools/test_windows_installation.ps1 `
+            -InstallerPath "dist/installer/${{ steps.version.outputs.installer_name }}" `
+            -PreviousInstallerPath "build/upgrade-reference/minimum/${{ steps.version.outputs.minimum_upgrade_installer_name }}"
+
+      - name: Preserve the Windows installer
+        if: env.BUILD_PACKAGES == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ${{ steps.version.outputs.windows_artifact }}
+          path: dist/installer/${{ steps.version.outputs.installer_name }}
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  macos:
+    name: Test macOS Apple Silicon
+    # Playwright >= 1.59 no longer supports WebKit on macOS 14.
+    # GitHub Actions label macos-15 provides an Apple Silicon arm64 runner.
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      MACOSX_DEPLOYMENT_TARGET: "14.0"
+      BUILD_PACKAGES: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.validate_packages) }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate Apple Silicon runner and macOS
+        shell: bash
+        run: |
+          architecture="$(uname -m)"
+          macos_version="$(sw_vers -productVersion)"
+          macos_major="${macos_version%%.*}"
+          echo "Architecture: $architecture"
+          echo "macOS: $macos_version"
+          test "$architecture" = "arm64"
+          test "$macos_major" -ge 15
+
+      - name: Install Python 3.12 arm64
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          architecture: arm64
+          cache: pip
+
+      - name: Read and validate version
+        id: version
+        shell: bash
+        env:
+          BUILD_REF: ${{ github.ref }}
+          BUILD_REF_NAME: ${{ github.ref_name }}
+        run: |
+          arguments=(--github-output "$GITHUB_OUTPUT")
+          if [[ "$BUILD_REF" == refs/tags/* ]]; then
+            arguments+=(--tag "$BUILD_REF_NAME")
+          fi
+          python3 tools/release_metadata.py "${arguments[@]}"
+          python3 tools/check_version_consistency.py
+          if [[ "$BUILD_REF" == refs/tags/* ]]; then
+            python3 tools/verify_release_ref.py --tag "$BUILD_REF_NAME" --commit "$GITHUB_SHA"
+          fi
+
+      - name: Install runtime dependencies
+        run: python3 -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
+
+      - name: Audit licenses and distribution contents
+        run: python3 tools/audit_distribution.py
+
+      - name: Test Python code and package
+        timeout-minutes: 5
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Prepare Chromium, Firefox, and WebKit
+        timeout-minutes: 15
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install chromium firefox webkit
+
+      - name: Check generated English assets
+        run: |
+          python3 tools/build_english_assets.py --check
+          python3 tools/audit_localization.py
+
+      - name: Test the site in all three engines
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          server_pid=""
+          stop_server() {
+            if [[ -n "$server_pid" ]] && kill -0 "$server_pid" 2>/dev/null; then
+              kill "$server_pid" 2>/dev/null || true
+              wait "$server_pid" 2>/dev/null || true
+            fi
+            server_pid=""
+          }
+          trap stop_server EXIT
+          for browser in webkit chromium firefox; do
+            echo "::group::$browser flow"
+            python3 tools/browser_test_server.py --port 18765 >"browser-test-$browser.log" 2>&1 &
+            server_pid=$!
+            ready=0
+            for attempt in {1..120}; do
+              if curl --noproxy '*' --silent --fail --max-time 1 \
+                  http://127.0.0.1:18765/api/version >/dev/null; then
+                ready=1
+                break
+              fi
+              if ! kill -0 "$server_pid" 2>/dev/null; then
+                cat "browser-test-$browser.log"
+                exit 1
+              fi
+              sleep 0.25
+            done
+            if [[ "$ready" != "1" ]]; then
+              cat "browser-test-$browser.log"
+              exit 1
+            fi
+            BOTW_BROWSER_TEST_TIMEOUT_MS=120000 \
+              node tools/browser_smoke.js http://127.0.0.1:18765 "$browser"
+            stop_server
+            echo "::endgroup::"
+          done
+
+      - name: Preserve browser diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: browser-failure-${{ github.run_id }}-macos
+          path: |
+            test-results/browser/*.png
+            browser-test-*.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Build the application and DMG
+        if: env.BUILD_PACKAGES == 'true'
+        shell: bash
+        timeout-minutes: 35
+        run: ./tools/build_macos_app.sh
+
+      - name: Download the main upgrade reference DMG
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.upgrade_tag != ''
+        shell: bash
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/upgrade-reference/latest
+          gh release download "${{ steps.version.outputs.upgrade_tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "${{ steps.version.outputs.upgrade_dmg_name }}" \
+            --dir build/upgrade-reference/latest \
+            --clobber
+
+      - name: Download the minimum upgrade reference DMG
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.minimum_upgrade_tag != ''
+        shell: bash
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/upgrade-reference/minimum
+          gh release download "${{ steps.version.outputs.minimum_upgrade_tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "${{ steps.version.outputs.minimum_upgrade_dmg_name }}" \
+            --dir build/upgrade-reference/minimum \
+            --clobber
+
+      - name: Test DMG, replacement, restart, rollback and data preservation
+        if: env.BUILD_PACKAGES == 'true'
+        shell: bash
+        timeout-minutes: 15
+        env:
+          UPGRADE_DMG: ${{ steps.version.outputs.upgrade_dmg_name }}
+        run: |
+          arguments=("dist/${{ steps.version.outputs.dmg_name }}")
+          if [[ -n "$UPGRADE_DMG" ]]; then
+            arguments+=("build/upgrade-reference/latest/$UPGRADE_DMG")
+          fi
+          ./tools/test_macos_installation.sh "${arguments[@]}"
+
+      - name: Test minimum supported upgrade
+        if: env.BUILD_PACKAGES == 'true' && steps.version.outputs.minimum_upgrade_tag != ''
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          ./tools/test_macos_installation.sh \
+            "dist/${{ steps.version.outputs.dmg_name }}" \
+            "build/upgrade-reference/minimum/${{ steps.version.outputs.minimum_upgrade_dmg_name }}"
+
+      - name: Preserve the Apple Silicon DMG
+        if: env.BUILD_PACKAGES == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ${{ steps.version.outputs.macos_artifact }}
+          path: dist/${{ steps.version.outputs.dmg_name }}
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  publish:
+    name: Publish the GitHub release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-release
+    permissions:
+      contents: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Read and validate version
+        id: version
+        shell: bash
+        env:
+          BUILD_REF_NAME: ${{ github.ref_name }}
+        run: |
+          python3 tools/release_metadata.py \
+            --github-output "$GITHUB_OUTPUT" \
+            --tag "$BUILD_REF_NAME"
+          python3 tools/check_version_consistency.py
+          python3 tools/verify_release_ref.py \
+            --tag "$BUILD_REF_NAME" \
+            --commit "$GITHUB_SHA"
+
+      - name: Audit licenses and distribution contents
+        run: python3 tools/audit_distribution.py
+
+      - name: Download validated installers
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: BOTW-Companion-${{ steps.version.outputs.display_version }}-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Verify both platforms
+        shell: bash
+        run: |
+          test -f "release-assets/${{ steps.version.outputs.installer_name }}"
+          test -f "release-assets/${{ steps.version.outputs.dmg_name }}"
+          test "$(find release-assets -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
+
+      - name: Create the draft GitHub release
+        id: create_release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --paginate --slurp \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases?per_page=100" \
+            > release-list.json
+          if python3 tools/release_lookup.py \
+              --metadata release-list.json \
+              --tag "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::error::A release already exists for this immutable tag."
+            exit 1
+          fi
+          release_type=()
+          if [[ "${{ steps.version.outputs.prerelease }}" == "true" ]]; then
+            release_type=(--prerelease)
+          fi
+          gh release create "${{ steps.version.outputs.tag }}" \
+            "release-assets/${{ steps.version.outputs.installer_name }}" \
+            "release-assets/${{ steps.version.outputs.dmg_name }}" \
+            --draft \
+            --verify-tag \
+            "${release_type[@]}" \
+            --title "${{ steps.version.outputs.release_title }}" \
+            --generate-notes
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          release_id=""
+          for attempt in {1..10}; do
+            if gh api --paginate --slurp \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "repos/${{ github.repository }}/releases?per_page=100" \
+                > release-list.json; then
+              if release_id="$(python3 tools/release_lookup.py \
+                  --metadata release-list.json \
+                  --tag "${{ steps.version.outputs.tag }}" \
+                  --state draft 2>/dev/null)"; then
+                break
+              fi
+            fi
+            sleep $((attempt * 2))
+          done
+          if [[ -z "$release_id" ]]; then
+            echo "::error::The draft release database ID could not be resolved."
+            exit 1
+          fi
+          echo "release_id=$release_id" >> "$GITHUB_OUTPUT"
+
+      - name: Verify GitHub's uploaded assets
+        shell: bash
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          verified=0
+          for attempt in {1..10}; do
+            if gh api \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
+                > release-metadata.json && \
+              python3 tools/verify_release_assets.py \
+                --metadata release-metadata.json \
+                --assets release-assets \
+                --repository "${{ github.repository }}"; then
+              verified=1
+              break
+            fi
+            sleep $((attempt * 2))
+          done
+          test "$verified" = "1"
+
+      - name: Publish the verified release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ "${{ steps.version.outputs.prerelease }}" == "true" ]]; then
+            prerelease=true
+            make_latest=false
+          else
+            prerelease=false
+            make_latest=true
+          fi
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
+            -F draft=false \
+            -F prerelease="$prerelease" \
+            -f make_latest="$make_latest" \
+            > release-metadata.json
+
+      - name: Verify the published release
+        shell: bash
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          verified=0
+          for attempt in {1..10}; do
+            if gh api \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.release_id }}" \
+                > release-metadata.json && \
+              python3 tools/verify_release_assets.py \
+                --metadata release-metadata.json \
+                --assets release-assets \
+                --repository "${{ github.repository }}" \
+                --published; then
+              verified=1
+              break
+            fi
+            sleep $((attempt * 2))
+          done
+          test "$verified" = "1"
+
+      - name: Remove an unverified release
+        if: failure() && steps.create_release.outputs.created == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_id="${{ steps.create_release.outputs.release_id }}"
+          if [[ -z "$release_id" ]]; then
+            gh api --paginate --slurp \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "repos/${{ github.repository }}/releases?per_page=100" \
+              > release-list.json
+            release_id="$(python3 tools/release_lookup.py \
+              --metadata release-list.json \
+              --tag "${{ steps.version.outputs.tag }}" \
+              --state draft)"
+          fi
+          gh api --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${{ github.repository }}/releases/$release_id"

@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="botw-session-token" content="__BOTW_SESSION_TOKEN__">
+    <script src="/language.js"></script>
+
+    <title>BOTW Companion</title>
+
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/metrics.css">
+    <link rel="stylesheet" href="/armor.css">
+</head>
+
+<body>
+    <a class="skipLink" href="#mainContent">Aller au contenu principal</a>
+
+    <aside aria-label="Navigation des catégories">
+        <div class="brand">
+            <span class="triforce">▲</span>
+
+            <div>
+                <b>BOTW</b>
+                <small>COMPANION</small>
+            </div>
+        </div>
+
+        <nav id="categories"></nav>
+
+        <div class="legend" aria-label="Légende des états">
+            <p>
+                <i class="dot todo"></i>
+                À faire
+            </p>
+
+            <p>
+                <i class="dot doing"></i>
+                En cours
+            </p>
+
+            <p>
+                <i class="dot done"></i>
+                Terminé
+            </p>
+
+            <p>
+                <i class="dot info"></i>
+                Informatif
+            </p>
+        </div>
+    </aside>
+
+    <main id="mainContent" tabindex="-1">
+        <header>
+            <div>
+                <p class="eyebrow">SAUVEGARDE <span id="runtimeEmulator">ÉMULATEUR</span> • <span id="runtimePlatform">CHARGEMENT…</span></p>
+
+                <h1>Progression vers le 100 %</h1>
+
+                <p id="saveInfo">
+                    Chargement de la dernière sauvegarde…
+                </p>
+
+                <figure
+                    id="savePreview"
+                    class="savePreview"
+                    aria-live="polite"
+                >
+                    <div class="saveCaptionFrame">
+                        <img
+                            id="saveCaption"
+                            alt=""
+                            hidden
+                        >
+
+                        <span id="saveCaptionFallback">
+                            SLOT -
+                        </span>
+                    </div>
+
+                    <figcaption>
+                        <small>SLOT ANALYSÉ</small>
+
+                        <strong id="saveSlotTitle">
+                            Sélection en cours…
+                        </strong>
+
+                        <span id="saveSlotDate">
+                            Date inconnue
+                        </span>
+
+                        <span id="saveSlotSource">
+                            Émulateur local
+                        </span>
+                    </figcaption>
+                </figure>
+            </div>
+
+            <div id="dsuControl" class="dsuControl" aria-live="polite">
+
+                <div class="dsuHeader">
+                    <div class="dsuTitle">
+                        <i id="dsuDot" class="dsu-off" aria-hidden="true"></i>
+
+                        <small>
+                            GYROSCOPE
+                            <span class="dsuSeparator">•</span>
+                            <span id="dsuEngineLabel">DSU</span>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="dsuMain">
+                    <div class="dsuSource">
+                        <label class="dsuSourceLabel" for="dsuSource">
+                            Source du gyroscope
+                        </label>
+
+                        <select id="dsuSource" aria-label="Source du gyroscope">
+                            <option value="">Détection des manettes…</option>
+                        </select>
+                    </div>
+
+                    <button id="toggleDsu" type="button">
+                        Activer
+                    </button>
+                </div>
+
+                <div class="dsuStatusBlock">
+                    <b id="dsuStatus">Désactivé</b>
+
+                    <span id="dsuMessage">
+                        Serveur local arrêté.
+                    </span>
+
+                    <span id="dsuCapabilities"></span>
+                </div>
+
+                <details id="dsuDiagnostic" class="dsuDiagnostic">
+                    <summary>
+                        <span>QUALITÉ DU SIGNAL</span>
+
+                        <b id="dsuQuality" class="quality-inactive">Diagnostic inactif</b>
+                    </summary>
+
+                    <p id="dsuQualitySummary">
+                        Active le gyroscope pour mesurer la qualité du signal.
+                    </p>
+
+                    <div class="dsuMetrics" aria-label="Mesures de qualité du gyroscope">
+                        <span>Fréquence reçue <b id="dsuReceivedRate">-</b></span>
+                        <span>Fréquence envoyée <b id="dsuSentRate">-</b></span>
+                        <span>Âge de l’échantillon <b id="dsuSampleAge">-</b></span>
+                        <span>Jitter reçu <b id="dsuReceivedJitter">-</b></span>
+                        <span>Jitter envoyé <b id="dsuSentJitter">-</b></span>
+                        <span>Timestamps anormaux <b id="dsuTimestampErrors">-</b></span>
+                        <span>Paquets envoyés <b id="dsuSentPackets">-</b></span>
+                        <span>Erreurs réseau <b id="dsuNetworkErrors">-</b></span>
+                        <span>Déconnexions / reconnexions <b id="dsuReconnects">-</b></span>
+                        <span>Calibrations valides / refusées <b id="dsuCalibrations">-</b></span>
+                    </div>
+                </details>
+
+            </div>
+        </header>
+
+        <section class="panel syncBar" aria-label="Synchronisation et application">
+            <div class="syncSaveArea">
+                <div class="syncState">
+                    <i id="syncDot"></i>
+
+                    <div>
+                        <p class="metricLabel">
+                            SYNCHRONISATION RYUJINX
+                        </p>
+
+                        <h2 id="syncStatus">
+                            Première lecture en attente
+                        </h2>
+
+                        <p id="syncTimes">
+                            Vérification de la sauvegarde…
+                        </p>
+                    </div>
+                </div>
+
+                <div class="syncControls" aria-label="Commandes de synchronisation">
+                    <label>
+                        Vérifier toutes les
+
+                        <select id="syncInterval">
+                            <option value="5">5 s</option>
+                            <option value="10">10 s</option>
+                            <option value="15">15 s</option>
+                            <option value="30" selected>30 s</option>
+                            <option value="60">60 s</option>
+                        </select>
+                    </label>
+
+                    <button id="pauseSync">
+                        Pause
+                    </button>
+
+                    <button id="refresh">
+                        ↻ Lire maintenant
+                    </button>
+                </div>
+            </div>
+
+            <div class="appActions" aria-labelledby="appActionsTitle">
+                <p id="appActionsTitle" class="metricLabel">APPLICATION</p>
+
+                <label class="languageControl" for="languageSelect">
+                    <span>Langue</span>
+                    <select id="languageSelect"><option value="fr">Français</option><option value="en">English</option></select>
+                </label>
+
+                <div class="appActionButtons">
+                    <button id="openHelp" type="button">
+                        Aide
+                    </button>
+
+                    <button id="checkUpdates" type="button">
+                        Mises à jour
+                    </button>
+
+                    <button id="quitCompanion" class="dangerButton">
+                        Quitter
+                    </button>
+                </div>
+            </div>
+
+            <details class="syncHistory">
+                <summary>
+                    Historique récent
+                </summary>
+
+                <div id="syncEvents">
+                    <p>Aucun événement.</p>
+                </div>
+            </details>
+        </section>
+
+        <section id="updateBanner" class="panel updateBanner" aria-live="polite" hidden>
+            <div>
+                <p class="metricLabel">MISE À JOUR DISPONIBLE</p>
+                <h2 id="updateTitle">Une nouvelle version est disponible</h2>
+                <p id="updateVersions"></p>
+                <div id="updateProgress" class="updateProgress" hidden>
+                    <progress id="updateProgressBar" max="100" value="0"></progress>
+                    <p id="updateProgressText" role="status">Préparation du téléchargement…</p>
+                </div>
+            </div>
+            <div class="updateActions">
+                <button id="downloadUpdate" class="primaryAction" type="button">
+                    Télécharger la mise à jour
+                </button>
+                <button id="cancelUpdateDownload" type="button" hidden>Annuler</button>
+                <button id="retryUpdateDownload" type="button" hidden>Réessayer</button>
+                <a id="updateReleaseNotes" href="#" target="_blank" rel="noopener noreferrer">
+                    Notes de version
+                </a>
+                <button id="dismissUpdate" type="button">Plus tard</button>
+            </div>
+        </section>
+
+        <section
+            id="bloodMoonPanel"
+            class="panel bloodMoonBar"
+            aria-live="polite"
+        >
+            <div class="bloodMoonVisual">
+                <div
+                    class="bloodMoonScene"
+                    aria-hidden="true"
+                >
+                    <svg
+                        class="bloodMoonArtwork"
+                        viewBox="0 0 96 96"
+                        focusable="false"
+                    >
+                        <defs>
+                            <radialGradient id="bloodMoonDisk" cx="38%" cy="34%" r="72%">
+                                <stop offset="0" stop-color="#a62d35" />
+                                <stop offset="0.62" stop-color="#741923" />
+                                <stop offset="1" stop-color="#310810" />
+                            </radialGradient>
+                            <clipPath id="bloodMoonClip">
+                                <circle cx="42" cy="43" r="39" />
+                            </clipPath>
+                        </defs>
+
+                        <g class="bloodMoonCorona">
+                            <path d="M8 45C12 17 26 5 48 5c16 0 29 8 36 22-9-8-16-7-20-16-6 7-15 2-21 8-8-7-18 2-26 0 3 9-7 15-9 26Z" />
+                            <path d="M13 63c-5-17 0-35 14-46-3 11 5 13 0 22 9 0 8 12 17 15-8 7-20 10-31 9Z" />
+                            <path d="M77 17c12 12 15 30 8 47-3-10-12-10-11-19-9-2-4-14-12-19 7-6 10-7 15-9Z" />
+                        </g>
+
+                        <g class="bloodMoonMoon">
+                            <circle class="bloodMoonRim" cx="42" cy="43" r="41" />
+                            <circle class="bloodMoonDisk" cx="42" cy="43" r="39" />
+                            <g class="bloodMoonTexture" clip-path="url(#bloodMoonClip)">
+                                <path d="M12 35c12-5 15 5 25 1 8-3 8-12 20-8 7 2 8 8 17 8v16c-10-2-16 5-25 1-8-3-12-10-23-7-6 2-11 0-14-2Z" />
+                                <path d="M18 62c8-9 17-3 23 1 8 5 14-2 22-1 9 1 15 8 18 15L60 88 27 82Z" />
+                                <circle cx="29" cy="27" r="6" />
+                                <circle cx="61" cy="39" r="8" />
+                                <circle cx="37" cy="66" r="5" />
+                                <circle cx="68" cy="67" r="3.5" />
+                            </g>
+                            <g class="bloodMoonFissures" clip-path="url(#bloodMoonClip)">
+                                <path d="m22 58 9-8 5 2 7-11 5 4 8-13 5 5 9-8" />
+                                <path d="m31 77 7-10 7 2 7-9 5 3 8-8" />
+                            </g>
+                        </g>
+
+                        <g class="bloodMoonMist bloodMoonMist--back">
+                            <path d="M-8 47c15-10 25-5 36-1 12 4 21-6 33-3 11 3 20 11 43 1v13H-8Z" />
+                        </g>
+                        <g class="bloodMoonCloud bloodMoonCloud--far">
+                            <path d="M-13 49c9-7 17-7 24-2 6-9 17-8 23 0 8-5 17-2 22 4 9-4 19-2 26 5H-13Z" />
+                        </g>
+                        <g class="bloodMoonCloud bloodMoonCloud--near">
+                            <path d="M-16 69c11-11 24-11 35-2 7-11 22-12 31-1 11-8 24-5 31 5 7-4 15-3 24 4H-16Z" />
+                        </g>
+
+                        <g class="bloodMoonEmbers">
+                            <circle cx="12" cy="82" r="1.2" />
+                            <circle cx="28" cy="75" r="0.8" />
+                            <circle cx="52" cy="85" r="1" />
+                            <circle cx="69" cy="78" r="0.7" />
+                            <circle cx="85" cy="87" r="1.1" />
+                        </g>
+                    </svg>
+                </div>
+
+                <span id="bloodMoonPercent">-</span>
+            </div>
+
+            <div class="bloodMoonMain">
+                <div class="bloodMoonHeading">
+                    <div>
+                        <p class="metricLabel">
+                            PROCHAINE LUNE DE SANG
+                        </p>
+
+                        <h2 id="bloodMoonCountdown">
+                            Lecture du compteur interne…
+                        </h2>
+                    </div>
+
+                    <span
+                        id="bloodMoonPhase"
+                        class="bloodMoonPhase"
+                    >
+                        Analyse…
+                    </span>
+                </div>
+
+                <p id="bloodMoonStatus">
+                    Analyse de la dernière sauvegarde.
+                </p>
+
+                <div class="bloodMoonTimeline">
+                    <div>
+                        <small>
+                            Seuil des 7 jours
+                        </small>
+
+                        <b id="bloodMoonThreshold">-</b>
+                    </div>
+
+                    <div>
+                        <small>
+                            Programmation
+                        </small>
+
+                        <b id="bloodMoonScheduled">-</b>
+                    </div>
+
+                    <div class="bloodMoonFinal">
+                        <small>
+                            Déclenchement
+                        </small>
+
+                        <b id="bloodMoonEvent">-</b>
+                    </div>
+                </div>
+
+                <div
+                    class="bloodMoonProgress"
+                    aria-hidden="true"
+                >
+                    <i id="bloodMoonProgress"></i>
+                </div>
+            </div>
+
+            <div class="bloodMoonDetails">
+                <p id="bloodMoonMeasuredAt">
+                    Mesure de la dernière sauvegarde
+                </p>
+
+                <p id="bloodMoonInternal">-</p>
+                <p id="bloodMoonAccuracy">-</p>
+            </div>
+        </section>
+
+        <section class="hero">
+            <article class="metric officialMetric">
+                <div class="ring officialRing">
+                    <span id="mapPercent">-</span>
+                    <small>carte BOTW</small>
+                </div>
+
+                <div>
+                    <p class="metricLabel">
+                        POURCENTAGE OFFICIEL DE LA CARTE
+                    </p>
+
+                    <h2 id="mapScore">
+                        Analyse en cours
+                    </h2>
+
+                    <p id="mapStatus"></p>
+
+                    <label>
+                        Formule
+
+                        <select id="mapDlcMode">
+                            <option value="automatique">
+                                Automatique
+                            </option>
+
+                            <option value="base">
+                                Jeu de base
+                            </option>
+
+                            <option value="dlc">
+                                Jeu + DLC
+                            </option>
+                        </select>
+                    </label>
+
+                    <div
+                        id="mapBreakdown"
+                        class="quick"
+                    ></div>
+                </div>
+            </article>
+
+            <article class="metric companionMetric">
+                <div class="ring companionRing">
+                    <span id="percent">-</span>
+                    <small>couverture</small>
+                </div>
+
+                <div>
+                    <p class="metricLabel">
+                        PROFIL DE COMPLÉTION
+                    </p>
+
+                    <h2 id="score">
+                        Analyse en cours
+                    </h2>
+
+                    <p id="scoreNote"></p>
+
+                    <label>
+                        Profil
+
+                        <select id="completionProfile"></select>
+                    </label>
+
+                    <div
+                        id="quickStats"
+                        class="quick"
+                    ></div>
+
+                    <details id="completionBlockers" class="completionBlockers">
+                        <summary id="completionBlockerSummary">Éléments empêchant le 100 %</summary>
+                        <ul id="completionBlockerList"></ul>
+                    </details>
+                </div>
+            </article>
+        </section>
+
+        <section class="manualBar panel">
+            <div>
+                <p class="metricLabel">
+                    SUIVI MANUEL LOCAL
+                </p>
+
+                <h2 id="manualScore">
+                    Chargement…
+                </h2>
+
+                <p id="manualNote">
+                    Séparé de l’analyse automatique et du pourcentage officiel.
+                </p>
+            </div>
+
+            <div class="manualActions">
+                <button
+                    id="toggleManualReview"
+                    aria-expanded="false"
+                    aria-controls="manualReview"
+                >
+                    Voir les validations
+                </button>
+
+                <button id="exportManual">
+                    Exporter
+                </button>
+
+                <button id="importManual">
+                    Importer
+                </button>
+
+                <input
+                    id="manualFile"
+                    type="file"
+                    accept="application/json,.json"
+                    hidden
+                >
+            </div>
+        </section>
+
+        <section
+            id="manualReview"
+            class="manualReview panel"
+            hidden
+        >
+            <div class="manualReviewHeader">
+                <div>
+                    <p class="metricLabel">
+                        CONTRÔLE DES CASES PERSONNELLES
+                    </p>
+
+                    <h2>
+                        Objectifs validés manuellement
+                    </h2>
+
+                    <p id="manualReviewSummary">
+                        Aucun objectif coché manuellement.
+                    </p>
+                </div>
+
+                <button
+                    id="closeManualReview"
+                    type="button"
+                    aria-label="Fermer la liste des validations manuelles"
+                >
+                    Fermer
+                </button>
+            </div>
+
+            <div class="manualReviewToolbar">
+                <input
+                    id="manualReviewSearch"
+                    type="search"
+                    aria-label="Rechercher dans les validations manuelles"
+                    placeholder="Rechercher un objectif, une note, une région…"
+                >
+
+                <select
+                    id="manualReviewCategory"
+                    aria-label="Filtrer les validations manuelles par catégorie"
+                >
+                    <option value="all">
+                        Toutes les catégories
+                    </option>
+                </select>
+            </div>
+
+            <div
+                id="manualReviewList"
+                class="manualReviewList"
+            ></div>
+        </section>
+
+        <section class="toolbar">
+            <input
+                id="search"
+                type="search"
+                aria-label="Rechercher un objectif"
+                placeholder="Rechercher un sanctuaire, une quête, une région…"
+            >
+
+            <select id="status" aria-label="Filtrer par état de progression">
+                <option value="todo">
+                    À faire, en cours et infos
+                </option>
+
+                <option value="all">
+                    Tout afficher
+                </option>
+
+                <option value="done">
+                    Terminés (tous)
+                </option>
+
+                <option value="automatic">
+                    Validés automatiquement
+                </option>
+
+                <option value="manual">
+                    Validés manuellement
+                </option>
+
+                <option value="mixed">
+                    Validés automatiquement + manuellement
+                </option>
+
+                <option value="info">
+                    Points informatifs
+                </option>
+            </select>
+
+            <select id="dlc" aria-label="Filtrer par contenu additionnel">
+                <option value="all">
+                    Tous les contenus
+                </option>
+
+                <option value="base">
+                    Jeu de base
+                </option>
+
+                <option value="expansion">
+                    Expansion Pass complet
+                </option>
+
+                <option value="expansion_bonus">
+                    Bonus Expansion Pass
+                </option>
+
+                <option value="master_trials">
+                    DLC 1 - Les épreuves légendaires
+                </option>
+
+                <option value="champions_ballad">
+                    DLC 2 - L'Ode aux Prodiges
+                </option>
+
+                <option value="amiibo">
+                    Extension amiibo
+                </option>
+
+                <option value="master_mode">
+                    Mode expert
+                </option>
+
+                <option value="free_update">
+                    Mise à jour Xenoblade
+                </option>
+            </select>
+
+            <select id="gameMode" aria-label="Filtrer par mode de jeu">
+                <option value="save">
+                    Mode de la sauvegarde
+                </option>
+
+                <option value="all">
+                    Tous les modes (averti)
+                </option>
+
+                <option value="normal">
+                    Placements du mode normal
+                </option>
+
+                <option value="expert">
+                    Placements du mode Expert
+                </option>
+            </select>
+
+            <select id="location" aria-label="Filtrer par type de localisation">
+                <option value="all">
+                    Toutes les localisations
+                </option>
+
+                <option value="map_and_list">
+                    Affichables sur Hyrule
+                </option>
+
+                <option value="interior_only">
+                    Cartes intérieures
+                </option>
+
+                <option value="list_only">
+                    Liste seulement
+                </option>
+
+                <option value="coordinates_missing">
+                    Sans coordonnées renseignées
+                </option>
+
+                <option value="no_natural_location">
+                    Sans localisation naturelle
+                </option>
+            </select>
+
+            <select id="variant" aria-label="Filtrer par variante">
+                <option value="all">
+                    Toutes les variantes
+                </option>
+            </select>
+
+            <select id="region" aria-label="Filtrer par région">
+                <option value="all">
+                    Toutes les régions
+                </option>
+            </select>
+        </section>
+
+        <section
+            id="filterScopeNotice"
+            class="filterScopeNotice panel"
+            aria-live="polite"
+        ></section>
+
+        <section
+            id="routePlanner"
+            class="panel routePlanner"
+        >
+            <div class="routeHeader">
+                <div>
+                    <p class="metricLabel">
+                        SESSION DE JEU
+                    </p>
+
+                    <h2>
+                        Planificateur d’itinéraire
+                    </h2>
+
+                    <p id="routeSummary">
+                        Aucune étape sélectionnée.
+                    </p>
+                </div>
+
+                <button
+                    id="toggleRoute"
+                    aria-expanded="false"
+                    aria-controls="routeBody"
+                >
+                    Afficher
+                </button>
+            </div>
+
+            <div id="routeBody" hidden>
+                <div class="routeSessions">
+                    <label>
+                        Session
+
+                        <select id="routeSessionSelect"></select>
+                    </label>
+
+                    <label>
+                        Nom
+
+                        <input
+                            id="routeSessionName"
+                            maxlength="120"
+                            value="Session BOTW"
+                        >
+                    </label>
+
+                    <button id="newRouteSession">
+                        Nouvelle
+                    </button>
+
+                    <button id="duplicateRouteSession">
+                        Dupliquer
+                    </button>
+
+                    <button id="deleteRouteSession">
+                        Supprimer
+                    </button>
+
+                    <label>
+                        Optimisation
+
+                        <select id="routeStrategy">
+                            <option value="distance">
+                                Distance directe
+                            </option>
+
+                            <option value="region">
+                                Priorité régionale
+                            </option>
+
+                            <option value="teleport">
+                                Téléportations privilégiées
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="routeToolbar">
+                    <div class="routeToolGroup">
+                        <span class="routeToolTitle">OBJECTIFS</span>
+
+                        <div class="routeToolControls">
+                            <button id="addFiltered">
+                                + Ajouter les résultats filtrés
+                            </button>
+
+                            <button id="optimizeRoute">
+                                Optimiser l’itinéraire
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="routeToolGroup">
+                        <span class="routeToolTitle">POINT DE DÉPART</span>
+
+                        <div class="routeToolControls">
+                            <button id="pickRouteStart">
+                                Choisir sur la carte
+                            </button>
+
+                            <button id="useSelectedStart">
+                                Utiliser la fiche ouverte
+                            </button>
+
+                            <label>
+                                X
+
+                                <input
+                                    id="routeStartX"
+                                    type="number"
+                                    step="1"
+                                    placeholder="auto"
+                                >
+                            </label>
+
+                            <label>
+                                Z
+
+                                <input
+                                    id="routeStartZ"
+                                    type="number"
+                                    step="1"
+                                    placeholder="auto"
+                                >
+                            </label>
+
+                            <button id="applyRouteStart">
+                                Utiliser ces coordonnées
+                            </button>
+
+                            <button id="clearRouteStart">
+                                Réinitialiser le départ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="routeWorkspace">
+                    <div
+                        id="routeList"
+                        class="routeList"
+                    >
+                        <div class="empty">
+                            Ajoute des objectifs depuis les résultats ou une fiche.
+                        </div>
+                    </div>
+
+                    <div class="routeExport">
+                        <h3>Session</h3>
+
+                        <p id="routeStartLabel">
+                            Départ : premier objectif
+                        </p>
+
+                        <p id="routeRegions">
+                            Régions : -
+                        </p>
+
+                        <p class="routeWarning">
+                            Calcul indicatif : le relief, la météo, l’escalade et les dangers ne sont pas simulés.
+                        </p>
+
+                        <div class="routeExportActions">
+                            <button id="exportRouteJson">
+                                Exporter la session
+                            </button>
+
+                            <button id="importRouteJson">
+                                Importer une session
+                            </button>
+
+                            <input
+                                id="routeFile"
+                                type="file"
+                                accept="application/json,.json"
+                                hidden
+                            >
+
+                            <button id="exportRouteText">
+                                Exporter en texte
+                            </button>
+
+                            <button id="exportAllData">
+                                Sauvegarder toutes les données
+                            </button>
+
+                            <button id="clearRoute" class="routeClearButton">
+                                Vider la session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <div class="panel mapPanel">
+                <div class="panelTitle">
+                    <div>
+                        <h3>
+                            Carte d’Hyrule
+                        </h3>
+
+                        <span id="mapCount"></span>
+                    </div>
+
+                    <div class="mapControls">
+                        <button
+                            id="zoomOut"
+                            title="Dézoomer"
+                            aria-label="Dézoomer la carte"
+                        >
+                            −
+                        </button>
+
+                        <button
+                            id="mapReset"
+                            title="Voir toute la carte"
+                            aria-label="Afficher toute la carte"
+                        >
+                            ⌂
+                        </button>
+
+                        <button
+                            id="zoomIn"
+                            title="Zoomer"
+                            aria-label="Zoomer la carte"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <div id="map">
+                    <div id="mapStage">
+                        <img
+                            id="mapFallback"
+                            class="mapFallback"
+                            src="/hyrule-map.webp"
+                            alt="Carte topographique d’Hyrule"
+                            draggable="false"
+                        >
+
+                        <div id="mapTiles" class="mapTiles" aria-hidden="true"></div>
+
+                        <svg
+                            id="geoPath"
+                            viewBox="0 0 1200 1000"
+                            aria-hidden="true"
+                        ></svg>
+
+                        <div id="markers"></div>
+                    </div>
+
+                    <p
+                        id="mapCoords"
+                        class="mapCoords"
+                    >
+                        Déplace la carte • molette pour zoomer
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel listPanel">
+                <div class="panelTitle">
+                    <h3 id="listTitle">
+                        Éléments restants
+                    </h3>
+
+                    <span id="resultCount" role="status" aria-live="polite"></span>
+                </div>
+
+                <div id="list"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <div
+        id="itemDetails"
+        class="detailDrawer"
+        role="dialog"
+        aria-labelledby="detailTitle"
+        aria-hidden="true"
+        inert
+    >
+        <button
+            id="closeDetails"
+            class="detailClose"
+            aria-label="Fermer"
+        >
+            ×
+        </button>
+
+        <div id="detailContent"></div>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <dialog
+        id="helpDialog"
+        class="helpDialog"
+        aria-labelledby="helpTitle"
+        aria-describedby="helpIntroduction"
+    >
+        <header class="helpHeader">
+            <div>
+                <p class="eyebrow">CENTRE D’AIDE</p>
+                <h2 id="helpTitle" tabindex="-1">Découvrir BOTW Companion</h2>
+                <p id="helpIntroduction">
+                    Retrouve une explication de chaque fonction ou lance le parcours guidé dans l’interface.
+                </p>
+            </div>
+
+            <button id="closeHelp" type="button" aria-label="Fermer le centre d’aide">×</button>
+        </header>
+
+        <div class="helpWorkspace">
+            <nav class="helpNavigation" aria-label="Chapitres du centre d’aide">
+                <button id="helpOverview" class="active" type="button" aria-current="page">
+                    Vue d’ensemble
+                </button>
+                <div id="helpChapterList"></div>
+            </nav>
+
+            <section
+                id="helpContent"
+                class="helpContent"
+                tabindex="0"
+                aria-live="polite"
+                aria-atomic="true"
+            ></section>
+        </div>
+
+        <footer class="helpActions">
+            <button id="resumeTutorial" type="button" hidden>Reprendre le parcours</button>
+            <button id="startTutorial" class="primaryHelpAction" type="button">
+                Lancer le parcours essentiel
+            </button>
+        </footer>
+    </dialog>
+
+    <div id="tutorialLayer" class="tutorialLayer" hidden>
+        <div class="tutorialMask tutorialMask--top" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--right" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--bottom" aria-hidden="true"></div>
+        <div class="tutorialMask tutorialMask--left" aria-hidden="true"></div>
+        <div id="tutorialSpotlight" class="tutorialSpotlight" aria-hidden="true">
+            <div id="tutorialPreview" class="tutorialPreview" inert hidden></div>
+        </div>
+
+        <section
+            id="tutorialCard"
+            class="tutorialCard"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tutorialTitle"
+            aria-describedby="tutorialDescription tutorialDetail"
+        >
+            <div class="tutorialHeading">
+                <div>
+                    <span id="tutorialKind">PARCOURS ESSENTIEL</span>
+                    <span id="tutorialStepLabel" role="status" aria-live="polite">Étape 1 sur 10</span>
+                </div>
+                <button id="closeTutorial" type="button" aria-label="Fermer le parcours guidé">×</button>
+            </div>
+
+            <span class="tutorialProgressTrack" aria-hidden="true">
+                <i id="tutorialProgressBar"></i>
+            </span>
+
+            <div class="tutorialContent" aria-live="polite" aria-atomic="true">
+                <h2 id="tutorialTitle" tabindex="-1"></h2>
+                <p id="tutorialDescription"></p>
+                <p id="tutorialDetail" class="tutorialDetail"></p>
+            </div>
+
+            <div class="tutorialActions">
+                <button id="skipTutorial" type="button">Passer le parcours</button>
+                <span></span>
+                <button id="previousTutorial" type="button">Précédent</button>
+                <button id="nextTutorial" type="button">Suivant</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="/route_planner.js?lang=fr"></script>
+    <script src="/browser_session.js"></script>
+    <script src="/app.js?lang=fr"></script>
+</body>
+</html>

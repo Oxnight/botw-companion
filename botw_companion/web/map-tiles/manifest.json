@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "logical_size": [
+    1200,
+    1000
+  ],
+  "tile_size": 1024,
+  "levels": [
+    {
+      "id": "z1",
+      "width": 6000,
+      "height": 5000,
+      "density": 5.0,
+      "columns": 6,
+      "rows": 5
+    },
+    {
+      "id": "z2",
+      "width": 12000,
+      "height": 10000,
+      "density": 10.0,
+      "columns": 12,
+      "rows": 10
+    },
+    {
+      "id": "z3",
+      "width": 24000,
+      "height": 20000,
+      "density": 20.0,
+      "columns": 24,
+      "rows": 20
+    }
+  ]
+}

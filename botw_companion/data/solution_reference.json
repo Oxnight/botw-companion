@@ -1,0 +1,3831 @@
+{
+  "schema_version": 1,
+  "quests": {
+    "PictureMemory": {
+      "event_flow_found": true,
+      "event_nodes": 0,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FPictureMemory.json"
+      }
+    },
+    "BalladOfHeroGoron": {
+      "event_flow_found": true,
+      "event_nodes": 304,
+      "event_actions": 178,
+      "message_references": 85,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBalladOfHeroGoron.json"
+      }
+    },
+    "BalladOfHeroZora": {
+      "event_flow_found": true,
+      "event_nodes": 181,
+      "event_actions": 110,
+      "message_references": 41,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBalladOfHeroZora.json"
+      }
+    },
+    "BalladOfHeroRito": {
+      "event_flow_found": true,
+      "event_nodes": 218,
+      "event_actions": 133,
+      "message_references": 49,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBalladOfHeroRito.json"
+      }
+    },
+    "BalladOfHeroGerudo": {
+      "event_flow_found": true,
+      "event_nodes": 230,
+      "event_actions": 131,
+      "message_references": 60,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBalladOfHeroGerudo.json"
+      }
+    },
+    "GanonQuest": {
+      "event_flow_found": true,
+      "event_nodes": 0,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGanonQuest.json"
+      }
+    },
+    "Wind_Relic": {
+      "event_flow_found": true,
+      "event_nodes": 363,
+      "event_actions": 222,
+      "message_references": 67,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FWind_Relic.json"
+      }
+    },
+    "Electric_Relic": {
+      "event_flow_found": true,
+      "event_nodes": 341,
+      "event_actions": 227,
+      "message_references": 62,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FElectric_Relic.json"
+      }
+    },
+    "Fire_Relic": {
+      "event_flow_found": true,
+      "event_nodes": 332,
+      "event_actions": 219,
+      "message_references": 82,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFire_Relic.json"
+      }
+    },
+    "Water_Relic": {
+      "event_flow_found": true,
+      "event_nodes": 521,
+      "event_actions": 339,
+      "message_references": 68,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FWater_Relic.json"
+      }
+    },
+    "FairyFountain": {
+      "event_flow_found": true,
+      "event_nodes": 34,
+      "event_actions": 13,
+      "message_references": 8,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFairyFountain.json"
+      }
+    },
+    "FirstTower": {
+      "event_flow_found": true,
+      "event_nodes": 0,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFirstTower.json"
+      }
+    },
+    "Drag_Hero": {
+      "event_flow_found": true,
+      "event_nodes": 157,
+      "event_actions": 94,
+      "message_references": 56,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FDrag_Hero.json"
+      }
+    },
+    "Find_4Relic": {
+      "event_flow_found": true,
+      "event_nodes": 14,
+      "event_actions": 10,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFind_4Relic.json"
+      }
+    },
+    "CarryingBlueFireEXMini": {
+      "event_flow_found": true,
+      "event_nodes": 216,
+      "event_actions": 136,
+      "message_references": 95,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FCarryingBlueFireEXMini.json"
+      }
+    },
+    "GotoZoraVillage": {
+      "event_flow_found": true,
+      "event_nodes": 606,
+      "event_actions": 399,
+      "message_references": 77,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGotoZoraVillage.json"
+      }
+    },
+    "Find_Impa": {
+      "event_flow_found": true,
+      "event_nodes": 164,
+      "event_actions": 106,
+      "message_references": 38,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFind_Impa.json"
+      }
+    },
+    "BalladOfHeroes": {
+      "event_flow_found": true,
+      "event_nodes": 168,
+      "event_actions": 83,
+      "message_references": 28,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBalladOfHeroes.json"
+      }
+    },
+    "Get_MasterSword": {
+      "event_flow_found": true,
+      "event_nodes": 103,
+      "event_actions": 75,
+      "message_references": 14,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGet_MasterSword.json"
+      }
+    },
+    "FindDungeon": {
+      "event_flow_found": true,
+      "event_nodes": 53,
+      "event_actions": 42,
+      "message_references": 4,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFindDungeon.json"
+      }
+    },
+    "GoronsRock": {
+      "event_flow_found": true,
+      "event_nodes": 97,
+      "event_actions": 63,
+      "message_references": 26,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGoronsRock.json"
+      }
+    },
+    "SearchStone": {
+      "event_flow_found": true,
+      "event_nodes": 241,
+      "event_actions": 152,
+      "message_references": 35,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSearchStone.json"
+      }
+    },
+    "MtMotelMini_Landscape": {
+      "event_flow_found": true,
+      "event_nodes": 19,
+      "event_actions": 12,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMtMotelMini_Landscape.json"
+      }
+    },
+    "Thunder_Sword": {
+      "event_flow_found": true,
+      "event_nodes": 48,
+      "event_actions": 23,
+      "message_references": 9,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FThunder_Sword.json"
+      }
+    },
+    "Gaman": {
+      "event_flow_found": true,
+      "event_nodes": 423,
+      "event_actions": 282,
+      "message_references": 79,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGaman.json"
+      }
+    },
+    "SeekerEye": {
+      "event_flow_found": true,
+      "event_nodes": 56,
+      "event_actions": 34,
+      "message_references": 12,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSeekerEye.json"
+      }
+    },
+    "Remains_Fancier": {
+      "event_flow_found": true,
+      "event_nodes": 111,
+      "event_actions": 60,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRemains_Fancier.json"
+      }
+    },
+    "MacuseIseki": {
+      "event_flow_found": true,
+      "event_nodes": 13,
+      "event_actions": 10,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMacuseIseki.json"
+      }
+    },
+    "Relief_Landing": {
+      "event_flow_found": true,
+      "event_nodes": 93,
+      "event_actions": 55,
+      "message_references": 6,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRelief_Landing.json"
+      }
+    },
+    "Rito_BrosRock": {
+      "event_flow_found": true,
+      "event_nodes": 225,
+      "event_actions": 119,
+      "message_references": 53,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRito_BrosRock.json"
+      }
+    },
+    "HatenoMini_ThreeTree": {
+      "event_flow_found": true,
+      "event_nodes": 7,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_ThreeTree.json"
+      }
+    },
+    "SecretofObject": {
+      "event_flow_found": true,
+      "event_nodes": 9,
+      "event_actions": 5,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSecretofObject.json"
+      }
+    },
+    "DarkWoods": {
+      "event_flow_found": true,
+      "event_nodes": 55,
+      "event_actions": 38,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FDarkWoods.json"
+      }
+    },
+    "Shadow_Sign": {
+      "event_flow_found": true,
+      "event_nodes": 54,
+      "event_actions": 32,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FShadow_Sign.json"
+      }
+    },
+    "NakedIsland": {
+      "event_flow_found": true,
+      "event_nodes": 103,
+      "event_actions": 86,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FNakedIsland.json"
+      }
+    },
+    "RitoSongMystery": {
+      "event_flow_found": true,
+      "event_nodes": 33,
+      "event_actions": 7,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoSongMystery.json"
+      }
+    },
+    "RitoRabitMountain": {
+      "event_flow_found": true,
+      "event_nodes": 7,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoRabitMountain.json"
+      }
+    },
+    "StatueofZora": {
+      "event_flow_found": true,
+      "event_nodes": 49,
+      "event_actions": 8,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FStatueofZora.json"
+      }
+    },
+    "Animal_Forest": {
+      "event_flow_found": true,
+      "event_nodes": 48,
+      "event_actions": 25,
+      "message_references": 5,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FAnimal_Forest.json"
+      }
+    },
+    "CursedStatue": {
+      "event_flow_found": true,
+      "event_nodes": 30,
+      "event_actions": 15,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FCursedStatue.json"
+      }
+    },
+    "Desert_Maze": {
+      "event_flow_found": true,
+      "event_nodes": 6,
+      "event_actions": 4,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FDesert_Maze.json"
+      }
+    },
+    "SandStorm": {
+      "event_flow_found": true,
+      "event_nodes": 70,
+      "event_actions": 45,
+      "message_references": 14,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSandStorm.json"
+      }
+    },
+    "GoronCamp": {
+      "event_flow_found": true,
+      "event_nodes": 191,
+      "event_actions": 130,
+      "message_references": 46,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGoronCamp.json"
+      }
+    },
+    "FirstOhenro": {
+      "event_flow_found": true,
+      "event_nodes": 169,
+      "event_actions": 98,
+      "message_references": 37,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFirstOhenro.json"
+      }
+    },
+    "Gerudo_CarryIce": {
+      "event_flow_found": true,
+      "event_nodes": 160,
+      "event_actions": 93,
+      "message_references": 34,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_CarryIce.json"
+      }
+    },
+    "MouthofDragon": {
+      "event_flow_found": true,
+      "event_nodes": 37,
+      "event_actions": 15,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMouthofDragon.json"
+      }
+    },
+    "KnightDoll": {
+      "event_flow_found": true,
+      "event_nodes": 60,
+      "event_actions": 40,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKnightDoll.json"
+      }
+    },
+    "MagneticFld": {
+      "event_flow_found": true,
+      "event_nodes": 160,
+      "event_actions": 92,
+      "message_references": 36,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMagneticFld.json"
+      }
+    },
+    "DokuroEye": {
+      "event_flow_found": true,
+      "event_nodes": 7,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FDokuroEye.json"
+      }
+    },
+    "HigakkareMini_RedDragon": {
+      "event_flow_found": true,
+      "event_nodes": 12,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHigakkareMini_RedDragon.json"
+      }
+    },
+    "HatenoMini_WhiteDragon": {
+      "event_flow_found": true,
+      "event_nodes": 16,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_WhiteDragon.json"
+      }
+    },
+    "StolenBook": {
+      "event_flow_found": true,
+      "event_nodes": 555,
+      "event_actions": 368,
+      "message_references": 111,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FStolenBook.json"
+      }
+    },
+    "ShieldofKolog": {
+      "event_flow_found": true,
+      "event_nodes": 288,
+      "event_actions": 195,
+      "message_references": 21,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FShieldofKolog.json"
+      }
+    },
+    "Threebros_giant": {
+      "event_flow_found": true,
+      "event_nodes": 27,
+      "event_actions": 15,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FThreebros_giant.json"
+      }
+    },
+    "TwoWheels": {
+      "event_flow_found": true,
+      "event_nodes": 43,
+      "event_actions": 22,
+      "message_references": 6,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTwoWheels.json"
+      }
+    },
+    "SunazarashiRace": {
+      "event_flow_found": true,
+      "event_nodes": 384,
+      "event_actions": 234,
+      "message_references": 54,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSunazarashiRace.json"
+      }
+    },
+    "GodTree": {
+      "event_flow_found": true,
+      "event_nodes": 55,
+      "event_actions": 35,
+      "message_references": 9,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGodTree.json"
+      }
+    },
+    "Solitary_Maze": {
+      "event_flow_found": true,
+      "event_nodes": 6,
+      "event_actions": 4,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSolitary_Maze.json"
+      }
+    },
+    "FourJewel": {
+      "event_flow_found": true,
+      "event_nodes": 28,
+      "event_actions": 22,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFourJewel.json"
+      }
+    },
+    "Cliff_Maze": {
+      "event_flow_found": true,
+      "event_nodes": 6,
+      "event_actions": 4,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FCliff_Maze.json"
+      }
+    },
+    "BloodyMoonRelief": {
+      "event_flow_found": true,
+      "event_nodes": 106,
+      "event_actions": 55,
+      "message_references": 22,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBloodyMoonRelief.json"
+      }
+    },
+    "DontDamageFlower": {
+      "event_flow_found": true,
+      "event_nodes": 54,
+      "event_actions": 33,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FDontDamageFlower.json"
+      }
+    },
+    "MinamihateeluMini_touzoku": {
+      "event_flow_found": true,
+      "event_nodes": 148,
+      "event_actions": 92,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMinamihateeluMini_touzoku.json"
+      }
+    },
+    "OldKorok_Help": {
+      "event_flow_found": true,
+      "event_nodes": 275,
+      "event_actions": 174,
+      "message_references": 34,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FOldKorok_Help.json"
+      }
+    },
+    "HutagoHatago_Ch_001": {
+      "event_flow_found": true,
+      "event_nodes": 111,
+      "event_actions": 75,
+      "message_references": 25,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHutagoHatago_Ch_001.json"
+      }
+    },
+    "Kakariko_Cha_003": {
+      "event_flow_found": true,
+      "event_nodes": 68,
+      "event_actions": 33,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Cha_003.json"
+      }
+    },
+    "Kakariko_Ch_006": {
+      "event_flow_found": true,
+      "event_nodes": 37,
+      "event_actions": 18,
+      "message_references": 12,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_006.json"
+      }
+    },
+    "Kakariko_Cha_001": {
+      "event_flow_found": true,
+      "event_nodes": 67,
+      "event_actions": 35,
+      "message_references": 15,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Cha_001.json"
+      }
+    },
+    "Kakariko_Ch_Cooking2": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_Cooking2.json"
+      }
+    },
+    "Kakariko_Ch_Cooking3": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_Cooking3.json"
+      }
+    },
+    "Kakariko_Ch_Cooking4": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_Cooking4.json"
+      }
+    },
+    "Kakariko_Ch_005": {
+      "event_flow_found": true,
+      "event_nodes": 156,
+      "event_actions": 93,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_005.json"
+      }
+    },
+    "Kakariko_Ch_004": {
+      "event_flow_found": true,
+      "event_nodes": 78,
+      "event_actions": 50,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKakariko_Ch_004.json"
+      }
+    },
+    "HatenoMini_DevilSeal": {
+      "event_flow_found": true,
+      "event_nodes": 10,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_DevilSeal.json"
+      }
+    },
+    "HatenoMini_WeaponMania": {
+      "event_flow_found": true,
+      "event_nodes": 29,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_WeaponMania.json"
+      }
+    },
+    "HatenoMini_LoveInsects": {
+      "event_flow_found": true,
+      "event_nodes": 28,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_LoveInsects.json"
+      }
+    },
+    "HatenoMini_GoatThief": {
+      "event_flow_found": true,
+      "event_nodes": 12,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_GoatThief.json"
+      }
+    },
+    "HatenoMini_BlueFire": {
+      "event_flow_found": true,
+      "event_nodes": 185,
+      "event_actions": 122,
+      "message_references": 55,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_BlueFire.json"
+      }
+    },
+    "Hateno_SheikPad_PowerUp": {
+      "event_flow_found": true,
+      "event_nodes": 14,
+      "event_actions": 1,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHateno_SheikPad_PowerUp.json"
+      }
+    },
+    "HatenoMini_CameraBoy": {
+      "event_flow_found": true,
+      "event_nodes": 10,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_CameraBoy.json"
+      }
+    },
+    "HateeluMini_Treasure": {
+      "event_flow_found": true,
+      "event_nodes": 45,
+      "event_actions": 31,
+      "message_references": 16,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHateeluMini_Treasure.json"
+      }
+    },
+    "HatenoMini_MyHome": {
+      "event_flow_found": true,
+      "event_nodes": 16,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHatenoMini_MyHome.json"
+      }
+    },
+    "UMiiMini_MakeVillage": {
+      "event_flow_found": true,
+      "event_nodes": 56,
+      "event_actions": 1,
+      "message_references": 1,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUMiiMini_MakeVillage.json"
+      }
+    },
+    "Bottle_Mes": {
+      "event_flow_found": true,
+      "event_nodes": 214,
+      "event_actions": 145,
+      "message_references": 44,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FBottle_Mes.json"
+      }
+    },
+    "ZoraMini_DiveChallenge": {
+      "event_flow_found": true,
+      "event_nodes": 62,
+      "event_actions": 41,
+      "message_references": 20,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FZoraMini_DiveChallenge.json"
+      }
+    },
+    "RinelSearch": {
+      "event_flow_found": true,
+      "event_nodes": 134,
+      "event_actions": 89,
+      "message_references": 37,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRinelSearch.json"
+      }
+    },
+    "Zora_FlogMini": {
+      "event_flow_found": true,
+      "event_nodes": 7,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FZora_FlogMini.json"
+      }
+    },
+    "Giant_ZoraMini": {
+      "event_flow_found": true,
+      "event_nodes": 11,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGiant_ZoraMini.json"
+      }
+    },
+    "ZoraMini_HarvestingStone": {
+      "event_flow_found": true,
+      "event_nodes": 8,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FZoraMini_HarvestingStone.json"
+      }
+    },
+    "ZoraMini_FlowedWife": {
+      "event_flow_found": true,
+      "event_nodes": 15,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FZoraMini_FlowedWife.json"
+      }
+    },
+    "isso_treasure_mini": {
+      "event_flow_found": true,
+      "event_nodes": 83,
+      "event_actions": 48,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2Fisso_treasure_mini.json"
+      }
+    },
+    "ZoraMini_ReliefSearch": {
+      "event_flow_found": true,
+      "event_nodes": 10,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FZoraMini_ReliefSearch.json"
+      }
+    },
+    "UotoriMini_RecipeSea": {
+      "event_flow_found": true,
+      "event_nodes": 118,
+      "event_actions": 74,
+      "message_references": 32,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUotoriMini_RecipeSea.json"
+      }
+    },
+    "UotoriMini_SinkTreasure": {
+      "event_flow_found": true,
+      "event_nodes": 34,
+      "event_actions": 15,
+      "message_references": 7,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUotoriMini_SinkTreasure.json"
+      }
+    },
+    "UotoriMini_RecoverBay": {
+      "event_flow_found": true,
+      "event_nodes": 60,
+      "event_actions": 36,
+      "message_references": 18,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUotoriMini_RecoverBay.json"
+      }
+    },
+    "FironeMini_HeartPond": {
+      "event_flow_found": true,
+      "event_nodes": 158,
+      "event_actions": 106,
+      "message_references": 54,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFironeMini_HeartPond.json"
+      }
+    },
+    "FironeMini_TerribleThunder": {
+      "event_flow_found": true,
+      "event_nodes": 54,
+      "event_actions": 31,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFironeMini_TerribleThunder.json"
+      }
+    },
+    "FironeMini_GiantHorse": {
+      "event_flow_found": true,
+      "event_nodes": 74,
+      "event_actions": 51,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFironeMini_GiantHorse.json"
+      }
+    },
+    "FironeMini_HorseEnemy": {
+      "event_flow_found": true,
+      "event_nodes": 61,
+      "event_actions": 37,
+      "message_references": 13,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FFironeMini_HorseEnemy.json"
+      }
+    },
+    "Gerudo_HorseBuyer": {
+      "event_flow_found": true,
+      "event_nodes": 56,
+      "event_actions": 35,
+      "message_references": 18,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_HorseBuyer.json"
+      }
+    },
+    "OneHundred": {
+      "event_flow_found": true,
+      "event_nodes": 178,
+      "event_actions": 95,
+      "message_references": 53,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FOneHundred.json"
+      }
+    },
+    "Gerudo_tsukamidake": {
+      "event_flow_found": true,
+      "event_nodes": 44,
+      "event_actions": 25,
+      "message_references": 16,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_tsukamidake.json"
+      }
+    },
+    "Oasis_Drug_Challenge": {
+      "event_flow_found": true,
+      "event_nodes": 39,
+      "event_actions": 21,
+      "message_references": 13,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FOasis_Drug_Challenge.json"
+      }
+    },
+    "GerudoMiniJewel": {
+      "event_flow_found": true,
+      "event_nodes": 112,
+      "event_actions": 68,
+      "message_references": 35,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudoMiniJewel.json"
+      }
+    },
+    "Gerudo_Ch_SecretClub": {
+      "event_flow_found": true,
+      "event_nodes": 38,
+      "event_actions": 25,
+      "message_references": 9,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_SecretClub.json"
+      }
+    },
+    "Gerudo_Ch_SandWarm": {
+      "event_flow_found": true,
+      "event_nodes": 82,
+      "event_actions": 43,
+      "message_references": 20,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_SandWarm.json"
+      }
+    },
+    "Gerudo_Ch_SnowMT": {
+      "event_flow_found": true,
+      "event_nodes": 129,
+      "event_actions": 82,
+      "message_references": 41,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_SnowMT.json"
+      }
+    },
+    "Gerudo_Ch_SnowBoots": {
+      "event_flow_found": true,
+      "event_nodes": 116,
+      "event_actions": 73,
+      "message_references": 34,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_SnowBoots.json"
+      }
+    },
+    "Gerudo_Ch_Helmet": {
+      "event_flow_found": true,
+      "event_nodes": 138,
+      "event_actions": 74,
+      "message_references": 33,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_Helmet.json"
+      }
+    },
+    "Gerudo_Ch_Poison": {
+      "event_flow_found": true,
+      "event_nodes": 141,
+      "event_actions": 79,
+      "message_references": 39,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_Poison.json"
+      }
+    },
+    "Gerudo_Ch_FindingValetta": {
+      "event_flow_found": true,
+      "event_nodes": 110,
+      "event_actions": 58,
+      "message_references": 33,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGerudo_Ch_FindingValetta.json"
+      }
+    },
+    "RitoUmayadoMini_HotRecipe": {
+      "event_flow_found": true,
+      "event_nodes": 44,
+      "event_actions": 26,
+      "message_references": 22,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoUmayadoMini_HotRecipe.json"
+      }
+    },
+    "RitoMini_Cook": {
+      "event_flow_found": true,
+      "event_nodes": 8,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoMini_Cook.json"
+      }
+    },
+    "RitoMini_Flint": {
+      "event_flow_found": true,
+      "event_nodes": 8,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoMini_Flint.json"
+      }
+    },
+    "RitoMini_IceGolem": {
+      "event_flow_found": true,
+      "event_nodes": 11,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRitoMini_IceGolem.json"
+      }
+    },
+    "Rito_KeelSearch": {
+      "event_flow_found": true,
+      "event_nodes": 68,
+      "event_actions": 43,
+      "message_references": 16,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRito_KeelSearch.json"
+      }
+    },
+    "SetugenUmayadoMini_Umahonephoto": {
+      "event_flow_found": true,
+      "event_nodes": 35,
+      "event_actions": 22,
+      "message_references": 13,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSetugenUmayadoMini_Umahonephoto.json"
+      }
+    },
+    "HyrulePlainMini_Balloon": {
+      "event_flow_found": true,
+      "event_nodes": 48,
+      "event_actions": 29,
+      "message_references": 16,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHyrulePlainMini_Balloon.json"
+      }
+    },
+    "KorokMini_RodShiren": {
+      "event_flow_found": true,
+      "event_nodes": 57,
+      "event_actions": 34,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKorokMini_RodShiren.json"
+      }
+    },
+    "KorokMini_KorokShiren": {
+      "event_flow_found": true,
+      "event_nodes": 75,
+      "event_actions": 40,
+      "message_references": 23,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKorokMini_KorokShiren.json"
+      }
+    },
+    "KorokMini_UMAShiren": {
+      "event_flow_found": true,
+      "event_nodes": 34,
+      "event_actions": 18,
+      "message_references": 11,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKorokMini_UMAShiren.json"
+      }
+    },
+    "MarittaMini_BigWhales": {
+      "event_flow_found": true,
+      "event_nodes": 180,
+      "event_actions": 88,
+      "message_references": 37,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMarittaMini_BigWhales.json"
+      }
+    },
+    "CompleteDungeon": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FCompleteDungeon.json"
+      }
+    },
+    "KorokMini_RiddleShiren": {
+      "event_flow_found": true,
+      "event_nodes": 90,
+      "event_actions": 56,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FKorokMini_RiddleShiren.json"
+      }
+    },
+    "TabantaBridgeMini_Sundial": {
+      "event_flow_found": true,
+      "event_nodes": 39,
+      "event_actions": 21,
+      "message_references": 16,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTabantaBridgeMini_Sundial.json"
+      }
+    },
+    "RiversideMini_CastleWeapon": {
+      "event_flow_found": true,
+      "event_nodes": 88,
+      "event_actions": 47,
+      "message_references": 29,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRiversideMini_CastleWeapon.json"
+      }
+    },
+    "Carnivorous_Boy": {
+      "event_flow_found": true,
+      "event_nodes": 54,
+      "event_actions": 28,
+      "message_references": 19,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FCarnivorous_Boy.json"
+      }
+    },
+    "My_Hero": {
+      "event_flow_found": true,
+      "event_nodes": 59,
+      "event_actions": 31,
+      "message_references": 24,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMy_Hero.json"
+      }
+    },
+    "RiversideMini_RoyalRecipe": {
+      "event_flow_found": true,
+      "event_nodes": 52,
+      "event_actions": 36,
+      "message_references": 21,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FRiversideMini_RoyalRecipe.json"
+      }
+    },
+    "HyruleDepthMini_WhiteHorse": {
+      "event_flow_found": true,
+      "event_nodes": 62,
+      "event_actions": 42,
+      "message_references": 18,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHyruleDepthMini_WhiteHorse.json"
+      }
+    },
+    "SanrokuMini_Lizard": {
+      "event_flow_found": true,
+      "event_nodes": 57,
+      "event_actions": 32,
+      "message_references": 17,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FSanrokuMini_Lizard.json"
+      }
+    },
+    "GoronCityMini_BeatGolem": {
+      "event_flow_found": true,
+      "event_nodes": 10,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGoronCityMini_BeatGolem.json"
+      }
+    },
+    "GoronMini_WallCrackTBox": {
+      "event_flow_found": true,
+      "event_nodes": 12,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGoronMini_WallCrackTBox.json"
+      }
+    },
+    "GoronMini_ImportGem": {
+      "event_flow_found": true,
+      "event_nodes": 8,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FGoronMini_ImportGem.json"
+      }
+    },
+    "UMiiMini_GiveCake": {
+      "event_flow_found": true,
+      "event_nodes": 30,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUMiiMini_GiveCake.json"
+      }
+    },
+    "UMiiMini_RichmansHobby": {
+      "event_flow_found": true,
+      "event_nodes": 13,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FUMiiMini_RichmansHobby.json"
+      }
+    },
+    "HigakkareMini_StrangeMan": {
+      "event_flow_found": true,
+      "event_nodes": 7,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FHigakkareMini_StrangeMan.json"
+      }
+    },
+    "MinakkareMini_Dragonfly": {
+      "event_flow_found": true,
+      "event_nodes": 38,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FMinakkareMini_Dragonfly.json"
+      }
+    },
+    "100enemy": {
+      "event_flow_found": true,
+      "event_nodes": 88,
+      "event_actions": 52,
+      "message_references": 4,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2F100enemy.json"
+      }
+    },
+    "TreasureHunt01": {
+      "event_flow_found": true,
+      "event_nodes": 14,
+      "event_actions": 6,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt01.json"
+      }
+    },
+    "TreasureHunt02": {
+      "event_flow_found": true,
+      "event_nodes": 14,
+      "event_actions": 6,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt02.json"
+      }
+    },
+    "TreasureHunt_touzoku01": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku01.json"
+      }
+    },
+    "TreasureHunt_touzoku03": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku03.json"
+      }
+    },
+    "TreasureHunt_touzoku02": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku02.json"
+      }
+    },
+    "TreasureHunt_touzoku04": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku04.json"
+      }
+    },
+    "bf2_collabo": {
+      "event_flow_found": true,
+      "event_nodes": 4,
+      "event_actions": 1,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2Fbf2_collabo.json"
+      }
+    },
+    "TreasureHunt03": {
+      "event_flow_found": true,
+      "event_nodes": 16,
+      "event_actions": 7,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt03.json"
+      }
+    },
+    "TreasureHunt04": {
+      "event_flow_found": true,
+      "event_nodes": 16,
+      "event_actions": 7,
+      "message_references": 2,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt04.json"
+      }
+    },
+    "TreasureHunt_touzoku08": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku08.json"
+      }
+    },
+    "TreasureHunt_touzoku06": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku06.json"
+      }
+    },
+    "TreasureHunt_touzoku05": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku05.json"
+      }
+    },
+    "TreasureHunt_touzoku07": {
+      "event_flow_found": true,
+      "event_nodes": 2,
+      "event_actions": 0,
+      "message_references": 0,
+      "source": {
+        "name": "BOTW Event Flow Viewer - flux de quête",
+        "url": "https://eventviewer.zeldamods.org/viewer.html?data=%2Fd%2FTreasureHunt_touzoku07.json"
+      }
+    }
+  },
+  "trial_rooms": [
+    {
+      "id": "beginning-01",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 1,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "3 Bokoblins",
+      "strategy": "Utilise l'arbre comme couvert, puis une bombe près du feu ; récupère immédiatement armes et nourriture.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-02",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 2,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Chuchu de feu, 4 Bokoblins",
+      "strategy": "Élimine le Chuchu depuis le grand arbre, puis déloge séparément les archers avec des bombes.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-03",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 3,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Chuchu, 8 Chuchus de feu",
+      "strategy": "Fais exploser les Chuchus à distance et exploite les courants ascendants avant que l'herbe ne cesse de brûler.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-04",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 4,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "5 Bokoblins, 3 Bokoblins bleus",
+      "strategy": "Approche discrètement, neutralise d'abord les archers et déclenche les barils depuis une position sûre.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-05",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 5,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Moblins, 3 Bokoblins bleus",
+      "strategy": "Tire une flèche de feu dans la grotte-crâne, puis bombarde les survivants depuis les arbres.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-06",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 6,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Lithorok",
+      "strategy": "Détruis ses bras avec les bombes, grimpe pendant sa chute et frappe le gisement avec une arme à deux mains.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-07",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 7,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Approche accroupi pour capturer la fée, brise les caisses et cuisine les ingrédients avant de repartir.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-08",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 8,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 gros Chuchu électrique, 2 Lézalfos, 2 Lézalfos bleus",
+      "strategy": "Élimine le Chuchu depuis le rocher, saisis la lance et isole les Lézalfos avec Cinetis.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-09",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 9,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Octos d'eau, 1 Sorcier électrique",
+      "strategy": "Tue l'Octo placé derrière le départ, sors le coffre avec Cryonis puis maintiens le Sorcier au sol.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-10",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 10,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Lézalfos bleu, 2 Lézalfos noirs",
+      "strategy": "Crée un pilier Cryonis pour tirer en ralenti, puis concentre toutes les attaques sur une cible à la fois.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-11",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 11,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "4 Bokoblins, 3 Bokoblins bleus, 1 Bokoblin noir, 1 Moblin noir",
+      "strategy": "Élimine les archers avant d'avancer avec le radeau et fais tomber le Moblin dans l'eau si possible.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-12",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 12,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Hinox bleu",
+      "strategy": "Vise l'œil, exploite Cinetis amélioré et frappe avec une arme à deux mains pendant chaque chute.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "beginning-13",
+      "stage": "beginning",
+      "stage_label": "Épreuves basiques",
+      "floor": 13,
+      "kind": "reward",
+      "kind_label": "Salle de récompense",
+      "enemies": "Aucun",
+      "strategy": "Examine le moine pour renforcer l'Épée de légende : puissance de base 40.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-01",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 1,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "5 Bokoblins",
+      "strategy": "Laisse les bombes flotter sous les plateformes pour économiser les armes, puis ouvre le coffre à droite.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-02",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 2,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Bokoblins, 1 Bokoblin bleu, 1 Sorcier de feu, 2 Sorciers météores",
+      "strategy": "Élimine les Sorciers à l'arc avant qu'ils ne modifient la météo, puis termine les Bokoblins.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-03",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 3,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "4 Bokoblins, 3 Bokoblins bleus",
+      "strategy": "Utilise les courants d'air pour les tirs en ralenti et fais tomber les ennemis des plateformes.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-04",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 4,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Gardien détérioré",
+      "strategy": "Place un obstacle entre le laser et Link, vise l'œil puis frappe pendant l'interruption.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-05",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 5,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Capture la fée, ouvre les trois coffres et cuisine avant la section plongée dans l'obscurité.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-06",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 6,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "5 Chauves-souris de feu, 1 Chuchu électrique",
+      "strategy": "Dans l'obscurité, repère les lueurs, élimine les Chauves-souris à distance puis le Chuchu.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-07",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 7,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Lézalfos crache-feu, 2 Lézalfos bleus",
+      "strategy": "Utilise la glace contre les crache-feu et combats une cible à la fois dans la zone éclairée.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-08",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 8,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Sorcier météore, 2 Bokoblins bleus, 1 Bokoblin noir",
+      "strategy": "Abats d'abord le Sorcier pour éviter ses renforts, puis utilise son arme de feu comme source de lumière.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-09",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 9,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Gardien détérioré",
+      "strategy": "Repère son œil dans l'obscurité, protège-toi derrière le décor et renvoie ou interrompt le laser.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-10",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 10,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Hinox noir",
+      "strategy": "Prépare une attaque renforcée, vise l'œil et utilise les meilleures armes durant son étourdissement.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-11",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 11,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Capture les deux fées, ouvre les trois coffres et cuisine toute la nourriture utile.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-12",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 12,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "6 Nano Gardiens I",
+      "strategy": "Isole les éclaireurs et utilise Cryonis pour atteindre le coffre de dix flèches.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-13",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 13,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "3 Nano Gardiens II",
+      "strategy": "Déplace la caisse métallique pour atteindre le coffre caché, puis élimine les Gardiens sans gaspiller les armes fortes.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-14",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 14,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "4 Nano Gardiens I, 2 Nano Gardiens II",
+      "strategy": "Concentre les attaques sur les modèles II et utilise les piliers pour casser les lignes de tir.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-15",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 15,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Nano Gardiens III",
+      "strategy": "Provoque les esquives parfaites et abrite-toi lorsque commence l'attaque tournoyante.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-16",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 16,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Nano Gardien IV",
+      "strategy": "Économise une arme solide, exploite chaque esquive parfaite et les courants ascendants du laser rotatif.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "middle-17",
+      "stage": "middle",
+      "stage_label": "Épreuves moyennes",
+      "floor": 17,
+      "kind": "reward",
+      "kind_label": "Salle de récompense",
+      "enemies": "Aucun",
+      "strategy": "Examine le moine pour renforcer l'Épée de légende : puissance de base 50.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-01",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 1,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "4 Stalkoblins",
+      "strategy": "Utilise surtout les bombes, détruis les crânes et conserve toutes les armes en bois pour la suite.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-02",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 2,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Chauves-souris électriques, 3 Stalézalfos",
+      "strategy": "Élimine les Chauves-souris, déclenche les barils avec une bombe et détruis rapidement les crânes.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-03",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 3,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Chuchus électriques, 5 Stalmoblins",
+      "strategy": "Fais exploser les Chuchus à distance puis utilise les bombes pour désarmer et finir les Stalmoblins.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-04",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 4,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "7 Stalkoblins montés",
+      "strategy": "Vole un cheval squelette, saute pour tirer en ralenti et vise la tête des cavaliers.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-05",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 5,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Stalhinox",
+      "strategy": "Décroche son œil, détruis-le avant l'aube et récupère les trois armes élémentaires fixées à son corps.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-06",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 6,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Capture les deux fées et conserve précieusement les trois flèches archéoniques pour les dernières salles.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-07",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 7,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Chuchu de feu, 1 Octo des rochers, 2 Lithoroks juniors de feu",
+      "strategy": "Reste à distance : les bombes suffisent pour nettoyer toute cette salle volcanique.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-08",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 8,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "3 Lézalfos crache-feu",
+      "strategy": "Utilise les courants ascendants pour viser la tête puis élimine-les avec l'arme de glace.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-09",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 9,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Sorcier météore, 1 Moblin noir, 2 Lézalfos crache-feu",
+      "strategy": "Neutralise le Sorcier en premier et conserve son bâton météore pour la section froide.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-10",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 10,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "3 Moblins noirs, 1 Lézalfos crache-feu",
+      "strategy": "Utilise Cinetis et l'électricité ; empêche les Moblins de tomber dans la lave afin de récupérer leurs armes.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-11",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 11,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Magrok",
+      "strategy": "Refroidis son corps avec la glace, exploite les courants ascendants et frappe le gisement.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-12",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 12,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Capture les trois fées, ouvre les coffres et cuisine plusieurs plats anti-froid pour la prochaine section.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-13",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 13,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Lithoroks juniors de glace, 1 Chuchu de glace, 2 Bokoblins bleus, 1 Bokoblin noir",
+      "strategy": "Utilise le feu contre les ennemis gelés et profite de la dernière marmite disponible.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-14",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 14,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "2 Chuchus de glace, 1 Lézalfos crache-glace, 4 Bokoblins bleus, 1 Moblin argenté",
+      "strategy": "Élimine les cibles de glace avec le feu et récupère les trois flèches archéoniques du coffre.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-15",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 15,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Moblin noir, 1 Sorcier de glace, 2 Bokoblins bleus, 1 Bokoblin argenté",
+      "strategy": "Abats le Sorcier avec le feu avant qu'il n'invoque des renforts, puis isole les ennemis lourds.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-16",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 16,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Cryorok",
+      "strategy": "Fais fondre sa glace, utilise le brise-pierre de la salle de repos et frappe le gisement.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-17",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 17,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Lynel bleu",
+      "strategy": "La neige gêne les déplacements : utilise une flèche archéonique pour préserver santé et équipement.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-18",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 18,
+      "kind": "rest",
+      "kind_label": "Salle de repos",
+      "enemies": "Aucun",
+      "strategy": "Capture les quatre fées, cuisine un repas de soin complet et ouvre les trois coffres royaux.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-19",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 19,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "6 Gardiens détériorés",
+      "strategy": "Utilise les arbres pour couper les tirs, attaque chaque Gardien par l'arrière et conserve les flèches archéoniques.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-20",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 20,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Gardien à pied",
+      "strategy": "Coupe ses pattes, vise l'œil et combats-le normalement afin d'économiser les flèches archéoniques.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-21",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 21,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Gardien volant",
+      "strategy": "Prends de la hauteur avec les tours, détruis ses hélices ou utilise une flèche archéonique.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-22",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 22,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "1 Gardien à pied, 1 Gardien volant, 1 Gardien tourelle",
+      "strategy": "Élimine le volant et le marcheur aux flèches archéoniques, puis grimpe jusqu'à la tourelle si nécessaire.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-23",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 23,
+      "kind": "combat",
+      "kind_label": "Salle active",
+      "enemies": "8 Bokoblins montés, 1 Lynel blanc, 1 Gardien tourelle",
+      "strategy": "Supprime immédiatement le Lynel avec une flèche archéonique, neutralise la tourelle puis termine les cavaliers.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    },
+    {
+      "id": "final-24",
+      "stage": "final",
+      "stage_label": "Épreuves extrêmes",
+      "floor": 24,
+      "kind": "reward",
+      "kind_label": "Salle de récompense",
+      "enemies": "Aucun",
+      "strategy": "Examine le moine : l'Épée de légende conserve désormais sa puissance de base 60.",
+      "source": {
+        "name": "Zelda Dungeon - Trial of the Sword",
+        "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+      }
+    }
+  ],
+  "audit": {
+    "quests_total": 152,
+    "quests_with_event_flow_file": 152,
+    "quests_with_nonempty_event_flow": 149,
+    "trial_rooms_total": 54,
+    "trial_active_rooms": 45,
+    "trial_rest_rooms": 6,
+    "trial_reward_rooms": 3,
+    "quests_with_editorial_facts": 152,
+    "quests_with_named_giver": 133,
+    "quests_with_named_reward": 140
+  },
+  "sources": [
+    {
+      "name": "Zelda Dungeon - Trial of the Sword",
+      "url": "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword"
+    },
+    {
+      "name": "BOTW Event Flow Viewer - données de flux",
+      "url": "https://github.com/zeldamods/botw-event-viewer"
+    },
+    {
+      "name": "Zelda Wiki - fiches de quêtes",
+      "url": "https://zeldawiki.wiki/wiki/Category:Breath_of_the_Wild_Quests"
+    }
+  ],
+  "quest_facts": {
+    "PictureMemory": {
+      "giver": "Impa",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Champion's Tunic",
+      "source": {
+        "name": "Zelda Wiki - Captured Memories",
+        "url": "https://zeldawiki.wiki/wiki/Captured_Memories"
+      }
+    },
+    "BalladOfHeroGoron": {
+      "giver": "",
+      "location": "",
+      "prerequisite": "Complete Great Plateau trials",
+      "reward": "Daruk's Protection +",
+      "source": {
+        "name": "Zelda Wiki - EX Champion Daruk's Song",
+        "url": "https://zeldawiki.wiki/wiki/EX_Champion_Daruk%27s_Song"
+      }
+    },
+    "BalladOfHeroZora": {
+      "giver": "",
+      "location": "Ja'Abu Ridge",
+      "prerequisite": "Complete Great Plateau trials",
+      "reward": "Mipha's Grace +",
+      "source": {
+        "name": "Zelda Wiki - EX Champion Mipha's Song",
+        "url": "https://zeldawiki.wiki/wiki/EX_Champion_Mipha%27s_Song"
+      }
+    },
+    "BalladOfHeroRito": {
+      "giver": "",
+      "location": "",
+      "prerequisite": "",
+      "reward": "Revali's Gale +",
+      "source": {
+        "name": "Zelda Wiki - EX Champion Revali's Song",
+        "url": "https://zeldawiki.wiki/wiki/EX_Champion_Revali%27s_Song"
+      }
+    },
+    "BalladOfHeroGerudo": {
+      "giver": "",
+      "location": "East Gerudo Mesa",
+      "prerequisite": "Complete Great Plateau trials",
+      "reward": "Urbosa's Fury +",
+      "source": {
+        "name": "Zelda Wiki - EX Champion Urbosa's Song",
+        "url": "https://zeldawiki.wiki/wiki/EX_Champion_Urbosa%27s_Song"
+      }
+    },
+    "GanonQuest": {
+      "giver": "King Rhoam",
+      "location": "Great Plateau",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Destroy Ganon",
+        "url": "https://zeldawiki.wiki/wiki/Destroy_Ganon"
+      }
+    },
+    "Wind_Relic": {
+      "giver": "",
+      "location": "{{Infobox Game Blocks ; |BotW= Tabantha Frontier Sky, Vah Medoh's Perch",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Divine Beast Vah Medoh",
+        "url": "https://zeldawiki.wiki/wiki/Divine_Beast_Vah_Medoh"
+      }
+    },
+    "Electric_Relic": {
+      "giver": "",
+      "location": "Gerudo Desert",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Divine Beast Vah Naboris",
+        "url": "https://zeldawiki.wiki/wiki/Divine_Beast_Vah_Naboris"
+      }
+    },
+    "Fire_Relic": {
+      "giver": "",
+      "location": "Death Mountain",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Divine Beast Vah Rudania",
+        "url": "https://zeldawiki.wiki/wiki/Divine_Beast_Vah_Rudania"
+      }
+    },
+    "Water_Relic": {
+      "giver": "",
+      "location": "Lanayru Great Spring",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Divine Beast Vah Ruta",
+        "url": "https://zeldawiki.wiki/wiki/Divine_Beast_Vah_Ruta"
+      }
+    },
+    "FairyFountain": {
+      "giver": "Pikango",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Find the Fairy Fountain",
+        "url": "https://zeldawiki.wiki/wiki/Find_the_Fairy_Fountain"
+      }
+    },
+    "FirstTower": {
+      "giver": "",
+      "location": "Great Plateau",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Follow the Sheikah Slate",
+        "url": "https://zeldawiki.wiki/wiki/Follow_the_Sheikah_Slate"
+      }
+    },
+    "Drag_Hero": {
+      "giver": "Benja",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Access to Gerudo Town",
+      "source": {
+        "name": "Zelda Wiki - Forbidden City Entry",
+        "url": "https://zeldawiki.wiki/wiki/Forbidden_City_Entry"
+      }
+    },
+    "Find_4Relic": {
+      "giver": "Impa",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Free the Divine Beasts",
+        "url": "https://zeldawiki.wiki/wiki/Free_the_Divine_Beasts"
+      }
+    },
+    "CarryingBlueFireEXMini": {
+      "giver": "Impa",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "{{List| ; Album ; Camera Rune ; Hyrule Compendium",
+      "source": {
+        "name": "Zelda Wiki - Locked Mementos",
+        "url": "https://zeldawiki.wiki/wiki/Locked_Mementos"
+      }
+    },
+    "GotoZoraVillage": {
+      "giver": "Sidon",
+      "location": "Inogo Bridge",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Reach Zora's Domain",
+        "url": "https://zeldawiki.wiki/wiki/Reach_Zora%27s_Domain"
+      }
+    },
+    "Find_Impa": {
+      "giver": "King Rhoam",
+      "location": "Great Plateau",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Seek Out Impa",
+        "url": "https://zeldawiki.wiki/wiki/Seek_Out_Impa"
+      }
+    },
+    "BalladOfHeroes": {
+      "giver": "Zelda",
+      "location": "Shrine of Resurrection",
+      "prerequisite": "Calm all Divine Beasts",
+      "reward": "Master Cycle Zero ; Picture of the Champions",
+      "source": {
+        "name": "Zelda Wiki - EX The Champions' Ballad",
+        "url": "https://zeldawiki.wiki/wiki/EX_The_Champions%27_Ballad"
+      }
+    },
+    "Get_MasterSword": {
+      "giver": "Great Deku Tree",
+      "location": "Korok Forest",
+      "prerequisite": "",
+      "reward": "Master Sword",
+      "source": {
+        "name": "Zelda Wiki - The Hero's Sword",
+        "url": "https://zeldawiki.wiki/wiki/The_Hero%27s_Sword"
+      }
+    },
+    "FindDungeon": {
+      "giver": "Old Man",
+      "location": "Great Plateau",
+      "prerequisite": "",
+      "reward": "Paraglider",
+      "source": {
+        "name": "Zelda Wiki - The Isolated Plateau",
+        "url": "https://zeldawiki.wiki/wiki/The_Isolated_Plateau"
+      }
+    },
+    "GoronsRock": {
+      "giver": "Bladon",
+      "location": "Goron City",
+      "prerequisite": "",
+      "reward": "Kayra Mah Shrine",
+      "source": {
+        "name": "Zelda Wiki - A Brother's Roast",
+        "url": "https://zeldawiki.wiki/wiki/A_Brother%27s_Roast"
+      }
+    },
+    "SearchStone": {
+      "giver": "Garini",
+      "location": "Palmorae Ruins",
+      "prerequisite": "Camera Rune",
+      "reward": "Kah Yah Shrine",
+      "source": {
+        "name": "Zelda Wiki - A Fragmented Monument",
+        "url": "https://zeldawiki.wiki/wiki/A_Fragmented_Monument"
+      }
+    },
+    "MtMotelMini_Landscape": {
+      "giver": "Mayro",
+      "location": "Foothill Stable",
+      "prerequisite": "",
+      "reward": "Tah Muhl Shrine",
+      "source": {
+        "name": "Zelda Wiki - A Landscape of a Stable",
+        "url": "https://zeldawiki.wiki/wiki/A_Landscape_of_a_Stable"
+      }
+    },
+    "Thunder_Sword": {
+      "giver": "Kass",
+      "location": "Calora Lake",
+      "prerequisite": "",
+      "reward": "Qukah Nata Shrine",
+      "source": {
+        "name": "Zelda Wiki - A Song of Storms",
+        "url": "https://zeldawiki.wiki/wiki/A_Song_of_Storms"
+      }
+    },
+    "Gaman": {
+      "giver": "Bayge",
+      "location": "Mount Nabooru",
+      "prerequisite": "",
+      "reward": "Joloo Nah Shrine",
+      "source": {
+        "name": "Zelda Wiki - Test of Will",
+        "url": "https://zeldawiki.wiki/wiki/Test_of_Will"
+      }
+    },
+    "SeekerEye": {
+      "giver": "Geggle",
+      "location": "Tabantha Bridge Stable",
+      "prerequisite": "",
+      "reward": "Keeha Yoog Shrine",
+      "source": {
+        "name": "Zelda Wiki - Cliffside Etchings",
+        "url": "https://zeldawiki.wiki/wiki/Cliffside_Etchings"
+      }
+    },
+    "Remains_Fancier": {
+      "giver": "Loone",
+      "location": "Puffer Beach",
+      "prerequisite": "Camera Rune",
+      "reward": "Shoqa Tatone Shrine",
+      "source": {
+        "name": "Zelda Wiki - Guardian Slideshow",
+        "url": "https://zeldawiki.wiki/wiki/Guardian_Slideshow"
+      }
+    },
+    "MacuseIseki": {
+      "giver": "Stone Tablet",
+      "location": "Rist Peninsula",
+      "prerequisite": "",
+      "reward": "Ritaag Zumo Shrine",
+      "source": {
+        "name": "Zelda Wiki - Into the Vortex",
+        "url": "https://zeldawiki.wiki/wiki/Into_the_Vortex"
+      }
+    },
+    "Relief_Landing": {
+      "giver": "Kass",
+      "location": "Horon Lagoon",
+      "prerequisite": "",
+      "reward": "Shai Yota Shrine",
+      "source": {
+        "name": "Zelda Wiki - Master of the Wind",
+        "url": "https://zeldawiki.wiki/wiki/Master_of_the_Wind"
+      }
+    },
+    "Rito_BrosRock": {
+      "giver": "Kheel",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Voo Lota Shrine",
+      "source": {
+        "name": "Zelda Wiki - Recital at Warbler's Nest",
+        "url": "https://zeldawiki.wiki/wiki/Recital_at_Warbler%27s_Nest"
+      }
+    },
+    "HatenoMini_ThreeTree": {
+      "giver": "Clavia",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Tahno O'ah Shrine",
+      "source": {
+        "name": "Zelda Wiki - Secret of the Cedars",
+        "url": "https://zeldawiki.wiki/wiki/Secret_of_the_Cedars"
+      }
+    },
+    "SecretofObject": {
+      "giver": "Mountain Peak Log",
+      "location": "Mount Granajh",
+      "prerequisite": "",
+      "reward": "Suma Sahma Shrine",
+      "source": {
+        "name": "Zelda Wiki - Secret of the Snowy Peaks",
+        "url": "https://zeldawiki.wiki/wiki/Secret_of_the_Snowy_Peaks"
+      }
+    },
+    "DarkWoods": {
+      "giver": "",
+      "location": "Thyphlo Ruins",
+      "prerequisite": "",
+      "reward": "Ketoh Wawai Shrine",
+      "source": {
+        "name": "Zelda Wiki - Shrouded Shrine",
+        "url": "https://zeldawiki.wiki/wiki/Shrouded_Shrine"
+      }
+    },
+    "Shadow_Sign": {
+      "giver": "Kass",
+      "location": "Gerudo Tower",
+      "prerequisite": "",
+      "reward": "Sasa Kai Shrine",
+      "source": {
+        "name": "Zelda Wiki - Sign of the Shadow",
+        "url": "https://zeldawiki.wiki/wiki/Sign_of_the_Shadow"
+      }
+    },
+    "NakedIsland": {
+      "giver": "",
+      "location": "Eventide Island",
+      "prerequisite": "",
+      "reward": "Korgu Chideh Shrine",
+      "source": {
+        "name": "Zelda Wiki - Stranded on Eventide",
+        "url": "https://zeldawiki.wiki/wiki/Stranded_on_Eventide"
+      }
+    },
+    "RitoSongMystery": {
+      "giver": "Bedoli",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Bareeda Naag Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Ancient Rito Song",
+        "url": "https://zeldawiki.wiki/wiki/The_Ancient_Rito_Song"
+      }
+    },
+    "RitoRabitMountain": {
+      "giver": "Molli",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Mozo Shenno Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Bird in the Mountains",
+        "url": "https://zeldawiki.wiki/wiki/The_Bird_in_the_Mountains"
+      }
+    },
+    "StatueofZora": {
+      "giver": "Laruta",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Dagah Keek Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Ceremonial Song",
+        "url": "https://zeldawiki.wiki/wiki/The_Ceremonial_Song"
+      }
+    },
+    "Animal_Forest": {
+      "giver": "Kass",
+      "location": "Rabia Plain",
+      "prerequisite": "",
+      "reward": "Mezza Lo Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Crowned Beast",
+        "url": "https://zeldawiki.wiki/wiki/The_Crowned_Beast"
+      }
+    },
+    "CursedStatue": {
+      "giver": "Calip",
+      "location": "Fort Hateno",
+      "prerequisite": "",
+      "reward": "Kam Urog Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Cursed Statue",
+        "url": "https://zeldawiki.wiki/wiki/The_Cursed_Statue"
+      }
+    },
+    "Desert_Maze": {
+      "giver": "",
+      "location": "South Lomei Labyrinth",
+      "prerequisite": "",
+      "reward": "Dila Maag Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Desert Labyrinth",
+        "url": "https://zeldawiki.wiki/wiki/The_Desert_Labyrinth"
+      }
+    },
+    "SandStorm": {
+      "giver": "Nobiro",
+      "location": "Kara Kara Bazaar",
+      "prerequisite": "",
+      "reward": "Dako Tah Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Eye of the Sandstorm",
+        "url": "https://zeldawiki.wiki/wiki/The_Eye_of_the_Sandstorm"
+      }
+    },
+    "GoronCamp": {
+      "giver": "Bayge",
+      "location": "Gut Check Rock",
+      "prerequisite": "",
+      "reward": "Gorae Torr Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Gut Check Challenge",
+        "url": "https://zeldawiki.wiki/wiki/The_Gut_Check_Challenge"
+      }
+    },
+    "FirstOhenro": {
+      "giver": "Tasho",
+      "location": "Korok Forest",
+      "prerequisite": "",
+      "reward": "Daag Chokah Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Lost Pilgrimage",
+        "url": "https://zeldawiki.wiki/wiki/The_Lost_Pilgrimage"
+      }
+    },
+    "Gerudo_CarryIce": {
+      "giver": "Pokki",
+      "location": "East Barrens",
+      "prerequisite": "",
+      "reward": "Misae Suma Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Perfect Drink",
+        "url": "https://zeldawiki.wiki/wiki/The_Perfect_Drink"
+      }
+    },
+    "MouthofDragon": {
+      "giver": "Kass",
+      "location": "Pagos Woods",
+      "prerequisite": "",
+      "reward": "Shae Katha Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Serpent's Jaws",
+        "url": "https://zeldawiki.wiki/wiki/The_Serpent%27s_Jaws"
+      }
+    },
+    "KnightDoll": {
+      "giver": "Rotana",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Korsh O'hu Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Seven Heroines",
+        "url": "https://zeldawiki.wiki/wiki/The_Seven_Heroines"
+      }
+    },
+    "MagneticFld": {
+      "giver": "Laine",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Kema Zoos Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Silent Swordswomen",
+        "url": "https://zeldawiki.wiki/wiki/The_Silent_Swordswomen"
+      }
+    },
+    "DokuroEye": {
+      "giver": "Jerrin",
+      "location": "Akkala Ancient Tech Lab",
+      "prerequisite": "",
+      "reward": "Zuna Kai Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Skull's Eye",
+        "url": "https://zeldawiki.wiki/wiki/The_Skull%27s_Eye"
+      }
+    },
+    "HigakkareMini_RedDragon": {
+      "giver": "Nobo",
+      "location": "East Akkala Stable",
+      "prerequisite": "",
+      "reward": "Tutsuwa Nima Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Spring of Power",
+        "url": "https://zeldawiki.wiki/wiki/The_Spring_of_Power"
+      }
+    },
+    "HatenoMini_WhiteDragon": {
+      "giver": "Medda",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Jitan Sa'mi Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Spring of Wisdom",
+        "url": "https://zeldawiki.wiki/wiki/The_Spring_of_Wisdom"
+      }
+    },
+    "StolenBook": {
+      "giver": "Paya",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Lakna Rokee Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Stolen Heirloom",
+        "url": "https://zeldawiki.wiki/wiki/The_Stolen_Heirloom"
+      }
+    },
+    "ShieldofKolog": {
+      "giver": "Damia",
+      "location": "Korok Forest",
+      "prerequisite": "",
+      "reward": "Maag Halan Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Test of Wood",
+        "url": "https://zeldawiki.wiki/wiki/The_Test_of_Wood"
+      }
+    },
+    "Threebros_giant": {
+      "giver": "Stone Tablet",
+      "location": "Mount Taran",
+      "prerequisite": "",
+      "reward": "Tawa Jinn Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Three Giant Brothers",
+        "url": "https://zeldawiki.wiki/wiki/The_Three_Giant_Brothers"
+      }
+    },
+    "TwoWheels": {
+      "giver": "Kass",
+      "location": "West Hyrule Plains",
+      "prerequisite": "",
+      "reward": "Sheem Dagoze Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Two Rings",
+        "url": "https://zeldawiki.wiki/wiki/The_Two_Rings"
+      }
+    },
+    "SunazarashiRace": {
+      "giver": "Tali",
+      "location": "Sand-Seal Rally",
+      "prerequisite": "",
+      "reward": "Raqa Zunzo Shrine",
+      "source": {
+        "name": "Zelda Wiki - The Undefeated Champ",
+        "url": "https://zeldawiki.wiki/wiki/The_Undefeated_Champ"
+      }
+    },
+    "GodTree": {
+      "giver": "Zooki",
+      "location": "Korok Forest",
+      "prerequisite": "",
+      "reward": "Kuhn Sidajj Shrine",
+      "source": {
+        "name": "Zelda Wiki - Trial of Second Sight",
+        "url": "https://zeldawiki.wiki/wiki/Trial_of_Second_Sight"
+      }
+    },
+    "Solitary_Maze": {
+      "giver": "",
+      "location": "Lomei Labyrinth Island",
+      "prerequisite": "",
+      "reward": "Tu Ka'loh Shrine",
+      "source": {
+        "name": "Zelda Wiki - Trial of the Labyrinth",
+        "url": "https://zeldawiki.wiki/wiki/Trial_of_the_Labyrinth"
+      }
+    },
+    "FourJewel": {
+      "giver": "",
+      "location": "Thundra Plateau",
+      "prerequisite": "",
+      "reward": "Toh Yahsa Shrine",
+      "source": {
+        "name": "Zelda Wiki - Trial of Thunder",
+        "url": "https://zeldawiki.wiki/wiki/Trial_of_Thunder"
+      }
+    },
+    "Cliff_Maze": {
+      "giver": "",
+      "location": "North Lomei Labyrinth",
+      "prerequisite": "",
+      "reward": "Qaza Tokki Shrine",
+      "source": {
+        "name": "Zelda Wiki - Trial on the Cliff",
+        "url": "https://zeldawiki.wiki/wiki/Trial_on_the_Cliff"
+      }
+    },
+    "BloodyMoonRelief": {
+      "giver": "Kass",
+      "location": "Hyrule Ridge",
+      "prerequisite": "",
+      "reward": "Mijah Rokee Shrine",
+      "source": {
+        "name": "Zelda Wiki - Under a Red Moon",
+        "url": "https://zeldawiki.wiki/wiki/Under_a_Red_Moon"
+      }
+    },
+    "DontDamageFlower": {
+      "giver": "Magda",
+      "location": "",
+      "prerequisite": "",
+      "reward": "Hila Rao Shrine",
+      "source": {
+        "name": "Zelda Wiki - Watch Out for the Flowers",
+        "url": "https://zeldawiki.wiki/wiki/Watch_Out_for_the_Flowers"
+      }
+    },
+    "MinamihateeluMini_touzoku": {
+      "giver": "Domidak",
+      "location": "Dueling Peaks Stable",
+      "prerequisite": "",
+      "reward": "Opal ; Amber ; Sapphire ×2 ; Luminous Stone ; Flameblade",
+      "source": {
+        "name": "Zelda Wiki - Misko, the Great Bandit",
+        "url": "https://zeldawiki.wiki/wiki/Misko%2C_the_Great_Bandit"
+      }
+    },
+    "OldKorok_Help": {
+      "giver": "Hestu",
+      "location": "West Necluda",
+      "prerequisite": "",
+      "reward": "Inventory Expansion",
+      "source": {
+        "name": "Zelda Wiki - The Priceless Maracas",
+        "url": "https://zeldawiki.wiki/wiki/The_Priceless_Maracas"
+      }
+    },
+    "HutagoHatago_Ch_001": {
+      "giver": "Rensa",
+      "location": "Dueling Peaks Stable",
+      "prerequisite": "",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - Wild Horses",
+        "url": "https://zeldawiki.wiki/wiki/Wild_Horses"
+      }
+    },
+    "Kakariko_Cha_003": {
+      "giver": "Cado",
+      "location": "Kakariko Village",
+      "prerequisite": "Speak to Impa",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - Flown the Coop",
+        "url": "https://zeldawiki.wiki/wiki/Flown_the_Coop"
+      }
+    },
+    "Kakariko_Ch_006": {
+      "giver": "Rola",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Red Rupee",
+      "source": {
+        "name": "Zelda Wiki - Arrows of Burning Heat",
+        "url": "https://zeldawiki.wiki/wiki/Arrows_of_Burning_Heat"
+      }
+    },
+    "Kakariko_Cha_001": {
+      "giver": "Koko",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Hasty Veggie Cream Soup",
+      "source": {
+        "name": "Zelda Wiki - Koko's Kitchen",
+        "url": "https://zeldawiki.wiki/wiki/Koko%27s_Kitchen"
+      }
+    },
+    "Kakariko_Ch_Cooking2": {
+      "giver": "Koko",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Hot Buttered Apple",
+      "source": {
+        "name": "Zelda Wiki - Cooking with Koko",
+        "url": "https://zeldawiki.wiki/wiki/Cooking_with_Koko"
+      }
+    },
+    "Kakariko_Ch_Cooking3": {
+      "giver": "Koko",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Tough Meat-Stuffed Pumpkin",
+      "source": {
+        "name": "Zelda Wiki - Koko Cuisine",
+        "url": "https://zeldawiki.wiki/wiki/Koko_Cuisine"
+      }
+    },
+    "Kakariko_Ch_Cooking4": {
+      "giver": "Koko",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Energizing Honeyed Apple",
+      "source": {
+        "name": "Zelda Wiki - Koko's Specialty",
+        "url": "https://zeldawiki.wiki/wiki/Koko%27s_Specialty"
+      }
+    },
+    "Kakariko_Ch_005": {
+      "giver": "Cottla",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Rock Salt",
+      "source": {
+        "name": "Zelda Wiki - Playtime with Cottla",
+        "url": "https://zeldawiki.wiki/wiki/Playtime_with_Cottla"
+      }
+    },
+    "Kakariko_Ch_004": {
+      "giver": "Lasli",
+      "location": "Kakariko Village",
+      "prerequisite": "",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - By Firefly's Light",
+        "url": "https://zeldawiki.wiki/wiki/By_Firefly%27s_Light"
+      }
+    },
+    "HatenoMini_DevilSeal": {
+      "giver": "Horned Statue",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "The ability to trade Heart Containers and Stamina Vessels for the other",
+      "source": {
+        "name": "Zelda Wiki - The Statue's Bargain",
+        "url": "https://zeldawiki.wiki/wiki/The_Statue%27s_Bargain"
+      }
+    },
+    "HatenoMini_WeaponMania": {
+      "giver": "Nebb",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Red Rupee ×2 ; Purple Rupee ×2 ; Silver Rupee ×2 ; Gold Rupee ; Diamond",
+      "source": {
+        "name": "Zelda Wiki - The Weapon Connoisseur",
+        "url": "https://zeldawiki.wiki/wiki/The_Weapon_Connoisseur"
+      }
+    },
+    "HatenoMini_LoveInsects": {
+      "giver": "Manny",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Gift for My Beloved",
+        "url": "https://zeldawiki.wiki/wiki/A_Gift_for_My_Beloved"
+      }
+    },
+    "HatenoMini_GoatThief": {
+      "giver": "Koyin",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Fresh Milk ×10",
+      "source": {
+        "name": "Zelda Wiki - The Sheep Rustlers",
+        "url": "https://zeldawiki.wiki/wiki/The_Sheep_Rustlers"
+      }
+    },
+    "HatenoMini_BlueFire": {
+      "giver": "Purah",
+      "location": "Hateno Ancient Tech Lab",
+      "prerequisite": "",
+      "reward": "Ancient Arrow ×3",
+      "source": {
+        "name": "Zelda Wiki - Robbie's Research",
+        "url": "https://zeldawiki.wiki/wiki/Robbie%27s_Research"
+      }
+    },
+    "Hateno_SheikPad_PowerUp": {
+      "giver": "Purah",
+      "location": "Hateno Ancient Tech Lab",
+      "prerequisite": "",
+      "reward": "Remote Bomb + ; Sheikah Sensor + ; Stasis +",
+      "source": {
+        "name": "Zelda Wiki - Slated for Upgrades",
+        "url": "https://zeldawiki.wiki/wiki/Slated_for_Upgrades"
+      }
+    },
+    "HatenoMini_CameraBoy": {
+      "giver": "Symin",
+      "location": "Hateno Ancient Tech Lab",
+      "prerequisite": "Upgraded Sheikah Sensor",
+      "reward": "Hearty Truffle ×3",
+      "source": {
+        "name": "Zelda Wiki - Sunshroom Sensing",
+        "url": "https://zeldawiki.wiki/wiki/Sunshroom_Sensing"
+      }
+    },
+    "HateeluMini_Treasure": {
+      "giver": "Kass",
+      "location": "Kitano Bay",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Hero's Cache",
+        "url": "https://zeldawiki.wiki/wiki/The_Hero%27s_Cache"
+      }
+    },
+    "HatenoMini_MyHome": {
+      "giver": "Bolson",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Link's House",
+      "source": {
+        "name": "Zelda Wiki - Hylian Homeowner",
+        "url": "https://zeldawiki.wiki/wiki/Hylian_Homeowner"
+      }
+    },
+    "UMiiMini_MakeVillage": {
+      "giver": "Hudson",
+      "location": "Hateno Village",
+      "prerequisite": "",
+      "reward": "Tarrey Town<br/> ; Diamond ×3",
+      "source": {
+        "name": "Zelda Wiki - From the Ground Up",
+        "url": "https://zeldawiki.wiki/wiki/From_the_Ground_Up"
+      }
+    },
+    "Bottle_Mes": {
+      "giver": "Finley",
+      "location": "Bank of Wishes",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - Special Delivery",
+        "url": "https://zeldawiki.wiki/wiki/Special_Delivery"
+      }
+    },
+    "ZoraMini_DiveChallenge": {
+      "giver": "Gruve",
+      "location": "Zora's Domain",
+      "prerequisite": "Obtaining the Zora Armor",
+      "reward": "Fleet-Lotus Seeds ×5",
+      "source": {
+        "name": "Zelda Wiki - Diving is Beauty!",
+        "url": "https://zeldawiki.wiki/wiki/Diving_is_Beauty%21"
+      }
+    },
+    "RinelSearch": {
+      "giver": "Laflat",
+      "location": "Zora's Domain",
+      "prerequisite": "Camera Rune",
+      "reward": "Zora Greaves",
+      "source": {
+        "name": "Zelda Wiki - Lynel Safari",
+        "url": "https://zeldawiki.wiki/wiki/Lynel_Safari"
+      }
+    },
+    "Zora_FlogMini": {
+      "giver": "Tumbo",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Armoranth",
+      "source": {
+        "name": "Zelda Wiki - Frog Catching",
+        "url": "https://zeldawiki.wiki/wiki/Frog_Catching"
+      }
+    },
+    "Giant_ZoraMini": {
+      "giver": "Torfeau",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Giant of Ralis Pond",
+        "url": "https://zeldawiki.wiki/wiki/The_Giant_of_Ralis_Pond"
+      }
+    },
+    "ZoraMini_HarvestingStone": {
+      "giver": "Ledo",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Diamond ×2",
+      "source": {
+        "name": "Zelda Wiki - Luminous Stone Gathering",
+        "url": "https://zeldawiki.wiki/wiki/Luminous_Stone_Gathering"
+      }
+    },
+    "ZoraMini_FlowedWife": {
+      "giver": "Fronk",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Staminoka Bass ×5",
+      "source": {
+        "name": "Zelda Wiki - A Wife Washed Away",
+        "url": "https://zeldawiki.wiki/wiki/A_Wife_Washed_Away"
+      }
+    },
+    "isso_treasure_mini": {
+      "giver": "Izra",
+      "location": "Wetland Stable",
+      "prerequisite": "",
+      "reward": "Knight's Broadsword",
+      "source": {
+        "name": "Zelda Wiki - Riverbed Reward",
+        "url": "https://zeldawiki.wiki/wiki/Riverbed_Reward"
+      }
+    },
+    "ZoraMini_ReliefSearch": {
+      "giver": "Jiahto",
+      "location": "Zora's Domain",
+      "prerequisite": "",
+      "reward": "Diamond",
+      "source": {
+        "name": "Zelda Wiki - Zora Stone Monuments",
+        "url": "https://zeldawiki.wiki/wiki/Zora_Stone_Monuments"
+      }
+    },
+    "UotoriMini_RecipeSea": {
+      "giver": "Kiana",
+      "location": "Lurelin Village",
+      "prerequisite": "",
+      "reward": "Purple Rupee ; Seafood Paella",
+      "source": {
+        "name": "Zelda Wiki - What's for Dinner?",
+        "url": "https://zeldawiki.wiki/wiki/What%27s_for_Dinner%3F"
+      }
+    },
+    "UotoriMini_SinkTreasure": {
+      "giver": "",
+      "location": "",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Sunken Treasure",
+        "url": "https://zeldawiki.wiki/wiki/Sunken_Treasure"
+      }
+    },
+    "UotoriMini_RecoverBay": {
+      "giver": "Sebasto",
+      "location": "Lurelin Village",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Take Back the Sea",
+        "url": "https://zeldawiki.wiki/wiki/Take_Back_the_Sea"
+      }
+    },
+    "FironeMini_HeartPond": {
+      "giver": "Wabbin",
+      "location": "",
+      "prerequisite": "",
+      "reward": "Red Rupee ; Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Gift of Nightshade",
+        "url": "https://zeldawiki.wiki/wiki/A_Gift_of_Nightshade"
+      }
+    },
+    "FironeMini_TerribleThunder": {
+      "giver": "Cima",
+      "location": "Lakeside Stable",
+      "prerequisite": "",
+      "reward": "Rubber Helm",
+      "source": {
+        "name": "Zelda Wiki - Thunder Magnet",
+        "url": "https://zeldawiki.wiki/wiki/Thunder_Magnet"
+      }
+    },
+    "FironeMini_GiantHorse": {
+      "giver": "Straia",
+      "location": "Mounted Archery Camp",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Hunt for the Giant Horse",
+        "url": "https://zeldawiki.wiki/wiki/Hunt_for_the_Giant_Horse"
+      }
+    },
+    "FironeMini_HorseEnemy": {
+      "giver": "Perosa",
+      "location": "Highland Stable",
+      "prerequisite": "",
+      "reward": "Endura Carrot",
+      "source": {
+        "name": "Zelda Wiki - The Horseback Hoodlums",
+        "url": "https://zeldawiki.wiki/wiki/The_Horseback_Hoodlums"
+      }
+    },
+    "Gerudo_HorseBuyer": {
+      "giver": "Zyle",
+      "location": "Gerudo Canyon",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - Good-Sized Horse",
+        "url": "https://zeldawiki.wiki/wiki/Good-Sized_Horse"
+      }
+    },
+    "OneHundred": {
+      "giver": "Sesami",
+      "location": "Gerudo Canyon Stable",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - Missing in Action",
+        "url": "https://zeldawiki.wiki/wiki/Missing_in_Action"
+      }
+    },
+    "Gerudo_tsukamidake": {
+      "giver": "Pirou",
+      "location": "Gerudo Canyon Stable",
+      "prerequisite": "",
+      "reward": "Diamond",
+      "source": {
+        "name": "Zelda Wiki - Rushroom Rush!",
+        "url": "https://zeldawiki.wiki/wiki/Rushroom_Rush%21"
+      }
+    },
+    "Oasis_Drug_Challenge": {
+      "giver": "Guy",
+      "location": "Kara Kara Bazaar",
+      "prerequisite": "",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - An Ice Guy",
+        "url": "https://zeldawiki.wiki/wiki/An_Ice_Guy"
+      }
+    },
+    "GerudoMiniJewel": {
+      "giver": "Isha",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "{{List| ; Access to Starlight Memories ; One of: ; Topaz Earrings ; Sapphire Circlet ; Ruby Circlet",
+      "source": {
+        "name": "Zelda Wiki - Tools of the Trade",
+        "url": "https://zeldawiki.wiki/wiki/Tools_of_the_Trade"
+      }
+    },
+    "Gerudo_Ch_SecretClub": {
+      "giver": "Greta",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Access to the Gerudo Secret Club",
+      "source": {
+        "name": "Zelda Wiki - The Secret Club's Secret",
+        "url": "https://zeldawiki.wiki/wiki/The_Secret_Club%27s_Secret"
+      }
+    },
+    "Gerudo_Ch_SandWarm": {
+      "giver": "Malena",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - Medicinal Molduga",
+        "url": "https://zeldawiki.wiki/wiki/Medicinal_Molduga"
+      }
+    },
+    "Gerudo_Ch_SnowMT": {
+      "giver": "Bozai",
+      "location": "Gerudo Desert",
+      "prerequisite": "Gerudo Outfit",
+      "reward": "Sand Boots",
+      "source": {
+        "name": "Zelda Wiki - The Eighth Heroine",
+        "url": "https://zeldawiki.wiki/wiki/The_Eighth_Heroine"
+      }
+    },
+    "Gerudo_Ch_SnowBoots": {
+      "giver": "Bozai",
+      "location": "Gerudo Desert",
+      "prerequisite": "",
+      "reward": "Snow Boots",
+      "source": {
+        "name": "Zelda Wiki - The Forgotten Sword",
+        "url": "https://zeldawiki.wiki/wiki/The_Forgotten_Sword"
+      }
+    },
+    "Gerudo_Ch_Helmet": {
+      "giver": "Riju",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Thunder Helm",
+      "source": {
+        "name": "Zelda Wiki - The Thunder Helm",
+        "url": "https://zeldawiki.wiki/wiki/The_Thunder_Helm"
+      }
+    },
+    "Gerudo_Ch_Poison": {
+      "giver": "Dalia",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "{{List| ; Access to a Wildberry patch ; Hydromelon",
+      "source": {
+        "name": "Zelda Wiki - The Mystery Polluter",
+        "url": "https://zeldawiki.wiki/wiki/The_Mystery_Polluter"
+      }
+    },
+    "Gerudo_Ch_FindingValetta": {
+      "giver": "Liana",
+      "location": "Gerudo Town",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Search for Barta",
+        "url": "https://zeldawiki.wiki/wiki/The_Search_for_Barta"
+      }
+    },
+    "RitoUmayadoMini_HotRecipe": {
+      "giver": "Lester",
+      "location": "Rito Stable",
+      "prerequisite": "",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - Curry for What Ails You",
+        "url": "https://zeldawiki.wiki/wiki/Curry_for_What_Ails_You"
+      }
+    },
+    "RitoMini_Cook": {
+      "giver": "Juney",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Apple of My Eye",
+        "url": "https://zeldawiki.wiki/wiki/The_Apple_of_My_Eye"
+      }
+    },
+    "RitoMini_Flint": {
+      "giver": "Jogo",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Spark of Romance",
+        "url": "https://zeldawiki.wiki/wiki/The_Spark_of_Romance"
+      }
+    },
+    "RitoMini_IceGolem": {
+      "giver": "Gesane",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Face the Frost Talus",
+        "url": "https://zeldawiki.wiki/wiki/Face_the_Frost_Talus"
+      }
+    },
+    "Rito_KeelSearch": {
+      "giver": "Amali",
+      "location": "Rito Village",
+      "prerequisite": "",
+      "reward": "Purple Rupee",
+      "source": {
+        "name": "Zelda Wiki - Find Kheel",
+        "url": "https://zeldawiki.wiki/wiki/Find_Kheel"
+      }
+    },
+    "SetugenUmayadoMini_Umahonephoto": {
+      "giver": "Juannelle",
+      "location": "Snowfield Stable",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Stalhorse: Pictured!",
+        "url": "https://zeldawiki.wiki/wiki/Stalhorse%3A_Pictured%21"
+      }
+    },
+    "HyrulePlainMini_Balloon": {
+      "giver": "Shamae",
+      "location": "Woodland Stable",
+      "prerequisite": "",
+      "reward": "Star Fragment",
+      "source": {
+        "name": "Zelda Wiki - Balloon Flight",
+        "url": "https://zeldawiki.wiki/wiki/Balloon_Flight"
+      }
+    },
+    "KorokMini_RodShiren": {
+      "giver": "Kula",
+      "location": "Great Hyrule Forest",
+      "prerequisite": "",
+      "reward": "Silver Rupee ; Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Freezing Rod",
+        "url": "https://zeldawiki.wiki/wiki/A_Freezing_Rod"
+      }
+    },
+    "KorokMini_KorokShiren": {
+      "giver": "Chio",
+      "location": "Great Hyrule Forest",
+      "prerequisite": "",
+      "reward": "Big Hearty Truffle ×3",
+      "source": {
+        "name": "Zelda Wiki - The Korok Trials",
+        "url": "https://zeldawiki.wiki/wiki/The_Korok_Trials"
+      }
+    },
+    "KorokMini_UMAShiren": {
+      "giver": "Peeks",
+      "location": "Great Hyrule Forest",
+      "prerequisite": "Camera Rune",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Legendary Rabbit Trial",
+        "url": "https://zeldawiki.wiki/wiki/Legendary_Rabbit_Trial"
+      }
+    },
+    "MarittaMini_BigWhales": {
+      "giver": "",
+      "location": "",
+      "prerequisite": "",
+      "reward": "",
+      "source": {
+        "name": "Zelda Wiki - Leviathan Bones",
+        "url": "https://zeldawiki.wiki/wiki/Leviathan_Bones"
+      }
+    },
+    "CompleteDungeon": {
+      "giver": "Monk",
+      "location": "Ancient Shrine",
+      "prerequisite": "Complete 120 Ancient Shrines",
+      "reward": "Cap of the Wild ; Tunic of the Wild ; Trousers of the Wild",
+      "source": {
+        "name": "Zelda Wiki - A Gift from the Monks",
+        "url": "https://zeldawiki.wiki/wiki/A_Gift_from_the_Monks"
+      }
+    },
+    "KorokMini_RiddleShiren": {
+      "giver": "Walton",
+      "location": "Great Hyrule Forest",
+      "prerequisite": "",
+      "reward": "Diamond",
+      "source": {
+        "name": "Zelda Wiki - Riddles of Hyrule",
+        "url": "https://zeldawiki.wiki/wiki/Riddles_of_Hyrule"
+      }
+    },
+    "TabantaBridgeMini_Sundial": {
+      "giver": "Toren",
+      "location": "Tabantha Bridge Stable",
+      "prerequisite": "",
+      "reward": "Kaysa's Great Fairy Fountain",
+      "source": {
+        "name": "Zelda Wiki - A Gift for the Great Fairy",
+        "url": "https://zeldawiki.wiki/wiki/A_Gift_for_the_Great_Fairy"
+      }
+    },
+    "RiversideMini_CastleWeapon": {
+      "giver": "Parcy",
+      "location": "Riverside Stable",
+      "prerequisite": "",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Royal Guard's Gear",
+        "url": "https://zeldawiki.wiki/wiki/The_Royal_Guard%27s_Gear"
+      }
+    },
+    "Carnivorous_Boy": {
+      "giver": "Trott",
+      "location": "Outskirt Stable",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Rare Find",
+        "url": "https://zeldawiki.wiki/wiki/A_Rare_Find"
+      }
+    },
+    "My_Hero": {
+      "giver": "Aliza",
+      "location": "Outskirt Stable",
+      "prerequisite": "",
+      "reward": "Star Fragment",
+      "source": {
+        "name": "Zelda Wiki - My Hero",
+        "url": "https://zeldawiki.wiki/wiki/My_Hero"
+      }
+    },
+    "RiversideMini_RoyalRecipe": {
+      "giver": "Gotter",
+      "location": "Riverside Stable",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Royal Recipe",
+        "url": "https://zeldawiki.wiki/wiki/A_Royal_Recipe"
+      }
+    },
+    "HyruleDepthMini_WhiteHorse": {
+      "giver": "Toffa",
+      "location": "Outskirt Stable",
+      "prerequisite": "",
+      "reward": "Royal Bridle ; Royal Saddle",
+      "source": {
+        "name": "Zelda Wiki - The Royal White Stallion",
+        "url": "https://zeldawiki.wiki/wiki/The_Royal_White_Stallion"
+      }
+    },
+    "SanrokuMini_Lizard": {
+      "giver": "Kima",
+      "location": "Southern Mine",
+      "prerequisite": "",
+      "reward": "Flamebreaker Armor",
+      "source": {
+        "name": "Zelda Wiki - Fireproof Lizard Roundup",
+        "url": "https://zeldawiki.wiki/wiki/Fireproof_Lizard_Roundup"
+      }
+    },
+    "GoronCityMini_BeatGolem": {
+      "giver": "Fugo",
+      "location": "Goron City",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - The Road to Respect",
+        "url": "https://zeldawiki.wiki/wiki/The_Road_to_Respect"
+      }
+    },
+    "GoronMini_WallCrackTBox": {
+      "giver": "Dugby",
+      "location": "Goron Hot Springs",
+      "prerequisite": "",
+      "reward": "Drillshaft",
+      "source": {
+        "name": "Zelda Wiki - Death Mountain's Secret",
+        "url": "https://zeldawiki.wiki/wiki/Death_Mountain%27s_Secret"
+      }
+    },
+    "GoronMini_ImportGem": {
+      "giver": "Ramella",
+      "location": "Goron City",
+      "prerequisite": "",
+      "reward": "500 Rupees",
+      "source": {
+        "name": "Zelda Wiki - The Jewel Trade",
+        "url": "https://zeldawiki.wiki/wiki/The_Jewel_Trade"
+      }
+    },
+    "UMiiMini_GiveCake": {
+      "giver": "Ruli",
+      "location": "Tarrey Town",
+      "prerequisite": "Completed Tarrey Town",
+      "reward": "Gold Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Parent's Love",
+        "url": "https://zeldawiki.wiki/wiki/A_Parent%27s_Love"
+      }
+    },
+    "UMiiMini_RichmansHobby": {
+      "giver": "Hagie",
+      "location": "Tarrey Town",
+      "prerequisite": "Completed Tarrey Town",
+      "reward": "Silver Rupee ; Red Rupee",
+      "source": {
+        "name": "Zelda Wiki - Hobbies of the Rich",
+        "url": "https://zeldawiki.wiki/wiki/Hobbies_of_the_Rich"
+      }
+    },
+    "HigakkareMini_StrangeMan": {
+      "giver": "Hoz",
+      "location": "East Akkala Stable",
+      "prerequisite": "Camera Rune",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - A Shady Customer",
+        "url": "https://zeldawiki.wiki/wiki/A_Shady_Customer"
+      }
+    },
+    "MinakkareMini_Dragonfly": {
+      "giver": "Jana",
+      "location": "South Akkala Stable",
+      "prerequisite": "",
+      "reward": "Silver Rupee",
+      "source": {
+        "name": "Zelda Wiki - Little Sister's Big Request",
+        "url": "https://zeldawiki.wiki/wiki/Little_Sister%27s_Big_Request"
+      }
+    },
+    "100enemy": {
+      "giver": "",
+      "location": "Korok Forest",
+      "prerequisite": "",
+      "reward": "Permanently awakened Master Sword",
+      "source": {
+        "name": "Zelda Wiki - EX Trial of the Sword",
+        "url": "https://zeldawiki.wiki/wiki/EX_Trial_of_the_Sword"
+      }
+    },
+    "TreasureHunt01": {
+      "giver": "Super Rumor Mill V1",
+      "location": "Woodland Stable",
+      "prerequisite": "Exiting the Great Plateau",
+      "reward": "Korok Mask",
+      "source": {
+        "name": "Zelda Wiki - EX Strange Mask Rumors",
+        "url": "https://zeldawiki.wiki/wiki/EX_Strange_Mask_Rumors"
+      }
+    },
+    "TreasureHunt02": {
+      "giver": "Super Rumor Mill V2",
+      "location": "South Akkala Stable",
+      "prerequisite": "Exiting the Great Plateau",
+      "reward": "Travel Medallion",
+      "source": {
+        "name": "Zelda Wiki - EX Teleportation Rumors!",
+        "url": "https://zeldawiki.wiki/wiki/EX_Teleportation_Rumors%21"
+      }
+    },
+    "TreasureHunt_touzoku01": {
+      "giver": "Misko's EX Journal",
+      "location": "Outpost Ruins",
+      "prerequisite": "Exiting the Great Plateau",
+      "reward": "Majora's Mask (Item)",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Ancient Mask",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Ancient_Mask"
+      }
+    },
+    "TreasureHunt_touzoku03": {
+      "giver": "Misko's EX Journal",
+      "location": "Outpost Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Tingle's Hood ; Tingle's Shirt ; Tingle's Tights",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Fairy Clothes",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Fairy_Clothes"
+      }
+    },
+    "TreasureHunt_touzoku02": {
+      "giver": "Misko's EX Journal",
+      "location": "Outpost Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Midna's Helmet",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Twilight Relic",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Twilight_Relic"
+      }
+    },
+    "TreasureHunt_touzoku04": {
+      "giver": "Misko's EX Journal",
+      "location": "Outpost Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Phantom Helmet ; Phantom Armor ; Phantom Greaves",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Phantasma",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Phantasma"
+      }
+    },
+    "bf2_collabo": {
+      "giver": "",
+      "location": "",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Salvager Headwear ; Salvager Vest ; Salvager Trousers",
+      "source": {
+        "name": "Zelda Wiki - Xenoblade Chronicles 2",
+        "url": "https://zeldawiki.wiki/wiki/Xenoblade_Chronicles_2"
+      }
+    },
+    "TreasureHunt03": {
+      "giver": "Super Rumor Mill V3",
+      "location": "Highland Stable",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Ancient Bridle ; Ancient Saddle",
+      "source": {
+        "name": "Zelda Wiki - EX Ancient Horse Rumors",
+        "url": "https://zeldawiki.wiki/wiki/EX_Ancient_Horse_Rumors"
+      }
+    },
+    "TreasureHunt04": {
+      "giver": "Super Rumor Mill V4",
+      "location": "Riverside Stable",
+      "prerequisite": "Exiting the Great Plateau",
+      "reward": "Royal Guard Cap ; Royal Guard Uniform ; Royal Guard Boots",
+      "source": {
+        "name": "Zelda Wiki - EX Royal Guard Rumors",
+        "url": "https://zeldawiki.wiki/wiki/EX_Royal_Guard_Rumors"
+      }
+    },
+    "TreasureHunt_touzoku08": {
+      "giver": "Misko's EX Journal 2",
+      "location": "Deya Village Ruins",
+      "prerequisite": "Exiting the Great Plateau",
+      "reward": "Phantom Ganon Skull ; Phantom Ganon Armor ; Phantom Ganon Greaves",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Dark Armor",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Dark_Armor"
+      }
+    },
+    "TreasureHunt_touzoku06": {
+      "giver": "Misko's EX Journal 2",
+      "location": "Deya Village Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Island Lobster Shirt",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Garb of Winds",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Garb_of_Winds"
+      }
+    },
+    "TreasureHunt_touzoku05": {
+      "giver": "Misko's EX Journal 2",
+      "location": "Deya Village Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Ravio's Hood",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Merchant Hood",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Merchant_Hood"
+      }
+    },
+    "TreasureHunt_touzoku07": {
+      "giver": "Misko's EX Journal 2",
+      "location": "Deya Village Ruins",
+      "prerequisite": "Exit the Great Plateau",
+      "reward": "Zant's Helmet",
+      "source": {
+        "name": "Zelda Wiki - EX Treasure: Usurper King",
+        "url": "https://zeldawiki.wiki/wiki/EX_Treasure%3A_Usurper_King"
+      }
+    }
+  }
+}

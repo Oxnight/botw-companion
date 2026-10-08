@@ -1,0 +1,482 @@
+from contextlib import contextmanager
+from pathlib import Path
+import json
+import tempfile
+import threading
+import unittest
+from unittest.mock import patch
+from urllib.error import HTTPError, URLError
+from urllib.request import Request
+
+from botw_companion import __version__
+from botw_companion.lifecycle import (
+    RyujinxLifecycleWatcher,
+    WebLifecycle,
+    open_loopback,
+    probe_companion_server,
+)
+from botw_companion.server import serve
+
+
+class FakeClock:
+    def __init__(self) -> None:
+        self.value = 100.0
+
+    def __call__(self) -> float:
+        return self.value
+
+    def advance(self, seconds: float) -> None:
+        self.value += seconds
+
+
+class WebLifecycleTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.clock = FakeClock()
+        self.lifecycle = WebLifecycle(120, self.clock)
+
+    def test_startup_without_browser_does_not_stop_automatically(self):
+        self.assertFalse(self.lifecycle.has_browser)
+        self.clock.advance(24 * 60 * 60)
+        self.assertFalse(self.lifecycle.should_shutdown())
+
+    def test_heartbeat_is_diagnostic_and_does_not_create_a_deadline(self):
+        self.clock.advance(100)
+        response = self.lifecycle.heartbeat()
+        self.assertEqual(response, {"active": True, "inactivity_seconds": 120.0})
+        self.assertTrue(self.lifecycle.has_browser)
+        self.clock.advance(24 * 60 * 60)
+        self.assertFalse(self.lifecycle.should_shutdown())
+
+    def test_manual_shutdown_is_immediate(self):
+        self.lifecycle.request_shutdown()
+        self.assertTrue(self.lifecycle.should_shutdown())
+
+    def test_minimum_inactivity_value_is_kept_for_api_compatibility(self):
+        lifecycle = WebLifecycle(1, self.clock)
+        self.assertEqual(lifecycle.inactivity_seconds, 60.0)
+        self.clock.advance(24 * 60 * 60)
+        self.assertFalse(lifecycle.should_shutdown())
+
+    def test_shutdown_reason_is_recorded(self):
+        self.lifecycle.request_shutdown("ryujinx_ferme")
+        self.assertTrue(self.lifecycle.should_shutdown())
+        self.assertEqual(self.lifecycle.shutdown_reason, "ryujinx_ferme")
+
+
+class FakeResponse:
+    def __init__(self, payload: bytes, status: int = 200) -> None:
+        self.payload = payload
+        self.status = status
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, _exc_type, _exc, _traceback) -> None:
+        pass
+
+    def read(self) -> bytes:
+        return self.payload
+
+
+class ServerProbeTests(unittest.TestCase):
+    def test_probe_accepts_only_a_real_companion_server(self):
+        calls = []
+
+        def opener(url, timeout):
+            calls.append((url, timeout))
+            return FakeResponse(
+                f'{{"application":"BOTW Companion","version":"{__version__}"}}'.encode()
+            )
+
+        result = probe_companion_server(9876, timeout=0.25, opener=opener)
+        self.assertEqual(result["version"], __version__)
+        self.assertEqual(calls, [("http://127.0.0.1:9876/api/version", 0.25)])
+
+    def test_probe_rejects_an_unrelated_service_on_the_same_port(self):
+        result = probe_companion_server(
+            opener=lambda _url, timeout: FakeResponse(b'{"application":"autre","version":"1"}'),
+        )
+        self.assertIsNone(result)
+
+
+class RyujinxLifecycleWatcherTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.clock = FakeClock()
+        self.running = {"value": False}
+        self.reasons = []
+        self.watcher = RyujinxLifecycleWatcher(
+            lambda: self.running["value"],
+            self.reasons.append,
+            poll_seconds=10,
+            close_grace_seconds=20,
+            resume_gap_seconds=40,
+            clock=self.clock,
+        )
+
+    def test_never_stops_before_ryujinx_has_really_been_seen(self):
+        for _index in range(20):
+            self.assertFalse(self.watcher.check_once())
+            self.clock.advance(10)
+        self.assertEqual(self.reasons, [])
+        self.assertEqual(self.watcher.status()["state"], "attente_ryujinx")
+
+    def test_confirmed_ryujinx_exit_requests_shutdown(self):
+        self.running["value"] = True
+        self.watcher.check_once()
+        self.running["value"] = False
+        self.clock.advance(10)
+        self.assertFalse(self.watcher.check_once())
+        self.clock.advance(19)
+        self.assertFalse(self.watcher.check_once())
+        self.clock.advance(1)
+        self.assertTrue(self.watcher.check_once())
+        self.assertEqual(self.reasons, ["ryujinx_ferme"])
+
+    def test_wake_from_sleep_never_looks_like_a_confirmed_exit(self):
+        self.running["value"] = True
+        self.watcher.check_once()
+        self.running["value"] = False
+        self.clock.advance(120)
+        self.assertFalse(self.watcher.check_once())
+        self.assertEqual(self.watcher.status()["state"], "reprise_apres_veille")
+        self.assertEqual(self.reasons, [])
+
+    def test_detection_error_is_not_treated_as_a_closed_game(self):
+        errors = RyujinxLifecycleWatcher(
+            lambda: (_ for _ in ()).throw(PermissionError("accès refusé")),
+            self.reasons.append,
+            clock=self.clock,
+        )
+        self.assertFalse(errors.check_once())
+        self.assertEqual(errors.status()["state"], "erreur_detection")
+        self.assertEqual(self.reasons, [])
+
+
+class FakeInstanceGuard:
+    def __init__(self, available: bool = True) -> None:
+        self.available = available
+        self.closed = False
+
+    def acquire(self) -> bool:
+        return self.available
+
+    def close(self) -> None:
+        self.closed = True
+
+
+class FakeDsuManager:
+    def __init__(self) -> None:
+        self.started = False
+        self.stopped = False
+        self.closed = False
+
+    def status(self) -> dict:
+        return {"state": "off"}
+
+    def start(self) -> dict:
+        self.started = True
+        return self.status()
+
+    def stop(self) -> dict:
+        self.stopped = True
+        return self.status()
+
+    def close(self) -> None:
+        self.closed = True
+
+
+class FakeUpdateChecker:
+    def __init__(self) -> None:
+        self.forces = []
+
+    def check(self, *, force=False) -> dict:
+        self.forces.append(force)
+        return {"status": "up_to_date", "update_available": False}
+
+
+class FakeUpdateDownloadManager:
+    def __init__(self) -> None:
+        self.actions = []
+        self.closed = False
+
+    def status(self) -> dict:
+        return {"status": "inactive", "can_cancel": False, "can_retry": False}
+
+    def start(self) -> dict:
+        self.actions.append("start")
+        return {"status": "checking"}
+
+    def retry(self) -> dict:
+        self.actions.append("retry")
+        return {"status": "checking"}
+
+    def cancel(self) -> dict:
+        self.actions.append("cancel")
+        return {"status": "cancelled"}
+
+    def close(self) -> None:
+        self.closed = True
+
+
+class ReadyUpdateDownloadManager(FakeUpdateDownloadManager):
+    def installation_candidate(self):
+        return object()
+
+    def status(self) -> dict:
+        return {"status": "ready_to_install", "ready_to_install": True}
+
+
+class FakeUpdateInstaller:
+    def __init__(self) -> None:
+        self.calls = []
+
+    def status(self) -> dict:
+        return {"status": "inactive", "supported": True}
+
+    def start(self, candidate, *, parent_pid, port):
+        self.calls.append((candidate, parent_pid, port))
+        return {"status": "scheduled", "message": "arrêt"}
+
+
+class ServerLifecycleIntegrationTests(unittest.TestCase):
+    SESSION_TOKEN = "integration-test-session-token"
+
+    @staticmethod
+    def request_shutdown(port: int) -> None:
+        try:
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                headers={"X-BOTW-Session-Token": ServerLifecycleIntegrationTests.SESSION_TOKEN},
+                method="POST",
+            ), timeout=0.5):
+                pass
+        except (OSError, URLError):
+            # A startup assertion may fail before the socket exists. The daemon
+            # thread still guarantees that the suite regains control.
+            pass
+
+    @contextmanager
+    def running_server(self, payload_factory, **kwargs):
+        ready = threading.Event()
+        bound_port = []
+
+        def report_ready(port: int) -> None:
+            bound_port.append(port)
+            ready.set()
+
+        thread = threading.Thread(
+            target=serve,
+            args=(payload_factory,),
+            kwargs={
+                "port": 0,
+                "open_browser": False,
+                "running_emulators_provider": lambda: [],
+                "server_ready": report_ready,
+                "session_token": self.SESSION_TOKEN,
+                **kwargs,
+            },
+            daemon=True,
+        )
+        thread.start()
+        try:
+            self.assertTrue(ready.wait(5), "Le serveur local ne s'est pas lié dans les 5 secondes")
+            yield thread, bound_port[0]
+        finally:
+            if bound_port:
+                self.request_shutdown(bound_port[0])
+            thread.join(timeout=3)
+
+    def test_version_probe_shutdown_and_cleanup_form_one_lifecycle(self):
+        guard = FakeInstanceGuard()
+        dsu = FakeDsuManager()
+        provider_calls = []
+
+        def no_running_emulators():
+            provider_calls.append(True)
+            return []
+
+        with self.running_server(
+            lambda: {},
+            instance_guard=guard,
+            dsu_manager=dsu,
+            running_emulators_provider=no_running_emulators,
+        ) as (thread, port):
+            identity = probe_companion_server(port, timeout=1)
+            self.assertIsNotNone(identity)
+            self.assertEqual(identity["application"], "BOTW Companion")
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
+        self.assertTrue(provider_calls)
+        self.assertTrue(dsu.stopped)
+        self.assertTrue(dsu.closed)
+        self.assertTrue(guard.closed)
+
+    def test_existing_dsu_api_controls_the_platform_manager(self):
+        dsu = FakeDsuManager()
+        with self.running_server(
+            lambda: {},
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=dsu,
+        ) as (thread, port):
+            self.assertIsNotNone(probe_companion_server(port, timeout=1))
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/dsu/start",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            self.assertTrue(dsu.started)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/dsu/stop",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            self.assertTrue(dsu.stopped)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/shutdown",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1):
+                pass
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
+
+    def test_update_endpoint_supports_cached_and_manual_checks(self):
+        checker = FakeUpdateChecker()
+        downloads = FakeUpdateDownloadManager()
+        with self.running_server(
+            lambda: {},
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=FakeDsuManager(),
+            update_checker=checker,
+            update_download_manager=downloads,
+        ) as (_thread, port):
+            with open_loopback(f"http://127.0.0.1:{port}/api/update", timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update?force=1",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 200)
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/download",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+            ), timeout=1) as response:
+                self.assertEqual(json.loads(response.read())["status"], "inactive")
+            for action, expected_status in (("start", 202), ("cancel", 200), ("retry", 202)):
+                with open_loopback(Request(
+                    f"http://127.0.0.1:{port}/api/update/download/{action}",
+                    data=b"",
+                    headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                    method="POST",
+                ), timeout=1) as response:
+                    self.assertEqual(response.status, expected_status)
+        self.assertEqual(checker.forces, [False, True])
+        self.assertEqual(downloads.actions[:3], ["start", "cancel", "retry"])
+        self.assertTrue(downloads.closed)
+
+    def test_assisted_update_handoff_stops_dsu_and_server_after_response(self):
+        downloads = ReadyUpdateDownloadManager()
+        installer = FakeUpdateInstaller()
+        dsu = FakeDsuManager()
+        with self.running_server(
+            lambda: {},
+            instance_guard=FakeInstanceGuard(),
+            dsu_manager=dsu,
+            update_download_manager=downloads,
+            update_installer=installer,
+        ) as (thread, port):
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/install",
+                data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN},
+                method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 202)
+                self.assertEqual(json.loads(response.read())["status"], "scheduled")
+            thread.join(timeout=3)
+            self.assertFalse(thread.is_alive())
+        self.assertTrue(dsu.stopped)
+        self.assertEqual(len(installer.calls), 1)
+        self.assertEqual(installer.calls[0][2], port)
+
+    def test_install_handoff_rejects_duplicate_install_and_cache_mutation(self):
+        downloads = ReadyUpdateDownloadManager()
+        installer = FakeUpdateInstaller()
+        with patch("botw_companion.server.threading.Timer"), self.running_server(
+            lambda: {}, instance_guard=FakeInstanceGuard(),
+            update_download_manager=downloads, update_installer=installer,
+        ) as (_thread, port):
+            with open_loopback(Request(
+                f"http://127.0.0.1:{port}/api/update/install", data=b"",
+                headers={"X-BOTW-Session-Token": self.SESSION_TOKEN}, method="POST",
+            ), timeout=1) as response:
+                self.assertEqual(response.status, 202)
+            for endpoint in ("/api/update/install", "/api/update/download/start",
+                             "/api/update/download/retry"):
+                with self.assertRaises(HTTPError) as rejected:
+                    open_loopback(Request(
+                        f"http://127.0.0.1:{port}{endpoint}", data=b"",
+                        headers={"X-BOTW-Session-Token": self.SESSION_TOKEN}, method="POST",
+                    ), timeout=1)
+                self.assertEqual(rejected.exception.code, 409)
+                rejected.exception.close()
+        self.assertEqual(len(installer.calls), 1)
+        self.assertNotIn("start", downloads.actions)
+        self.assertNotIn("retry", downloads.actions)
+
+    def test_selected_save_caption_is_served_as_a_private_jpeg(self):
+        with tempfile.TemporaryDirectory() as directory:
+            slot = Path(directory) / "1"
+            slot.mkdir()
+            content = b"\xff\xd8\xff\xe0" + b"slot preview".ljust(124, b"\0") + b"\xff\xd9"
+            (slot / "caption.jpg").write_bytes(content)
+            with self.running_server(
+                lambda: {"sauvegarde": {"chemin": str(slot)}},
+                instance_guard=FakeInstanceGuard(),
+                dsu_manager=FakeDsuManager(),
+            ) as (thread, port):
+                self.assertIsNotNone(probe_companion_server(port, timeout=1))
+                with open_loopback(f"http://127.0.0.1:{port}/api/save-caption", timeout=1) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(response.headers["Content-Type"], "image/jpeg")
+                    self.assertEqual(response.headers["Cache-Control"], "no-store")
+                    self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+                    self.assertEqual(response.read(), content)
+            self.assertFalse(thread.is_alive())
+
+    def test_server_startup_never_requires_reverse_dns(self):
+        with patch("socket.getfqdn", side_effect=AssertionError("reverse DNS interdit")):
+            with self.running_server(
+                lambda: {},
+                instance_guard=FakeInstanceGuard(),
+                dsu_manager=FakeDsuManager(),
+            ) as (_thread, port):
+                self.assertIsNotNone(probe_companion_server(port, timeout=1))
+
+    def test_second_server_is_rejected_before_binding_a_port(self):
+        guard = FakeInstanceGuard(False)
+        with self.assertRaisesRegex(OSError, "fonctionne déjà"):
+            serve(
+                lambda: {},
+                port=0,
+                open_browser=False,
+                instance_guard=guard,
+                dsu_manager=FakeDsuManager(),
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

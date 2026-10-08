@@ -1,0 +1,5302 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "name": "MrCheeze/botw-tools - placements MUBIN extraits du jeu",
+      "url": "https://github.com/MrCheeze/botw-tools"
+    },
+    {
+      "name": "ZeldaMods Dungeon pack - contexte des cartes intérieures",
+      "url": "https://zeldamods.org/wiki/Dungeon_pack"
+    },
+    {
+      "name": "BOTW Object Map - contrôle interactif des acteurs et coffres",
+      "url": "https://objmap.zeldamods.org/"
+    }
+  ],
+  "audit": {
+    "shrine_completion_entries": 136,
+    "physical_shrine_chests": 205,
+    "trial_chests": 49,
+    "dungeon_chests": 42
+  },
+  "shrines": {
+    "Dungeon000": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon000",
+      "interior_map_label": "Intérieur - Tah Muhl Shrine",
+      "chest_count": 4,
+      "interior_bounds": {
+        "min_x": -21.5,
+        "max_x": 9.0,
+        "min_z": -28.5,
+        "max_z": -3.5
+      },
+      "interior_chests": [
+        {
+          "hash": 79753044,
+          "actor": "Weapon_Lsword_036",
+          "content": "Cobble Crusher",
+          "x": 9.0,
+          "y": 2.0,
+          "z": -3.5
+        },
+        {
+          "hash": 1015560256,
+          "actor": "Item_Ore_B",
+          "content": "Ruby",
+          "x": -21.5,
+          "y": 0.0,
+          "z": -23.0
+        },
+        {
+          "hash": 1061208573,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -8.5,
+          "y": 6.0,
+          "z": -28.5
+        },
+        {
+          "hash": 3853713592,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -19.5,
+          "y": 7.5,
+          "z": -10.5
+        }
+      ]
+    },
+    "Dungeon001": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon001",
+      "interior_map_label": "Intérieur - Jee Noh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 22.0,
+        "max_x": 22.0,
+        "min_z": -34.0,
+        "max_z": -34.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3852730446,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": 22.0,
+          "y": 6.5,
+          "z": -34.0
+        }
+      ]
+    },
+    "Dungeon002": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon002",
+      "interior_map_label": "Intérieur - Sah Dahaj Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -17.0,
+        "max_x": -17.0,
+        "min_z": 2.0,
+        "max_z": 2.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2489506180,
+          "actor": "Weapon_Bow_035",
+          "content": "Knight's Bow",
+          "x": -17.0,
+          "y": 8.07,
+          "z": 2.0
+        }
+      ]
+    },
+    "Dungeon003": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon003",
+      "interior_map_label": "Intérieur - Hawa Koth Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -9.5,
+        "max_x": 27.25,
+        "min_z": 7.25,
+        "max_z": 62.0
+      },
+      "interior_chests": [
+        {
+          "hash": 638977289,
+          "actor": "Item_Ore_C",
+          "content": "Sapphire",
+          "x": 27.25,
+          "y": 10.0,
+          "z": 7.25
+        },
+        {
+          "hash": 2441275272,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": 2.0,
+          "y": 12.15,
+          "z": 52.0
+        },
+        {
+          "hash": 3284159718,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": -9.5,
+          "y": -0.54,
+          "z": 62.0
+        }
+      ]
+    },
+    "Dungeon004": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon004",
+      "interior_map_label": "Intérieur - Zalta Wa Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -29.0,
+        "max_x": -29.0,
+        "min_z": -5.5,
+        "max_z": -5.5
+      },
+      "interior_chests": [
+        {
+          "hash": 3918894197,
+          "actor": "Weapon_Bow_035",
+          "content": "Knight's Bow",
+          "x": -29.0,
+          "y": 8.0,
+          "z": -5.5
+        }
+      ]
+    },
+    "Dungeon005": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon005",
+      "interior_map_label": "Intérieur - Ne'ez Yohma Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -15.0,
+        "max_x": -15.0,
+        "min_z": -32.0,
+        "max_z": -32.0
+      },
+      "interior_chests": [
+        {
+          "hash": 4248817833,
+          "actor": "Weapon_Spear_027",
+          "content": "Zora Spear",
+          "x": -15.0,
+          "y": -22.95,
+          "z": -32.0
+        }
+      ]
+    },
+    "Dungeon006": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon006",
+      "interior_map_label": "Intérieur - Yah Rin Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -36.5,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -7.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1735097170,
+          "actor": "Weapon_Sword_003",
+          "content": "Knight's Broadsword",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -7.5
+        },
+        {
+          "hash": 4049467582,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -36.5,
+          "y": 6.0,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon007": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon007",
+      "interior_map_label": "Intérieur - Bosh Kala Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -15.0,
+        "max_x": -0.5,
+        "min_z": -148.0,
+        "max_z": -19.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2677842568,
+          "actor": "Item_Ore_F",
+          "content": "Amber",
+          "x": -15.0,
+          "y": 1.15,
+          "z": -19.0
+        },
+        {
+          "hash": 4073483487,
+          "actor": "Weapon_Lsword_002",
+          "content": "Soldier's Claymore",
+          "x": -0.5,
+          "y": -6.5,
+          "z": -148.0
+        }
+      ]
+    },
+    "Dungeon008": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon008",
+      "interior_map_label": "Intérieur - Bareeda Naag Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -78.0,
+        "max_x": 52.0,
+        "min_z": 48.0,
+        "max_z": 64.0
+      },
+      "interior_chests": [
+        {
+          "hash": 159148495,
+          "actor": "Weapon_Bow_016",
+          "content": "Swallow Bow",
+          "x": -78.0,
+          "y": 21.46,
+          "z": 64.0
+        },
+        {
+          "hash": 3513544036,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 52.0,
+          "y": 21.5,
+          "z": 48.0
+        }
+      ]
+    },
+    "Dungeon009": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon009",
+      "interior_map_label": "Intérieur - Owa Daim Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 6.0,
+        "max_x": 6.0,
+        "min_z": -40.5,
+        "max_z": -40.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1182477274,
+          "actor": "Weapon_Shield_035",
+          "content": "Traveler's Shield",
+          "x": 6.0,
+          "y": 15.0,
+          "z": -40.5
+        }
+      ]
+    },
+    "Dungeon010": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon010",
+      "interior_map_label": "Intérieur - Kay Noh Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -53.0,
+        "max_x": 2.0,
+        "min_z": -3.0,
+        "max_z": 59.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1396031621,
+          "actor": "Weapon_Sword_029",
+          "content": "Gerudo Scimitar",
+          "x": -53.0,
+          "y": 17.5,
+          "z": -3.0
+        },
+        {
+          "hash": 3287407663,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 2.0,
+          "y": 7.0,
+          "z": 59.0
+        }
+      ]
+    },
+    "Dungeon011": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon011",
+      "interior_map_label": "Intérieur - Monya Toma Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -23.0,
+        "max_x": -23.0,
+        "min_z": -16.0,
+        "max_z": -16.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2144851240,
+          "actor": "Weapon_Sword_035",
+          "content": "Thunderblade",
+          "x": -23.0,
+          "y": 8.0,
+          "z": -16.0
+        }
+      ]
+    },
+    "Dungeon012": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon012",
+      "interior_map_label": "Intérieur - Voo Lota Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": 48.0,
+        "max_x": 49.3,
+        "min_z": -64.0,
+        "max_z": 42.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2260374746,
+          "actor": "Weapon_Sword_033",
+          "content": "Flameblade",
+          "x": 49.3,
+          "y": 23.0,
+          "z": 42.0
+        },
+        {
+          "hash": 2875625519,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 48.0,
+          "y": 28.0,
+          "z": -64.0
+        }
+      ]
+    },
+    "Dungeon013": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon013",
+      "interior_map_label": "Intérieur - Katosa Aug Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 19.0,
+        "max_x": 19.0,
+        "min_z": -21.0,
+        "max_z": -21.0
+      },
+      "interior_chests": [
+        {
+          "hash": 130001776,
+          "actor": "Weapon_Lsword_034",
+          "content": "Great Frostblade",
+          "x": 19.0,
+          "y": 17.11,
+          "z": -21.0
+        }
+      ]
+    },
+    "Dungeon014": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon014",
+      "interior_map_label": "Intérieur - Kam Urog Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -8.31,
+        "max_x": -2.5,
+        "min_z": -12.5,
+        "max_z": 8.5
+      },
+      "interior_chests": [
+        {
+          "hash": 2374996813,
+          "actor": "Weapon_Spear_002",
+          "content": "Soldier's Spear",
+          "x": -8.31,
+          "y": -9.81,
+          "z": -12.5
+        },
+        {
+          "hash": 3513966293,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -2.5,
+          "y": -6.5,
+          "z": 8.5
+        }
+      ]
+    },
+    "Dungeon015": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon015",
+      "interior_map_label": "Intérieur - Toto Sah Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -39.0,
+        "max_x": 23.0,
+        "min_z": -47.0,
+        "max_z": -33.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1319070279,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 23.0,
+          "y": 36.5,
+          "z": -47.0
+        },
+        {
+          "hash": 1345302867,
+          "actor": "Weapon_Shield_041",
+          "content": "Shield of the Mind's Eye",
+          "x": -39.0,
+          "y": 8.5,
+          "z": -33.5
+        }
+      ]
+    },
+    "Dungeon016": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon016",
+      "interior_map_label": "Intérieur - Rucco Maag Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -12.0,
+        "max_x": 7.5,
+        "min_z": -27.5,
+        "max_z": -27.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1708460808,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -12.0,
+          "y": 17.76,
+          "z": -27.5
+        },
+        {
+          "hash": 2731610075,
+          "actor": "Weapon_Bow_014",
+          "content": "Silver Bow",
+          "x": 7.5,
+          "y": 17.76,
+          "z": -27.5
+        }
+      ]
+    },
+    "Dungeon017": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon017",
+      "interior_map_label": "Intérieur - Shee Vaneer Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -16.0,
+        "max_x": -16.0,
+        "min_z": 28.5,
+        "max_z": 28.5
+      },
+      "interior_chests": [
+        {
+          "hash": 4140941963,
+          "actor": "Weapon_Lsword_041",
+          "content": "Eightfold Longblade",
+          "x": -16.0,
+          "y": 18.0,
+          "z": 28.5
+        }
+      ]
+    },
+    "Dungeon018": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon018",
+      "interior_map_label": "Intérieur - Rok Uwog Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -7.0,
+        "max_x": 11.0,
+        "min_z": 3.0,
+        "max_z": 11.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1203458803,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 11.0,
+          "y": 2.6,
+          "z": 11.0
+        },
+        {
+          "hash": 4120858762,
+          "actor": "Weapon_Spear_031",
+          "content": "Drillshaft",
+          "x": -7.0,
+          "y": 6.0,
+          "z": 3.0
+        }
+      ]
+    },
+    "Dungeon019": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon019",
+      "interior_map_label": "Intérieur - Dow Na'eh Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -20.0,
+        "max_x": 20.0,
+        "min_z": -18.0,
+        "max_z": -2.0
+      },
+      "interior_chests": [
+        {
+          "hash": 896824088,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": 9.0,
+          "y": -4.0,
+          "z": -6.0
+        },
+        {
+          "hash": 1114850190,
+          "actor": "Weapon_Sword_027",
+          "content": "Zora Sword",
+          "x": -20.0,
+          "y": 9.63,
+          "z": -2.0
+        },
+        {
+          "hash": 1961782765,
+          "actor": "Item_Ore_F",
+          "content": "Amber",
+          "x": 20.0,
+          "y": 0.0,
+          "z": -18.0
+        }
+      ]
+    },
+    "Dungeon020": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon020",
+      "interior_map_label": "Intérieur - Sheem Dagoze Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -4.0,
+        "max_x": -4.0,
+        "min_z": -30.0,
+        "max_z": -30.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2966651740,
+          "actor": "Weapon_Lsword_035",
+          "content": "Great Thunderblade",
+          "x": -4.0,
+          "y": -20.0,
+          "z": -30.0
+        }
+      ]
+    },
+    "Dungeon021": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon021",
+      "interior_map_label": "Intérieur - Toh Yahsa Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 23.0,
+        "min_z": 8.0,
+        "max_z": 21.1
+      },
+      "interior_chests": [
+        {
+          "hash": 651697158,
+          "actor": "Armor_046_Upper",
+          "content": "Rubber Armor",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 21.1
+        },
+        {
+          "hash": 1608635741,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": 23.0,
+          "y": 12.0,
+          "z": 8.0
+        }
+      ]
+    },
+    "Dungeon022": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon022",
+      "interior_map_label": "Intérieur - Keo Ruug Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 30.0,
+        "max_x": 30.0,
+        "min_z": 17.5,
+        "max_z": 17.5
+      },
+      "interior_chests": [
+        {
+          "hash": 944710900,
+          "actor": "Weapon_Lsword_003",
+          "content": "Knight's Claymore",
+          "x": 30.0,
+          "y": 0.0,
+          "z": 17.5
+        }
+      ]
+    },
+    "Dungeon023": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon023",
+      "interior_map_label": "Intérieur - Sheh Rata Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": 8.0,
+        "max_x": 11.5,
+        "min_z": -14.0,
+        "max_z": 28.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1274382149,
+          "actor": "Weapon_Lsword_051",
+          "content": "Giant Boomerang",
+          "x": 11.5,
+          "y": 12.0,
+          "z": -14.0
+        },
+        {
+          "hash": 3463086557,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": 8.0,
+          "y": 4.0,
+          "z": 28.0
+        }
+      ]
+    },
+    "Dungeon024": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon024",
+      "interior_map_label": "Intérieur - Mezza Lo Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -24.0,
+        "max_x": -24.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 114738522,
+          "actor": "Weapon_Sword_035",
+          "content": "Thunderblade",
+          "x": -24.0,
+          "y": 6.0,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon025": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon025",
+      "interior_map_label": "Intérieur - Kayra Mah Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -15.0,
+        "max_x": 18.0,
+        "min_z": -175.0,
+        "max_z": -112.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2928701109,
+          "actor": "Item_Ore_B",
+          "content": "Ruby",
+          "x": 18.0,
+          "y": 53.5,
+          "z": -112.0
+        },
+        {
+          "hash": 3410031031,
+          "actor": "Obj_BombArrow_A_02",
+          "content": "Bomb Arrow x5",
+          "x": -15.0,
+          "y": 106.5,
+          "z": -175.0
+        }
+      ]
+    },
+    "Dungeon026": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon026",
+      "interior_map_label": "Intérieur - Shae Mo'sah Shrine",
+      "chest_count": 4,
+      "interior_bounds": {
+        "min_x": -23.0,
+        "max_x": 26.0,
+        "min_z": -24.5,
+        "max_z": 28.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1306359972,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -23.0,
+          "y": 10.0,
+          "z": 13.0
+        },
+        {
+          "hash": 1749408352,
+          "actor": "Item_Ore_B",
+          "content": "Ruby",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -24.5
+        },
+        {
+          "hash": 2775322850,
+          "actor": "Weapon_Lsword_037",
+          "content": "Stone Smasher",
+          "x": 26.0,
+          "y": 0.0,
+          "z": 28.0
+        },
+        {
+          "hash": 2783782463,
+          "actor": "Obj_IceArrow_A_02",
+          "content": "Ice Arrow x10",
+          "x": 0.0,
+          "y": 10.0,
+          "z": -8.5
+        }
+      ]
+    },
+    "Dungeon027": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon027",
+      "interior_map_label": "Intérieur - Rota Ooh Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -10.5,
+        "max_x": 4.0,
+        "min_z": -14.5,
+        "max_z": -13.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2001786182,
+          "actor": "Weapon_Sword_031",
+          "content": "Feathered Edge",
+          "x": 4.0,
+          "y": 20.0,
+          "z": -14.5
+        },
+        {
+          "hash": 3566506040,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -10.5,
+          "y": 8.15,
+          "z": -13.0
+        }
+      ]
+    },
+    "Dungeon028": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon028",
+      "interior_map_label": "Intérieur - Shora Hah Shrine",
+      "chest_count": 6,
+      "interior_bounds": {
+        "min_x": -54.0,
+        "max_x": 64.0,
+        "min_z": -27.5,
+        "max_z": 60.5
+      },
+      "interior_chests": [
+        {
+          "hash": 223462799,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": -24.0,
+          "y": 35.5,
+          "z": 60.5
+        },
+        {
+          "hash": 304910307,
+          "actor": "Weapon_Lsword_033",
+          "content": "Great Flameblade",
+          "x": 48.0,
+          "y": 32.0,
+          "z": -27.5
+        },
+        {
+          "hash": 1249330112,
+          "actor": "Obj_IceArrow_A_02",
+          "content": "Ice Arrow x10",
+          "x": -54.0,
+          "y": 32.0,
+          "z": -9.5
+        },
+        {
+          "hash": 3281368662,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 64.0,
+          "y": 32.0,
+          "z": -16.0
+        },
+        {
+          "hash": 3826616279,
+          "actor": "Weapon_Sword_025",
+          "content": "Forest Dweller's Sword",
+          "x": -27.0,
+          "y": 36.0,
+          "z": 32.0
+        },
+        {
+          "hash": 4196993938,
+          "actor": "Weapon_Bow_036",
+          "content": "Royal Bow",
+          "x": -34.0,
+          "y": 20.0,
+          "z": -9.0
+        }
+      ]
+    },
+    "Dungeon029": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon029",
+      "interior_map_label": "Intérieur - Hila Rao Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -7.0,
+        "max_x": 5.5,
+        "min_z": 13.0,
+        "max_z": 39.0
+      },
+      "interior_chests": [
+        {
+          "hash": 771359327,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -7.0,
+          "y": -6.0,
+          "z": 39.0
+        },
+        {
+          "hash": 2545300147,
+          "actor": "Obj_IceArrow_A_03",
+          "content": "Ice Arrow x5",
+          "x": 5.5,
+          "y": 0.0,
+          "z": 13.0
+        }
+      ]
+    },
+    "Dungeon030": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon030",
+      "interior_map_label": "Intérieur - Joloo Nah Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -26.0,
+        "max_x": 0.0,
+        "min_z": -61.0,
+        "max_z": 38.0
+      },
+      "interior_chests": [
+        {
+          "hash": 296010651,
+          "actor": "Weapon_Spear_029",
+          "content": "Gerudo Spear",
+          "x": 0.0,
+          "y": 20.0,
+          "z": -61.0
+        },
+        {
+          "hash": 2758576440,
+          "actor": "Weapon_Lsword_029",
+          "content": "Golden Claymore",
+          "x": -26.0,
+          "y": 8.0,
+          "z": 38.0
+        }
+      ]
+    },
+    "Dungeon031": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon031",
+      "interior_map_label": "Intérieur - Mo'a Keet Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": 17.0,
+        "max_x": 28.0,
+        "min_z": -63.5,
+        "max_z": 38.0
+      },
+      "interior_chests": [
+        {
+          "hash": 418217937,
+          "actor": "Item_Ore_B",
+          "content": "Ruby",
+          "x": 28.0,
+          "y": 25.0,
+          "z": 38.0
+        },
+        {
+          "hash": 4073019342,
+          "actor": "Weapon_Sword_003",
+          "content": "Knight's Broadsword",
+          "x": 17.0,
+          "y": 27.65,
+          "z": -63.5
+        }
+      ]
+    },
+    "Dungeon032": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon032",
+      "interior_map_label": "Intérieur - Dako Tah Shrine",
+      "chest_count": 4,
+      "interior_bounds": {
+        "min_x": -48.0,
+        "max_x": -35.5,
+        "min_z": -21.5,
+        "max_z": 35.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1366576292,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": -48.0,
+          "y": 122.61,
+          "z": -21.5
+        },
+        {
+          "hash": 2298702348,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": -45.0,
+          "y": 144.5,
+          "z": 32.0
+        },
+        {
+          "hash": 2917484848,
+          "actor": "Weapon_Shield_036",
+          "content": "Radiant Shield",
+          "x": -35.5,
+          "y": 164.2,
+          "z": 35.5
+        },
+        {
+          "hash": 4223476174,
+          "actor": "Weapon_Sword_030",
+          "content": "Moonlight Scimitar",
+          "x": -48.0,
+          "y": 143.5,
+          "z": 35.0
+        }
+      ]
+    },
+    "Dungeon033": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon033",
+      "interior_map_label": "Intérieur - Daka Tuss Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -16.0,
+        "max_x": -16.0,
+        "min_z": -24.0,
+        "max_z": -24.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1852894353,
+          "actor": "Weapon_Lsword_027",
+          "content": "Silver Longsword",
+          "x": -16.0,
+          "y": 0.1,
+          "z": -24.0
+        }
+      ]
+    },
+    "Dungeon034": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon034",
+      "interior_map_label": "Intérieur - Kah Yah Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -26.0,
+        "max_x": 26.0,
+        "min_z": 18.0,
+        "max_z": 18.0
+      },
+      "interior_chests": [
+        {
+          "hash": 445242426,
+          "actor": "Weapon_Lsword_003",
+          "content": "Knight's Claymore",
+          "x": 26.0,
+          "y": 4.0,
+          "z": 18.0
+        },
+        {
+          "hash": 1223731997,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -26.0,
+          "y": 4.0,
+          "z": 18.0
+        }
+      ]
+    },
+    "Dungeon035": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon035",
+      "interior_map_label": "Intérieur - Akh Va'quot Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -6.0,
+        "max_x": 26.0,
+        "min_z": 38.0,
+        "max_z": 58.5
+      },
+      "interior_chests": [
+        {
+          "hash": 450234134,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 26.0,
+          "y": 10.0,
+          "z": 58.5
+        },
+        {
+          "hash": 2699775799,
+          "actor": "Weapon_Spear_032",
+          "content": "Feathered Spear",
+          "x": -6.0,
+          "y": 6.0,
+          "z": 38.0
+        },
+        {
+          "hash": 4270154666,
+          "actor": "Item_Ore_C",
+          "content": "Sapphire",
+          "x": 6.0,
+          "y": 6.0,
+          "z": 38.0
+        }
+      ]
+    },
+    "Dungeon036": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon036",
+      "interior_map_label": "Intérieur - Sho Dantu Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -22.0,
+        "max_x": -22.0,
+        "min_z": -1.0,
+        "max_z": -1.0
+      },
+      "interior_chests": [
+        {
+          "hash": 962037740,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": -22.0,
+          "y": 0.0,
+          "z": -1.0
+        }
+      ]
+    },
+    "Dungeon037": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon037",
+      "interior_map_label": "Intérieur - Shae Loya Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -8.0,
+        "max_x": 29.0,
+        "min_z": 1.0,
+        "max_z": 17.5
+      },
+      "interior_chests": [
+        {
+          "hash": 3612472744,
+          "actor": "Item_Ore_D",
+          "content": "Topaz",
+          "x": 29.0,
+          "y": 14.0,
+          "z": 1.0
+        },
+        {
+          "hash": 3658282587,
+          "actor": "Weapon_Bow_017",
+          "content": "Falcon Bow",
+          "x": -8.0,
+          "y": 26.0,
+          "z": 17.5
+        }
+      ]
+    },
+    "Dungeon038": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon038",
+      "interior_map_label": "Intérieur - Oman Au Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 41.0,
+        "max_x": 41.0,
+        "min_z": -31.0,
+        "max_z": -31.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3375369818,
+          "actor": "Weapon_Bow_001",
+          "content": "Traveler's Bow",
+          "x": 41.0,
+          "y": 45.5,
+          "z": -31.0
+        }
+      ]
+    },
+    "Dungeon039": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon039",
+      "interior_map_label": "Intérieur - Myahm Agana Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -9.5,
+        "max_x": -9.5,
+        "min_z": -6.0,
+        "max_z": -6.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2175434126,
+          "actor": "Weapon_Bow_029",
+          "content": "Phrenic Bow",
+          "x": -9.5,
+          "y": -3.0,
+          "z": -6.0
+        }
+      ]
+    },
+    "Dungeon040": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon040",
+      "interior_map_label": "Intérieur - Kaam Ya'tak Shrine",
+      "chest_count": 5,
+      "interior_bounds": {
+        "min_x": -70.5,
+        "max_x": 78.0,
+        "min_z": -73.0,
+        "max_z": 62.0
+      },
+      "interior_chests": [
+        {
+          "hash": 616546705,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 78.0,
+          "y": 4.0,
+          "z": 62.0
+        },
+        {
+          "hash": 1402060224,
+          "actor": "Weapon_Sword_003",
+          "content": "Knight's Broadsword",
+          "x": -22.0,
+          "y": 4.0,
+          "z": -59.0
+        },
+        {
+          "hash": 2202095126,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 14.0,
+          "y": 16.0,
+          "z": -73.0
+        },
+        {
+          "hash": 2914122144,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": 18.0,
+          "y": 8.0,
+          "z": 16.0
+        },
+        {
+          "hash": 3497573834,
+          "actor": "Weapon_Lsword_055",
+          "content": "Edge of Duality",
+          "x": -70.5,
+          "y": 4.0,
+          "z": -42.5
+        }
+      ]
+    },
+    "Dungeon041": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon041",
+      "interior_map_label": "Intérieur - Ja Baij Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -23.0,
+        "max_x": -6.0,
+        "min_z": -77.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 235083489,
+          "actor": "Weapon_Lsword_001",
+          "content": "Traveler's Claymore",
+          "x": -6.0,
+          "y": 0.0,
+          "z": -4.0
+        },
+        {
+          "hash": 4192706961,
+          "actor": "Item_Ore_F",
+          "content": "Amber",
+          "x": -23.0,
+          "y": 4.0,
+          "z": -77.0
+        }
+      ]
+    },
+    "Dungeon042": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon042",
+      "interior_map_label": "Intérieur - Rin Oyaa Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 28.0,
+        "max_x": 28.0,
+        "min_z": 20.0,
+        "max_z": 20.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2081482182,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 28.0,
+          "y": 16.0,
+          "z": 20.0
+        }
+      ]
+    },
+    "Dungeon043": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon043",
+      "interior_map_label": "Intérieur - Kuh Takkar Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -16.0,
+        "max_x": -16.0,
+        "min_z": 5.5,
+        "max_z": 5.5
+      },
+      "interior_chests": [
+        {
+          "hash": 294526304,
+          "actor": "Weapon_Sword_034",
+          "content": "Frostblade",
+          "x": -16.0,
+          "y": 3.5,
+          "z": 5.5
+        }
+      ]
+    },
+    "Dungeon044": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon044",
+      "interior_map_label": "Intérieur - Shee Venath Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 16.0,
+        "max_x": 16.0,
+        "min_z": 28.5,
+        "max_z": 28.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1221975918,
+          "actor": "Weapon_Spear_037",
+          "content": "Serpentine Spear",
+          "x": 16.0,
+          "y": 18.0,
+          "z": 28.5
+        }
+      ]
+    },
+    "Dungeon045": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon045",
+      "interior_map_label": "Intérieur - Ha Dahamar Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 62.5,
+        "max_x": 62.5,
+        "min_z": 11.5,
+        "max_z": 11.5
+      },
+      "interior_chests": [
+        {
+          "hash": 787648808,
+          "actor": "PutRupee_Purple",
+          "content": "Purple Rupee",
+          "x": 62.5,
+          "y": 13.5,
+          "z": 11.5
+        }
+      ]
+    },
+    "Dungeon046": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon046",
+      "interior_map_label": "Intérieur - Shada Naw Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -33.0,
+        "max_x": -33.0,
+        "min_z": -14.0,
+        "max_z": -14.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2733670140,
+          "actor": "Weapon_Lsword_034",
+          "content": "Great Frostblade",
+          "x": -33.0,
+          "y": 8.5,
+          "z": -14.0
+        }
+      ]
+    },
+    "Dungeon047": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon047",
+      "interior_map_label": "Intérieur - Ree Dahee Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -15.0,
+        "max_x": -15.0,
+        "min_z": -81.0,
+        "max_z": -81.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1203109046,
+          "actor": "Armor_014_Head",
+          "content": "Climber's Bandanna",
+          "x": -15.0,
+          "y": 14.0,
+          "z": -81.0
+        }
+      ]
+    },
+    "Dungeon048": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon048",
+      "interior_map_label": "Intérieur - Ze Kasho Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -12.0,
+        "max_x": -12.0,
+        "min_z": 38.5,
+        "max_z": 38.5
+      },
+      "interior_chests": [
+        {
+          "hash": 2075859436,
+          "actor": "Weapon_Spear_028",
+          "content": "Silverscale Spear",
+          "x": -12.0,
+          "y": 7.0,
+          "z": 38.5
+        }
+      ]
+    },
+    "Dungeon049": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon049",
+      "interior_map_label": "Intérieur - Kaya Wan Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -19.0,
+        "max_x": 13.5,
+        "min_z": -95.5,
+        "max_z": -41.0
+      },
+      "interior_chests": [
+        {
+          "hash": 4012296241,
+          "actor": "Weapon_Sword_003",
+          "content": "Knight's Broadsword",
+          "x": -19.0,
+          "y": 10.15,
+          "z": -95.5
+        },
+        {
+          "hash": 4214849996,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 13.5,
+          "y": 7.0,
+          "z": -41.0
+        }
+      ]
+    },
+    "Dungeon050": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon050",
+      "interior_map_label": "Intérieur - Shai Utoh Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -0.5,
+        "max_x": 17.5,
+        "min_z": -85.5,
+        "max_z": -27.5
+      },
+      "interior_chests": [
+        {
+          "hash": 923248764,
+          "actor": "Weapon_Sword_001",
+          "content": "Traveler's Sword",
+          "x": 17.5,
+          "y": 12.15,
+          "z": -27.5
+        },
+        {
+          "hash": 3173256521,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": -0.5,
+          "y": 23.65,
+          "z": -85.5
+        }
+      ]
+    },
+    "Dungeon051": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon051",
+      "interior_map_label": "Intérieur - Maka Rah Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -4.0,
+        "max_x": 20.0,
+        "min_z": -94.5,
+        "max_z": -17.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1297119120,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 20.0,
+          "y": -16.5,
+          "z": -94.5
+        },
+        {
+          "hash": 2905879506,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": -4.0,
+          "y": -22.0,
+          "z": -51.0
+        },
+        {
+          "hash": 4272783493,
+          "actor": "Obj_BombArrow_A_03",
+          "content": "Bomb Arrow x10",
+          "x": 8.0,
+          "y": -28.0,
+          "z": -17.0
+        }
+      ]
+    },
+    "Dungeon052": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon052",
+      "interior_map_label": "Intérieur - Gee Ha'rah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 42.5,
+        "max_x": 42.5,
+        "min_z": -12.5,
+        "max_z": -12.5
+      },
+      "interior_chests": [
+        {
+          "hash": 2975470194,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 42.5,
+          "y": 0.0,
+          "z": -12.5
+        }
+      ]
+    },
+    "Dungeon053": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon053",
+      "interior_map_label": "Intérieur - Sha Warvo Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -14.0,
+        "max_x": 21.0,
+        "min_z": -18.0,
+        "max_z": -6.0
+      },
+      "interior_chests": [
+        {
+          "hash": 287351360,
+          "actor": "Weapon_Bow_035",
+          "content": "Knight's Bow",
+          "x": 21.0,
+          "y": 28.0,
+          "z": -6.0
+        },
+        {
+          "hash": 699967431,
+          "actor": "PutRupee_Purple",
+          "content": "Purple Rupee",
+          "x": -14.0,
+          "y": -34.0,
+          "z": -18.0
+        }
+      ]
+    },
+    "Dungeon054": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon054",
+      "interior_map_label": "Intérieur - Ka'o Makagh Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -48.5,
+        "max_x": -12.0,
+        "min_z": 10.0,
+        "max_z": 26.5
+      },
+      "interior_chests": [
+        {
+          "hash": 393155234,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": -12.0,
+          "y": 16.0,
+          "z": 10.0
+        },
+        {
+          "hash": 2042129072,
+          "actor": "Weapon_Bow_001",
+          "content": "Traveler's Bow",
+          "x": -48.5,
+          "y": 0.0,
+          "z": 26.5
+        },
+        {
+          "hash": 3705447709,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": -14.0,
+          "y": 2.0,
+          "z": 15.0
+        }
+      ]
+    },
+    "Dungeon055": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon055",
+      "interior_map_label": "Intérieur - Dunba Taag Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -80.5,
+        "max_x": 11.0,
+        "min_z": 12.0,
+        "max_z": 21.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2319591679,
+          "actor": "Weapon_Lsword_035",
+          "content": "Great Thunderblade",
+          "x": -80.5,
+          "y": 0.14,
+          "z": 21.0
+        },
+        {
+          "hash": 3047743907,
+          "actor": "Weapon_Bow_017",
+          "content": "Falcon Bow",
+          "x": 11.0,
+          "y": 2.15,
+          "z": 12.0
+        }
+      ]
+    },
+    "Dungeon056": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon056",
+      "interior_map_label": "Intérieur - Mirro Shaz Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -144.0,
+        "max_x": -16.0,
+        "min_z": 85.9,
+        "max_z": 96.0
+      },
+      "interior_chests": [
+        {
+          "hash": 309690636,
+          "actor": "Weapon_Lsword_031",
+          "content": "Iron Sledgehammer",
+          "x": -16.0,
+          "y": -15.4,
+          "z": 85.9
+        },
+        {
+          "hash": 1168499415,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": -144.0,
+          "y": -15.35,
+          "z": 86.0
+        },
+        {
+          "hash": 2340212918,
+          "actor": "Weapon_Lsword_031",
+          "content": "Iron Sledgehammer",
+          "x": -127.0,
+          "y": -15.35,
+          "z": 96.0
+        }
+      ]
+    },
+    "Dungeon057": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon057",
+      "interior_map_label": "Intérieur - Wahgo Katta Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 23.5,
+        "max_x": 23.5,
+        "min_z": 28.0,
+        "max_z": 28.0
+      },
+      "interior_chests": [
+        {
+          "hash": 322360761,
+          "actor": "Item_Ore_F",
+          "content": "Amber",
+          "x": 23.5,
+          "y": 12.0,
+          "z": 28.0
+        }
+      ]
+    },
+    "Dungeon058": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon058",
+      "interior_map_label": "Intérieur - Mogg Latan Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -12.0,
+        "max_x": 7.94,
+        "min_z": -76.5,
+        "max_z": -12.95
+      },
+      "interior_chests": [
+        {
+          "hash": 359699135,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": 0.0,
+          "y": -17.0,
+          "z": -76.5
+        },
+        {
+          "hash": 718693766,
+          "actor": "Weapon_Spear_025",
+          "content": "Forest Dweller's Spear",
+          "x": 7.94,
+          "y": -16.0,
+          "z": -12.95
+        },
+        {
+          "hash": 3819328534,
+          "actor": "Weapon_Bow_013",
+          "content": "Forest Dweller's Bow",
+          "x": -12.0,
+          "y": -16.0,
+          "z": -43.0
+        }
+      ]
+    },
+    "Dungeon059": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon059",
+      "interior_map_label": "Intérieur - Kah Okeo Shrine",
+      "chest_count": 6,
+      "interior_bounds": {
+        "min_x": -43.25,
+        "max_x": 39.0,
+        "min_z": -17.5,
+        "max_z": 61.0
+      },
+      "interior_chests": [
+        {
+          "hash": 889586639,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": 5.0,
+          "y": 38.5,
+          "z": 18.0
+        },
+        {
+          "hash": 2150412173,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -43.25,
+          "y": 89.36,
+          "z": 2.25
+        },
+        {
+          "hash": 2402635144,
+          "actor": "Weapon_Lsword_056",
+          "content": "Korok Leaf",
+          "x": 36.5,
+          "y": 30.65,
+          "z": 61.0
+        },
+        {
+          "hash": 3055684308,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": -39.0,
+          "y": 49.5,
+          "z": 42.0
+        },
+        {
+          "hash": 3147218512,
+          "actor": "Weapon_Sword_025",
+          "content": "Forest Dweller's Sword",
+          "x": 2.0,
+          "y": 37.0,
+          "z": 0.0
+        },
+        {
+          "hash": 3495362814,
+          "actor": "Weapon_Spear_035",
+          "content": "Thunderspear",
+          "x": 39.0,
+          "y": 38.5,
+          "z": -17.5
+        }
+      ]
+    },
+    "Dungeon060": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon060",
+      "interior_map_label": "Intérieur - Daqo Chisay Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -13.0,
+        "max_x": -13.0,
+        "min_z": -23.0,
+        "max_z": -23.0
+      },
+      "interior_chests": [
+        {
+          "hash": 32387787,
+          "actor": "Weapon_Sword_035",
+          "content": "Thunderblade",
+          "x": -13.0,
+          "y": 0.0,
+          "z": -23.0
+        }
+      ]
+    },
+    "Dungeon061": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon061",
+      "interior_map_label": "Intérieur - Shoda Sah Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -27.0,
+        "max_x": 27.0,
+        "min_z": -24.5,
+        "max_z": -24.5
+      },
+      "interior_chests": [
+        {
+          "hash": 3299660229,
+          "actor": "Obj_IceArrow_A_03",
+          "content": "Ice Arrow x5",
+          "x": 27.0,
+          "y": 13.0,
+          "z": -24.5
+        },
+        {
+          "hash": 3647020470,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -27.0,
+          "y": 13.0,
+          "z": -24.5
+        }
+      ]
+    },
+    "Dungeon062": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon062",
+      "interior_map_label": "Intérieur - Sha Gehma Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -14.5,
+        "max_x": 0.0,
+        "min_z": -7.0,
+        "max_z": 0.0
+      },
+      "interior_chests": [
+        {
+          "hash": 654507101,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 0.0,
+          "y": 4.0,
+          "z": 0.0
+        },
+        {
+          "hash": 2591211974,
+          "actor": "Weapon_Sword_024",
+          "content": "Royal Broadsword",
+          "x": -14.5,
+          "y": 12.0,
+          "z": -7.0
+        }
+      ]
+    },
+    "Dungeon063": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon063",
+      "interior_map_label": "Intérieur - Kema Zoos Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -26.0,
+        "max_x": -26.0,
+        "min_z": -11.5,
+        "max_z": -11.5
+      },
+      "interior_chests": [
+        {
+          "hash": 987962398,
+          "actor": "Weapon_Sword_030",
+          "content": "Moonlight Scimitar",
+          "x": -26.0,
+          "y": 0.0,
+          "z": -11.5
+        }
+      ]
+    },
+    "Dungeon064": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon064",
+      "interior_map_label": "Intérieur - Daqa Koh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 18.5,
+        "max_x": 18.5,
+        "min_z": 29.0,
+        "max_z": 29.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3884443295,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": 18.5,
+          "y": 19.0,
+          "z": 29.0
+        }
+      ]
+    },
+    "Dungeon065": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon065",
+      "interior_map_label": "Intérieur - Keh Namut Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -4.0,
+        "max_x": -4.0,
+        "min_z": 0.5,
+        "max_z": 0.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1490683918,
+          "actor": "Weapon_Spear_001",
+          "content": "Traveler's Spear",
+          "x": -4.0,
+          "y": 6.0,
+          "z": 0.5
+        }
+      ]
+    },
+    "Dungeon066": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon066",
+      "interior_map_label": "Intérieur - Kah Mael Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 16.0,
+        "max_x": 16.0,
+        "min_z": -23.0,
+        "max_z": -23.0
+      },
+      "interior_chests": [
+        {
+          "hash": 215071769,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 16.0,
+          "y": 12.0,
+          "z": -23.0
+        }
+      ]
+    },
+    "Dungeon067": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon067",
+      "interior_map_label": "Intérieur - Qua Raym Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -27.0,
+        "max_x": 9.5,
+        "min_z": 2.75,
+        "max_z": 23.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2541023350,
+          "actor": "Weapon_Lsword_003",
+          "content": "Knight's Claymore",
+          "x": -27.0,
+          "y": 10.5,
+          "z": 23.0
+        },
+        {
+          "hash": 3617692800,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": 9.5,
+          "y": 4.0,
+          "z": 2.75
+        }
+      ]
+    },
+    "Dungeon068": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon068",
+      "interior_map_label": "Intérieur - Ya Naga Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 17.0,
+        "max_x": 17.0,
+        "min_z": 1.0,
+        "max_z": 1.0
+      },
+      "interior_chests": [
+        {
+          "hash": 319620032,
+          "actor": "Weapon_Sword_041",
+          "content": "Eightfold Blade",
+          "x": 17.0,
+          "y": 55.0,
+          "z": 1.0
+        }
+      ]
+    },
+    "Dungeon069": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon069",
+      "interior_map_label": "Intérieur - Ishto Soh Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -29.0,
+        "max_x": 25.5,
+        "min_z": 0.0,
+        "max_z": 0.0
+      },
+      "interior_chests": [
+        {
+          "hash": 582159315,
+          "actor": "Item_Ore_D",
+          "content": "Topaz",
+          "x": 25.5,
+          "y": 0.0,
+          "z": 0.0
+        },
+        {
+          "hash": 1505890884,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": -29.0,
+          "y": 12.0,
+          "z": 0.0
+        }
+      ]
+    },
+    "Dungeon070": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon070",
+      "interior_map_label": "Intérieur - Soh Kofi Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3032109463,
+          "actor": "Weapon_Bow_035",
+          "content": "Knight's Bow",
+          "x": 0.0,
+          "y": 12.5,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon071": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon071",
+      "interior_map_label": "Intérieur - Pumaag Nitae Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3450862395,
+          "actor": "Weapon_Sword_051",
+          "content": "Boomerang",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon072": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon072",
+      "interior_map_label": "Intérieur - Dah Kaso Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 992999892,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon073": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon073",
+      "interior_map_label": "Intérieur - Katah Chuki Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 628803076,
+          "actor": "Weapon_Spear_024",
+          "content": "Royal Halberd",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon074": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon074",
+      "interior_map_label": "Intérieur - Noya Neha Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 821435950,
+          "actor": "Weapon_Shield_003",
+          "content": "Knight's Shield",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon075": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon075",
+      "interior_map_label": "Intérieur - Dah Hesho Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1908915428,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon076": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon076",
+      "interior_map_label": "Intérieur - Sasa Kai Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1835622564,
+          "actor": "Weapon_Sword_034",
+          "content": "Frostblade",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon077": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon077",
+      "interior_map_label": "Intérieur - Ke'nai Shakah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3073200707,
+          "actor": "Item_Ore_C",
+          "content": "Sapphire",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon078": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon078",
+      "interior_map_label": "Intérieur - Mijah Rokee Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 246330360,
+          "actor": "Weapon_Sword_034",
+          "content": "Frostblade",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon079": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon079",
+      "interior_map_label": "Intérieur - Namika Ozz Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2855684808,
+          "actor": "Weapon_Spear_034",
+          "content": "Frostspear",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon080": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon080",
+      "interior_map_label": "Intérieur - Shoqa Tatone Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 396797432,
+          "actor": "Weapon_Sword_024",
+          "content": "Royal Broadsword",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon081": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon081",
+      "interior_map_label": "Intérieur - Muwo Jeem Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3517324741,
+          "actor": "Weapon_Bow_035",
+          "content": "Knight's Bow",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon082": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon082",
+      "interior_map_label": "Intérieur - Chaas Qeta Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2231710576,
+          "actor": "Armor_014_Upper",
+          "content": "Climbing Gear",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon083": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon083",
+      "interior_map_label": "Intérieur - Tena Ko'sah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3776874027,
+          "actor": "Weapon_Spear_003",
+          "content": "Knight's Halberd",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon084": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon084",
+      "interior_map_label": "Intérieur - Tutsuwa Nima Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1101189494,
+          "actor": "Weapon_Spear_033",
+          "content": "Flamespear",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon085": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon085",
+      "interior_map_label": "Intérieur - Kema Kosassa Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 4153981767,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon086": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon086",
+      "interior_map_label": "Intérieur - Goma Asaagh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 289382806,
+          "actor": "Weapon_Lsword_024",
+          "content": "Royal Claymore",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon087": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon087",
+      "interior_map_label": "Intérieur - Mozo Shenno Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 56897618,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon088": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon088",
+      "interior_map_label": "Intérieur - Hia Miu Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 262007905,
+          "actor": "Item_Ore_C",
+          "content": "Sapphire",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon089": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon089",
+      "interior_map_label": "Intérieur - Saas Ko'sah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -60.0,
+        "max_z": -60.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1249779666,
+          "actor": "Weapon_Sword_033",
+          "content": "Flameblade",
+          "x": 0.0,
+          "y": 12.55,
+          "z": -60.0
+        }
+      ]
+    },
+    "Dungeon090": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon090",
+      "interior_map_label": "Intérieur - Suma Sahma Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3298610380,
+          "actor": "Weapon_Sword_030",
+          "content": "Moonlight Scimitar",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon091": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon091",
+      "interior_map_label": "Intérieur - Gorae Torr Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1597604003,
+          "actor": "Weapon_Lsword_034",
+          "content": "Great Frostblade",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon092": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon092",
+      "interior_map_label": "Intérieur - Maag No'rah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 682054227,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon093": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon093",
+      "interior_map_label": "Intérieur - Raqa Zunzo Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3003260476,
+          "actor": "Weapon_Shield_036",
+          "content": "Radiant Shield",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon094": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon094",
+      "interior_map_label": "Intérieur - Tho Kayu Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3348821939,
+          "actor": "Weapon_Bow_015",
+          "content": "Golden Bow",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon095": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon095",
+      "interior_map_label": "Intérieur - Kuhn Sidajj Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1547680732,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon096": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon096",
+      "interior_map_label": "Intérieur - Qukah Nata Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 731998508,
+          "actor": "Armor_046_Lower",
+          "content": "Rubber Tights",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon097": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon097",
+      "interior_map_label": "Intérieur - Korgu Chideh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2953061699,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon098": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon098",
+      "interior_map_label": "Intérieur - Daag Chokah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3264264754,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon099": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon099",
+      "interior_map_label": "Intérieur - Ta'loh Naeg Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -16.0,
+        "max_x": 16.0,
+        "min_z": -52.0,
+        "max_z": 24.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1648376382,
+          "actor": "Weapon_Sword_041",
+          "content": "Eightfold Blade",
+          "x": -16.0,
+          "y": 10.15,
+          "z": 24.0
+        },
+        {
+          "hash": 2577142135,
+          "actor": "Weapon_Shield_041",
+          "content": "Shield of the Mind's Eye",
+          "x": 16.0,
+          "y": 10.15,
+          "z": 24.0
+        },
+        {
+          "hash": 3163225088,
+          "actor": "Item_Ore_E",
+          "content": "Opal",
+          "x": 0.0,
+          "y": 12.5,
+          "z": -52.0
+        }
+      ]
+    },
+    "Dungeon100": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon100",
+      "interior_map_label": "Intérieur - Keeha Yoog Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2835421124,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon101": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon101",
+      "interior_map_label": "Intérieur - Dagah Keek Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 849632171,
+          "actor": "PutRupee_Silver",
+          "content": "Silver Rupee",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon102": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon102",
+      "interior_map_label": "Intérieur - Zuna Kai Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1161464155,
+          "actor": "Weapon_Sword_033",
+          "content": "Flameblade",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon103": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon103",
+      "interior_map_label": "Intérieur - Dila Maag Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3735012660,
+          "actor": "Armor_048_Upper",
+          "content": "Barbarian Armor",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon104": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon104",
+      "interior_map_label": "Intérieur - Lanno Kooh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2852596923,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon105": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon105",
+      "interior_map_label": "Intérieur - Tu Ka'loh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.5,
+        "max_z": -4.5
+      },
+      "interior_chests": [
+        {
+          "hash": 832725204,
+          "actor": "Armor_048_Head",
+          "content": "Barbarian Helm",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.5
+        }
+      ]
+    },
+    "Dungeon106": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon106",
+      "interior_map_label": "Intérieur - Maag Halan Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.5,
+        "max_z": -4.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1178382884,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.5
+        }
+      ]
+    },
+    "Dungeon107": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon107",
+      "interior_map_label": "Intérieur - Misae Suma Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3717856843,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon108": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon108",
+      "interior_map_label": "Intérieur - Ketoh Wawai Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2936889658,
+          "actor": "Item_Enemy_30",
+          "content": "Ancient Core",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon109": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon109",
+      "interior_map_label": "Intérieur - Ritaag Zumo Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 883436885,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon110": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon110",
+      "interior_map_label": "Intérieur - Korsh O'hu Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1956105793,
+          "actor": "Weapon_Spear_033",
+          "content": "Flamespear",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon111": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon111",
+      "interior_map_label": "Intérieur - Tawa Jinn Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 4013064750,
+          "actor": "Weapon_Lsword_035",
+          "content": "Great Thunderblade",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon112": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon112",
+      "interior_map_label": "Intérieur - Lakna Rokee Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2561429726,
+          "actor": "Weapon_Lsword_055",
+          "content": "Edge of Duality",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon113": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon113",
+      "interior_map_label": "Intérieur - Shae Katha Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 50928817,
+          "actor": "Weapon_Spear_035",
+          "content": "Thunderspear",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon114": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon114",
+      "interior_map_label": "Intérieur - Shai Yota Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2006054206,
+          "actor": "Weapon_Lsword_033",
+          "content": "Great Flameblade",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon115": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon115",
+      "interior_map_label": "Intérieur - Rona Kachta Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3962878289,
+          "actor": "Weapon_Lsword_033",
+          "content": "Great Flameblade",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon116": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon116",
+      "interior_map_label": "Intérieur - Qaza Tokki Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2611637153,
+          "actor": "Armor_048_Lower",
+          "content": "Barbarian Leg Wraps",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon117": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon117",
+      "interior_map_label": "Intérieur - Jitan Sa'mi Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 993230,
+          "actor": "Weapon_Spear_034",
+          "content": "Frostspear",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon118": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon118",
+      "interior_map_label": "Intérieur - To Quomo Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1922807999,
+          "actor": "Weapon_Lsword_024",
+          "content": "Royal Claymore",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon119": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon119",
+      "interior_map_label": "Intérieur - Tahno O'ah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": -4.0,
+        "max_z": -4.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3913217232,
+          "actor": "Armor_014_Lower",
+          "content": "Climbing Boots",
+          "x": 0.0,
+          "y": 6.5,
+          "z": -4.0
+        }
+      ]
+    },
+    "Dungeon120": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon120",
+      "interior_map_label": "Intérieur - Yowaka Ita Shrine",
+      "chest_count": 2,
+      "interior_bounds": {
+        "min_x": -74.0,
+        "max_x": -29.0,
+        "min_z": -8.62,
+        "max_z": 40.0
+      },
+      "interior_chests": [
+        {
+          "hash": 777293012,
+          "actor": "Weapon_Bow_029",
+          "content": "Phrenic Bow",
+          "x": -74.0,
+          "y": 0.0,
+          "z": 40.0
+        },
+        {
+          "hash": 1562844085,
+          "actor": "Obj_BombArrow_A_02",
+          "content": "Bomb Arrow x5",
+          "x": -29.0,
+          "y": 0.15,
+          "z": -8.62
+        }
+      ]
+    },
+    "Dungeon121": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon121",
+      "interior_map_label": "Intérieur - Kihiro Moh Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 44.0,
+        "max_x": 44.0,
+        "min_z": 10.0,
+        "max_z": 10.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1235062787,
+          "actor": "Weapon_Spear_035",
+          "content": "Thunderspear",
+          "x": 44.0,
+          "y": 4.15,
+          "z": 10.0
+        }
+      ]
+    },
+    "Dungeon122": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon122",
+      "interior_map_label": "Intérieur - Etsu Korima Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -42.0,
+        "max_x": -42.0,
+        "min_z": -21.5,
+        "max_z": -21.5
+      },
+      "interior_chests": [
+        {
+          "hash": 4075460597,
+          "actor": "PutRupee_Gold",
+          "content": "Gold Rupee",
+          "x": -42.0,
+          "y": 13.0,
+          "z": -21.5
+        }
+      ]
+    },
+    "Dungeon123": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon123",
+      "interior_map_label": "Intérieur - Rohta Chigah Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -61.5,
+        "max_x": -61.5,
+        "min_z": 59.0,
+        "max_z": 59.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2785472328,
+          "actor": "Weapon_Shield_023",
+          "content": "Forest Dweller's Shield",
+          "x": -61.5,
+          "y": 38.0,
+          "z": 59.0
+        }
+      ]
+    },
+    "Dungeon124": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon124",
+      "interior_map_label": "Intérieur - Sato Koda Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 20.5,
+        "max_x": 20.5,
+        "min_z": -27.0,
+        "max_z": -27.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1836215605,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 20.5,
+          "y": 19.0,
+          "z": -27.0
+        }
+      ]
+    },
+    "Dungeon125": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon125",
+      "interior_map_label": "Intérieur - Kee Dafunia Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": 3.5,
+        "max_z": 3.5
+      },
+      "interior_chests": [
+        {
+          "hash": 3263521738,
+          "actor": "Weapon_Sword_034",
+          "content": "Frostblade",
+          "x": 0.0,
+          "y": -33.0,
+          "z": 3.5
+        }
+      ]
+    },
+    "Dungeon126": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon126",
+      "interior_map_label": "Intérieur - Mah Eliya Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 73.5,
+        "max_x": 73.5,
+        "min_z": -48.5,
+        "max_z": -48.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1344934344,
+          "actor": "Weapon_Shield_022",
+          "content": "Royal Shield",
+          "x": 73.5,
+          "y": 35.1,
+          "z": -48.5
+        }
+      ]
+    },
+    "Dungeon127": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon127",
+      "interior_map_label": "Intérieur - Noe Rajee Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -5.5,
+        "max_x": -5.5,
+        "min_z": -33.5,
+        "max_z": -33.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1095169988,
+          "actor": "Weapon_Shield_041",
+          "content": "Shield of the Mind's Eye",
+          "x": -5.5,
+          "y": 44.0,
+          "z": -33.5
+        }
+      ]
+    },
+    "Dungeon128": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon128",
+      "interior_map_label": "Intérieur - Kiah Toza Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 78.0,
+        "max_x": 78.0,
+        "min_z": -18.0,
+        "max_z": -18.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1082925680,
+          "actor": "Weapon_Bow_017",
+          "content": "Falcon Bow",
+          "x": 78.0,
+          "y": 44.0,
+          "z": -18.0
+        }
+      ]
+    },
+    "Dungeon129": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon129",
+      "interior_map_label": "Intérieur - Shira Gomar Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -56.0,
+        "max_x": -56.0,
+        "min_z": -23.0,
+        "max_z": -23.0
+      },
+      "interior_chests": [
+        {
+          "hash": 3187836279,
+          "actor": "Obj_BombArrow_A_03",
+          "content": "Bomb Arrow x10",
+          "x": -56.0,
+          "y": 78.0,
+          "z": -23.0
+        }
+      ]
+    },
+    "Dungeon130": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon130",
+      "interior_map_label": "Intérieur - Kamia Omuna Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": -78.5,
+        "max_x": -78.5,
+        "min_z": -28.0,
+        "max_z": -28.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2937439544,
+          "actor": "Item_Ore_A",
+          "content": "Diamond",
+          "x": -78.5,
+          "y": 46.0,
+          "z": -28.0
+        }
+      ]
+    },
+    "Dungeon131": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon131",
+      "interior_map_label": "Intérieur - Rinu Honika Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 55.0,
+        "max_x": 55.0,
+        "min_z": 6.0,
+        "max_z": 6.0
+      },
+      "interior_chests": [
+        {
+          "hash": 4057292846,
+          "actor": "Weapon_Lsword_037",
+          "content": "Stone Smasher",
+          "x": 55.0,
+          "y": -83.0,
+          "z": 6.0
+        }
+      ]
+    },
+    "Dungeon132": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon132",
+      "interior_map_label": "Intérieur - Sharo Lun Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 0.0,
+        "max_x": 0.0,
+        "min_z": 8.0,
+        "max_z": 8.0
+      },
+      "interior_chests": [
+        {
+          "hash": 1630334883,
+          "actor": "Weapon_Lsword_033",
+          "content": "Great Flameblade",
+          "x": 0.0,
+          "y": 16.0,
+          "z": 8.0
+        }
+      ]
+    },
+    "Dungeon133": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon133",
+      "interior_map_label": "Intérieur - Keive Tala Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 150.0,
+        "max_x": 150.0,
+        "min_z": 56.5,
+        "max_z": 56.5
+      },
+      "interior_chests": [
+        {
+          "hash": 1178751663,
+          "actor": "Weapon_Shield_036",
+          "content": "Radiant Shield",
+          "x": 150.0,
+          "y": 6.0,
+          "z": 56.5
+        }
+      ]
+    },
+    "Dungeon134": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon134",
+      "interior_map_label": "Intérieur - Takama Shiri Shrine",
+      "chest_count": 1,
+      "interior_bounds": {
+        "min_x": 204.5,
+        "max_x": 204.5,
+        "min_z": -4.5,
+        "max_z": -4.5
+      },
+      "interior_chests": [
+        {
+          "hash": 2056438385,
+          "actor": "Weapon_Bow_036",
+          "content": "Royal Bow",
+          "x": 204.5,
+          "y": -38.5,
+          "z": -4.5
+        }
+      ]
+    },
+    "Dungeon135": {
+      "map_context": "shrine_interior",
+      "interior_map": "Dungeon135",
+      "interior_map_label": "Intérieur - Ruvo Korbah Shrine",
+      "chest_count": 3,
+      "interior_bounds": {
+        "min_x": -24.0,
+        "max_x": 3.0,
+        "min_z": -60.0,
+        "max_z": 10.0
+      },
+      "interior_chests": [
+        {
+          "hash": 2691561845,
+          "actor": "KeySmall",
+          "content": "Small Key",
+          "x": -24.0,
+          "y": -7.85,
+          "z": 10.0
+        },
+        {
+          "hash": 3155326400,
+          "actor": "Obj_BombArrow_A_03",
+          "content": "Bomb Arrow x10",
+          "x": 0.0,
+          "y": 12.5,
+          "z": -60.0
+        },
+        {
+          "hash": 3694474462,
+          "actor": "Item_Enemy_31",
+          "content": "Giant Ancient Core",
+          "x": 3.0,
+          "y": -13.5,
+          "z": -28.0
+        }
+      ]
+    }
+  },
+  "trial_chests": {
+    "452454445": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 452454445,
+        "actor": "Obj_FireArrow_A_03",
+        "content": "Fire Arrow x5",
+        "x": -4168.11,
+        "y": 313.87,
+        "z": -3893.8
+      }
+    },
+    "469590919": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 469590919,
+        "actor": "Obj_ElectricArrow_A_02",
+        "content": "Shock Arrow x10",
+        "x": -4530.14,
+        "y": 302.41,
+        "z": -3571.14
+      }
+    },
+    "571657376": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 571657376,
+        "actor": "Weapon_Sword_051",
+        "content": "Boomerang",
+        "x": -4131.95,
+        "y": 313.87,
+        "z": -3806.33
+      }
+    },
+    "1683482510": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 1683482510,
+        "actor": "Weapon_Sword_002",
+        "content": "Soldier's Broadsword",
+        "x": -4467.56,
+        "y": 345.29,
+        "z": -3345.0
+      }
+    },
+    "1979524167": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 1979524167,
+        "actor": "Weapon_Bow_002",
+        "content": "Soldier's Bow",
+        "x": -4495.48,
+        "y": 341.25,
+        "z": -3384.09
+      }
+    },
+    "3179964467": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 3179964467,
+        "actor": "Obj_FireArrow_A_02",
+        "content": "Fire Arrow x10",
+        "x": -4479.08,
+        "y": 314.0,
+        "z": -3611.02
+      }
+    },
+    "3423461010": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-1",
+      "interior_map_label": "Épreuves de l'Épée - section A-1",
+      "interior_bounds": {
+        "min_x": -4530.14,
+        "max_x": -4131.95,
+        "min_z": -3893.8,
+        "max_z": -3323.0
+      },
+      "interior_position": {
+        "hash": 3423461010,
+        "actor": "Weapon_Spear_032",
+        "content": "Feathered Spear",
+        "x": -4224.0,
+        "y": 342.4,
+        "z": -3323.0
+      }
+    },
+    "174323478": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 174323478,
+        "actor": "Obj_AncientArrow_C_01",
+        "content": "Ancient Arrow x3",
+        "x": -4791.0,
+        "y": 300.22,
+        "z": -2550.0
+      }
+    },
+    "236853965": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 236853965,
+        "actor": "Weapon_Shield_003",
+        "content": "Knight's Shield",
+        "x": -4530.91,
+        "y": 299.83,
+        "z": -1988.29
+      }
+    },
+    "456421641": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 456421641,
+        "actor": "Weapon_Sword_024",
+        "content": "Royal Broadsword",
+        "x": -4791.0,
+        "y": 300.01,
+        "z": -2000.0
+      }
+    },
+    "1241851576": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 1241851576,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": -4791.0,
+        "y": 300.0,
+        "z": -2546.0
+      }
+    },
+    "1274667194": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 1274667194,
+        "actor": "Weapon_Bow_036",
+        "content": "Royal Bow",
+        "x": -4791.0,
+        "y": 300.0,
+        "z": -1992.0
+      }
+    },
+    "1482414257": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 1482414257,
+        "actor": "Armor_011_Lower",
+        "content": "Flamebreaker Boots",
+        "x": -4791.0,
+        "y": 300.0,
+        "z": -2542.0
+      }
+    },
+    "1521240634": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 1521240634,
+        "actor": "Obj_IceArrow_A_03",
+        "content": "Ice Arrow x5",
+        "x": -4535.67,
+        "y": 300.5,
+        "z": -2662.23
+      }
+    },
+    "2153587184": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 2153587184,
+        "actor": "Weapon_Spear_025",
+        "content": "Forest Dweller's Spear",
+        "x": -4223.4,
+        "y": 300.26,
+        "z": -2929.17
+      }
+    },
+    "2733554147": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 2733554147,
+        "actor": "Weapon_Shield_022",
+        "content": "Royal Shield",
+        "x": -4791.0,
+        "y": 300.0,
+        "z": -1996.0
+      }
+    },
+    "3182591387": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/A-2",
+      "interior_map_label": "Épreuves de l'Épée - section A-2",
+      "interior_bounds": {
+        "min_x": -4791.0,
+        "max_x": -4223.4,
+        "min_z": -2929.17,
+        "max_z": -1988.29
+      },
+      "interior_position": {
+        "hash": 3182591387,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": -4463.84,
+        "y": 301.56,
+        "z": -2255.44
+      }
+    },
+    "938107": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 938107,
+        "actor": "Obj_ArrowBundle_A_02",
+        "content": "Arrow x10",
+        "x": -3382.03,
+        "y": 303.74,
+        "z": -3567.11
+      }
+    },
+    "223901593": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 223901593,
+        "actor": "Weapon_Bow_040",
+        "content": "Duplex Bow",
+        "x": -3616.0,
+        "y": 302.0,
+        "z": -3115.5
+      }
+    },
+    "550209937": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 550209937,
+        "actor": "Weapon_Shield_041",
+        "content": "Shield of the Mind's Eye",
+        "x": -3091.0,
+        "y": 300.1,
+        "z": -3742.18
+      }
+    },
+    "813105602": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 813105602,
+        "actor": "Weapon_Sword_031",
+        "content": "Feathered Edge",
+        "x": -3768.5,
+        "y": 342.25,
+        "z": -3383.5
+      }
+    },
+    "1125891243": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 1125891243,
+        "actor": "Weapon_Sword_041",
+        "content": "Eightfold Blade",
+        "x": -3091.0,
+        "y": 300.2,
+        "z": -3745.73
+      }
+    },
+    "1841209160": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 1841209160,
+        "actor": "Weapon_Spear_037",
+        "content": "Serpentine Spear",
+        "x": -3091.0,
+        "y": 300.23,
+        "z": -3749.46
+      }
+    },
+    "2434597244": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 2434597244,
+        "actor": "Weapon_Bow_002",
+        "content": "Soldier's Bow",
+        "x": -3889.34,
+        "y": 304.02,
+        "z": -3597.19
+      }
+    },
+    "2505276374": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 2505276374,
+        "actor": "Weapon_Sword_003",
+        "content": "Knight's Broadsword",
+        "x": -3091.0,
+        "y": 300.17,
+        "z": -3198.66
+      }
+    },
+    "2715337580": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 2715337580,
+        "actor": "Weapon_Lsword_041",
+        "content": "Eightfold Longblade",
+        "x": -3838.5,
+        "y": 300.0,
+        "z": -3125.0
+      }
+    },
+    "3345699953": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 3345699953,
+        "actor": "Weapon_Bow_017",
+        "content": "Falcon Bow",
+        "x": -3091.0,
+        "y": 300.13,
+        "z": -3192.72
+      }
+    },
+    "3429370975": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 3429370975,
+        "actor": "Weapon_Shield_003",
+        "content": "Knight's Shield",
+        "x": -3367.34,
+        "y": 342.5,
+        "z": -3317.44
+      }
+    },
+    "3509277471": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 3509277471,
+        "actor": "Armor_001_Lower",
+        "content": "Hylian Trousers",
+        "x": -3091.03,
+        "y": 300.19,
+        "z": -3195.62
+      }
+    },
+    "3631437129": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 3631437129,
+        "actor": "Obj_ArrowBundle_A_02",
+        "content": "Arrow x10",
+        "x": -3631.47,
+        "y": 302.04,
+        "z": -3623.16
+      }
+    },
+    "3811317078": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 3811317078,
+        "actor": "Weapon_Bow_014",
+        "content": "Silver Bow",
+        "x": -3381.06,
+        "y": 305.02,
+        "z": -3613.07
+      }
+    },
+    "4102891730": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 4102891730,
+        "actor": "Weapon_Bow_002",
+        "content": "Soldier's Bow",
+        "x": -3430.62,
+        "y": 341.25,
+        "z": -3316.2
+      }
+    },
+    "4112942550": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-1",
+      "interior_map_label": "Épreuves de l'Épée - section B-1",
+      "interior_bounds": {
+        "min_x": -3889.34,
+        "max_x": -3091.0,
+        "min_z": -3749.46,
+        "max_z": -3100.5
+      },
+      "interior_position": {
+        "hash": 4112942550,
+        "actor": "Obj_ArrowBundle_A_02",
+        "content": "Arrow x10",
+        "x": -3381.0,
+        "y": 304.0,
+        "z": -3100.5
+      }
+    },
+    "245520230": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 245520230,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": -3388.85,
+        "y": 305.93,
+        "z": -2016.77
+      }
+    },
+    "374517867": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 374517867,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": -3699.86,
+        "y": 333.64,
+        "z": -1999.68
+      }
+    },
+    "565925996": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 565925996,
+        "actor": "Weapon_Shield_003",
+        "content": "Knight's Shield",
+        "x": -3841.63,
+        "y": 309.98,
+        "z": -2696.97
+      }
+    },
+    "1291205972": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 1291205972,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": -3857.24,
+        "y": 309.81,
+        "z": -2681.54
+      }
+    },
+    "1362194037": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 1362194037,
+        "actor": "Weapon_Lsword_037",
+        "content": "Stone Smasher",
+        "x": -3091.0,
+        "y": 300.0,
+        "z": -2296.0
+      }
+    },
+    "2107255720": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 2107255720,
+        "actor": "Obj_AncientArrow_C_01",
+        "content": "Ancient Arrow x3",
+        "x": -3595.34,
+        "y": 304.89,
+        "z": -2447.59
+      }
+    },
+    "2179207388": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 2179207388,
+        "actor": "Weapon_Bow_036",
+        "content": "Royal Bow",
+        "x": -3099.63,
+        "y": 299.9,
+        "z": -1981.28
+      }
+    },
+    "2228603863": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 2228603863,
+        "actor": "Weapon_Shield_033",
+        "content": "Royal Guard's Shield",
+        "x": -3091.0,
+        "y": 300.0,
+        "z": -2292.0
+      }
+    },
+    "2509086549": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 2509086549,
+        "actor": "Armor_001_Upper",
+        "content": "Hylian Tunic",
+        "x": -3091.01,
+        "y": 300.0,
+        "z": -2695.48
+      }
+    },
+    "3176382602": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 3176382602,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": -3322.17,
+        "y": 300.3,
+        "z": -2238.19
+      }
+    },
+    "3211970552": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 3211970552,
+        "actor": "Weapon_Spear_025",
+        "content": "Forest Dweller's Spear",
+        "x": -3091.0,
+        "y": 300.0,
+        "z": -2698.55
+      }
+    },
+    "3605914736": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 3605914736,
+        "actor": "Armor_001_Upper",
+        "content": "Hylian Tunic",
+        "x": -3091.0,
+        "y": 300.22,
+        "z": -2300.0
+      }
+    },
+    "3770784754": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 3770784754,
+        "actor": "Weapon_Shield_022",
+        "content": "Royal Shield",
+        "x": -3115.54,
+        "y": 311.7,
+        "z": -1984.96
+      }
+    },
+    "3982205396": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 3982205396,
+        "actor": "Obj_AncientArrow_C_01",
+        "content": "Ancient Arrow x3",
+        "x": -3571.63,
+        "y": 300.45,
+        "z": -2255.78
+      }
+    },
+    "4245255027": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 4245255027,
+        "actor": "Weapon_Sword_025",
+        "content": "Forest Dweller's Sword",
+        "x": -3091.0,
+        "y": 300.0,
+        "z": -2692.72
+      }
+    },
+    "4293408431": {
+      "map_context": "trial_interior",
+      "interior_map": "AocField/B-2",
+      "interior_map_label": "Épreuves de l'Épée - section B-2",
+      "interior_bounds": {
+        "min_x": -3857.24,
+        "max_x": -3091.0,
+        "min_z": -2706.52,
+        "max_z": -1981.28
+      },
+      "interior_position": {
+        "hash": 4293408431,
+        "actor": "Weapon_Sword_047",
+        "content": "Royal Guard's Sword",
+        "x": -3634.98,
+        "y": 299.55,
+        "z": -2706.52
+      }
+    }
+  },
+  "dungeon_chests": {
+    "543487524": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 543487524,
+        "actor": "Item_Enemy_26",
+        "content": "Ancient Gear",
+        "x": 0.0,
+        "y": 101.1,
+        "z": -62.5
+      }
+    },
+    "583928903": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 583928903,
+        "actor": "Item_Ore_D",
+        "content": "Topaz",
+        "x": 0.0,
+        "y": 164.5,
+        "z": -12.5
+      }
+    },
+    "890156340": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 890156340,
+        "actor": "Weapon_Shield_003",
+        "content": "Knight's Shield",
+        "x": -0.0,
+        "y": 102.75,
+        "z": 123.5
+      }
+    },
+    "1107920290": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 1107920290,
+        "actor": "Item_Enemy_28",
+        "content": "Ancient Spring",
+        "x": -28.0,
+        "y": 100.0,
+        "z": 25.0
+      }
+    },
+    "1439251665": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 1439251665,
+        "actor": "Item_Enemy_27",
+        "content": "Ancient Screw",
+        "x": 11.0,
+        "y": 147.95,
+        "z": -25.0
+      }
+    },
+    "2024040400": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 2024040400,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": 2.0,
+        "y": 112.0,
+        "z": 0.0
+      }
+    },
+    "2502766660": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 2502766660,
+        "actor": "Item_Enemy_29",
+        "content": "Ancient Shaft",
+        "x": -2.0,
+        "y": 112.0,
+        "z": 0.0
+      }
+    },
+    "3029802873": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 3029802873,
+        "actor": "Item_Enemy_30",
+        "content": "Ancient Core",
+        "x": 0.0,
+        "y": 79.98,
+        "z": -76.0
+      }
+    },
+    "3535181875": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsElectric",
+      "interior_map_label": "Créature divine Vah'Naboris",
+      "interior_bounds": {
+        "min_x": -28.0,
+        "max_x": 31.5,
+        "min_z": -76.0,
+        "max_z": 123.5
+      },
+      "interior_position": {
+        "hash": 3535181875,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": 31.5,
+        "y": 100.0,
+        "z": -25.0
+      }
+    },
+    "80984099": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 80984099,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": -2.0,
+        "y": 12.0,
+        "z": -5.0
+      }
+    },
+    "142838264": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 142838264,
+        "actor": "Obj_ArrowBundle_A_01",
+        "content": "Arrow x5",
+        "x": 15.26,
+        "y": 0.0,
+        "z": -17.57
+      }
+    },
+    "421030062": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 421030062,
+        "actor": "Weapon_Sword_043",
+        "content": "Torch",
+        "x": 5.0,
+        "y": 0.0,
+        "z": 3.5
+      }
+    },
+    "551066994": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 551066994,
+        "actor": "Weapon_Sword_006",
+        "content": "Dragonbone Boko Club",
+        "x": -6.4,
+        "y": 0.0,
+        "z": 20.01
+      }
+    },
+    "572020553": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 572020553,
+        "actor": "Item_Enemy_30",
+        "content": "Ancient Core",
+        "x": 0.64,
+        "y": 60.77,
+        "z": 0.0
+      }
+    },
+    "654620011": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 654620011,
+        "actor": "Item_Enemy_27",
+        "content": "Ancient Screw",
+        "x": 0.0,
+        "y": 15.0,
+        "z": 127.5
+      }
+    },
+    "935051534": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 935051534,
+        "actor": "Obj_ArrowBundle_A_01",
+        "content": "Arrow x5",
+        "x": 15.19,
+        "y": 0.0,
+        "z": -21.83
+      }
+    },
+    "1739313242": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 1739313242,
+        "actor": "Obj_IceArrow_A_03",
+        "content": "Ice Arrow x5",
+        "x": -0.52,
+        "y": 18.45,
+        "z": 0.77
+      }
+    },
+    "2574653140": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 2574653140,
+        "actor": "Item_Enemy_26",
+        "content": "Ancient Gear",
+        "x": 26.5,
+        "y": 14.8,
+        "z": 25.0
+      }
+    },
+    "3877021021": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 3877021021,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": -6.0,
+        "y": 0.0,
+        "z": -41.0
+      }
+    },
+    "4082461528": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsFire",
+      "interior_map_label": "Créature divine Vah'Rudania",
+      "interior_bounds": {
+        "min_x": -24.5,
+        "max_x": 26.5,
+        "min_z": -41.0,
+        "max_z": 127.5
+      },
+      "interior_position": {
+        "hash": 4082461528,
+        "actor": "PutRupee_Silver",
+        "content": "Silver Rupee",
+        "x": -24.5,
+        "y": -10.5,
+        "z": -22.0
+      }
+    },
+    "456917981": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 456917981,
+        "actor": "Weapon_Spear_003",
+        "content": "Knight's Halberd",
+        "x": 0.0,
+        "y": 61.2,
+        "z": 52.5
+      }
+    },
+    "703988891": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 703988891,
+        "actor": "Item_Enemy_28",
+        "content": "Ancient Spring",
+        "x": 10.5,
+        "y": 6.0,
+        "z": 34.5
+      }
+    },
+    "1261793201": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 1261793201,
+        "actor": "Item_Enemy_29",
+        "content": "Ancient Shaft",
+        "x": 0.0,
+        "y": 7.45,
+        "z": 187.5
+      }
+    },
+    "3527163403": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 3527163403,
+        "actor": "PutRupee_Silver",
+        "content": "Silver Rupee",
+        "x": -19.5,
+        "y": 35.8,
+        "z": -48.0
+      }
+    },
+    "3777321501": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 3777321501,
+        "actor": "Obj_IceArrow_A_02",
+        "content": "Ice Arrow x10",
+        "x": -31.5,
+        "y": 110.15,
+        "z": 30.01
+      }
+    },
+    "3875439170": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 3875439170,
+        "actor": "Obj_FireArrow_A_02",
+        "content": "Fire Arrow x10",
+        "x": 3.0,
+        "y": 55.0,
+        "z": 18.0
+      }
+    },
+    "4271575548": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWater",
+      "interior_map_label": "Créature divine Vah'Ruta",
+      "interior_bounds": {
+        "min_x": -31.5,
+        "max_x": 10.5,
+        "min_z": -48.0,
+        "max_z": 187.5
+      },
+      "interior_position": {
+        "hash": 4271575548,
+        "actor": "Item_Enemy_30",
+        "content": "Ancient Core",
+        "x": -0.25,
+        "y": 40.69,
+        "z": 2.35
+      }
+    },
+    "388540865": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 388540865,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": 24.4,
+        "y": -10.0,
+        "z": 44.5
+      }
+    },
+    "404901059": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 404901059,
+        "actor": "Item_Ore_C",
+        "content": "Sapphire",
+        "x": 0.0,
+        "y": 4.0,
+        "z": -137.5
+      }
+    },
+    "1346994567": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 1346994567,
+        "actor": "Obj_IceArrow_A_02",
+        "content": "Ice Arrow x10",
+        "x": -99.58,
+        "y": 13.99,
+        "z": 29.88
+      }
+    },
+    "1407963741": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 1407963741,
+        "actor": "Item_Enemy_31",
+        "content": "Giant Ancient Core",
+        "x": 0.0,
+        "y": 7.53,
+        "z": 158.0
+      }
+    },
+    "1515121245": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 1515121245,
+        "actor": "Item_Enemy_29",
+        "content": "Ancient Shaft",
+        "x": 0.1,
+        "y": -20.93,
+        "z": 34.83
+      }
+    },
+    "1716309953": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 1716309953,
+        "actor": "Weapon_Lsword_003",
+        "content": "Knight's Claymore",
+        "x": 77.5,
+        "y": 8.3,
+        "z": 21.0
+      }
+    },
+    "3937043794": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 3937043794,
+        "actor": "Item_Enemy_30",
+        "content": "Ancient Core",
+        "x": 14.75,
+        "y": 9.1,
+        "z": 18.5
+      }
+    },
+    "3992374850": {
+      "map_context": "dungeon_interior",
+      "interior_map": "RemainsWind",
+      "interior_map_label": "Créature divine Vah'Medoh",
+      "interior_bounds": {
+        "min_x": -99.58,
+        "max_x": 77.5,
+        "min_z": -137.5,
+        "max_z": 158.0
+      },
+      "interior_position": {
+        "hash": 3992374850,
+        "actor": "Weapon_Bow_035",
+        "content": "Knight's Bow",
+        "x": -34.5,
+        "y": 5.0,
+        "z": 18.0
+      }
+    },
+    "1443111722": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 1443111722,
+        "actor": "Weapon_Shield_026",
+        "content": "Gerudo Shield",
+        "x": 0.0,
+        "y": 17.86,
+        "z": 62.5
+      }
+    },
+    "1773704879": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 1773704879,
+        "actor": "Item_Ore_A",
+        "content": "Diamond",
+        "x": 31.0,
+        "y": 37.75,
+        "z": -43.35
+      }
+    },
+    "2364301542": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 2364301542,
+        "actor": "Weapon_Bow_016",
+        "content": "Swallow Bow",
+        "x": 104.0,
+        "y": 10.74,
+        "z": -25.5
+      }
+    },
+    "2495386238": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 2495386238,
+        "actor": "Weapon_Spear_027",
+        "content": "Zora Spear",
+        "x": -139.0,
+        "y": 8.22,
+        "z": -25.5
+      }
+    },
+    "3675721223": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 3675721223,
+        "actor": "Obj_BombArrow_A_02",
+        "content": "Bomb Arrow x5",
+        "x": 23.82,
+        "y": 21.33,
+        "z": -46.68
+      }
+    },
+    "3768423375": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 3768423375,
+        "actor": "Weapon_Sword_029",
+        "content": "Gerudo Scimitar",
+        "x": -32.8,
+        "y": 15.62,
+        "z": 31.6
+      }
+    },
+    "3964443978": {
+      "map_context": "dungeon_interior",
+      "interior_map": "FinalTrial",
+      "interior_map_label": "Épreuve finale de l'Ode aux Prodiges",
+      "interior_bounds": {
+        "min_x": -139.0,
+        "max_x": 104.0,
+        "min_z": -46.68,
+        "max_z": 62.5
+      },
+      "interior_position": {
+        "hash": 3964443978,
+        "actor": "Weapon_Lsword_036",
+        "content": "Cobble Crusher",
+        "x": 45.5,
+        "y": 16.9,
+        "z": 43.4
+      }
+    }
+  }
+}

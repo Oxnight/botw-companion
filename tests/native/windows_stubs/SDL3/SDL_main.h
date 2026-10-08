@@ -1,0 +1,4 @@
+#ifndef TEST_WINDOWS_SDL_MAIN_H
+#define TEST_WINDOWS_SDL_MAIN_H
+
+#endif

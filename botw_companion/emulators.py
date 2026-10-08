@@ -1,0 +1,85 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+import platform
+from typing import Callable, Mapping
+
+from .platforms import cemu_save_roots, ryujinx_save_roots
+from .platforms import cemu_is_running, ryujinx_is_running
+
+
+@dataclass(frozen=True)
+class EmulatorBackend:
+    id: str
+    label: str
+
+
+RYUJINX = EmulatorBackend("ryujinx", "Ryujinx")
+CEMU = EmulatorBackend("cemu", "Cemu")
+
+
+def emulator_save_roots(emulator: str | None = None, *, system: str | None = None,
+                        environ: Mapping[str, str] | None = None,
+                        home: Path | None = None,
+                        which: Callable[[str], str | None] | None = None) -> list[tuple[EmulatorBackend, Path]]:
+    """Return known save roots in deterministic order.
+
+    When no emulator is forced, inspect both backends. The final save choice is
+    based on the internal BOTW timestamp, not this order.
+    """
+    kwargs = {"system": system, "environ": environ, "home": home}
+    if which is not None:
+        kwargs["which"] = which
+    result: list[tuple[EmulatorBackend, Path]] = []
+    requested = emulator.casefold() if emulator else None
+    if requested in (None, RYUJINX.id):
+        result.extend((RYUJINX, path) for path in ryujinx_save_roots(**kwargs))
+    if requested in (None, CEMU.id):
+        result.extend((CEMU, path) for path in cemu_save_roots(**kwargs))
+    return result
+
+
+def running_emulators(*, system: str | None = None,
+                      process_names: Callable[[], set[str]] | None = None,
+                      environ: Mapping[str, str] | None = None) -> list[EmulatorBackend]:
+    result: list[EmulatorBackend] = []
+    if ryujinx_is_running(system=system, process_names=process_names, environ=environ):
+        result.append(RYUJINX)
+    if cemu_is_running(system=system, process_names=process_names, environ=environ):
+        result.append(CEMU)
+    return result
+
+
+def any_supported_emulator_running(*, system: str | None = None,
+                                   process_names: Callable[[], set[str]] | None = None,
+                                   environ: Mapping[str, str] | None = None) -> bool:
+    return bool(running_emulators(system=system, process_names=process_names, environ=environ))
+
+
+def reliable_running_emulators(*, system: str | None = None) -> list[EmulatorBackend]:
+    """Keep detection failures distinct from absence for automatic shutdown."""
+    resolved = system or platform.system()
+    if resolved == "Darwin":
+        from .platforms.macos import process_names
+        names = process_names(strict=True)
+    elif resolved == "Windows":
+        from .platforms.windows import running_process_names
+        names = running_process_names(strict=True)
+    else:
+        return running_emulators(system=resolved)
+    # A single snapshot must serve both supported emulator checks.
+    return running_emulators(system=resolved, process_names=lambda: names)
+
+
+def reliable_emulator_running(*, system: str | None = None) -> bool:
+    return bool(reliable_running_emulators(system=system))
+
+
+def emulator_for_path(path: Path) -> EmulatorBackend | None:
+    parts = [part.casefold() for part in Path(path).parts]
+    if "ryujinx" in parts or "bis" in parts and "save" in parts:
+        return RYUJINX
+    if "cemu" in parts or "mlc01" in parts:
+        return CEMU
+    return None

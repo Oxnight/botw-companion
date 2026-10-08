@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "botw-companion"
+dynamic = ["version"]
+description = "Local Breath of the Wild save analysis and completion tracking for Ryujinx and Cemu."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "BOTW Companion contributors"}]
+dependencies = ["certifi==2025.8.3"]
+
+[project.scripts]
+botw-companion = "botw_companion.cli:main"
+botw-companion-windows = "botw_companion.windows_launcher:main"
+
+[tool.setuptools.package-data]
+botw_companion = [
+    "VERSION",
+    "macos_update_relay.sh",
+    "data/*.json",
+    "web/*.html",
+    "web/*.css",
+    "web/*.js",
+    "web/*.webp",
+    "web/map-tiles/*.json",
+    "web/map-tiles/*.txt",
+    "web/map-tiles/*/*.webp",
+    "dsu/*.md",
+    "dsu/macos/*",
+    "dsu/windows/*.exe",
+    "dsu/windows/*.dll",
+    "dsu/windows/*.json",
+    "dsu/windows/*.txt",
+]
+
+[tool.setuptools.dynamic]
+version = {file = ["botw_companion/VERSION"]}
+
+[tool.setuptools.packages.find]
+include = ["botw_companion*"]
+exclude = ["tests*", "tools*"]

@@ -1,0 +1,48 @@
+{
+  "manual_tracking.json": {
+    "schema_version": 2,
+    "revision": 7,
+    "updated_at": "2026-09-06T12:00:00+00:00",
+    "entries": {
+      "korogus:reference": {
+        "completed": true,
+        "note": "Conservé depuis la version précédente",
+        "updated_at": "2026-09-06T12:00:00+00:00"
+      }
+    }
+  },
+  "route_sessions.json": {
+    "schema_version": 3,
+    "revision": 4,
+    "updated_at": "2026-09-06T12:00:00+00:00",
+    "active_session_id": "session-reference",
+    "sessions": {
+      "session-reference": {
+        "id": "session-reference",
+        "name": "Route conservée",
+        "start": null,
+        "strategy": "region",
+        "created_at": "2026-09-06T12:00:00+00:00",
+        "updated_at": "2026-09-06T12:00:00+00:00",
+        "entries": [
+          {
+            "tracking_id": "sanctuaires:reference",
+            "locked": true,
+            "snapshot": {"name": "Sanctuaire conservé", "x": 12.5, "z": -8.25}
+          }
+        ]
+      }
+    }
+  },
+  "preferences.json": {
+    "schema_version": 1,
+    "revision": 3,
+    "updated_at": "2026-09-06T12:00:00+00:00",
+    "values": {"map_content_mode": "dlc", "sync_interval": 15, "dsu_mode": "integrated"}
+  },
+  "export-reference.json": {
+    "application": "BOTW Companion",
+    "schema_version": 2,
+    "origine": "version précédente"
+  }
+}

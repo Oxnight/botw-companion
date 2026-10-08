@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+coverage.xml
+htmlcov/
+
+# Python environments
+.venv/
+venv/
+env/
+
+# Node dependencies and browser-test output
+node_modules/
+playwright-report/
+
+# PyCharm
+.idea/
+*.iml
+
+# Build and distribution output
+build/
+dist/
+test-results/
+*.egg-info/
+deliverables/
+*.zip
+*.dmg
+*.msi
+*.rtf
+*.rtfd/
+windows/native-dsu/
+botw_companion/dsu/windows/*.exe
+botw_companion/dsu/windows/*.dll
+botw_companion/dsu/windows/manifest.json
+botw_companion/dsu/windows/SDL3-LICENSE.txt
+botw_companion/dsu/macos/JoyConDSU
+botw_companion/dsu/macos/libSDL3.0.dylib
+botw_companion/dsu/macos/manifest.json
+botw_companion/dsu/macos/SDL3-LICENSE.txt
+
+# BOTW and Ryujinx saves
+*.sav
+caption.jpg
+last_save/
+ryujinx-save/
+saves/
+
+# Personal BOTW Companion data
+manual_tracking.json
+manual_tracking.backup.json
+route_sessions.json
+route_sessions.backup.json
+progression.json
+
+# Environment files and possible secrets
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+._*
+__MACOSX/
+
+# Temporary files
+*.tmp
+*.log

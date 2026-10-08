@@ -1,0 +1,153 @@
+import struct
+import unittest
+from pathlib import Path
+
+from botw_companion.versioning import CURRENT_VERSION
+
+
+class MacOSBundleTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.macos = cls.root / "macos"
+
+    def test_pyinstaller_build_is_windowed_arm64_and_self_contained(self):
+        spec = (self.macos / "BOTW Companion.spec").read_text(encoding="utf-8")
+        entry = (self.root / "macos_entry.py").read_text(encoding="utf-8")
+        self.assertIn("BUNDLE(", spec)
+        self.assertIn("COLLECT(", spec)
+        self.assertIn('target_arch="arm64"', spec)
+        self.assertIn("console=False", spec)
+        self.assertIn('"LSMinimumSystemVersion": "14.0"', spec)
+        self.assertIn("CURRENT_VERSION.macos_short", spec)
+        self.assertIn("CURRENT_VERSION.macos_bundle", spec)
+        self.assertNotIn(CURRENT_VERSION.display, spec)
+        self.assertIn("JoyConDSU", spec)
+        self.assertIn("libSDL3.0.dylib", spec)
+        self.assertIn("collect_data_files", spec)
+        self.assertIn('collect_data_files("certifi")', spec)
+        self.assertIn("sys.stdout is None", entry)
+        self.assertIn("os.devnull", entry)
+
+    def test_application_icon_is_complete(self):
+        icon = (self.macos / "BOTW Companion.icns").read_bytes()
+        self.assertEqual(icon[:4], b"icns")
+        self.assertEqual(struct.unpack(">I", icon[4:8])[0], len(icon))
+        for representation in (
+            b"icp4", b"icp5", b"icp6", b"ic07", b"ic08", b"ic09",
+            b"ic10", b"ic11", b"ic12", b"ic13", b"ic14",
+        ):
+            self.assertIn(representation, icon)
+
+    def test_native_build_pins_sdl_and_rewrites_the_runtime_path(self):
+        script = (self.root / "tools" / "build_joycon_dsu_macos.sh").read_text(encoding="utf-8")
+        cmake = (self.root / "third_party" / "JoyConDSU" / "CMakeLists.txt").read_text(encoding="utf-8")
+        self.assertIn("SDL3-3.4.14.tar.gz", cmake)
+        self.assertIn("CMAKE_OSX_ARCHITECTURES=arm64", script)
+        self.assertIn("CMAKE_SKIP_BUILD_RPATH=ON", script)
+        self.assertIn("CMAKE_SKIP_RPATH=ON", script)
+        self.assertIn("SDL_HIDAPI_LIBUSB=OFF", script)
+        self.assertIn("SDL_HIDAPI_LIBUSB_SHARED=OFF", script)
+        self.assertIn("CMAKE_DISABLE_FIND_PACKAGE_LibUSB=TRUE", script)
+        self.assertIn("set(SDL_HIDAPI_LIBUSB OFF", cmake)
+        self.assertIn("set(SDL_HIDAPI_LIBUSB_SHARED OFF", cmake)
+        self.assertIn("set(CMAKE_SKIP_BUILD_RPATH ON", cmake)
+        self.assertIn("set(CMAKE_SKIP_RPATH ON", cmake)
+        self.assertIn("@loader_path/libSDL3.0.dylib", script)
+        self.assertIn("install_name_tool -delete_rpath", script)
+        self.assertIn('cmd" && $2 == "LC_RPATH"', script)
+        self.assertIn("NR > 1 { print $1 }", script)
+        self.assertIn('list_macho_dependencies "$binary"', script)
+        self.assertIn('list_macho_rpaths "$binary"', script)
+        self.assertIn("lipo -archs", script)
+        self.assertIn("codesign --force --sign -", script)
+        self.assertIn('"$PACKAGE_DIR/libSDL3.0.dylib"; do', script)
+        self.assertIn("otool -l", script)
+        self.assertIn("/opt/homebrew|/usr/local|/Users/", script)
+
+    def test_dmg_build_and_clean_install_are_exercised(self):
+        build = (self.root / "tools" / "build_macos_app.sh").read_text(encoding="utf-8")
+        validation = (self.root / "tools" / "test_macos_installation.sh").read_text(encoding="utf-8")
+        self.assertIn("hdiutil create", build)
+        self.assertIn("hdiutil verify", build)
+        self.assertIn("for attempt in 1 2 3 4", build)
+        self.assertIn('DMG_WORK_ROOT="${RUNNER_TEMP:-/tmp}', build)
+        self.assertIn("--field dmg_name", build)
+        self.assertNotIn(CURRENT_VERSION.display, build)
+        self.assertIn("/Applications", build)
+        self.assertIn('codesign --force --sign - "$PACKAGED_SDL"', build)
+        self.assertIn('codesign --force --sign - "$PACKAGED_DSU"', build)
+        self.assertIn('codesign --force --sign - "$APPLICATION"', build)
+        self.assertNotIn("codesign --force --deep --sign", build)
+        self.assertIn('manifest["executable_sha256"]', build)
+        self.assertIn('manifest["sdl_sha256"]', build)
+        self.assertIn("PACKAGED_UPDATE_RELAY", build)
+        self.assertIn("macos_update_relay.sh", build)
+        self.assertIn("--package-self-test", validation)
+        self.assertIn('PATH="/usr/bin:/bin"', validation)
+        self.assertIn("--list-controllers", validation)
+        self.assertIn("/api/version", validation)
+        self.assertIn("/api/shutdown", validation)
+        self.assertIn("codesign --verify", validation)
+        self.assertIn("otool -l", validation)
+        self.assertIn("NR > 1 { print $1 }", validation)
+        self.assertIn('cmd" && $2 == "LC_RPATH"', validation)
+        self.assertIn('/usr/bin/otool -L "$binary"', validation)
+        self.assertIn('/usr/bin/otool -l "$binary"', validation)
+        self.assertIn("CFBundleShortVersionString", validation)
+        self.assertIn('[[ "$actual_bundle_version" == "$EXPECTED_MACOS_BUNDLE" ]]', validation)
+        self.assertIn("find \"$application\" -type f -print0", validation)
+        self.assertIn("Binaire non arm64 dans l'application", validation)
+        self.assertIn("PREVIOUS_DMG_PATH", validation)
+        self.assertIn("Application Support/BOTW Companion", validation)
+        self.assertIn("Conservé depuis la version précédente", validation)
+        self.assertIn("installation-macos.plist", validation)
+        self.assertIn("--test-mode", validation)
+        self.assertIn("localization_fr.json", validation)
+        self.assertIn("nomenclature_fr_reference.json", validation)
+        for document in (
+            "LICENSE", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md",
+            "PYTHON-3.12.txt", "SDL3-3.4.14.txt", "CERTIFI-MPL-2.0.txt",
+        ):
+            self.assertIn(document, build)
+            self.assertIn(document, validation)
+        self.assertNotIn("CHANGELOG.md", build)
+        self.assertNotIn("CHANGELOG.md", validation)
+
+    def test_release_waits_for_windows_and_macos(self):
+        workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        self.assertIn("runs-on: macos-15", workflow)
+        self.assertNotIn("runs-on: macos-14", workflow)
+        self.assertIn('test "$architecture" = "arm64"', workflow)
+        self.assertIn('test "$macos_major" -ge 15', workflow)
+        self.assertIn("MACOSX_DEPLOYMENT_TARGET: \"14.0\"", workflow)
+        self.assertGreaterEqual(workflow.count("timeout-minutes: 5"), 2)
+        self.assertIn("./tools/build_macos_app.sh", workflow)
+        self.assertEqual(workflow.count('"certifi==2025.8.3"'), 2)
+        self.assertGreaterEqual(workflow.count("Install runtime dependencies"), 2)
+        self.assertIn("./tools/test_macos_installation.sh", workflow)
+        self.assertGreaterEqual(workflow.count("timeout-minutes: 15"), 3)
+        self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS=120000", workflow)
+        self.assertIn("for browser in webkit chromium firefox", workflow)
+        self.assertIn('browser-test-$browser.log', workflow)
+        self.assertIn("stop_server", workflow)
+        self.assertIn("needs: [windows, macos]", workflow)
+        self.assertIn("gh release create", workflow)
+        self.assertIn("steps.version.outputs.upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.upgrade_dmg_name", workflow)
+        self.assertIn("steps.version.outputs.minimum_upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.minimum_upgrade_dmg_name", workflow)
+        self.assertNotIn(CURRENT_VERSION.display, workflow)
+
+    def test_source_tree_has_no_clone_dependent_macos_launcher(self):
+        launcher = (self.root / "botw_companion" / "macos_launcher.py").read_text(encoding="utf-8")
+        manager = (self.root / "botw_companion" / "dsu" / "manager.py").read_text(encoding="utf-8")
+        combined = launcher + manager
+        self.assertNotIn("/Users/oxnight", combined)
+        self.assertNotIn("/opt/homebrew", combined)
+        self.assertNotIn(".venv", combined)
+        self.assertIn("PYINSTALLER_RESET_ENVIRONMENT", launcher)
+
+
+if __name__ == "__main__":
+    unittest.main()

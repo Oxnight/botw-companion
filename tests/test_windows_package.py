@@ -1,0 +1,291 @@
+import struct
+import unittest
+from pathlib import Path
+
+from botw_companion.versioning import CURRENT_VERSION
+
+
+class WindowsPackageTests(unittest.TestCase):
+    def test_inno_setup_verifies_the_exact_downloaded_release(self):
+        script = (self.root / "tools/install_inno_setup_ci.ps1").read_text(encoding="utf-8")
+        self.assertIn('release verify-asset $ReleaseTag $installer --repo "jrsoftware/issrc"', script)
+
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).resolve().parents[1]
+        cls.windows = cls.root / "windows"
+
+    def test_pyinstaller_uses_one_folder_without_a_console(self):
+        spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
+        entry = (self.root / "windows_entry.py").read_text(encoding="utf-8")
+        self.assertIn("COLLECT(", spec)
+        self.assertIn('name="BOTW Companion"', spec)
+        self.assertIn("console=False", spec)
+        self.assertIn("exclude_binaries=True", spec)
+        self.assertIn("BOTW Companion.ico", spec)
+        self.assertIn("BOTW_WINDOWS_VERSION_FILE", spec)
+        self.assertNotIn("onefile", spec.casefold())
+        self.assertIn("sys.stdout is None", entry)
+        self.assertIn("sys.stderr is None", entry)
+        self.assertIn("os.devnull", entry)
+        updater_spec = (self.windows / "BOTW Companion Updater.spec").read_text(encoding="utf-8")
+        updater_entry = (self.root / "windows_updater_entry.py").read_text(encoding="utf-8")
+        self.assertIn('name="BOTW Companion Updater"', updater_spec)
+        self.assertIn("console=False", updater_spec)
+        self.assertIn('"botw_companion" / "VERSION"', updater_spec)
+        self.assertIn("BOTW_WINDOWS_VERSION_FILE", updater_spec)
+        self.assertIn("run_relay", updater_entry)
+
+    def test_every_required_offline_resource_is_collected(self):
+        spec = (self.windows / "BOTW Companion.spec").read_text(encoding="utf-8")
+        self.assertIn('collect_data_files(', spec)
+        self.assertIn('collect_data_files("certifi")', spec)
+        self.assertIn('"botw_companion"', spec)
+        self.assertIn("JoyConDSU.exe", spec)
+        self.assertIn("SDL3.dll", spec)
+        self.assertIn("manifest.json", spec)
+        self.assertIn("SDL3-LICENSE.txt", spec)
+
+    def test_installer_is_per_user_and_preserves_personal_data(self):
+        installer = (self.windows / "BOTW Companion.iss").read_text(encoding="utf-8")
+        self.assertIn("PrivilegesRequired=lowest", installer)
+        self.assertIn("{localappdata}\\Programs\\BOTW Companion", installer)
+        self.assertIn("{group}\\BOTW Companion", installer)
+        self.assertIn("{autodesktop}\\BOTW Companion", installer)
+        self.assertIn("Tasks: desktopicon", installer)
+        self.assertIn("UsePreviousAppDir=yes", installer)
+        self.assertIn("UsePreviousTasks=yes", installer)
+        self.assertIn("CloseApplications=yes", installer)
+        self.assertNotIn("CloseApplications=force", installer)
+        self.assertIn("ASSISTEDUPDATE", installer)
+        self.assertIn("UninstallDisplayIcon={app}", installer)
+        self.assertNotIn("[UninstallDelete]", installer)
+        self.assertNotIn("{localappdata}\\BOTW Companion\\manual", installer)
+
+    def test_icon_contains_all_required_windows_sizes(self):
+        icon = (self.windows / "BOTW Companion.ico").read_bytes()
+        reserved, kind, count = struct.unpack_from("<HHH", icon)
+        self.assertEqual((reserved, kind), (0, 1))
+        sizes = set()
+        for index in range(count):
+            width, height = struct.unpack_from("<BB", icon, 6 + index * 16)
+            sizes.add((256 if width == 0 else width, 256 if height == 0 else height))
+        for size in (16, 24, 32, 48, 64, 128, 256):
+            self.assertIn((size, size), sizes)
+
+    def test_build_script_validates_the_standalone_package(self):
+        script = (self.root / "tools" / "build_windows_app.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"pyinstaller==6.22.2"', script)
+        self.assertIn('"certifi==2025.8.3"', script)
+        self.assertIn("--package-self-test", script)
+        self.assertIn("--package-network-self-test", script)
+        self.assertIn("cartography_reference_fr_compiled.json", script)
+        self.assertIn("localization_fr.json", script)
+        self.assertIn("nomenclature_fr_reference.json", script)
+        self.assertIn("JoyConDSU.exe", script)
+        self.assertIn("BOTW Companion Updater.exe", script)
+        self.assertIn("$updaterExecutable --self-test", script)
+        self.assertIn("SDL3.dll", script)
+        self.assertIn("ISCC", script)
+        self.assertIn("tools\\release_metadata.py", script)
+        self.assertIn("tools\\render_windows_version_info.py", script)
+        self.assertIn('"LICENSE", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md", "PRIVACY.md", "SECURITY.md"', script)
+        self.assertIn("Copy-Item -LiteralPath $documentSource", script)
+        self.assertIn('"licenses\\PYTHON-3.12.txt"', script)
+        self.assertIn('"licenses\\SDL3-3.4.14.txt"', script)
+        self.assertIn('"licenses\\CERTIFI-MPL-2.0.txt"', script)
+        self.assertNotIn('project_root / "LICENSE"', (
+            self.windows / "BOTW Companion.spec"
+        ).read_text(encoding="utf-8"))
+
+    def test_inno_setup_ci_reuses_the_runner_installation(self):
+        script = (self.root / "tools" / "install_inno_setup_ci.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('${env:ProgramFiles(x86)}', script)
+        self.assertIn('$env:ProgramFiles', script)
+        self.assertIn('$env:GITHUB_PATH', script)
+        self.assertIn('Test-Path -LiteralPath $_ -PathType Leaf', script)
+
+    def test_local_build_produces_and_validates_application_and_installer(self):
+        build = (self.root / "tools" / "build_windows_app.ps1").read_text(
+            encoding="utf-8"
+        )
+        validation = (
+            self.root / "tools" / "test_windows_installation.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("BOTW Companion.spec", build)
+        self.assertIn("BOTW Companion.exe", validation)
+        self.assertIn("BOTW Companion Updater.exe", validation)
+        self.assertIn("$metadata.installer_name", validation)
+        self.assertIn("--package-self-test", validation)
+        self.assertIn("--list-controllers", validation)
+        self.assertIn("/api/version", validation)
+        self.assertIn("/api/shutdown", validation)
+        self.assertIn('(Join-Path $InstallRoot "LICENSE")', validation)
+        self.assertNotIn('(Join-Path $InstallRoot "CHANGELOG.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "THIRD_PARTY_NOTICES.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "DATA_SOURCES.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "PRIVACY.md")', validation)
+        self.assertIn('(Join-Path $InstallRoot "SECURITY.md")', validation)
+        self.assertIn("PreviousInstallerPath", validation)
+        self.assertIn("Conservé depuis la version précédente", validation)
+        self.assertIn("WScript.Shell", validation)
+        self.assertIn("[System.Diagnostics.ProcessStartInfo]::new()", validation)
+        self.assertIn("$startInfo.ArgumentList.Add($argument)", validation)
+        self.assertIn("$process.WaitForExit($TimeoutMilliseconds)", validation)
+        self.assertIn("$process.Kill($true)", validation)
+        self.assertIn("Journal du relais de mise à jour", validation)
+        self.assertNotIn("& $updater --root", validation)
+        relay = (self.root / "botw_companion" / "windows_updates.py").read_text(encoding="utf-8")
+        self.assertIn('f"/LOG={log_path}"', relay)
+        self.assertNotIn("f'/LOG=\"{log_path}\"'", relay)
+        self.assertIn("_prepare_installer_log(log_path)", relay)
+        self.assertIn("log_path.parent.mkdir(parents=True, exist_ok=True)", relay)
+        self.assertIn('command.extend(("--server", "--port", str(port)))', relay)
+        self.assertIn("BOTW Companion restart diagnostics", relay)
+        self.assertIn('"--sans-navigateur"', validation)
+        self.assertIn('"--arreter-avec-ryujinx"', validation)
+        self.assertIn("RedirectStandardError", validation)
+        self.assertIn("-WorkingDirectory $InstallRoot", validation)
+
+    def test_clean_machine_validation_removes_development_tools_from_path(self):
+        script = (self.root / "tools" / "test_windows_installation.ps1").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("$env:SystemRoot\\System32;$env:SystemRoot", script)
+        self.assertIn("--package-self-test", script)
+        self.assertIn("/VERYSILENT", script)
+        self.assertIn("donnees-a-conserver.json", script)
+        self.assertNotIn("RunAs", script)
+
+    def test_release_workflow_builds_tests_and_publishes_only_a_tag(self):
+        workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("windows-2022", workflow)
+        self.assertIn("tools/build_windows_app.ps1", workflow)
+        self.assertIn("tools/test_windows_installation.ps1", workflow)
+        self.assertIn("tools/check_version_consistency.py", workflow)
+        self.assertIn("refs/tags/", workflow)
+        self.assertIn("gh release create", workflow)
+        self.assertIn('tags: ["v*"]', workflow)
+        self.assertIn("steps.version.outputs.upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.minimum_upgrade_tag", workflow)
+        self.assertIn("steps.version.outputs.minimum_upgrade_installer_name", workflow)
+        self.assertIn("steps.version.outputs.installer_name", workflow)
+        self.assertIn("steps.version.outputs.dmg_name", workflow)
+        self.assertIn("--generate-notes", workflow)
+        self.assertNotIn("--notes-file", workflow)
+        self.assertIn('release_type=()', workflow)
+        self.assertIn('release_type=(--prerelease)', workflow)
+        self.assertIn("gh api --method PATCH", workflow)
+        self.assertIn('-f make_latest="$make_latest"', workflow)
+        self.assertIn("steps.create_release.outputs.release_id", workflow)
+        self.assertIn("validate_packages:", workflow)
+        self.assertGreaterEqual(workflow.count("if: env.BUILD_PACKAGES == 'true'"), 9)
+        self.assertIn("if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')", workflow)
+        self.assertNotIn("SHA256" + "SUMS", workflow)
+        self.assertNotIn("sha256" + "sum", workflow.casefold())
+        self.assertNotIn(CURRENT_VERSION.display, workflow)
+        self.assertIn("--verify-tag", workflow)
+        self.assertIn("--draft", workflow)
+        self.assertIn("tools/verify_release_ref.py", workflow)
+        self.assertIn("tools/verify_release_assets.py", workflow)
+        self.assertIn("needs: [windows, macos]", workflow)
+
+    def test_browser_suite_covers_the_complete_user_path(self):
+        script = (self.root / "tools" / "browser_smoke.js").read_text(encoding="utf-8")
+        markup = (self.root / "botw_companion" / "web" / "index.html").read_text(encoding="utf-8")
+        for selector in (
+            "#bloodMoonCountdown", "#syncStatus", "#zoomIn", "#mapReset",
+            "#manualComplete", "#detailRoute", "#closeDetails", "#toggleRoute",
+            "#routeSessionSelect", "/api/routes/export", "/api/routes/import",
+            "#toggleDsu",
+            "#completionBlockerSummary", "#completionBlockerList",
+        ):
+            self.assertIn(selector, script)
+        self.assertIn("width: 390", script)
+        self.assertIn('getByRole("complementary")', script)
+        self.assertIn('getByRole("main")', script)
+        self.assertNotIn('querySelector(".sidebar")', script)
+        self.assertIn("conteneurs suspects", script)
+        self.assertIn("Le planificateur déborde", script)
+        self.assertIn("BOTW_BROWSER_TEST_TIMEOUT_MS", script)
+        self.assertIn("context.setDefaultTimeout", script)
+        self.assertIn("AbortController", script)
+        self.assertIn("closeWithTimeout", script)
+        # Each browser receives a fresh backend fixture. A verified download
+        # inherited from another engine must fail, never skip this scenario.
+        self.assertIn("assert(!(await downloadUpdate.isDisabled()),", script)
+        self.assertIn("await downloadUpdate.click();", script)
+        self.assertNotIn("if (!(await downloadUpdate.isDisabled()))", script)
+        self.assertIn('waitUntil: "commit"', script)
+        self.assertIn('reason: "navigation_timeout"', script)
+        self.assertIn("response?.ok()", script)
+        self.assertIn("waitForVisualStyle", script)
+        self.assertIn('expectedStylePaths = ["/style.css", "/metrics.css", "/armor.css"]', script)
+        self.assertIn("Boolean(link.sheet)", script)
+        self.assertIn("Les feuilles de style attendues ne sont pas toutes chargées", script)
+        self.assertIn('controls = ["#search"]', script)
+        self.assertIn('document.querySelector("#search")).paddingTop) >= 8', script)
+        self.assertNotIn('getPropertyValue("--muted")', script)
+        self.assertNotIn("search.getBoundingClientRect().height >= 40", script)
+        self.assertIn("requestAnimationFrame(() => requestAnimationFrame(resolve))", script)
+        self.assertIn("isExpectedWebKitNavigationError", script)
+        self.assertIn("dsuAfterReload", script)
+        self.assertIn('status: "progress"', script)
+        self.assertIn('page.waitForEvent("dialog"', script)
+        self.assertIn("manualCheckbox.evaluate(element => element.click())", script)
+        self.assertNotIn('.uncheck();', script)
+        self.assertIn('<aside aria-label="Navigation des catégories">', markup)
+        self.assertIn('<main id="mainContent" tabindex="-1">', markup)
+        self.assertIn('require("axe-core")', script)
+        self.assertIn("wcag22aa", script)
+        self.assertIn('reducedMotion: "reduce"', script)
+        self.assertIn('page.setViewportSize({width: 640, height: 360})', script)
+        self.assertNotIn('document.documentElement.style.zoom = "2"', script)
+        self.assertIn("zoom_200: true", script)
+        self.assertIn("exerciseOnboarding", script)
+        self.assertGreaterEqual(script.count('textContent.trim()'), 2)
+        self.assertIn("baseMarkerBox?.width >= 24", script)
+
+    def test_assisted_update_validation_uses_real_download_metadata(self):
+        script = (self.root / "tools" / "test_windows_installation.ps1").read_text(
+            encoding="utf-8"
+        )
+        for marker in (
+            "schema_version = 1",
+            "version = $metadata.display_version",
+            "filename = $metadata.installer_name",
+            'digest = "sha256:$digest"',
+            "ready = $true",
+        ):
+            self.assertIn(marker, script)
+        self.assertNotIn("'{\"ready\":true}'", script)
+
+    def test_narrow_layout_cannot_restore_wide_grids(self):
+        styles = (self.root / "botw_companion" / "web" / "armor.css").read_text(
+            encoding="utf-8"
+        )
+        wide_breakpoint = styles.index("@media(max-width:1000px)")
+        narrow_breakpoint = styles.index("@media(max-width:600px)", wide_breakpoint)
+        narrow_rules = styles[narrow_breakpoint:]
+        self.assertIn("grid-template-columns: minmax(0, 1fr);", narrow_rules)
+        self.assertIn("grid-template-columns: 126px minmax(0, 1fr);", narrow_rules)
+        self.assertIn("@media(max-width: 420px)", narrow_rules)
+        self.assertIn("header > div:first-child", narrow_rules)
+        self.assertIn("overflow-wrap: anywhere;", narrow_rules)
+        self.assertIn(".toolbar > *", narrow_rules)
+        self.assertIn(".routeSessions", narrow_rules)
+        self.assertIn(".routeHeader > button", narrow_rules)
+        self.assertIn("word-break: break-word", narrow_rules)
+        self.assertIn(".officialMetric label", narrow_rules)
+        self.assertIn(".companionMetric label", narrow_rules)
+        self.assertIn(".metric select", narrow_rules)
+
+
+if __name__ == "__main__":
+    unittest.main()

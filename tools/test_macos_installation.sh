@@ -1,0 +1,474 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
+  echo "Ce test nécessite un runner macOS Apple Silicon." >&2
+  exit 1
+fi
+
+readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+readonly CURRENT_DMG_NAME="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field dmg_name)"
+readonly EXPECTED_DISPLAY="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field display_version)"
+readonly EXPECTED_PEP440="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field pep440_version)"
+readonly EXPECTED_MACOS_SHORT="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_short_version)"
+readonly EXPECTED_MACOS_BUNDLE="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field macos_bundle_version)"
+readonly DMG_PATH="${1:-$PROJECT_ROOT/dist/$CURRENT_DMG_NAME}"
+readonly PREVIOUS_DMG_PATH="${2:-}"
+readonly REFERENCE_DMG_PATH="${PREVIOUS_DMG_PATH:-$DMG_PATH}"
+readonly VALIDATION_MODE="$(python3 "$PROJECT_ROOT/tools/release_metadata.py" --field installation_validation)"
+if [[ -z "$PREVIOUS_DMG_PATH" && "$VALIDATION_MODE" != "bootstrap" ]]; then
+  echo "A published stable reference DMG is required for upgrade validation." >&2
+  exit 1
+fi
+readonly TEST_ROOT="${RUNNER_TEMP:-/tmp}/BOTW Companion macOS installation test"
+readonly CLEAN_APPLICATION="$TEST_ROOT/Applications clean/BOTW Companion.app"
+readonly CLEAN_DATA_ROOT="$TEST_ROOT/Clean user data"
+readonly CLEAN_HOME_ROOT="$TEST_ROOT/Clean home"
+readonly UPGRADE_APPLICATION="$TEST_ROOT/Applications upgrade/BOTW Companion.app"
+readonly UPGRADE_HOME_ROOT="$TEST_ROOT/Upgrade home"
+readonly UPGRADE_DATA_ROOT="$UPGRADE_HOME_ROOT/Library/Application Support/BOTW Companion"
+readonly UPDATE_ROOT="$TEST_ROOT/Assisted update"
+MOUNT_POINT=""
+SERVER_PID=""
+
+detach_dmg() {
+  local attempt
+  if [[ -n "$MOUNT_POINT" ]]; then
+    for attempt in 1 2 3; do
+      if /usr/bin/hdiutil detach "$MOUNT_POINT" -quiet; then
+        MOUNT_POINT=""
+        return 0
+      fi
+      [[ "$attempt" == "3" ]] || /bin/sleep 0.2
+    done
+    /usr/bin/hdiutil detach "$MOUNT_POINT" -force -quiet || return 1
+    MOUNT_POINT=""
+  fi
+}
+
+cleanup() {
+  local result=$?
+  trap - EXIT
+  set +e
+  if [[ -n "$SERVER_PID" ]] && /bin/kill -0 "$SERVER_PID" 2>/dev/null; then
+    /bin/kill -TERM "$SERVER_PID" 2>/dev/null || true
+    wait "$SERVER_PID" 2>/dev/null || true
+  fi
+  if ! detach_dmg; then
+    echo "Le DMG de test est toujours attaché : $MOUNT_POINT" >&2
+    [[ "$result" != "0" ]] || result=1
+  fi
+  exit "$result"
+}
+trap cleanup EXIT
+
+attach_dmg() {
+  local dmg_path="$1"
+  local attach_output
+  attach_output="$(/usr/bin/hdiutil attach "$dmg_path" -nobrowse -readonly)"
+  MOUNT_POINT="$(printf '%s\n' "$attach_output" | /usr/bin/awk -F '\t' '/\/Volumes\//{print $NF; exit}')"
+  [[ -d "$MOUNT_POINT/BOTW Companion.app" ]] || {
+    echo "Le DMG ne contient pas BOTW Companion.app : $dmg_path" >&2
+    exit 1
+  }
+  [[ -L "$MOUNT_POINT/Applications" ]] || {
+    echo "Le DMG ne contient pas le raccourci Applications : $dmg_path" >&2
+    exit 1
+  }
+}
+
+copy_application_from_dmg() {
+  local dmg_path="$1"
+  local destination="$2"
+  attach_dmg "$dmg_path"
+  mkdir -p "$(dirname "$destination")"
+  /usr/bin/ditto "$MOUNT_POINT/BOTW Companion.app" "$destination"
+  detach_dmg
+}
+
+assert_image_detached() {
+  local dmg_path="$1"
+  /usr/bin/hdiutil info -plist > "$TEST_ROOT/attached-images.plist"
+  python3 - "$TEST_ROOT/attached-images.plist" "$dmg_path" <<'PY'
+import os
+import plistlib
+import sys
+with open(sys.argv[1], 'rb') as stream:
+    images = plistlib.load(stream).get('images', [])
+expected = os.path.realpath(sys.argv[2])
+if any(os.path.realpath(image.get('image-path', '')) == expected for image in images):
+    raise SystemExit('Le DMG utilisé par le relais est encore attaché.')
+PY
+}
+
+assert_current_application() {
+  local application="$1"
+  local executable="$application/Contents/MacOS/BOTW Companion"
+  /usr/bin/codesign --verify --deep --strict --verbose=2 "$application"
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$application/Contents/Info.plist")" == \
+    "fr.oxnight.botw-companion" ]] || { echo "Identifiant du bundle invalide." >&2; exit 1; }
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$application/Contents/Info.plist")" == \
+    "$EXPECTED_MACOS_SHORT" ]] || { echo "CFBundleShortVersionString est invalide." >&2; exit 1; }
+  local actual_bundle_version
+  actual_bundle_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$application/Contents/Info.plist")"
+  [[ "$actual_bundle_version" == "$EXPECTED_MACOS_BUNDLE" ]] || {
+    echo "CFBundleVersion est invalide : attendu $EXPECTED_MACOS_BUNDLE, obtenu $actual_bundle_version." >&2
+    exit 1
+  }
+  [[ "$(/usr/bin/lipo -archs "$executable")" == "arm64" ]] || {
+    echo "Le lanceur n'est pas exclusivement arm64." >&2
+    exit 1
+  }
+
+  local dsu_executable sdl_library localization nomenclature
+  dsu_executable="$(find "$application" -path '*/botw_companion/dsu/macos/JoyConDSU' -type f -print -quit)"
+  sdl_library="$(find "$application" -path '*/botw_companion/dsu/macos/libSDL3.0.dylib' -type f -print -quit)"
+  localization="$(find "$application" -path '*/botw_companion/data/localization_fr.json' -type f -print -quit)"
+  nomenclature="$(find "$application" -path '*/botw_companion/data/nomenclature_fr_reference.json' -type f -print -quit)"
+  [[ -n "$dsu_executable" && -n "$sdl_library" && -n "$localization" && -n "$nomenclature" ]] || {
+    echo "Le paquet macOS ne contient pas toutes ses ressources hors ligne." >&2
+    exit 1
+  }
+  for document in LICENSE THIRD_PARTY_NOTICES.md DATA_SOURCES.md PRIVACY.md SECURITY.md \
+    licenses/PYTHON-3.12.txt licenses/SDL3-3.4.14.txt licenses/CERTIFI-MPL-2.0.txt; do
+    find "$application" -path "*/$document" -type f -print -quit | grep -q . || {
+      echo "Document absent de l'application installée : $document" >&2; exit 1;
+    }
+  done
+  for binary in "$dsu_executable" "$sdl_library"; do
+    [[ "$(/usr/bin/lipo -archs "$binary")" == "arm64" ]] || {
+      echo "Architecture DSU inattendue : $binary" >&2
+      exit 1
+    }
+  done
+
+  while IFS= read -r -d '' binary; do
+    /usr/bin/file "$binary" | /usr/bin/grep -q 'Mach-O' || continue
+    [[ "$(/usr/bin/lipo -archs "$binary")" == "arm64" ]] || {
+      echo "Binaire non arm64 dans l'application : $binary" >&2
+      exit 1
+    }
+    /usr/bin/codesign --verify --strict --verbose=2 "$binary"
+    unsafe_metadata="$({
+      /usr/bin/otool -L "$binary" | /usr/bin/awk 'NR > 1 { print $1 }'
+      /usr/bin/otool -l "$binary" | /usr/bin/awk '
+        $1 == "cmd" && $2 == "LC_RPATH" { reading = 1; next }
+        reading && $1 == "path" { if (!seen[$2]++) print $2; reading = 0 }
+      '
+    } | /usr/bin/grep -E '/opt/homebrew|/usr/local|/Users/' || true)"
+    if [[ -n "$unsafe_metadata" ]]; then
+      echo "Dépendance propre à la machine de construction : $binary" >&2
+      printf '%s\n' "$unsafe_metadata" >&2
+      exit 1
+    fi
+  done < <(/usr/bin/find "$application" -type f -print0)
+}
+
+run_current_application() {
+  local application="$1"
+  local home_root="$2"
+  local data_root="$3"
+  local port="$4"
+  local validate_upgrade="$5"
+  local executable="$application/Contents/MacOS/BOTW Companion"
+  local dsu_executable
+  dsu_executable="$(find "$application" -path '*/botw_companion/dsu/macos/JoyConDSU' -type f -print -quit)"
+  local -a clean_environment=(/usr/bin/env -i "HOME=$home_root" "PATH=/usr/bin:/bin")
+  if [[ -n "$data_root" ]]; then
+    clean_environment+=("BOTW_COMPANION_DATA_DIR=$data_root")
+  fi
+
+  "${clean_environment[@]}" "$executable" --package-self-test
+  /usr/bin/env -i HOME="$home_root" PATH="/usr/bin:/bin" \
+    "$dsu_executable" --list-controllers >/dev/null
+  "${clean_environment[@]}" "$executable" --server --port "$port" --sans-navigateur \
+    >"$TEST_ROOT/server-$port.log" 2>&1 &
+  SERVER_PID=$!
+
+  local ready=0 identity_json=""
+  for _attempt in {1..120}; do
+    if ! /bin/kill -0 "$SERVER_PID" 2>/dev/null; then
+      /bin/cat "$TEST_ROOT/server-$port.log" >&2
+      echo "Le serveur installé s'est arrêté prématurément." >&2
+      exit 1
+    fi
+    identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 1 \
+      "http://127.0.0.1:$port/api/version" || true)"
+    if printf '%s' "$identity_json" | /usr/bin/grep -F "\"version\": \"$EXPECTED_PEP440\"" >/dev/null; then
+      ready=1
+      break
+    fi
+    /bin/sleep 0.25
+  done
+  [[ "$ready" == "1" ]] || {
+    /bin/cat "$TEST_ROOT/server-$port.log" >&2
+    echo "Le serveur installé n'a pas répondu dans le délai prévu." >&2
+    exit 1
+  }
+
+  if [[ "$validate_upgrade" == "yes" ]]; then
+    /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+      "http://127.0.0.1:$port/api/manual" >"$TEST_ROOT/manual.json"
+    /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+      "http://127.0.0.1:$port/api/routes" >"$TEST_ROOT/routes.json"
+    /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+      "http://127.0.0.1:$port/api/preferences" >"$TEST_ROOT/preferences.json"
+    python3 - "$TEST_ROOT/manual.json" "$TEST_ROOT/routes.json" "$TEST_ROOT/preferences.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+manual, routes, preferences = (
+    json.loads(Path(path).read_text(encoding="utf-8")) for path in sys.argv[1:]
+)
+entry = manual["entries"]["korogus:reference"]
+session = routes["sessions"]["session-reference"]
+assert entry["completed"] and entry["note"] == "Conservé depuis la version précédente"
+assert routes["active_session_id"] == "session-reference"
+assert session["entries"][0]["tracking_id"] == "sanctuaires:reference"
+assert session["entries"][0]["locked"] is True
+assert preferences["values"]["map_content_mode"] == "dlc"
+assert preferences["values"]["dsu_mode"] == "integrated"
+PY
+  fi
+
+  local session_token
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  [[ -n "$session_token" ]] || { echo "Jeton de session absent." >&2; exit 1; }
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST "http://127.0.0.1:$port/api/shutdown" >/dev/null
+  wait "$SERVER_PID"
+  SERVER_PID=""
+}
+
+[[ -f "$DMG_PATH" ]] || { echo "DMG introuvable : $DMG_PATH" >&2; exit 1; }
+cmake -E remove_directory "$TEST_ROOT"
+mkdir -p "$CLEAN_DATA_ROOT" "$CLEAN_HOME_ROOT"
+
+# Clean installation from the current DMG.
+copy_application_from_dmg "$DMG_PATH" "$CLEAN_APPLICATION"
+assert_current_application "$CLEAN_APPLICATION"
+run_current_application "$CLEAN_APPLICATION" "$CLEAN_HOME_ROOT" "$CLEAN_DATA_ROOT" 18767 no
+
+# The first stable build uses its own DMG to exercise replacement, rollback,
+# interruption and compatibility data without downloading a prior release.
+if [[ -n "$REFERENCE_DMG_PATH" ]]; then
+  if [[ -n "$PREVIOUS_DMG_PATH" ]]; then
+    echo "Upgrade validation: replace the supplied stable reference installation."
+  else
+    echo "Bootstrap validation: replace the built package with itself and preserve compatibility data."
+  fi
+  [[ -f "$REFERENCE_DMG_PATH" ]] || { echo "DMG de référence introuvable : $REFERENCE_DMG_PATH" >&2; exit 1; }
+  copy_application_from_dmg "$REFERENCE_DMG_PATH" "$UPGRADE_APPLICATION"
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' \
+    "$UPGRADE_APPLICATION/Contents/Info.plist")" == "fr.oxnight.botw-companion" ]] || {
+    echo "La version de référence n'utilise pas le même identifiant de bundle." >&2
+    exit 1
+  }
+
+  mkdir -p "$UPGRADE_DATA_ROOT"
+  python3 "$PROJECT_ROOT/tools/seed_installation_data.py" "$UPGRADE_DATA_ROOT"
+
+  # The detached relay replaces the stopped bundle transactionally and starts
+  # the new local server. Application Support remains outside the bundle.
+  mkdir -p "$UPDATE_ROOT"
+  update_dmg="$UPDATE_ROOT/$CURRENT_DMG_NAME"
+  update_metadata="$UPDATE_ROOT/$CURRENT_DMG_NAME.metadata.json"
+  /bin/cp "$DMG_PATH" "$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True,
+    "version": version,
+    "filename": filename,
+    "size": int(size),
+    "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" \
+    /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+      --test-mode \
+      --root "$UPDATE_ROOT" \
+      --dmg "$update_dmg" \
+      --metadata "$update_metadata" \
+      --version "$EXPECTED_DISPLAY" \
+      --runtime-version "$EXPECTED_PEP440" \
+      --short-version "$EXPECTED_MACOS_SHORT" \
+      --bundle-version "$EXPECTED_MACOS_BUNDLE" \
+      --digest "$update_digest" \
+      --size "$update_size" \
+      --parent-pid 0 \
+      --application "$UPGRADE_APPLICATION" \
+      --port 18768 \
+      --log "$UPDATE_ROOT/installation.log" \
+      --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+      --owner-uid "$(/usr/bin/id -u)" \
+      --owner-gid "$(/usr/bin/id -g)"
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == \
+    "succeeded" ]] || { /bin/cat "$UPDATE_ROOT/installation.log" >&2; exit 1; }
+  [[ ! -e "$update_dmg" && ! -e "$update_metadata" ]] || {
+    echo "Le relais n'a pas nettoyé le paquet validé après succès." >&2
+    exit 1
+  }
+  assert_image_detached "$update_dmg"
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18768/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18768/api/shutdown >/dev/null
+  /bin/sleep 1
+  assert_current_application "$UPGRADE_APPLICATION"
+  run_current_application "$UPGRADE_APPLICATION" "$UPGRADE_HOME_ROOT" "" 18769 yes
+
+  # Force the health check to fail and prove that the detached relay restores
+  # the backup instead of leaving a broken or missing application bundle.
+  cmake -E remove_directory "$UPGRADE_APPLICATION"
+  copy_application_from_dmg "$REFERENCE_DMG_PATH" "$UPGRADE_APPLICATION"
+  previous_bundle_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$UPGRADE_APPLICATION/Contents/Info.plist")"
+  /bin/cp "$DMG_PATH" "$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True, "version": version, "filename": filename,
+    "size": int(size), "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  if BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" BOTW_UPDATE_FORCE_RESTART_FAILURE=1 \
+      /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+        --test-mode --root "$UPDATE_ROOT" --dmg "$update_dmg" \
+        --metadata "$update_metadata" --version "$EXPECTED_DISPLAY" \
+        --runtime-version "$EXPECTED_PEP440" --short-version "$EXPECTED_MACOS_SHORT" \
+        --bundle-version "$EXPECTED_MACOS_BUNDLE" --digest "$update_digest" \
+        --size "$update_size" --parent-pid 0 --application "$UPGRADE_APPLICATION" \
+        --port 18770 --log "$UPDATE_ROOT/rollback.log" \
+        --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+        --owner-uid "$(/usr/bin/id -u)" --owner-gid "$(/usr/bin/id -g)"; then
+    echo "Le scénario de redémarrage défaillant aurait dû déclencher un rollback." >&2
+    exit 1
+  fi
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "failed" \
+    && "$(/usr/bin/plutil -extract rollback_performed raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "true" ]] || {
+    /bin/cat "$UPDATE_ROOT/rollback.log" >&2
+    echo "Le rollback macOS n'a pas été attesté." >&2
+    exit 1
+  }
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$UPGRADE_APPLICATION/Contents/Info.plist")" == "$previous_bundle_version" ]] || {
+    echo "Le rollback n'a pas restauré la version précédente." >&2
+    exit 1
+  }
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18770/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18770/api/shutdown >/dev/null
+  /bin/sleep 1
+
+  # Kill the relay immediately after its atomic publication. The Dock target
+  # must still exist, the old bundle must survive, and manual launch must work.
+  assert_image_detached "$update_dmg"
+  if BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" BOTW_UPDATE_KILL_AFTER_SWAP=1 \
+      /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+        --test-mode --root "$UPDATE_ROOT" --dmg "$update_dmg" \
+        --metadata "$update_metadata" --version "$EXPECTED_DISPLAY" \
+        --runtime-version "$EXPECTED_PEP440" --short-version "$EXPECTED_MACOS_SHORT" \
+        --bundle-version "$EXPECTED_MACOS_BUNDLE" --digest "$update_digest" \
+        --size "$update_size" --parent-pid 0 --application "$UPGRADE_APPLICATION" \
+        --port 18772 --log "$UPDATE_ROOT/interrupted.log" \
+        --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+        --owner-uid "$(/usr/bin/id -u)" --owner-gid "$(/usr/bin/id -g)"; then
+    echo "Le test devait interrompre le relais après le remplacement." >&2
+    exit 1
+  else
+    interrupted_result=$?
+    [[ "$interrupted_result" == "137" ]] || {
+      /bin/cat "$UPDATE_ROOT/interrupted.log" >&2
+      echo "L'interruption attendue n'a pas été atteinte." >&2
+      exit 1
+    }
+  fi
+  assert_image_detached "$update_dmg"
+  assert_current_application "$UPGRADE_APPLICATION"
+  /usr/bin/find "$(/usr/bin/dirname "$UPGRADE_APPLICATION")" -maxdepth 1 \
+    -type d -name '.BOTW Companion.app.backup-*' | /usr/bin/grep -q . || {
+    echo "La sauvegarde a disparu après l'interruption." >&2
+    exit 1
+  }
+  run_current_application "$UPGRADE_APPLICATION" "$UPGRADE_HOME_ROOT" "" 18772 yes
+
+  # A corrupt image must fail before replacement and reopen the installed
+  # application. Matching local metadata cannot make an invalid DMG valid.
+  printf 'invalid disk image\n' >"$update_dmg"
+  update_size="$(/usr/bin/stat -f '%z' "$update_dmg")"
+  update_digest="$(/usr/bin/shasum -a 256 "$update_dmg" | /usr/bin/awk '{print $1}')"
+  python3 - "$update_metadata" "$EXPECTED_DISPLAY" "$CURRENT_DMG_NAME" \
+    "$update_size" "$update_digest" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+path, version, filename, size, digest = sys.argv[1:]
+Path(path).write_text(json.dumps({
+    "ready": True, "version": version, "filename": filename,
+    "size": int(size), "digest": f"sha256:{digest}",
+}), encoding="utf-8")
+PY
+  if BOTW_COMPANION_DATA_DIR="$UPGRADE_DATA_ROOT" \
+      /bin/bash "$PROJECT_ROOT/botw_companion/macos_update_relay.sh" \
+        --test-mode --root "$UPDATE_ROOT" --dmg "$update_dmg" \
+        --metadata "$update_metadata" --version "$EXPECTED_DISPLAY" \
+        --runtime-version "$EXPECTED_PEP440" --short-version "$EXPECTED_MACOS_SHORT" \
+        --bundle-version "$EXPECTED_MACOS_BUNDLE" --digest "$update_digest" \
+        --size "$update_size" --parent-pid 0 --application "$UPGRADE_APPLICATION" \
+        --port 18771 --log "$UPDATE_ROOT/invalid-image.log" \
+        --release-url "https://github.com/Oxnight/botw-companion/releases/tag/v$EXPECTED_DISPLAY" \
+        --owner-uid "$(/usr/bin/id -u)" --owner-gid "$(/usr/bin/id -g)"; then
+    echo "Une image disque invalide ne doit jamais être installée." >&2
+    exit 1
+  fi
+  [[ "$(/usr/bin/plutil -extract status raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "failed" \
+    && "$(/usr/bin/plutil -extract rollback_performed raw -o - "$UPDATE_ROOT/installation-macos.plist")" == "false" ]] || {
+    /bin/cat "$UPDATE_ROOT/invalid-image.log" >&2
+    echo "L'échec avant remplacement n'a pas été conservé." >&2
+    exit 1
+  }
+  identity_json="$(/usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    http://127.0.0.1:18771/api/version)"
+  session_token="$(printf '%s' "$identity_json" | python3 -c \
+    'import json, sys; print(json.load(sys.stdin).get("session_token", ""))')"
+  /usr/bin/curl --noproxy '*' --silent --fail --max-time 2 \
+    -H "X-BOTW-Session-Token: $session_token" \
+    -X POST http://127.0.0.1:18771/api/shutdown >/dev/null
+  /bin/sleep 1
+
+  # On macOS, uninstalling means removing the bundle from Applications.
+  cmake -E remove_directory "$UPGRADE_APPLICATION"
+  [[ ! -e "$UPGRADE_APPLICATION" ]] || { echo "Le bundle n'a pas été supprimé." >&2; exit 1; }
+  for name in manual_tracking.json route_sessions.json preferences.json export-reference.json; do
+    [[ -f "$UPGRADE_DATA_ROOT/$name" ]] || {
+      echo "La suppression du bundle a supprimé une donnée de référence : $name" >&2
+      exit 1
+    }
+  done
+fi
+
+echo "DMG propre, mise à niveau, données, runtime Python, serveur et DSU arm64 validés."

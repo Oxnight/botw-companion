@@ -1,0 +1,5177 @@
+{
+  "source_revision": "39e57e4731add15b9a0dcedb5dd136215aaba7c7",
+  "source_url": "https://github.com/MrCheeze/botw-tools",
+  "names": [
+    {
+      "group": "shrines",
+      "id": "Dungeon000",
+      "expected": "Tah Muhl Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon001",
+      "expected": "Jee Noh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon002",
+      "expected": "Sah Dahaj Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon003",
+      "expected": "Hawa Koth Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon004",
+      "expected": "Zalta Wa Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon005",
+      "expected": "Ne'ez Yohma Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon006",
+      "expected": "Yah Rin Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon007",
+      "expected": "Bosh Kala Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon008",
+      "expected": "Bareeda Naag Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon009",
+      "expected": "Owa Daim Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon010",
+      "expected": "Kay Noh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon011",
+      "expected": "Monya Toma Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon012",
+      "expected": "Voo Lota Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon013",
+      "expected": "Katosa Aug Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon014",
+      "expected": "Kam Urog Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon015",
+      "expected": "Toto Sah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon016",
+      "expected": "Rucco Maag Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon017",
+      "expected": "Shee Vaneer Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon018",
+      "expected": "Rok Uwog Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon019",
+      "expected": "Dow Na'eh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon020",
+      "expected": "Sheem Dagoze Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon021",
+      "expected": "Toh Yahsa Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon022",
+      "expected": "Keo Ruug Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon023",
+      "expected": "Sheh Rata Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon024",
+      "expected": "Mezza Lo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon025",
+      "expected": "Kayra Mah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon026",
+      "expected": "Shae Mo'sah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon027",
+      "expected": "Rota Ooh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon028",
+      "expected": "Shora Hah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon029",
+      "expected": "Hila Rao Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon030",
+      "expected": "Joloo Nah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon031",
+      "expected": "Mo'a Keet Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon032",
+      "expected": "Dako Tah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon033",
+      "expected": "Daka Tuss Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon034",
+      "expected": "Kah Yah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon035",
+      "expected": "Akh Va'quot Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon036",
+      "expected": "Sho Dantu Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon037",
+      "expected": "Shae Loya Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon038",
+      "expected": "Oman Au Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon039",
+      "expected": "Myahm Agana Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon040",
+      "expected": "Kaam Ya'tak Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon041",
+      "expected": "Ja Baij Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon042",
+      "expected": "Rin Oyaa Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon043",
+      "expected": "Kuh Takkar Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon044",
+      "expected": "Shee Venath Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon045",
+      "expected": "Ha Dahamar Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon046",
+      "expected": "Shada Naw Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon047",
+      "expected": "Ree Dahee Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon048",
+      "expected": "Ze Kasho Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon049",
+      "expected": "Kaya Wan Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon050",
+      "expected": "Shai Utoh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon051",
+      "expected": "Maka Rah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon052",
+      "expected": "Gee Ha'rah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon053",
+      "expected": "Sha Warvo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon054",
+      "expected": "Ka'o Makagh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon055",
+      "expected": "Dunba Taag Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon056",
+      "expected": "Mirro Shaz Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon057",
+      "expected": "Wahgo Katta Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon058",
+      "expected": "Mogg Latan Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon059",
+      "expected": "Kah Okeo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon060",
+      "expected": "Daqo Chisay Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon061",
+      "expected": "Shoda Sah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon062",
+      "expected": "Sha Gehma Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon063",
+      "expected": "Kema Zoos Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon064",
+      "expected": "Daqa Koh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon065",
+      "expected": "Keh Namut Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon066",
+      "expected": "Kah Mael Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon067",
+      "expected": "Qua Raym Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon068",
+      "expected": "Ya Naga Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon069",
+      "expected": "Ishto Soh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon070",
+      "expected": "Soh Kofi Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon071",
+      "expected": "Pumaag Nitae Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon072",
+      "expected": "Dah Kaso Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon073",
+      "expected": "Katah Chuki Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon074",
+      "expected": "Noya Neha Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon075",
+      "expected": "Dah Hesho Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon076",
+      "expected": "Sasa Kai Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon077",
+      "expected": "Ke'nai Shakah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon078",
+      "expected": "Mijah Rokee Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon079",
+      "expected": "Namika Ozz Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon080",
+      "expected": "Shoqa Tatone Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon081",
+      "expected": "Muwo Jeem Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon082",
+      "expected": "Chaas Qeta Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon083",
+      "expected": "Tena Ko'sah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon084",
+      "expected": "Tutsuwa Nima Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon085",
+      "expected": "Kema Kosassa Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon086",
+      "expected": "Goma Asaagh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon087",
+      "expected": "Mozo Shenno Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon088",
+      "expected": "Hia Miu Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon089",
+      "expected": "Saas Ko'sah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon090",
+      "expected": "Suma Sahma Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon091",
+      "expected": "Gorae Torr Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon092",
+      "expected": "Maag No'rah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon093",
+      "expected": "Raqa Zunzo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon094",
+      "expected": "Tho Kayu Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon095",
+      "expected": "Kuhn Sidajj Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon096",
+      "expected": "Qukah Nata Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon097",
+      "expected": "Korgu Chideh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon098",
+      "expected": "Daag Chokah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon099",
+      "expected": "Ta'loh Naeg Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon100",
+      "expected": "Keeha Yoog Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon101",
+      "expected": "Dagah Keek Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon102",
+      "expected": "Zuna Kai Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon103",
+      "expected": "Dila Maag Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon104",
+      "expected": "Lanno Kooh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon105",
+      "expected": "Tu Ka'loh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon106",
+      "expected": "Maag Halan Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon107",
+      "expected": "Misae Suma Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon108",
+      "expected": "Ketoh Wawai Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon109",
+      "expected": "Ritaag Zumo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon110",
+      "expected": "Korsh O'hu Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon111",
+      "expected": "Tawa Jinn Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon112",
+      "expected": "Lakna Rokee Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon113",
+      "expected": "Shae Katha Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon114",
+      "expected": "Shai Yota Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon115",
+      "expected": "Rona Kachta Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon116",
+      "expected": "Qaza Tokki Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon117",
+      "expected": "Jitan Sa'mi Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon118",
+      "expected": "To Quomo Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon119",
+      "expected": "Tahno O'ah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon120",
+      "expected": "Yowaka Ita Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon121",
+      "expected": "Kihiro Moh Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon122",
+      "expected": "Etsu Korima Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon123",
+      "expected": "Rohta Chigah Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon124",
+      "expected": "Sato Koda Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon125",
+      "expected": "Kee Dafunia Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon126",
+      "expected": "Mah Eliya Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon127",
+      "expected": "Noe Rajee Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon128",
+      "expected": "Kiah Toza Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon129",
+      "expected": "Shira Gomar Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon130",
+      "expected": "Kamia Omuna Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon131",
+      "expected": "Rinu Honika Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon132",
+      "expected": "Sharo Lun Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon133",
+      "expected": "Keive Tala Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon134",
+      "expected": "Takama Shiri Shrine"
+    },
+    {
+      "group": "shrines",
+      "id": "Dungeon135",
+      "expected": "Ruvo Korbah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon000",
+      "expected": "Chest - Tah Muhl Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon001",
+      "expected": "Chest - Jee Noh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon002",
+      "expected": "Chest - Sah Dahaj Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon003",
+      "expected": "Chest - Hawa Koth Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon004",
+      "expected": "Chest - Zalta Wa Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon005",
+      "expected": "Chest - Ne'ez Yohma Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon006",
+      "expected": "Chest - Yah Rin Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon007",
+      "expected": "Chest - Bosh Kala Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon008",
+      "expected": "Chest - Bareeda Naag Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon009",
+      "expected": "Chest - Owa Daim Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon010",
+      "expected": "Chest - Kay Noh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon011",
+      "expected": "Chest - Monya Toma Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon012",
+      "expected": "Chest - Voo Lota Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon013",
+      "expected": "Chest - Katosa Aug Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon014",
+      "expected": "Chest - Kam Urog Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon015",
+      "expected": "Chest - Toto Sah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon016",
+      "expected": "Chest - Rucco Maag Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon017",
+      "expected": "Chest - Shee Vaneer Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon018",
+      "expected": "Chest - Rok Uwog Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon019",
+      "expected": "Chest - Dow Na'eh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon020",
+      "expected": "Chest - Sheem Dagoze Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon021",
+      "expected": "Chest - Toh Yahsa Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon022",
+      "expected": "Chest - Keo Ruug Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon023",
+      "expected": "Chest - Sheh Rata Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon024",
+      "expected": "Chest - Mezza Lo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon025",
+      "expected": "Chest - Kayra Mah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon026",
+      "expected": "Chest - Shae Mo'sah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon027",
+      "expected": "Chest - Rota Ooh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon028",
+      "expected": "Chest - Shora Hah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon029",
+      "expected": "Chest - Hila Rao Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon030",
+      "expected": "Chest - Joloo Nah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon031",
+      "expected": "Chest - Mo'a Keet Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon032",
+      "expected": "Chest - Dako Tah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon033",
+      "expected": "Chest - Daka Tuss Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon034",
+      "expected": "Chest - Kah Yah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon035",
+      "expected": "Chest - Akh Va'quot Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon036",
+      "expected": "Chest - Sho Dantu Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon037",
+      "expected": "Chest - Shae Loya Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon038",
+      "expected": "Chest - Oman Au Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon039",
+      "expected": "Chest - Myahm Agana Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon040",
+      "expected": "Chest - Kaam Ya'tak Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon041",
+      "expected": "Chest - Ja Baij Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon042",
+      "expected": "Chest - Rin Oyaa Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon043",
+      "expected": "Chest - Kuh Takkar Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon044",
+      "expected": "Chest - Shee Venath Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon045",
+      "expected": "Chest - Ha Dahamar Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon046",
+      "expected": "Chest - Shada Naw Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon047",
+      "expected": "Chest - Ree Dahee Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon048",
+      "expected": "Chest - Ze Kasho Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon049",
+      "expected": "Chest - Kaya Wan Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon050",
+      "expected": "Chest - Shai Utoh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon051",
+      "expected": "Chest - Maka Rah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon052",
+      "expected": "Chest - Gee Ha'rah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon053",
+      "expected": "Chest - Sha Warvo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon054",
+      "expected": "Chest - Ka'o Makagh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon055",
+      "expected": "Chest - Dunba Taag Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon056",
+      "expected": "Chest - Mirro Shaz Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon057",
+      "expected": "Chest - Wahgo Katta Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon058",
+      "expected": "Chest - Mogg Latan Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon059",
+      "expected": "Chest - Kah Okeo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon060",
+      "expected": "Chest - Daqo Chisay Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon061",
+      "expected": "Chest - Shoda Sah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon062",
+      "expected": "Chest - Sha Gehma Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon063",
+      "expected": "Chest - Kema Zoos Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon064",
+      "expected": "Chest - Daqa Koh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon065",
+      "expected": "Chest - Keh Namut Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon066",
+      "expected": "Chest - Kah Mael Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon067",
+      "expected": "Chest - Qua Raym Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon068",
+      "expected": "Chest - Ya Naga Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon069",
+      "expected": "Chest - Ishto Soh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon070",
+      "expected": "Chest - Soh Kofi Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon071",
+      "expected": "Chest - Pumaag Nitae Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon072",
+      "expected": "Chest - Dah Kaso Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon073",
+      "expected": "Chest - Katah Chuki Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon074",
+      "expected": "Chest - Noya Neha Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon075",
+      "expected": "Chest - Dah Hesho Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon076",
+      "expected": "Chest - Sasa Kai Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon077",
+      "expected": "Chest - Ke'nai Shakah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon078",
+      "expected": "Chest - Mijah Rokee Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon079",
+      "expected": "Chest - Namika Ozz Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon080",
+      "expected": "Chest - Shoqa Tatone Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon081",
+      "expected": "Chest - Muwo Jeem Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon082",
+      "expected": "Chest - Chaas Qeta Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon083",
+      "expected": "Chest - Tena Ko'sah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon084",
+      "expected": "Chest - Tutsuwa Nima Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon085",
+      "expected": "Chest - Kema Kosassa Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon086",
+      "expected": "Chest - Goma Asaagh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon087",
+      "expected": "Chest - Mozo Shenno Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon088",
+      "expected": "Chest - Hia Miu Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon089",
+      "expected": "Chest - Saas Ko'sah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon090",
+      "expected": "Chest - Suma Sahma Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon091",
+      "expected": "Chest - Gorae Torr Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon092",
+      "expected": "Chest - Maag No'rah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon093",
+      "expected": "Chest - Raqa Zunzo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon094",
+      "expected": "Chest - Tho Kayu Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon095",
+      "expected": "Chest - Kuhn Sidajj Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon096",
+      "expected": "Chest - Qukah Nata Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon097",
+      "expected": "Chest - Korgu Chideh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon098",
+      "expected": "Chest - Daag Chokah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon099",
+      "expected": "Chest - Ta'loh Naeg Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon100",
+      "expected": "Chest - Keeha Yoog Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon101",
+      "expected": "Chest - Dagah Keek Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon102",
+      "expected": "Chest - Zuna Kai Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon103",
+      "expected": "Chest - Dila Maag Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon104",
+      "expected": "Chest - Lanno Kooh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon105",
+      "expected": "Chest - Tu Ka'loh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon106",
+      "expected": "Chest - Maag Halan Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon107",
+      "expected": "Chest - Misae Suma Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon108",
+      "expected": "Chest - Ketoh Wawai Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon109",
+      "expected": "Chest - Ritaag Zumo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon110",
+      "expected": "Chest - Korsh O'hu Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon111",
+      "expected": "Chest - Tawa Jinn Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon112",
+      "expected": "Chest - Lakna Rokee Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon113",
+      "expected": "Chest - Shae Katha Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon114",
+      "expected": "Chest - Shai Yota Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon115",
+      "expected": "Chest - Rona Kachta Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon116",
+      "expected": "Chest - Qaza Tokki Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon117",
+      "expected": "Chest - Jitan Sa'mi Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon118",
+      "expected": "Chest - To Quomo Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon119",
+      "expected": "Chest - Tahno O'ah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon120",
+      "expected": "Chest - Yowaka Ita Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon121",
+      "expected": "Chest - Kihiro Moh Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon122",
+      "expected": "Chest - Etsu Korima Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon123",
+      "expected": "Chest - Rohta Chigah Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon124",
+      "expected": "Chest - Sato Koda Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon125",
+      "expected": "Chest - Kee Dafunia Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon126",
+      "expected": "Chest - Mah Eliya Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon127",
+      "expected": "Chest - Noe Rajee Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon128",
+      "expected": "Chest - Kiah Toza Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon129",
+      "expected": "Chest - Shira Gomar Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon130",
+      "expected": "Chest - Kamia Omuna Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon131",
+      "expected": "Chest - Rinu Honika Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon132",
+      "expected": "Chest - Sharo Lun Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon133",
+      "expected": "Chest - Keive Tala Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon134",
+      "expected": "Chest - Takama Shiri Shrine"
+    },
+    {
+      "group": "shrine_chests",
+      "id": "Dungeon135",
+      "expected": "Chest - Ruvo Korbah Shrine"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorse",
+      "expected": "Horse"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorse00L",
+      "expected": "Giant Horse"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorseZelda",
+      "expected": "White Horse"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorseNushi",
+      "expected": "Lord of the Mountain"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorseBone",
+      "expected": "Stalhorse"
+    },
+    {
+      "group": "compendium",
+      "id": "GameRomHorse00S",
+      "expected": "Donkey"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Sunazarashi_A",
+      "expected": "Sand Seal"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_SunazarashiSP_C",
+      "expected": "Patricia"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Squirrel_A",
+      "expected": "Bushy-Tailed Squirrel"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Boar_A",
+      "expected": "Woodland Boar"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Boar_B",
+      "expected": "Red-Tusked Boar"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_WildGoat_A",
+      "expected": "Mountain Goat"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Goat_A",
+      "expected": "White Goat"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Deer_A",
+      "expected": "Mountain Buck"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Doe_A",
+      "expected": "Mountain Doe"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Bull_A",
+      "expected": "Water Buffalo"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Cow_A",
+      "expected": "Hateno Cow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Sheep_A",
+      "expected": "Highland Sheep"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Fox_A",
+      "expected": "Grassland Fox"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Fox_B",
+      "expected": "Snowcoat Fox"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Wolf_A",
+      "expected": "Maraudo Wolf"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Wolf_B",
+      "expected": "Wasteland Coyote"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Wolf_C",
+      "expected": "Cold-Footed Wolf"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Elk_A",
+      "expected": "Tabantha Moose"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Rhino_A",
+      "expected": "Great-Horned Rhinoceros"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Bear_A",
+      "expected": "Honeyvore Bear"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Bear_B",
+      "expected": "Grizzlemaw Bear"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Dog_A",
+      "expected": "Hylian Retriever"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_RupeeRabbit_A",
+      "expected": "Blupee"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_A",
+      "expected": "Common Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_B",
+      "expected": "Red Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_C",
+      "expected": "Blue Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_D",
+      "expected": "Rainbow Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_E",
+      "expected": "Sand Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_LittleBird_F",
+      "expected": "Golden Sparrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Pigeon_A",
+      "expected": "Wood Pigeon"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Pigeon_B",
+      "expected": "Rainbow Pigeon"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Ptarmigan_B",
+      "expected": "Hotfeather Pigeon"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Ptarmigan_A",
+      "expected": "White Pigeon"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Crow_A",
+      "expected": "Mountain Crow"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_WildDuck_A",
+      "expected": "Bright-Chested Duck"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Heron_A",
+      "expected": "Blue-Winged Heron"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Heron_B",
+      "expected": "Pink Heron"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Hawk_A",
+      "expected": "Islander Hawk"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Gull_A",
+      "expected": "Seagull"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Cassowary_A",
+      "expected": "Eldin Ostrich"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Kokko_A",
+      "expected": "Cucco"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_A",
+      "expected": "Hyrule Bass"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_B",
+      "expected": "Hearty Bass"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_L",
+      "expected": "Staminoka Bass"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_I",
+      "expected": "Hearty Salmon"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_C",
+      "expected": "Chillfin Trout"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_J",
+      "expected": "Sizzlefin Trout"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_D",
+      "expected": "Voltfin Trout"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_X",
+      "expected": "Stealthfin Trout"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_E",
+      "expected": "Mighty Carp"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_H",
+      "expected": "Armored Carp"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_Z",
+      "expected": "Sanke Carp"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_F",
+      "expected": "Mighty Porgy"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_G",
+      "expected": "Armored Porgy"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_M",
+      "expected": "Sneaky River Snail"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_FishGet_K",
+      "expected": "Hearty Blueshell Snail"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_InsectGet_K",
+      "expected": "Razorclaw Crab"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_InsectGet_O",
+      "expected": "Ironshell Crab"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_InsectGet_Z",
+      "expected": "Bright-Eyed Crab"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_F",
+      "expected": "Fairy"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_N",
+      "expected": "Winterwing Butterfly"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_Q",
+      "expected": "Summerwing Butterfly"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_R",
+      "expected": "Thunderwing Butterfly"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_AB",
+      "expected": "Smotherwing Butterfly"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_C",
+      "expected": "Cold Darner"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_T",
+      "expected": "Warm Darner"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_I",
+      "expected": "Electric Darner"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_H",
+      "expected": "Restless Cricket"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_G",
+      "expected": "Bladed Rhino Beetle"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_P",
+      "expected": "Rugged Rhino Beetle"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_AA",
+      "expected": "Energetic Rhino Beetle"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_E",
+      "expected": "Sunset Firefly"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_A",
+      "expected": "Hot-Footed Frog"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_B",
+      "expected": "Tireless Frog"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_S",
+      "expected": "Hightail Lizard"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_M",
+      "expected": "Hearty Lizard"
+    },
+    {
+      "group": "compendium",
+      "id": "Animal_Insect_X",
+      "expected": "Fireproof Lizard"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Chuchu_Junior",
+      "expected": "Chuchu"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Chuchu_Fire_Junior",
+      "expected": "Fire Chuchu"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Chuchu_Ice_Junior",
+      "expected": "Ice Chuchu"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Chuchu_Electric_Junior",
+      "expected": "Electric Chuchu"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Keese",
+      "expected": "Keese"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Keese_Fire",
+      "expected": "Fire Keese"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Keese_Ice",
+      "expected": "Ice Keese"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Keese_Electric",
+      "expected": "Electric Keese"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Octarock",
+      "expected": "Water Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Octarock_Forest",
+      "expected": "Forest Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Octarock_Stone",
+      "expected": "Rock Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Octarock_Snow",
+      "expected": "Snow Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Octarock_Desert",
+      "expected": "Treasure Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_AirOctarock",
+      "expected": "Sky Octorok"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Fire",
+      "expected": "Fire Wizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Ice",
+      "expected": "Ice Wizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Electric",
+      "expected": "Electric Wizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Fire_Senior",
+      "expected": "Meteo Wizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Ice_Senior",
+      "expected": "Blizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Wizzrobe_Electric_Senior",
+      "expected": "Thunder Wizzrobe"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Junior",
+      "expected": "Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Middle",
+      "expected": "Blue Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Senior",
+      "expected": "Black Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Bone_Junior",
+      "expected": "Stalkoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Dark",
+      "expected": "Silver Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Bokoblin_Gold",
+      "expected": "Golden Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Junior",
+      "expected": "Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Middle",
+      "expected": "Blue Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Senior",
+      "expected": "Black Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Bone_Junior",
+      "expected": "Stalmoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Dark",
+      "expected": "Silver Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Moriblin_Gold",
+      "expected": "Golden Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Junior",
+      "expected": "Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Middle",
+      "expected": "Blue Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Senior",
+      "expected": "Black Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Bone_Junior",
+      "expected": "Stalizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Fire",
+      "expected": "Fire-Breath Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Ice",
+      "expected": "Ice-Breath Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Electric",
+      "expected": "Electric Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Dark",
+      "expected": "Silver Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lizalfos_Gold",
+      "expected": "Golden Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lynel_Junior",
+      "expected": "Lynel"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lynel_Middle",
+      "expected": "Blue-Maned Lynel"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lynel_Senior",
+      "expected": "White-Maned Lynel"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lynel_Dark",
+      "expected": "Silver Lynel"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Lynel_Gold",
+      "expected": "Golden Lynel"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_A",
+      "expected": "Guardian Stalker"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_C",
+      "expected": "Guardian Skywatcher"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_B",
+      "expected": "Guardian Turret"
+    },
+    {
+      "group": "compendium",
+      "id": "RemainsFire_Drone_A_01",
+      "expected": "Sentry"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_A_Fixed_Moss",
+      "expected": "Decayed Guardian"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_Mini_Baby",
+      "expected": "Guardian Scout I"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_Mini_Junior",
+      "expected": "Guardian Scout II"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_Mini_Middle",
+      "expected": "Guardian Scout III"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Guardian_Mini_Senior",
+      "expected": "Guardian Scout IV"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Assassin_Junior",
+      "expected": "Yiga Footsoldier"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Assassin_Middle",
+      "expected": "Yiga Blademaster"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Assassin_Senior",
+      "expected": "Master Kohga"
+    },
+    {
+      "group": "compendium",
+      "id": "Priest_Boss_Normal",
+      "expected": "Monk Maz Koshia"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Junior",
+      "expected": "Stone Talus"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Middle",
+      "expected": "Stone Talus (Luminous)"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Senior",
+      "expected": "Stone Talus (Rare)"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Fire",
+      "expected": "Igneo Talus"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Ice",
+      "expected": "Frost Talus"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Little",
+      "expected": "Stone Pebblit"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Little_Fire",
+      "expected": "Igneo Pebblit"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Little_Ice",
+      "expected": "Frost Pebblit"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Golem_Fire_R",
+      "expected": "Igneo Talus Titan"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Giant_Junior",
+      "expected": "Hinox"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Giant_Middle",
+      "expected": "Blue Hinox"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Giant_Senior",
+      "expected": "Black Hinox"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Giant_Bone",
+      "expected": "Stalnox"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Sandworm",
+      "expected": "Molduga"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_SandwormR",
+      "expected": "Molduking"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Dragon_Fire",
+      "expected": "Dinraal"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Dragon_Ice",
+      "expected": "Naydra"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Dragon_Electric",
+      "expected": "Farosh"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_GanonGrudge",
+      "expected": "Cursed Bokoblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_GanonGrudge_01",
+      "expected": "Cursed Moblin"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_GanonGrudge_02",
+      "expected": "Cursed Lizalfos"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_SiteBoss_Sword",
+      "expected": "Thunderblight Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_SiteBoss_Lsword",
+      "expected": "Fireblight Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_SiteBoss_Spear",
+      "expected": "Waterblight Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_SiteBoss_Bow",
+      "expected": "Windblight Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_Ganon",
+      "expected": "Calamity Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Enemy_GanonBeast",
+      "expected": "Dark Beast Ganon"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_A",
+      "expected": "Apple"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_G",
+      "expected": "Palm Fruit"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_B",
+      "expected": "Wildberry"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_D",
+      "expected": "Hearty Durian"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_F",
+      "expected": "Hydromelon"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_I",
+      "expected": "Spicy Pepper"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_C",
+      "expected": "Voltfruit"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_E",
+      "expected": "Fleet-Lotus Seeds"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_H",
+      "expected": "Mighty Bananas"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_E",
+      "expected": "Hylian Shroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_O",
+      "expected": "Endura Shroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_A",
+      "expected": "Stamella Shroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_F",
+      "expected": "Hearty Truffle"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_N",
+      "expected": "Big Hearty Truffle"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_B",
+      "expected": "Chillshroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_C",
+      "expected": "Sunshroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_H",
+      "expected": "Zapshroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_MushroomGet_D",
+      "expected": "Rushroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_L",
+      "expected": "Razorshroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_M",
+      "expected": "Ironshroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Mushroom_J",
+      "expected": "Silent Shroom"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_A",
+      "expected": "Hyrule Herb"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_B",
+      "expected": "Hearty Radish"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_C",
+      "expected": "Big Hearty Radish"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_E",
+      "expected": "Cool Safflina"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_F",
+      "expected": "Warm Safflina"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_L",
+      "expected": "Electric Safflina"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_M",
+      "expected": "Swift Carrot"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_Q",
+      "expected": "Endura Carrot"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_Fruit_J",
+      "expected": "Fortified Pumpkin"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_O",
+      "expected": "Swift Violet"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_G",
+      "expected": "Mighty Thistle"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_H",
+      "expected": "Armoranth"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_I",
+      "expected": "Blue Nightshade"
+    },
+    {
+      "group": "compendium",
+      "id": "Item_PlantGet_J",
+      "expected": "Silent Princess"
+    },
+    {
+      "group": "compendium",
+      "id": "BeeHome",
+      "expected": "Courser Bee Honey"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_070",
+      "expected": "Master Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_044",
+      "expected": "Tree Branch"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_043",
+      "expected": "Torch"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_022",
+      "expected": "Soup Ladle"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_051",
+      "expected": "Boomerang"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_040",
+      "expected": "Spring-Loaded Hammer"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_001",
+      "expected": "Traveler's Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_002",
+      "expected": "Soldier's Broadsword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_003",
+      "expected": "Knight's Broadsword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_024",
+      "expected": "Royal Broadsword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_025",
+      "expected": "Forest Dweller's Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_027",
+      "expected": "Zora Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_031",
+      "expected": "Feathered Edge"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_029",
+      "expected": "Gerudo Scimitar"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_030",
+      "expected": "Moonlight Scimitar"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_052",
+      "expected": "Scimitar of the Seven"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_041",
+      "expected": "Eightfold Blade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_023",
+      "expected": "Ancient Short Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_021",
+      "expected": "Rusty Broadsword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_047",
+      "expected": "Royal Guard's Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_033",
+      "expected": "Flameblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_034",
+      "expected": "Frostblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_035",
+      "expected": "Thunderblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_004",
+      "expected": "Boko Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_005",
+      "expected": "Spiked Boko Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_006",
+      "expected": "Dragonbone Boko Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_007",
+      "expected": "Lizal Boomerang"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_008",
+      "expected": "Lizal Forked Boomerang"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_009",
+      "expected": "Lizal Tri-Boomerang"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_013",
+      "expected": "Guardian Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_014",
+      "expected": "Guardian Sword+"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_015",
+      "expected": "Guardian Sword++"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_016",
+      "expected": "Lynel Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_017",
+      "expected": "Mighty Lynel Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_018",
+      "expected": "Savage Lynel Sword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_060",
+      "expected": "Fire Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_048",
+      "expected": "Meteor Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_061",
+      "expected": "Ice Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_049",
+      "expected": "Blizzard Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_062",
+      "expected": "Lightning Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_050",
+      "expected": "Thunderstorm Rod"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_053",
+      "expected": "Vicious Sickle"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_073",
+      "expected": "Demon Carver"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_502",
+      "expected": "One-Hit Obliterator"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_019",
+      "expected": "Bokoblin Arm"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Sword_020",
+      "expected": "Lizalfos Arm"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_056",
+      "expected": "Korok Leaf"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_045",
+      "expected": "Farming Hoe"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_038",
+      "expected": "Boat Oar"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_032",
+      "expected": "Woodcutter's Axe"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_030",
+      "expected": "Double Axe"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_031",
+      "expected": "Iron Sledgehammer"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_051",
+      "expected": "Giant Boomerang"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_001",
+      "expected": "Traveler's Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_002",
+      "expected": "Soldier's Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_003",
+      "expected": "Knight's Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_024",
+      "expected": "Royal Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_027",
+      "expected": "Silver Longsword"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_036",
+      "expected": "Cobble Crusher"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_037",
+      "expected": "Stone Smasher"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_054",
+      "expected": "Boulder Breaker"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_029",
+      "expected": "Golden Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_041",
+      "expected": "Eightfold Longblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_055",
+      "expected": "Edge of Duality"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_023",
+      "expected": "Ancient Bladesaw"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_020",
+      "expected": "Rusty Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_047",
+      "expected": "Royal Guard's Claymore"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_033",
+      "expected": "Great Flameblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_034",
+      "expected": "Great Frostblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_035",
+      "expected": "Great Thunderblade"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_004",
+      "expected": "Boko Bat"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_005",
+      "expected": "Spiked Boko Bat"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_006",
+      "expected": "Dragonbone Boko Bat"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_010",
+      "expected": "Moblin Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_011",
+      "expected": "Spiked Moblin Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_012",
+      "expected": "Dragonbone Moblin Club"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_013",
+      "expected": "Ancient Battle Axe"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_014",
+      "expected": "Ancient Battle Axe+"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_015",
+      "expected": "Ancient Battle Axe++"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_016",
+      "expected": "Lynel Crusher"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_017",
+      "expected": "Mighty Lynel Crusher"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_018",
+      "expected": "Savage Lynel Crusher"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_074",
+      "expected": "Windcleaver"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Lsword_019",
+      "expected": "Moblin Arm"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_036",
+      "expected": "Wooden Mop"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_022",
+      "expected": "Farmer's Pitchfork"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_038",
+      "expected": "Fishing Harpoon"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_030",
+      "expected": "Throwing Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_001",
+      "expected": "Traveler's Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_002",
+      "expected": "Soldier's Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_003",
+      "expected": "Knight's Halberd"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_024",
+      "expected": "Royal Halberd"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_025",
+      "expected": "Forest Dweller's Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_027",
+      "expected": "Zora Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_028",
+      "expected": "Silverscale Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_049",
+      "expected": "Ceremonial Trident"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_050",
+      "expected": "Lightscale Trident"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_031",
+      "expected": "Drillshaft"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_032",
+      "expected": "Feathered Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_029",
+      "expected": "Gerudo Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_037",
+      "expected": "Serpentine Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_023",
+      "expected": "Ancient Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_021",
+      "expected": "Rusty Halberd"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_047",
+      "expected": "Royal Guard's Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_033",
+      "expected": "Flamespear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_034",
+      "expected": "Frostspear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_035",
+      "expected": "Thunderspear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_004",
+      "expected": "Boko Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_005",
+      "expected": "Spiked Boko Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_006",
+      "expected": "Dragonbone Boko Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_010",
+      "expected": "Moblin Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_011",
+      "expected": "Spiked Moblin Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_012",
+      "expected": "Dragonbone Moblin Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_007",
+      "expected": "Lizal Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_008",
+      "expected": "Enhanced Lizal Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_009",
+      "expected": "Forked Lizal Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_013",
+      "expected": "Guardian Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_014",
+      "expected": "Guardian Spear+"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_015",
+      "expected": "Guardian Spear++"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_016",
+      "expected": "Lynel Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_017",
+      "expected": "Mighty Lynel Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Spear_018",
+      "expected": "Savage Lynel Spear"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_071",
+      "expected": "Bow of Light"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_038",
+      "expected": "Wooden Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_001",
+      "expected": "Traveler's Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_002",
+      "expected": "Soldier’s Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_035",
+      "expected": "Knight's Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_036",
+      "expected": "Royal Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_013",
+      "expected": "Forest Dweller's Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_014",
+      "expected": "Silver Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_016",
+      "expected": "Swallow Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_017",
+      "expected": "Falcon Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_028",
+      "expected": "Great Eagle Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_015",
+      "expected": "Golden Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_029",
+      "expected": "Phrenic Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_023",
+      "expected": "Ancient Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_033",
+      "expected": "Royal Guard's Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_004",
+      "expected": "Boko Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_003",
+      "expected": "Spiked Boko Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_027",
+      "expected": "Dragon Bone Boko Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_006",
+      "expected": "Lizal Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_011",
+      "expected": "Strengthened Lizal Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_030",
+      "expected": "Steel Lizal Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_009",
+      "expected": "Lynel Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_026",
+      "expected": "Mighty Lynel Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_032",
+      "expected": "Savage Lynel Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Bow_040",
+      "expected": "Duplex Bow"
+    },
+    {
+      "group": "compendium",
+      "id": "NormalArrow",
+      "expected": "Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "FireArrow",
+      "expected": "Fire Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "IceArrow",
+      "expected": "Ice Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "ElectricArrow",
+      "expected": "Shock Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "BombArrow_A",
+      "expected": "Bomb Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "AncientArrow",
+      "expected": "Ancient Arrow"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_030",
+      "expected": "Hylian Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_040",
+      "expected": "Pot Lid"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_001",
+      "expected": "Wooden Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_034",
+      "expected": "Emblazoned Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_031",
+      "expected": "Hunter's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_032",
+      "expected": "Fisherman's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_035",
+      "expected": "Traveler's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_002",
+      "expected": "Soldier’s Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_003",
+      "expected": "Knight's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_022",
+      "expected": "Royal Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_023",
+      "expected": "Forest Dweller's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_025",
+      "expected": "Silver Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_042",
+      "expected": "Kite Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_026",
+      "expected": "Gerudo Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_036",
+      "expected": "Radiant Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_037",
+      "expected": "Daybreaker"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_041",
+      "expected": "Shield of the Mind's Eye"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_038",
+      "expected": "Ancient Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_021",
+      "expected": "Rusty Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_033",
+      "expected": "Royal Guard's Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_004",
+      "expected": "Boko Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_005",
+      "expected": "Spiked Boko Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_006",
+      "expected": "Dragonbone Boko Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_007",
+      "expected": "Lizal Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_008",
+      "expected": "Reinforced Lizal Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_009",
+      "expected": "Steel Lizal Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_013",
+      "expected": "Guardian Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_014",
+      "expected": "Guardian Shield+"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_015",
+      "expected": "Guardian Shield++"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_016",
+      "expected": "Lynel Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_017",
+      "expected": "Mighty Lynel Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "Weapon_Shield_018",
+      "expected": "Savage Lynel Shield"
+    },
+    {
+      "group": "compendium",
+      "id": "TBox_Field_Iron",
+      "expected": "Treasure Chest"
+    },
+    {
+      "group": "compendium",
+      "id": "Obj_Mineral_A_01",
+      "expected": "Ore Deposit"
+    },
+    {
+      "group": "compendium",
+      "id": "Obj_Mineral_B_01",
+      "expected": "Rare Ore Deposit"
+    },
+    {
+      "group": "compendium",
+      "id": "Obj_Mineral_C_01",
+      "expected": "Luminous Stone Deposit"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_116_Upper",
+      "expected": "Champion's Tunic"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_049_Lower",
+      "expected": "Sand Boots"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_141_Lower",
+      "expected": "Snow Boots"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_027_Head",
+      "expected": "Topaz Earrings"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_028_Head",
+      "expected": "Opal Earrings"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_029_Head",
+      "expected": "Amber Earrings"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_024_Head",
+      "expected": "Diamond Circlet"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_025_Head",
+      "expected": "Ruby Circlet"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_026_Head",
+      "expected": "Sapphire Circlet"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_220_Head",
+      "expected": "Sheik's Mask"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_048_Head",
+      "expected": "Barbarian Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_048_Upper",
+      "expected": "Barbarian Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_048_Lower",
+      "expected": "Barbarian Leg Wraps"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_014_Head",
+      "expected": "Climber's Bandanna"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_014_Upper",
+      "expected": "Climbing Gear"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_014_Lower",
+      "expected": "Climbing Boots"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_008_Head",
+      "expected": "Desert Voe Headband"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_008_Upper",
+      "expected": "Desert Voe Spaulder"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_008_Lower",
+      "expected": "Desert Voe Trousers"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_225_Head",
+      "expected": "Fierce Deity Mask"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_225_Upper",
+      "expected": "Fierce Deity Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_225_Lower",
+      "expected": "Fierce Deity Boots"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_011_Head",
+      "expected": "Flamebreaker Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_011_Upper",
+      "expected": "Flamebreaker Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_011_Lower",
+      "expected": "Flamebreaker Boots"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_021_Head",
+      "expected": "Ancient Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_021_Upper",
+      "expected": "Ancient Cuirass"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_021_Lower",
+      "expected": "Ancient Greaves"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_215_Head",
+      "expected": "Cap of the Sky"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_215_Upper",
+      "expected": "Tunic of the Sky"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_215_Lower",
+      "expected": "Trousers of the Sky"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_200_Head",
+      "expected": "Cap of Time"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_200_Upper",
+      "expected": "Tunic of Time"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_200_Lower",
+      "expected": "Trousers of Time"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_210_Head",
+      "expected": "Cap of Twilight"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_210_Upper",
+      "expected": "Tunic of Twilight"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_210_Lower",
+      "expected": "Trousers of Twilight"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_005_Head",
+      "expected": "Cap of the Wild"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_005_Upper",
+      "expected": "Tunic of the Wild"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_005_Lower",
+      "expected": "Trousers of the Wild"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_205_Head",
+      "expected": "Cap of the Wind"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_205_Upper",
+      "expected": "Tunic of the Wind"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_205_Lower",
+      "expected": "Trousers of the Wind"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_230_Head",
+      "expected": "Cap of the Hero"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_230_Upper",
+      "expected": "Tunic of the Hero"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_230_Lower",
+      "expected": "Trousers of the Hero"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_001_Head",
+      "expected": "Hylian Hood"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_001_Upper",
+      "expected": "Hylian Tunic"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_001_Lower",
+      "expected": "Hylian Trousers"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_017_Head",
+      "expected": "Radiant Mask"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_017_Upper",
+      "expected": "Radiant Shirt"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_017_Lower",
+      "expected": "Radiant Tights"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_046_Head",
+      "expected": "Rubber Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_046_Upper",
+      "expected": "Rubber Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_046_Lower",
+      "expected": "Rubber Tights"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_009_Head",
+      "expected": "Snowquill Headdress"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_009_Upper",
+      "expected": "Snowquill Tunic"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_009_Lower",
+      "expected": "Snowquill Trousers"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_020_Head",
+      "expected": "Soldier's Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_020_Upper",
+      "expected": "Soldier's Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_020_Lower",
+      "expected": "Soldier's Greaves"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_012_Head",
+      "expected": "Stealth Mask"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_012_Upper",
+      "expected": "Stealth Chest Guard"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_012_Lower",
+      "expected": "Stealth Tights"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_006_Head",
+      "expected": "Zora Helm"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_006_Upper",
+      "expected": "Zora Armor"
+    },
+    {
+      "group": "armor_owned",
+      "id": "Armor_006_Lower",
+      "expected": "Zora Greaves"
+    },
+    {
+      "group": "main_quests",
+      "id": "capturedmemories",
+      "expected": "Captured Memories"
+    },
+    {
+      "group": "main_quests",
+      "id": "championdarukssong",
+      "expected": "EX Champion Daruk's Song"
+    },
+    {
+      "group": "main_quests",
+      "id": "championmiphassong",
+      "expected": "EX Champion Mipha's Song"
+    },
+    {
+      "group": "main_quests",
+      "id": "championrevalissong",
+      "expected": "EX Champion Revali's Song"
+    },
+    {
+      "group": "main_quests",
+      "id": "championurbosassong",
+      "expected": "EX Champion Urbosa's Song"
+    },
+    {
+      "group": "main_quests",
+      "id": "destroyganon",
+      "expected": "Destroy Ganon"
+    },
+    {
+      "group": "main_quests",
+      "id": "divinebeastvahmedoh",
+      "expected": "Divine Beast Vah Medoh"
+    },
+    {
+      "group": "main_quests",
+      "id": "divinebeastvahnaboris",
+      "expected": "Divine Beast Vah Naboris"
+    },
+    {
+      "group": "main_quests",
+      "id": "divinebeastvahrudania",
+      "expected": "Divine Beast Vah Rudania"
+    },
+    {
+      "group": "main_quests",
+      "id": "divinebeastvahruta",
+      "expected": "Divine Beast Vah Ruta"
+    },
+    {
+      "group": "main_quests",
+      "id": "findthefairyfountain",
+      "expected": "Find the Fairy Fountain"
+    },
+    {
+      "group": "main_quests",
+      "id": "followthesheikahslate",
+      "expected": "Follow the Sheikah Slate"
+    },
+    {
+      "group": "main_quests",
+      "id": "forbiddencityentry",
+      "expected": "Forbidden City Entry"
+    },
+    {
+      "group": "main_quests",
+      "id": "freethedivinebeasts",
+      "expected": "Free the Divine Beasts"
+    },
+    {
+      "group": "main_quests",
+      "id": "lockedmementos",
+      "expected": "Locked Mementos"
+    },
+    {
+      "group": "main_quests",
+      "id": "reachzorasdomain",
+      "expected": "Reach Zora's Domain"
+    },
+    {
+      "group": "main_quests",
+      "id": "seekoutimpa",
+      "expected": "Seek Out Impa"
+    },
+    {
+      "group": "main_quests",
+      "id": "thechampionsballad",
+      "expected": "EX The Champions' Ballad"
+    },
+    {
+      "group": "main_quests",
+      "id": "theherossword",
+      "expected": "The Hero's Sword"
+    },
+    {
+      "group": "main_quests",
+      "id": "theisolatedplateau",
+      "expected": "The Isolated Plateau"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "abrothersroast",
+      "expected": "A Brother's Roast"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "afragmentedmonument",
+      "expected": "A Fragmented Monument"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "alandscapeofastable",
+      "expected": "A Landscape of a Stable"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "asongofstorms",
+      "expected": "A Song of Storms"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "atestofwill",
+      "expected": "Test of Will"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "cliffsideetchings",
+      "expected": "Cliffside Etchings"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "guardianslideshow",
+      "expected": "Guardian Slideshow"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "intothevortex",
+      "expected": "Into the Vortex"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "masterofthewind",
+      "expected": "Master of the Wind"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "recitalatwarblersnest",
+      "expected": "Recital at Warbler's Nest"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "secretofthecedars",
+      "expected": "Secret of the Cedars"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "secretofthesnowypeaks",
+      "expected": "Secret of the Snowy Peaks"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "shroudedshrine",
+      "expected": "Shrouded Shrine"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "signoftheshadow",
+      "expected": "Sign of the Shadow"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "strandedoneventide",
+      "expected": "Stranded on Eventide"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theancientritosong",
+      "expected": "The Ancient Rito Song"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thebirdinthemountains",
+      "expected": "The Bird in the Mountains"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theceremonialsong",
+      "expected": "The Ceremonial Song"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thecrownedbeast",
+      "expected": "The Crowned Beast"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thecursedstatue",
+      "expected": "The Cursed Statue"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thedesertlabyrinth",
+      "expected": "The Desert Labyrinth"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theeyeofthesandstorm",
+      "expected": "The Eye of the Sandstorm"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thegutcheckchallenge",
+      "expected": "The Gut Check Challenge"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thelostpilgrimage",
+      "expected": "The Lost Pilgrimage"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theperfectdrink",
+      "expected": "The Perfect Drink"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theserpentsjaws",
+      "expected": "The Serpent's Jaws"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thesevenheroines",
+      "expected": "The Seven Heroines"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thesilentswordswomen",
+      "expected": "The Silent Swordswomen"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theskullseye",
+      "expected": "The Skull's Eye"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thespringofpower",
+      "expected": "The Spring of Power"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thespringofwisdom",
+      "expected": "The Spring of Wisdom"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thestolenheirloom",
+      "expected": "The Stolen Heirloom"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thetestofwood",
+      "expected": "The Test of Wood"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thethreegiantbrothers",
+      "expected": "The Three Giant Brothers"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "thetworings",
+      "expected": "The Two Rings"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "theundefeatedchamp",
+      "expected": "The Undefeated Champ"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "trialofsecondsight",
+      "expected": "Trial of Second Sight"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "trialofthelabyrinth",
+      "expected": "Trial of the Labyrinth"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "trialofthunder",
+      "expected": "Trial of Thunder"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "trialonthecliff",
+      "expected": "Trial on the Cliff"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "underaredmoon",
+      "expected": "Under a Red Moon"
+    },
+    {
+      "group": "shrine_quests",
+      "id": "watchoutfortheflowers",
+      "expected": "Watch Out for the Flowers"
+    },
+    {
+      "group": "side_quests",
+      "id": "miskothegreatbandit",
+      "expected": "Misko, the Great Bandit"
+    },
+    {
+      "group": "side_quests",
+      "id": "thepricelessmaracas",
+      "expected": "The Priceless Maracas"
+    },
+    {
+      "group": "side_quests",
+      "id": "wildhorses",
+      "expected": "Wild Horses"
+    },
+    {
+      "group": "side_quests",
+      "id": "flownthecoop",
+      "expected": "Flown the Coop"
+    },
+    {
+      "group": "side_quests",
+      "id": "arrowsofburningheat",
+      "expected": "Arrows of Burning Heat"
+    },
+    {
+      "group": "side_quests",
+      "id": "kokoskitchen",
+      "expected": "Koko's Kitchen"
+    },
+    {
+      "group": "side_quests",
+      "id": "cookingwithkoko",
+      "expected": "Cooking with Koko"
+    },
+    {
+      "group": "side_quests",
+      "id": "kokocuisine",
+      "expected": "Koko Cuisine"
+    },
+    {
+      "group": "side_quests",
+      "id": "kokosspecialty",
+      "expected": "Koko's Specialty"
+    },
+    {
+      "group": "side_quests",
+      "id": "playtimewithcottla",
+      "expected": "Playtime with Cottla"
+    },
+    {
+      "group": "side_quests",
+      "id": "byfireflyslight",
+      "expected": "By Firefly's Light"
+    },
+    {
+      "group": "side_quests",
+      "id": "thestatuesbargain",
+      "expected": "The Statue's Bargain"
+    },
+    {
+      "group": "side_quests",
+      "id": "theweaponconnoisseur",
+      "expected": "The Weapon Connoisseur"
+    },
+    {
+      "group": "side_quests",
+      "id": "agiftformybeloved",
+      "expected": "A Gift for My Beloved"
+    },
+    {
+      "group": "side_quests",
+      "id": "thesheeprustlers",
+      "expected": "The Sheep Rustlers"
+    },
+    {
+      "group": "side_quests",
+      "id": "robbiesresearch",
+      "expected": "Robbie's Research"
+    },
+    {
+      "group": "side_quests",
+      "id": "slatedforupgrades",
+      "expected": "Slated for Upgrades"
+    },
+    {
+      "group": "side_quests",
+      "id": "sunshroomsensing",
+      "expected": "Sunshroom Sensing"
+    },
+    {
+      "group": "side_quests",
+      "id": "theheroscache",
+      "expected": "The Hero's Cache"
+    },
+    {
+      "group": "side_quests",
+      "id": "hylianhomeowner",
+      "expected": "Hylian Homeowner"
+    },
+    {
+      "group": "side_quests",
+      "id": "fromthegroundup",
+      "expected": "From the Ground Up"
+    },
+    {
+      "group": "side_quests",
+      "id": "specialdelivery",
+      "expected": "Special Delivery"
+    },
+    {
+      "group": "side_quests",
+      "id": "divingisbeauty",
+      "expected": "Diving is Beauty!"
+    },
+    {
+      "group": "side_quests",
+      "id": "lynelsafari",
+      "expected": "Lynel Safari"
+    },
+    {
+      "group": "side_quests",
+      "id": "frogcatching",
+      "expected": "Frog Catching"
+    },
+    {
+      "group": "side_quests",
+      "id": "thegiantofralispond",
+      "expected": "The Giant of Ralis Pond"
+    },
+    {
+      "group": "side_quests",
+      "id": "luminousstonegathering",
+      "expected": "Luminous Stone Gathering"
+    },
+    {
+      "group": "side_quests",
+      "id": "awifewashedaway",
+      "expected": "A Wife Washed Away"
+    },
+    {
+      "group": "side_quests",
+      "id": "riverbedreward",
+      "expected": "Riverbed Reward"
+    },
+    {
+      "group": "side_quests",
+      "id": "zorastonemonuments",
+      "expected": "Zora Stone Monuments"
+    },
+    {
+      "group": "side_quests",
+      "id": "whatsfordinner",
+      "expected": "What's for Dinner?"
+    },
+    {
+      "group": "side_quests",
+      "id": "sunkentreasure",
+      "expected": "Sunken Treasure"
+    },
+    {
+      "group": "side_quests",
+      "id": "takebackthesea",
+      "expected": "Take Back the Sea"
+    },
+    {
+      "group": "side_quests",
+      "id": "agiftofnightshade",
+      "expected": "A Gift of Nightshade"
+    },
+    {
+      "group": "side_quests",
+      "id": "thundermagnet",
+      "expected": "Thunder Magnet"
+    },
+    {
+      "group": "side_quests",
+      "id": "huntforthegianthorse",
+      "expected": "Hunt for the Giant Horse"
+    },
+    {
+      "group": "side_quests",
+      "id": "thehorsebackhoodlums",
+      "expected": "The Horseback Hoodlums"
+    },
+    {
+      "group": "side_quests",
+      "id": "goodsizedhorse",
+      "expected": "Good-Sized Horse"
+    },
+    {
+      "group": "side_quests",
+      "id": "missinginaction",
+      "expected": "Missing in Action"
+    },
+    {
+      "group": "side_quests",
+      "id": "rushroomrush",
+      "expected": "Rushroom Rush!"
+    },
+    {
+      "group": "side_quests",
+      "id": "aniceguy",
+      "expected": "An Ice Guy"
+    },
+    {
+      "group": "side_quests",
+      "id": "toolsofthetrade",
+      "expected": "Tools of the Trade"
+    },
+    {
+      "group": "side_quests",
+      "id": "thesecretclubssecret",
+      "expected": "The Secret Club's Secret"
+    },
+    {
+      "group": "side_quests",
+      "id": "medicinalmolduga",
+      "expected": "Medicinal Molduga"
+    },
+    {
+      "group": "side_quests",
+      "id": "theeighthheroine",
+      "expected": "The Eighth Heroine"
+    },
+    {
+      "group": "side_quests",
+      "id": "theforgottensword",
+      "expected": "The Forgotten Sword"
+    },
+    {
+      "group": "side_quests",
+      "id": "thethunderhelm",
+      "expected": "The Thunder Helm"
+    },
+    {
+      "group": "side_quests",
+      "id": "themysterypolluter",
+      "expected": "The Mystery Polluter"
+    },
+    {
+      "group": "side_quests",
+      "id": "thesearchforbarta",
+      "expected": "The Search for Barta"
+    },
+    {
+      "group": "side_quests",
+      "id": "curryforwhatailsyou",
+      "expected": "Curry for What Ails You"
+    },
+    {
+      "group": "side_quests",
+      "id": "theappleofmyeye",
+      "expected": "The Apple of My Eye"
+    },
+    {
+      "group": "side_quests",
+      "id": "thesparkofromance",
+      "expected": "The Spark of Romance"
+    },
+    {
+      "group": "side_quests",
+      "id": "facethefrosttalus",
+      "expected": "Face the Frost Talus"
+    },
+    {
+      "group": "side_quests",
+      "id": "findkheel",
+      "expected": "Find Kheel"
+    },
+    {
+      "group": "side_quests",
+      "id": "stalhorsepictured",
+      "expected": "Stalhorse: Pictured!"
+    },
+    {
+      "group": "side_quests",
+      "id": "balloonflight",
+      "expected": "Balloon Flight"
+    },
+    {
+      "group": "side_quests",
+      "id": "afreezingrod",
+      "expected": "A Freezing Rod"
+    },
+    {
+      "group": "side_quests",
+      "id": "thekoroktrials",
+      "expected": "The Korok Trials"
+    },
+    {
+      "group": "side_quests",
+      "id": "legendaryrabbittrial",
+      "expected": "Legendary Rabbit Trial"
+    },
+    {
+      "group": "side_quests",
+      "id": "leviathanbones",
+      "expected": "Leviathan Bones"
+    },
+    {
+      "group": "side_quests",
+      "id": "agiftfromthemonks",
+      "expected": "A Gift from the Monks"
+    },
+    {
+      "group": "side_quests",
+      "id": "riddlesofhyrule",
+      "expected": "Riddles of Hyrule"
+    },
+    {
+      "group": "side_quests",
+      "id": "agiftforthegreatfairy",
+      "expected": "A Gift for the Great Fairy"
+    },
+    {
+      "group": "side_quests",
+      "id": "theroyalguardsgear",
+      "expected": "The Royal Guard's Gear"
+    },
+    {
+      "group": "side_quests",
+      "id": "ararefind",
+      "expected": "A Rare Find"
+    },
+    {
+      "group": "side_quests",
+      "id": "myhero",
+      "expected": "My Hero"
+    },
+    {
+      "group": "side_quests",
+      "id": "aroyalrecipe",
+      "expected": "A Royal Recipe"
+    },
+    {
+      "group": "side_quests",
+      "id": "theroyalwhitestallion",
+      "expected": "The Royal White Stallion"
+    },
+    {
+      "group": "side_quests",
+      "id": "fireprooflizardroundup",
+      "expected": "Fireproof Lizard Roundup"
+    },
+    {
+      "group": "side_quests",
+      "id": "theroadtorespect",
+      "expected": "The Road to Respect"
+    },
+    {
+      "group": "side_quests",
+      "id": "deathmountainssecret",
+      "expected": "Death Mountain's Secret"
+    },
+    {
+      "group": "side_quests",
+      "id": "thejeweltrade",
+      "expected": "The Jewel Trade"
+    },
+    {
+      "group": "side_quests",
+      "id": "aparentslove",
+      "expected": "A Parent's Love"
+    },
+    {
+      "group": "side_quests",
+      "id": "hobbiesoftherich",
+      "expected": "Hobbies of the Rich"
+    },
+    {
+      "group": "side_quests",
+      "id": "ashadycustomer",
+      "expected": "A Shady Customer"
+    },
+    {
+      "group": "side_quests",
+      "id": "littlesistersbigrequest",
+      "expected": "Little Sister's Big Request"
+    },
+    {
+      "group": "side_quests",
+      "id": "trialofthesword",
+      "expected": "EX Trial of the Sword"
+    },
+    {
+      "group": "side_quests",
+      "id": "strangemaskrumors",
+      "expected": "EX Strange Mask Rumors"
+    },
+    {
+      "group": "side_quests",
+      "id": "teleportationrumors",
+      "expected": "EX Teleportation Rumors!"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasureancientmask",
+      "expected": "EX Treasure: Ancient Mask"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasurefairyclothes",
+      "expected": "EX Treasure: Fairy Clothes"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasuretwilightrelic",
+      "expected": "EX Treasure: Twilight Relic"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasurephantasma",
+      "expected": "EX Treasure: Phantasma"
+    },
+    {
+      "group": "side_quests",
+      "id": "xenobladechronicles2",
+      "expected": "[Xenoblade Chronicles 2]"
+    },
+    {
+      "group": "side_quests",
+      "id": "ancienthorserumors",
+      "expected": "EX Ancient Horse Rumors"
+    },
+    {
+      "group": "side_quests",
+      "id": "royalguardrumors",
+      "expected": "EX Royal Guard Rumors"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasuredarkarmor",
+      "expected": "EX Treasure: Dark Armor"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasuregarbofwinds",
+      "expected": "EX Treasure: Garb of Winds"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasuremerchanthood",
+      "expected": "EX Treasure: Merchant Hood"
+    },
+    {
+      "group": "side_quests",
+      "id": "treasureusurperking",
+      "expected": "EX Treasure: Usurper King"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_043_Lower",
+      "expected": "Well-Worn Trousers"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_043_Upper",
+      "expected": "Old Shirt"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_044_Upper",
+      "expected": "Warm Doublet"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_022_Head",
+      "expected": "Bokoblin Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_045_Head",
+      "expected": "Moblin Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_055_Head",
+      "expected": "Lizalfos Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_056_Head",
+      "expected": "Lynel Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_053_Head",
+      "expected": "Gerudo Veil"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_053_Lower",
+      "expected": "Gerudo Sirwal"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_053_Upper",
+      "expected": "Gerudo Top"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_115_Head",
+      "expected": "Thunder Helm"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_160_Head",
+      "expected": "Dark Hood"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_160_Lower",
+      "expected": "Dark Trousers"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_160_Upper",
+      "expected": "Dark Tunic"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_170_Upper",
+      "expected": "Nintendo Switch Shirt"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_171_Head",
+      "expected": "Phantom Helmet"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_171_Lower",
+      "expected": "Phantom Greaves"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_171_Upper",
+      "expected": "Phantom Armor"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_172_Head",
+      "expected": "Majora's Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_173_Head",
+      "expected": "Midna's Helmet"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_174_Head",
+      "expected": "Tingle's Hood"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_174_Lower",
+      "expected": "Tingle's Tights"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_174_Upper",
+      "expected": "Tingle's Shirt"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_175_Upper",
+      "expected": "Island Lobster Shirt"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_176_Head",
+      "expected": "Korok Mask"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_177_Head",
+      "expected": "Ravio's Hood"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_178_Head",
+      "expected": "Zant's Helmet"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_179_Head",
+      "expected": "Royal Guard Cap"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_179_Lower",
+      "expected": "Royal Guard Boots"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_179_Upper",
+      "expected": "Royal Guard Uniform"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_180_Head",
+      "expected": "Phantom Ganon Skull"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_180_Lower",
+      "expected": "Phantom Ganon Greaves"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_180_Upper",
+      "expected": "Phantom Ganon Armor"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_185_Head",
+      "expected": "Salvager Headwear"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_185_Lower",
+      "expected": "Salvager Trousers"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_185_Upper",
+      "expected": "Salvager Vest"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_168_Head",
+      "expected": "Vah Naboris Divine Helm"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_181_Head",
+      "expected": "Vah Ruta Divine Helm"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_182_Head",
+      "expected": "Vah Medoh Divine Helm"
+    },
+    {
+      "group": "special_armor",
+      "id": "Armor_183_Head",
+      "expected": "Vah Rudania Divine Helm"
+    }
+  ],
+  "trials": [
+    {
+      "id": "Dungeon000",
+      "expected": "Passing the Flame"
+    },
+    {
+      "id": "Dungeon001",
+      "expected": "On the Move"
+    },
+    {
+      "id": "Dungeon002",
+      "expected": "Power of Fire"
+    },
+    {
+      "id": "Dungeon003",
+      "expected": "The Current Solution"
+    },
+    {
+      "id": "Dungeon004",
+      "expected": "Two Orbs to Guide You"
+    },
+    {
+      "id": "Dungeon005",
+      "expected": "Pushing Power"
+    },
+    {
+      "id": "Dungeon006",
+      "expected": "A Weighty Decision"
+    },
+    {
+      "id": "Dungeon007",
+      "expected": "The Wind Guides You"
+    },
+    {
+      "id": "Dungeon008",
+      "expected": "Cannon"
+    },
+    {
+      "id": "Dungeon009",
+      "expected": "Stasis Trial"
+    },
+    {
+      "id": "Dungeon010",
+      "expected": "Power of Electricity"
+    },
+    {
+      "id": "Dungeon011",
+      "expected": "Drawing Parabolas"
+    },
+    {
+      "id": "Dungeon012",
+      "expected": "The Winding Route"
+    },
+    {
+      "id": "Dungeon013",
+      "expected": "Katosa Aug Apparatus"
+    },
+    {
+      "id": "Dungeon014",
+      "expected": "Trial of Passage"
+    },
+    {
+      "id": "Dungeon015",
+      "expected": "Toto Sah Apparatus"
+    },
+    {
+      "id": "Dungeon016",
+      "expected": "Five Flames"
+    },
+    {
+      "id": "Dungeon017",
+      "expected": "Twin Memories"
+    },
+    {
+      "id": "Dungeon018",
+      "expected": "Power of Reach"
+    },
+    {
+      "id": "Dungeon019",
+      "expected": "Three Boxes"
+    },
+    {
+      "id": "Dungeon020",
+      "expected": "Moving in Parallel"
+    },
+    {
+      "id": "Dungeon021",
+      "expected": "Buried Secrets"
+    },
+    {
+      "id": "Dungeon022",
+      "expected": "Fateful Stars"
+    },
+    {
+      "id": "Dungeon023",
+      "expected": "Speed of Light"
+    },
+    {
+      "id": "Dungeon024",
+      "expected": "Ancient Trifecta"
+    },
+    {
+      "id": "Dungeon025",
+      "expected": "Greedy Hill"
+    },
+    {
+      "id": "Dungeon026",
+      "expected": "Swinging Flames"
+    },
+    {
+      "id": "Dungeon027",
+      "expected": "Passing of the Gates"
+    },
+    {
+      "id": "Dungeon028",
+      "expected": "Blue Flame"
+    },
+    {
+      "id": "Dungeon029",
+      "expected": "Drifting"
+    },
+    {
+      "id": "Dungeon030",
+      "expected": "Joloo Nah Apparatus"
+    },
+    {
+      "id": "Dungeon031",
+      "expected": "Metal Makes a Path"
+    },
+    {
+      "id": "Dungeon032",
+      "expected": "Electric Path"
+    },
+    {
+      "id": "Dungeon033",
+      "expected": "Sunken Scoop"
+    },
+    {
+      "id": "Dungeon034",
+      "expected": "Quick Thinking"
+    },
+    {
+      "id": "Dungeon035",
+      "expected": "Windmills"
+    },
+    {
+      "id": "Dungeon036",
+      "expected": "Two Bombs"
+    },
+    {
+      "id": "Dungeon037",
+      "expected": "Aim for the Moment"
+    },
+    {
+      "id": "Dungeon038",
+      "expected": "Magnesis Trial"
+    },
+    {
+      "id": "Dungeon039",
+      "expected": "Myahm Agana Apparatus"
+    },
+    {
+      "id": "Dungeon040",
+      "expected": "Trial of Power"
+    },
+    {
+      "id": "Dungeon041",
+      "expected": "Bomb Trial"
+    },
+    {
+      "id": "Dungeon042",
+      "expected": "Directing the Wind"
+    },
+    {
+      "id": "Dungeon043",
+      "expected": "Melting Ice Hazard"
+    },
+    {
+      "id": "Dungeon044",
+      "expected": "Twin Memories"
+    },
+    {
+      "id": "Dungeon045",
+      "expected": "The Water Guides"
+    },
+    {
+      "id": "Dungeon046",
+      "expected": "Red Giveaway"
+    },
+    {
+      "id": "Dungeon047",
+      "expected": "Timing Is Critical"
+    },
+    {
+      "id": "Dungeon048",
+      "expected": "Ze Kasho Apparatus"
+    },
+    {
+      "id": "Dungeon049",
+      "expected": "Shields from Water"
+    },
+    {
+      "id": "Dungeon050",
+      "expected": "Halt the Tilt"
+    },
+    {
+      "id": "Dungeon051",
+      "expected": "Steady Thy Heart"
+    },
+    {
+      "id": "Dungeon052",
+      "expected": "Tandem"
+    },
+    {
+      "id": "Dungeon053",
+      "expected": "Path of Hidden Winds"
+    },
+    {
+      "id": "Dungeon054",
+      "expected": "Metal Doors Open the Way"
+    },
+    {
+      "id": "Dungeon055",
+      "expected": "Build and Release"
+    },
+    {
+      "id": "Dungeon056",
+      "expected": "Tempered Power"
+    },
+    {
+      "id": "Dungeon057",
+      "expected": "Metal Connections"
+    },
+    {
+      "id": "Dungeon058",
+      "expected": "Synced Swing"
+    },
+    {
+      "id": "Dungeon059",
+      "expected": "Wind Guide"
+    },
+    {
+      "id": "Dungeon060",
+      "expected": "The Whole Picture"
+    },
+    {
+      "id": "Dungeon061",
+      "expected": "Impeccable Timing"
+    },
+    {
+      "id": "Dungeon062",
+      "expected": "Shift and Lock"
+    },
+    {
+      "id": "Dungeon063",
+      "expected": "A Delayed Puzzle"
+    },
+    {
+      "id": "Dungeon064",
+      "expected": "Stalled Flight"
+    },
+    {
+      "id": "Dungeon065",
+      "expected": "Cryonis Trial"
+    },
+    {
+      "id": "Dungeon066",
+      "expected": "Drop and Rise"
+    },
+    {
+      "id": "Dungeon067",
+      "expected": "A Balanced Approach"
+    },
+    {
+      "id": "Dungeon068",
+      "expected": "Shatter the Heavens"
+    },
+    {
+      "id": "Dungeon069",
+      "expected": "Bravery's Grasp"
+    },
+    {
+      "id": "Dungeon070",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon071",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon072",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon073",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon074",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon075",
+      "expected": "A Minor Test of Strength"
+    },
+    {
+      "id": "Dungeon076",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon077",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon078",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon079",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon080",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon081",
+      "expected": "A Modest Test of Strength"
+    },
+    {
+      "id": "Dungeon082",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon083",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon084",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon085",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon086",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon087",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon088",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon089",
+      "expected": "A Major Test of Strength"
+    },
+    {
+      "id": "Dungeon090",
+      "expected": "Suma Sahma's Blessing"
+    },
+    {
+      "id": "Dungeon091",
+      "expected": "Gorae Torr's Blessing"
+    },
+    {
+      "id": "Dungeon092",
+      "expected": "Maag No'rah's Blessing"
+    },
+    {
+      "id": "Dungeon093",
+      "expected": "Raqa Zunzo's Blessing"
+    },
+    {
+      "id": "Dungeon094",
+      "expected": "Tho Kayu's Blessing"
+    },
+    {
+      "id": "Dungeon095",
+      "expected": "Kuhn Sidajj's Blessing"
+    },
+    {
+      "id": "Dungeon096",
+      "expected": "Qukah Nata's Blessing"
+    },
+    {
+      "id": "Dungeon097",
+      "expected": "Korgu Chideh's Blessing"
+    },
+    {
+      "id": "Dungeon098",
+      "expected": "Daag Chokah's Blessing"
+    },
+    {
+      "id": "Dungeon099",
+      "expected": "Ta'loh Naeg's Teaching"
+    },
+    {
+      "id": "Dungeon100",
+      "expected": "Keeha Yoog's Blessing"
+    },
+    {
+      "id": "Dungeon101",
+      "expected": "Dagah Keek's Blessing"
+    },
+    {
+      "id": "Dungeon102",
+      "expected": "Zuna Kai's Blessing"
+    },
+    {
+      "id": "Dungeon103",
+      "expected": "Dila Maag's Blessing"
+    },
+    {
+      "id": "Dungeon104",
+      "expected": "Lanno Kooh's Blessing"
+    },
+    {
+      "id": "Dungeon105",
+      "expected": "Tu Ka'loh's Blessing"
+    },
+    {
+      "id": "Dungeon106",
+      "expected": "Maag Halan's Blessing"
+    },
+    {
+      "id": "Dungeon107",
+      "expected": "Misae Suma's Blessing"
+    },
+    {
+      "id": "Dungeon108",
+      "expected": "Ketoh Wawai's Blessing"
+    },
+    {
+      "id": "Dungeon109",
+      "expected": "Ritaag Zumo's Blessing"
+    },
+    {
+      "id": "Dungeon110",
+      "expected": "Korsh O'hu's Blessing"
+    },
+    {
+      "id": "Dungeon111",
+      "expected": "Tawa Jinn's Blessing"
+    },
+    {
+      "id": "Dungeon112",
+      "expected": "Lakna Rokee's Blessing"
+    },
+    {
+      "id": "Dungeon113",
+      "expected": "Shae Katha's Blessing"
+    },
+    {
+      "id": "Dungeon114",
+      "expected": "Shai Yota's Blessing"
+    },
+    {
+      "id": "Dungeon115",
+      "expected": "Rona Kachta's Blessing"
+    },
+    {
+      "id": "Dungeon116",
+      "expected": "Qaza Tokki's Blessing"
+    },
+    {
+      "id": "Dungeon117",
+      "expected": "Jitan Sa'mi's Blessing"
+    },
+    {
+      "id": "Dungeon118",
+      "expected": "To Quomo's Blessing"
+    },
+    {
+      "id": "Dungeon119",
+      "expected": "Tahno O'ah's Blessing"
+    },
+    {
+      "id": "Dungeon120",
+      "expected": "Collected Soul"
+    },
+    {
+      "id": "Dungeon121",
+      "expected": "Inside the Box"
+    },
+    {
+      "id": "Dungeon122",
+      "expected": "Path of Light"
+    },
+    {
+      "id": "Dungeon123",
+      "expected": "Stop to Start"
+    },
+    {
+      "id": "Dungeon124",
+      "expected": "Support and Guidance"
+    },
+    {
+      "id": "Dungeon125",
+      "expected": "The Melting Point"
+    },
+    {
+      "id": "Dungeon126",
+      "expected": "Secret Stairway"
+    },
+    {
+      "id": "Dungeon127",
+      "expected": "The Four Winds"
+    },
+    {
+      "id": "Dungeon128",
+      "expected": "Master the Orb"
+    },
+    {
+      "id": "Dungeon129",
+      "expected": "Aim for Stillness"
+    },
+    {
+      "id": "Dungeon130",
+      "expected": "Moving Targets"
+    },
+    {
+      "id": "Dungeon131",
+      "expected": "Block the Blaze"
+    },
+    {
+      "id": "Dungeon132",
+      "expected": "Blind Spots"
+    },
+    {
+      "id": "Dungeon133",
+      "expected": "Big or Small"
+    },
+    {
+      "id": "Dungeon134",
+      "expected": "Dual Purpose"
+    },
+    {
+      "id": "Dungeon135",
+      "expected": "A Major Test of Strength+"
+    }
+  ]
+}
