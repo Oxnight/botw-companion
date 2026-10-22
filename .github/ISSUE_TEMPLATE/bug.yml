@@ -1,0 +1,17 @@
+name: Bug report
+description: Report a reproducible application problem.
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Application and environment
+      description: App version, Windows/macOS version, browser, selected language, and installer or source launch.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include the exact error with private paths removed. Never attach saves, credentials or personal exports. Report security problems using SECURITY.md.
+    validations:
+      required: true

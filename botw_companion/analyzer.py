@@ -1548,7 +1548,7 @@ def analyze(flags: dict[str, object], inventory: list[dict] | None = None,
             "libelle": "Indice de couverture automatique",
             "note": "Indice du compagnon, distinct du pourcentage de carte affiché par le jeu.",
         },
-        # Alias retained for scripts that used the first archive.
+        # Compatibility key for scripts that consume the technical summary.
         "synthese_technique": {"faits": done, "total": total,
                                "pourcentage": round(100 * done / total, 2) if total else 0},
         "carte_officielle": official_map,

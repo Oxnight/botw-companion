@@ -1,5 +1,6 @@
 /* Reuse one tab across an assisted update; never automate unrelated tabs. */
 (() => {
+    if (globalThis.BOTWI18n?.failed) return;
     const fragment = new URLSearchParams(location.hash.slice(1));
     const clientId = fragment.get('browser-client') || history.state?.botwBrowserClient || crypto.randomUUID();
     // Keep identity in this history entry, not in storage shared or copied
@@ -9,7 +10,6 @@
     let token, stop, timer, pending = null, stopped = false, leaving = false;
     let channel;
     try { channel = new BroadcastChannel('botw-companion-update'); } catch (_) { /* Polling remains usable. */ }
-    const en = () => document.documentElement.lang === 'en';
     function retire() {
         if (stopped || leaving) return;
         stopped = true;
@@ -23,10 +23,9 @@
         const panel = document.createElement('div');
         panel.className = 'panel';
         const title = document.createElement('h1');
-        title.textContent = en() ? 'This BOTW Companion tab is inactive' : 'Cet onglet BOTW Companion n’est plus actif';
+        title.textContent = BOTWI18n.t('inactive-tab-title');
         const text = document.createElement('p');
-        text.textContent = en() ? 'The updated application uses another tab. You can close this tab.'
-            : 'L’application à jour utilise un autre onglet. Tu peux fermer cet onglet.';
+        text.textContent = BOTWI18n.t('inactive-tab-body');
         panel.append(title, text); main.append(panel);
         document.body.replaceChildren(main);
     }

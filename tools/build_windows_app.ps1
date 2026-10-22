@@ -71,7 +71,7 @@ if (-not (Test-Path -LiteralPath $environmentPython -PathType Leaf)) {
 }
 
 & $environmentPython -m pip install --disable-pip-version-check --quiet `
-    "pyinstaller==6.22.2" "certifi==2025.8.3"
+    "pyinstaller==6.22.2" -r (Join-Path $projectRoot "requirements-runtime.txt")
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $metadata = (& $environmentPython (Join-Path $projectRoot "tools\release_metadata.py") | ConvertFrom-Json)
@@ -135,7 +135,7 @@ foreach ($required in @(
     (Join-Path $applicationDirectory "_internal\botw_companion\data\korok_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\chest_reference.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\data\boss_reference.json"),
-    (Join-Path $applicationDirectory "_internal\botw_companion\web\index.html"),
+    (Join-Path $applicationDirectory "_internal\botw_companion\locales\registry.json"),
     (Join-Path $applicationDirectory "_internal\botw_companion\web\hyrule-map.webp"),
     (Join-Path $applicationDirectory "LICENSE"),
     (Join-Path $applicationDirectory "THIRD_PARTY_NOTICES.md"),

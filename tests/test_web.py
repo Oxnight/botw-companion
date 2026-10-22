@@ -4,6 +4,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from botw_companion.preferences import ALLOWED_VALUES
+from botw_companion.i18n import locale_resource, catalog, message
 
 
 class WebAssetsTests(unittest.TestCase):
@@ -13,8 +14,11 @@ class WebAssetsTests(unittest.TestCase):
         self.assertGreater(len(root.joinpath("map-tiles", "z1", "0_0.webp").read_bytes()), 10_000)
         self.assertGreater(len(root.joinpath("map-tiles", "z2", "0_0.webp").read_bytes()), 10_000)
         self.assertGreater(len(root.joinpath("map-tiles", "z3", "12_10.webp").read_bytes()), 10_000)
-        html = root.joinpath("index.html").read_text(encoding="utf-8")
+        html = locale_resource("index.html", "fr").read_text(encoding="utf-8")
         script = root.joinpath("app.js").read_text(encoding="utf-8")
+        _, contract, _ = catalog('fr')
+        prose = '\n'.join(message(key, 'fr', **{param: 'VALUE' for param in entry['params']})
+                          for key, entry in contract.items())
         css = root.joinpath("metrics.css").read_text(encoding="utf-8")
         style = root.joinpath("style.css").read_text(encoding="utf-8")
         armor = root.joinpath("armor.css").read_text(encoding="utf-8")
@@ -105,7 +109,7 @@ class WebAssetsTests(unittest.TestCase):
             "Gyroscope JoyConDSU",
             "Mises à jour, aide et fermeture",
         ):
-            self.assertIn(chapter, script)
+            self.assertIn(chapter, prose)
         self.assertIn('class="itemOpen"', script)
         self.assertIn('class="itemOpen"', script)
         self.assertIn('<span aria-hidden="true" title=', script)
@@ -142,10 +146,10 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("manualTracking", root.joinpath("armor.css").read_text(encoding="utf-8"))
         self.assertIn("manualReviewItem", root.joinpath("armor.css").read_text(encoding="utf-8"))
         self.assertIn("saveCaptionFrame", root.joinpath("armor.css").read_text(encoding="utf-8"))
-        self.assertIn("Solution détaillée", script)
+        self.assertIn("Solution détaillée", prose)
         self.assertIn("guideSources", script)
         self.assertIn("function frenchSourceName", script)
-        self.assertIn("Zelda Wiki - article sur", script)
+        self.assertIn("Zelda Wiki - article sur", prose)
         self.assertIn("guideDetail", root.joinpath("armor.css").read_text(encoding="utf-8"))
         self.assertIn('id="routePlanner"', html)
         self.assertIn('id="toggleRoute"\n                    aria-expanded="false"', html)
@@ -261,7 +265,7 @@ class WebAssetsTests(unittest.TestCase):
         self.assertIn("function installVerifiedUpdate", script)
         self.assertIn('runtimePlatform.id === "macos"', script)
         self.assertIn("/api/update/install", script)
-        self.assertIn("Installer et redémarrer", script)
+        self.assertIn("Installer et redémarrer", prose)
         self.assertIn("function renderUpdateDownload", script)
         self.assertIn("/api/update/download/", script)
         self.assertIn("/api/update", script)

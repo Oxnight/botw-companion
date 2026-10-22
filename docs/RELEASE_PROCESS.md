@@ -21,7 +21,7 @@ of upgrading an older executable. Missing references on later releases fail
 validation; they do not activate bootstrap mode.
 
 Run the checks in [DEVELOPMENT.md](DEVELOPMENT.md), including the complete
-Python suite, generated English assets, localization, and browser flows. Review
+Python suite, generated locale resources, localization, and browser flows. Review
 changes to dependencies, bundled material, and licenses before distribution.
 The unresolved map rights in [DATA_SOURCES.md](../DATA_SOURCES.md) require a
 maintainer decision; passing tests does not resolve them.

@@ -19,6 +19,8 @@ datas = collect_data_files(
     ],
 )
 datas.extend(collect_data_files("certifi"))
+datas.extend(collect_data_files("babel"))
+datas.extend(collect_data_files("pytz"))
 datas.append((str(dsu_root / "manifest.json"), "botw_companion/dsu/windows"))
 datas.append((str(dsu_root / "SDL3-LICENSE.txt"), "botw_companion/dsu/windows"))
 datas.append((str(project_root / "licenses"), "licenses"))

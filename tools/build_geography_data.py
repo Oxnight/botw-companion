@@ -147,8 +147,7 @@ def main() -> None:
                     source_id=marker.get("id"),
                 ))
 
-    # Legacy shrine-quest coordinates referred to the final shrine. They now
-    # become an explicit destination.
+    # Shrine-quest destinations use the shrine's coordinates, not the quest start.
     shrines_by_name = {shrine["name"]: shrine for shrine in catalog["shrines"]}
     for quest in catalog["shrine_quests"]:
         shrine = shrines_by_name[quest["sanctuaire"]]

@@ -1,0 +1,13 @@
+{
+  "base_commit": "8009763a0623dd660a963a93def8fc2569c42202",
+  "locales": {
+    "fr": {
+      "source_sha256": "2880b7f62938ee6c838728683a8c4575651cdc8e50c233a590a43b922128da96",
+      "events_sha256": "d9ab72594c31a4df2da48d07fe6ba1b8e0da5e7e8e34b95f10056983ca728a5e"
+    },
+    "en": {
+      "source_sha256": "8d42971a3498270eb032d3c041015b0aaace13e5f6a5ba5d6ac50a7d2476ead7",
+      "events_sha256": "642af2898893e1d05b22c56a266bf97e713863ee3851d728636e9356d418cca7"
+    }
+  }
+}

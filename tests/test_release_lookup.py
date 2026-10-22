@@ -4,6 +4,11 @@ from tools.release_lookup import ReleaseLookupError, find_release_id
 
 
 class ReleaseLookupTests(unittest.TestCase):
+    def test_boolean_is_not_a_release_database_id(self):
+        with self.assertRaisesRegex(ReleaseLookupError, "database id"):
+            find_release_id([{"id": True, "tag_name": "fixture-tag", "draft": False}],
+                            "fixture-tag")
+
     def test_paginated_metadata_resolves_a_draft_by_exact_tag(self):
         payload = [
             [{"id": 11, "tag_name": "v0.9.0", "draft": False}],

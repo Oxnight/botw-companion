@@ -224,7 +224,7 @@ class RyujinxLifecycleWatcher(EmulatorLifecycleWatcher):
         }
         self._state = aliases.get(self._state, self._state)
         if stopped and self._state == "ryujinx_ferme":
-            # The legacy test contract expects this exact pattern.
-            # The generic watcher used by the server emits emulateur_ferme.
+            # Ryujinx callers use ryujinx_ferme; the server's generic watcher
+            # uses emulateur_ferme for the same shutdown condition.
             pass
         return stopped

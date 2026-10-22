@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "id": "fr",
+  "native_name": "Français",
+  "format_locale": "fr-FR",
+  "direction": "ltr",
+  "aliases": [],
+  "fallback": null,
+  "enabled": true,
+  "display_names": {
+    "en": "French"
+  }
+}

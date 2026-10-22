@@ -10,6 +10,18 @@ from tools.upgrade_baselines import FIRST_STABLE
 
 
 class VersioningTests(unittest.TestCase):
+    def test_version_guard_ignores_operational_output_and_still_rejects_source_duplicates(self):
+        from tools.check_version_consistency import literal_version_errors
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ignored = root / 'test-results/operational-output/reference'
+            ignored.mkdir(parents=True)
+            (ignored / 'snapshot.json').write_text(CURRENT_VERSION.display, encoding='utf-8')
+            self.assertEqual(literal_version_errors(root, CURRENT_VERSION), [])
+            source = root / 'accidental_source.py'
+            source.write_text('version = "' + CURRENT_VERSION.display + '"', encoding='utf-8')
+            self.assertEqual(len(literal_version_errors(root, CURRENT_VERSION)), 1)
+
     def test_every_distributed_version_is_consistent(self):
         root = Path(__file__).resolve().parents[1]
         result = subprocess.run(

@@ -41,10 +41,8 @@ if (-not (Test-Path -LiteralPath $auditedSdlLicense -PathType Leaf)) {
     exit 1
 }
 
-# Git converts the tracked file to CRLF on Windows runners while the downloaded
-# SDL archive retains LF. Comparing normalized text validates content without
-# confusing line-ending formatting with a
-# modification de licence.
+# Compare archive and checkout text across line-ending differences; the
+# audited content must still match exactly.
 $generatedSdlLicenseText = (
     Get-Content -LiteralPath $sdlLicense -Raw -Encoding UTF8
 ) -replace "`r`n", "`n" -replace "`r", "`n"

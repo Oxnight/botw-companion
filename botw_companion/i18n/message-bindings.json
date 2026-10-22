@@ -1,0 +1,2096 @@
+{
+  "Amélioration 2 étoiles": {
+    "message": "legacy-template-3",
+    "values": {
+      "value0": "2",
+      "number0": 2.0
+    }
+  },
+  "Amélioration 3 étoiles": {
+    "message": "legacy-template-3",
+    "values": {
+      "value0": "3",
+      "number0": 3.0
+    }
+  },
+  "Amélioration 4 étoiles": {
+    "message": "legacy-template-4",
+    "values": {
+      "value0": "4",
+      "number0": 4.0
+    }
+  },
+  "Rejoins Position intérieure X -0.0, Y 102.8, Z 123.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-0.0",
+      "value1": "102.8",
+      "value2": "123.5",
+      "number0": -0.0,
+      "number1": 102.8,
+      "number2": 123.5
+    }
+  },
+  "Rejoins Position intérieure X -0.2, Y 40.7, Z 2.4.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-0.2",
+      "value1": "40.7",
+      "value2": "2.4",
+      "number0": -0.2,
+      "number1": 40.7,
+      "number2": 2.4
+    }
+  },
+  "Rejoins Position intérieure X -0.5, Y 18.4, Z 0.8.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-0.5",
+      "value1": "18.4",
+      "value2": "0.8",
+      "number0": -0.5,
+      "number1": 18.4,
+      "number2": 0.8
+    }
+  },
+  "Rejoins Position intérieure X -139.0, Y 8.2, Z -25.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-139.0",
+      "value1": "8.2",
+      "value2": "-25.5",
+      "number0": -139.0,
+      "number1": 8.2,
+      "number2": -25.5
+    }
+  },
+  "Rejoins Position intérieure X -19.5, Y 35.8, Z -48.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-19.5",
+      "value1": "35.8",
+      "value2": "-48.0",
+      "number0": -19.5,
+      "number1": 35.8,
+      "number2": -48.0
+    }
+  },
+  "Rejoins Position intérieure X -2.0, Y 112.0, Z 0.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-2.0",
+      "value1": "112.0",
+      "value2": "0.0",
+      "number0": -2.0,
+      "number1": 112.0,
+      "number2": 0.0
+    }
+  },
+  "Rejoins Position intérieure X -2.0, Y 12.0, Z -5.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-2.0",
+      "value1": "12.0",
+      "value2": "-5.0",
+      "number0": -2.0,
+      "number1": 12.0,
+      "number2": -5.0
+    }
+  },
+  "Rejoins Position intérieure X -24.5, Y -10.5, Z -22.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-24.5",
+      "value1": "-10.5",
+      "value2": "-22.0",
+      "number0": -24.5,
+      "number1": -10.5,
+      "number2": -22.0
+    }
+  },
+  "Rejoins Position intérieure X -28.0, Y 100.0, Z 25.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-28.0",
+      "value1": "100.0",
+      "value2": "25.0",
+      "number0": -28.0,
+      "number1": 100.0,
+      "number2": 25.0
+    }
+  },
+  "Rejoins Position intérieure X -31.5, Y 110.2, Z 30.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-31.5",
+      "value1": "110.2",
+      "value2": "30.0",
+      "number0": -31.5,
+      "number1": 110.2,
+      "number2": 30.0
+    }
+  },
+  "Rejoins Position intérieure X -32.8, Y 15.6, Z 31.6.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-32.8",
+      "value1": "15.6",
+      "value2": "31.6",
+      "number0": -32.8,
+      "number1": 15.6,
+      "number2": 31.6
+    }
+  },
+  "Rejoins Position intérieure X -34.5, Y 5.0, Z 18.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-34.5",
+      "value1": "5.0",
+      "value2": "18.0",
+      "number0": -34.5,
+      "number1": 5.0,
+      "number2": 18.0
+    }
+  },
+  "Rejoins Position intérieure X -6.0, Y 0.0, Z -41.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-6.0",
+      "value1": "0.0",
+      "value2": "-41.0",
+      "number0": -6.0,
+      "number1": 0.0,
+      "number2": -41.0
+    }
+  },
+  "Rejoins Position intérieure X -6.4, Y 0.0, Z 20.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-6.4",
+      "value1": "0.0",
+      "value2": "20.0",
+      "number0": -6.4,
+      "number1": 0.0,
+      "number2": 20.0
+    }
+  },
+  "Rejoins Position intérieure X -99.6, Y 14.0, Z 29.9.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "-99.6",
+      "value1": "14.0",
+      "value2": "29.9",
+      "number0": -99.6,
+      "number1": 14.0,
+      "number2": 29.9
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 101.1, Z -62.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.0",
+      "value1": "101.1",
+      "value2": "-62.5",
+      "number0": 0.0,
+      "number1": 101.1,
+      "number2": -62.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 15.0, Z 127.5.": {
+    "message": "legacy-template-275",
+    "values": {
+      "value0": "0.0",
+      "value1": "15.0",
+      "value2": "127.5",
+      "number0": 0.0,
+      "number1": 15.0,
+      "number2": 127.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 164.5, Z -12.5.": {
+    "message": "legacy-template-275",
+    "values": {
+      "value0": "0.0",
+      "value1": "164.5",
+      "value2": "-12.5",
+      "number0": 0.0,
+      "number1": 164.5,
+      "number2": -12.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 17.9, Z 62.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.0",
+      "value1": "17.9",
+      "value2": "62.5",
+      "number0": 0.0,
+      "number1": 17.9,
+      "number2": 62.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 4.0, Z -137.5.": {
+    "message": "legacy-template-275",
+    "values": {
+      "value0": "0.0",
+      "value1": "4.0",
+      "value2": "-137.5",
+      "number0": 0.0,
+      "number1": 4.0,
+      "number2": -137.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 61.2, Z 52.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.0",
+      "value1": "61.2",
+      "value2": "52.5",
+      "number0": 0.0,
+      "number1": 61.2,
+      "number2": 52.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 7.5, Z 158.0.": {
+    "message": "legacy-template-275",
+    "values": {
+      "value0": "0.0",
+      "value1": "7.5",
+      "value2": "158.0",
+      "number0": 0.0,
+      "number1": 7.5,
+      "number2": 158.0
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 7.5, Z 187.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.0",
+      "value1": "7.5",
+      "value2": "187.5",
+      "number0": 0.0,
+      "number1": 7.5,
+      "number2": 187.5
+    }
+  },
+  "Rejoins Position intérieure X 0.0, Y 80.0, Z -76.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.0",
+      "value1": "80.0",
+      "value2": "-76.0",
+      "number0": 0.0,
+      "number1": 80.0,
+      "number2": -76.0
+    }
+  },
+  "Rejoins Position intérieure X 0.1, Y -20.9, Z 34.8.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.1",
+      "value1": "-20.9",
+      "value2": "34.8",
+      "number0": 0.1,
+      "number1": -20.9,
+      "number2": 34.8
+    }
+  },
+  "Rejoins Position intérieure X 0.6, Y 60.8, Z 0.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "0.6",
+      "value1": "60.8",
+      "value2": "0.0",
+      "number0": 0.6,
+      "number1": 60.8,
+      "number2": 0.0
+    }
+  },
+  "Rejoins Position intérieure X 10.5, Y 6.0, Z 34.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "10.5",
+      "value1": "6.0",
+      "value2": "34.5",
+      "number0": 10.5,
+      "number1": 6.0,
+      "number2": 34.5
+    }
+  },
+  "Rejoins Position intérieure X 104.0, Y 10.7, Z -25.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "104.0",
+      "value1": "10.7",
+      "value2": "-25.5",
+      "number0": 104.0,
+      "number1": 10.7,
+      "number2": -25.5
+    }
+  },
+  "Rejoins Position intérieure X 11.0, Y 147.9, Z -25.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "11.0",
+      "value1": "147.9",
+      "value2": "-25.0",
+      "number0": 11.0,
+      "number1": 147.9,
+      "number2": -25.0
+    }
+  },
+  "Rejoins Position intérieure X 14.8, Y 9.1, Z 18.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "14.8",
+      "value1": "9.1",
+      "value2": "18.5",
+      "number0": 14.8,
+      "number1": 9.1,
+      "number2": 18.5
+    }
+  },
+  "Rejoins Position intérieure X 15.2, Y 0.0, Z -21.8.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "15.2",
+      "value1": "0.0",
+      "value2": "-21.8",
+      "number0": 15.2,
+      "number1": 0.0,
+      "number2": -21.8
+    }
+  },
+  "Rejoins Position intérieure X 15.3, Y 0.0, Z -17.6.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "15.3",
+      "value1": "0.0",
+      "value2": "-17.6",
+      "number0": 15.3,
+      "number1": 0.0,
+      "number2": -17.6
+    }
+  },
+  "Rejoins Position intérieure X 2.0, Y 112.0, Z 0.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "2.0",
+      "value1": "112.0",
+      "value2": "0.0",
+      "number0": 2.0,
+      "number1": 112.0,
+      "number2": 0.0
+    }
+  },
+  "Rejoins Position intérieure X 23.8, Y 21.3, Z -46.7.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "23.8",
+      "value1": "21.3",
+      "value2": "-46.7",
+      "number0": 23.8,
+      "number1": 21.3,
+      "number2": -46.7
+    }
+  },
+  "Rejoins Position intérieure X 24.4, Y -10.0, Z 44.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "24.4",
+      "value1": "-10.0",
+      "value2": "44.5",
+      "number0": 24.4,
+      "number1": -10.0,
+      "number2": 44.5
+    }
+  },
+  "Rejoins Position intérieure X 26.5, Y 14.8, Z 25.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "26.5",
+      "value1": "14.8",
+      "value2": "25.0",
+      "number0": 26.5,
+      "number1": 14.8,
+      "number2": 25.0
+    }
+  },
+  "Rejoins Position intérieure X 3.0, Y 55.0, Z 18.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "3.0",
+      "value1": "55.0",
+      "value2": "18.0",
+      "number0": 3.0,
+      "number1": 55.0,
+      "number2": 18.0
+    }
+  },
+  "Rejoins Position intérieure X 31.0, Y 37.8, Z -43.4.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "31.0",
+      "value1": "37.8",
+      "value2": "-43.4",
+      "number0": 31.0,
+      "number1": 37.8,
+      "number2": -43.4
+    }
+  },
+  "Rejoins Position intérieure X 31.5, Y 100.0, Z -25.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "31.5",
+      "value1": "100.0",
+      "value2": "-25.0",
+      "number0": 31.5,
+      "number1": 100.0,
+      "number2": -25.0
+    }
+  },
+  "Rejoins Position intérieure X 45.5, Y 16.9, Z 43.4.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "45.5",
+      "value1": "16.9",
+      "value2": "43.4",
+      "number0": 45.5,
+      "number1": 16.9,
+      "number2": 43.4
+    }
+  },
+  "Rejoins Position intérieure X 5.0, Y 0.0, Z 3.5.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "5.0",
+      "value1": "0.0",
+      "value2": "3.5",
+      "number0": 5.0,
+      "number1": 0.0,
+      "number2": 3.5
+    }
+  },
+  "Rejoins Position intérieure X 77.5, Y 8.3, Z 21.0.": {
+    "message": "legacy-template-276",
+    "values": {
+      "value0": "77.5",
+      "value1": "8.3",
+      "value2": "21.0",
+      "number0": 77.5,
+      "number1": 8.3,
+      "number2": 21.0
+    }
+  },
+  "Accompagnement - Coffre - Ambre brut": {
+    "message": "legacy-bound-421",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Arbre antique": {
+    "message": "legacy-bound-422",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Arc gerudo": {
+    "message": "legacy-bound-423",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Arc royal": {
+    "message": "legacy-bound-424",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Arc zora": {
+    "message": "legacy-bound-425",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Armure spectrale": {
+    "message": "legacy-bound-426",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Banane lame": {
+    "message": "legacy-bound-427",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Boomerang": {
+    "message": "legacy-bound-428",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier d'Hylia": {
+    "message": "legacy-bound-429",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier faune": {
+    "message": "legacy-bound-430",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier gerudo": {
+    "message": "legacy-bound-431",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier lapins": {
+    "message": "legacy-bound-432",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier poisson": {
+    "message": "legacy-bound-433",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier royal": {
+    "message": "legacy-bound-434",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Bouclier zora": {
+    "message": "legacy-bound-435",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Brise-montagne": {
+    "message": "legacy-bound-436",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Brise-roc": {
+    "message": "legacy-bound-437",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Casque zora": {
+    "message": "legacy-bound-438",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Casse-pierre": {
+    "message": "legacy-bound-439",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Cimeterre gerudo": {
+    "message": "legacy-bound-440",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Collant baudruche": {
+    "message": "legacy-bound-441",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Diamant brut": {
+    "message": "legacy-bound-442",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Doublet": {
+    "message": "legacy-bound-443",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Draco massue boko": {
+    "message": "legacy-bound-444",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Espadon gerudo": {
+    "message": "legacy-bound-445",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Espadon royal": {
+    "message": "legacy-bound-446",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Eventail Korogu": {
+    "message": "legacy-bound-447",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Filet antique": {
+    "message": "legacy-bound-448",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Gemme nox": {
+    "message": "legacy-bound-449",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Grand boomerang": {
+    "message": "legacy-bound-450",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Hallebarde royale": {
+    "message": "legacy-bound-451",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Javelot": {
+    "message": "legacy-bound-452",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Lance zora": {
+    "message": "legacy-bound-453",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Maillot Nintendo Switch": {
+    "message": "legacy-bound-454",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Masque spectral": {
+    "message": "legacy-bound-455",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Masse perforatrice": {
+    "message": "legacy-bound-456",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Opale brute": {
+    "message": "legacy-bound-457",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Pantalon hylien": {
+    "message": "legacy-bound-458",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Ressort antique": {
+    "message": "legacy-bound-459",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Rouage antique": {
+    "message": "legacy-bound-460",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Rubis brut": {
+    "message": "legacy-bound-461",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Rubis rouge": {
+    "message": "legacy-bound-462",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Rubis violet": {
+    "message": "legacy-bound-463",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Sabre tranche-vent": {
+    "message": "legacy-bound-464",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Saphir brut": {
+    "message": "legacy-bound-465",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Selle antique": {
+    "message": "legacy-bound-466",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Serpe coupe-gorge": {
+    "message": "legacy-bound-467",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Silex": {
+    "message": "legacy-bound-468",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Topaze brute": {
+    "message": "legacy-bound-469",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Torche": {
+    "message": "legacy-bound-470",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Trident gerudo": {
+    "message": "legacy-bound-471",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Tunique hylienne": {
+    "message": "legacy-bound-472",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Vieille chemise": {
+    "message": "legacy-bound-473",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Vieux pantalon": {
+    "message": "legacy-bound-474",
+    "values": {}
+  },
+  "Accompagnement - Coffre - Vis antique": {
+    "message": "legacy-bound-475",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox": {
+    "message": "legacy-bound-476",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Ancien château d'Edal - Sud": {
+    "message": "legacy-bound-477",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Ancien parc de la forêt": {
+    "message": "legacy-bound-478",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Camp d'entraînement au tir à l'arc": {
+    "message": "legacy-bound-479",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Geôles": {
+    "message": "legacy-bound-480",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Grand fossile d'Hébra": {
+    "message": "legacy-bound-481",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Pont de Faroria": {
+    "message": "legacy-bound-482",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Pont du Puîné": {
+    "message": "legacy-bound-483",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Relais de l'est d'Akkala": {
+    "message": "legacy-bound-484",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Ruines du parc Sandine": {
+    "message": "legacy-bound-485",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox - près de Temple oublié": {
+    "message": "legacy-bound-486",
+    "values": {}
+  },
+  "Album ; Module appareil photo ; Encyclopédie d'Hyrule": {
+    "message": "legacy-bound-487",
+    "values": {}
+  },
+  "Apporte l'épice à Pistou pour compléter son curry.": {
+    "message": "legacy-bound-488",
+    "values": {}
+  },
+  "Après Vah'Naboris, parle à Pihmène sur la piste de course de morses des sables.": {
+    "message": "legacy-bound-489",
+    "values": {}
+  },
+  "Après Vah'Rudania, parle à Labira dans la cité Goron.": {
+    "message": "legacy-bound-490",
+    "values": {}
+  },
+  "Après Vah'Ruta, parle à Alfine au banc des Vœux et suis sa lettre jetée dans la rivière.": {
+    "message": "legacy-bound-491",
+    "values": {}
+  },
+  "Après Vah'Ruta, parle à Narutel au domaine zora puis à Trello près de la place.": {
+    "message": "legacy-bound-492",
+    "values": {}
+  },
+  "Après Vah'Ruta, parle à Nelsice au domaine zora.": {
+    "message": "legacy-bound-493",
+    "values": {}
+  },
+  "Après avoir obtenu l'armure zora, parle à Gruve sur la plateforme du domaine.": {
+    "message": "legacy-bound-494",
+    "values": {}
+  },
+  "Après avoir parlé à Impa, parle à Vocah devant l'enclos de Cocorico.": {
+    "message": "legacy-bound-495",
+    "values": {}
+  },
+  "Après l'amélioration du détecteur, parle à Canel dans le laboratoire.": {
+    "message": "legacy-bound-496",
+    "values": {}
+  },
+  "Après la construction d'Euzéro, parle à Deza près de la falaise.": {
+    "message": "legacy-bound-497",
+    "values": {}
+  },
+  "Après la construction d'Euzéro, parle à Lespe dans sa maison.": {
+    "message": "legacy-bound-498",
+    "values": {}
+  },
+  "Après le plateau, observe une étoile filante rouge depuis le pont d'Hylia, le sommet du crâne d'Hébra et le plus grand pic Contrées Gerudos.": {
+    "message": "legacy-bound-499",
+    "values": {}
+  },
+  "Atteins la salle centrale et active le sanctuaire de Kaza'Tokki.": {
+    "message": "legacy-bound-500",
+    "values": {}
+  },
+  "Atteins le sanctuaire de Hiro'Hira au centre du champ.": {
+    "message": "legacy-bound-501",
+    "values": {}
+  },
+  "Atteins le sanctuaire de Mahmu'Lano avec l'équipement de l'épreuve encore en ta possession.": {
+    "message": "legacy-bound-502",
+    "values": {}
+  },
+  "Attends qu'Oaki atteigne seul le sanctuaire de Da'Chokahi, puis rejoins-le.": {
+    "message": "legacy-bound-503",
+    "values": {}
+  },
+  "Avec la tenue Contrées Gerudos, parle à Tuskaï devant la cité et emprunte ses bottes de neige.": {
+    "message": "legacy-bound-504",
+    "values": {}
+  },
+  "Bats le Yiga, place l'orbe récupéré dans le socle et active le sanctuaire de Rahna'Loki.": {
+    "message": "legacy-bound-505",
+    "values": {}
+  },
+  "Bijouteries": {
+    "message": "legacy-bound-506",
+    "values": {}
+  },
+  "Brise les rochers qui condamnent l'entrée pour révéler le sanctuaire de Ta'Mur.": {
+    "message": "legacy-bound-507",
+    "values": {}
+  },
+  "Cadre Stalhinox jusqu'à ce que son nom soit reconnu en orange.": {
+    "message": "legacy-bound-508",
+    "values": {}
+  },
+  "Cherche Stalhinox dans la section Monstres.": {
+    "message": "legacy-bound-509",
+    "values": {}
+  },
+  "Coffre - Ambre brut": {
+    "message": "legacy-bound-510",
+    "values": {}
+  },
+  "Coffre - Arbre antique": {
+    "message": "legacy-bound-511",
+    "values": {}
+  },
+  "Coffre - Arc gerudo": {
+    "message": "legacy-bound-512",
+    "values": {}
+  },
+  "Coffre - Arc royal": {
+    "message": "legacy-bound-513",
+    "values": {}
+  },
+  "Coffre - Arc zora": {
+    "message": "legacy-bound-514",
+    "values": {}
+  },
+  "Coffre - Armure spectrale": {
+    "message": "legacy-bound-515",
+    "values": {}
+  },
+  "Coffre - Banane lame": {
+    "message": "legacy-bound-516",
+    "values": {}
+  },
+  "Coffre - Boomerang": {
+    "message": "legacy-bound-517",
+    "values": {}
+  },
+  "Coffre - Bouclier d'Hylia": {
+    "message": "legacy-bound-518",
+    "values": {}
+  },
+  "Coffre - Bouclier faune": {
+    "message": "legacy-bound-519",
+    "values": {}
+  },
+  "Coffre - Bouclier gerudo": {
+    "message": "legacy-bound-520",
+    "values": {}
+  },
+  "Coffre - Bouclier lapins": {
+    "message": "legacy-bound-521",
+    "values": {}
+  },
+  "Coffre - Bouclier poisson": {
+    "message": "legacy-bound-522",
+    "values": {}
+  },
+  "Coffre - Bouclier royal": {
+    "message": "legacy-bound-523",
+    "values": {}
+  },
+  "Coffre - Bouclier zora": {
+    "message": "legacy-bound-524",
+    "values": {}
+  },
+  "Coffre - Brise-montagne": {
+    "message": "legacy-bound-525",
+    "values": {}
+  },
+  "Coffre - Brise-roc": {
+    "message": "legacy-bound-526",
+    "values": {}
+  },
+  "Coffre - Casque zora": {
+    "message": "legacy-bound-527",
+    "values": {}
+  },
+  "Coffre - Casse-pierre": {
+    "message": "legacy-bound-528",
+    "values": {}
+  },
+  "Coffre - Cimeterre gerudo": {
+    "message": "legacy-bound-529",
+    "values": {}
+  },
+  "Coffre - Collant baudruche": {
+    "message": "legacy-bound-530",
+    "values": {}
+  },
+  "Coffre - Diamant brut": {
+    "message": "legacy-bound-531",
+    "values": {}
+  },
+  "Coffre - Doublet": {
+    "message": "legacy-bound-532",
+    "values": {}
+  },
+  "Coffre - Draco massue boko": {
+    "message": "legacy-bound-533",
+    "values": {}
+  },
+  "Coffre - Espadon gerudo": {
+    "message": "legacy-bound-534",
+    "values": {}
+  },
+  "Coffre - Espadon royal": {
+    "message": "legacy-bound-535",
+    "values": {}
+  },
+  "Coffre - Eventail Korogu": {
+    "message": "legacy-bound-536",
+    "values": {}
+  },
+  "Coffre - Filet antique": {
+    "message": "legacy-bound-537",
+    "values": {}
+  },
+  "Coffre - Gemme nox": {
+    "message": "legacy-bound-538",
+    "values": {}
+  },
+  "Coffre - Grand boomerang": {
+    "message": "legacy-bound-539",
+    "values": {}
+  },
+  "Coffre - Hallebarde royale": {
+    "message": "legacy-bound-540",
+    "values": {}
+  },
+  "Coffre - Javelot": {
+    "message": "legacy-bound-541",
+    "values": {}
+  },
+  "Coffre - Lance zora": {
+    "message": "legacy-bound-542",
+    "values": {}
+  },
+  "Coffre - Maillot Nintendo Switch": {
+    "message": "legacy-bound-543",
+    "values": {}
+  },
+  "Coffre - Masque spectral": {
+    "message": "legacy-bound-544",
+    "values": {}
+  },
+  "Coffre - Masse perforatrice": {
+    "message": "legacy-bound-545",
+    "values": {}
+  },
+  "Coffre - Opale brute": {
+    "message": "legacy-bound-546",
+    "values": {}
+  },
+  "Coffre - Pantalon hylien": {
+    "message": "legacy-bound-547",
+    "values": {}
+  },
+  "Coffre - Ressort antique": {
+    "message": "legacy-bound-548",
+    "values": {}
+  },
+  "Coffre - Rouage antique": {
+    "message": "legacy-bound-549",
+    "values": {}
+  },
+  "Coffre - Rubis brut": {
+    "message": "legacy-bound-550",
+    "values": {}
+  },
+  "Coffre - Rubis rouge": {
+    "message": "legacy-bound-551",
+    "values": {}
+  },
+  "Coffre - Rubis violet": {
+    "message": "legacy-bound-552",
+    "values": {}
+  },
+  "Coffre - Sabre tranche-vent": {
+    "message": "legacy-bound-553",
+    "values": {}
+  },
+  "Coffre - Saphir brut": {
+    "message": "legacy-bound-554",
+    "values": {}
+  },
+  "Coffre - Selle antique": {
+    "message": "legacy-bound-555",
+    "values": {}
+  },
+  "Coffre - Serpe coupe-gorge": {
+    "message": "legacy-bound-556",
+    "values": {}
+  },
+  "Coffre - Silex": {
+    "message": "legacy-bound-557",
+    "values": {}
+  },
+  "Coffre - Topaze brute": {
+    "message": "legacy-bound-558",
+    "values": {}
+  },
+  "Coffre - Torche": {
+    "message": "legacy-bound-559",
+    "values": {}
+  },
+  "Coffre - Trident gerudo": {
+    "message": "legacy-bound-560",
+    "values": {}
+  },
+  "Coffre - Tunique hylienne": {
+    "message": "legacy-bound-561",
+    "values": {}
+  },
+  "Coffre - Vieille chemise": {
+    "message": "legacy-bound-562",
+    "values": {}
+  },
+  "Coffre - Vieux pantalon": {
+    "message": "legacy-bound-563",
+    "values": {}
+  },
+  "Coffre - Vis antique": {
+    "message": "legacy-bound-564",
+    "values": {}
+  },
+  "Descends la falaise jusqu'à la paroi friable et brise-la pour révéler le sanctuaire de Thano'A.": {
+    "message": "legacy-bound-565",
+    "values": {}
+  },
+  "Donne l'un des plats royaux à Gottah.": {
+    "message": "legacy-bound-566",
+    "values": {}
+  },
+  "Donne la pomme cuite à Junoh.": {
+    "message": "legacy-bound-567",
+    "values": {}
+  },
+  "Donne le gâteau à Lespe pour soigner sa fille.": {
+    "message": "legacy-bound-568",
+    "values": {}
+  },
+  "Donne les cinq grenouilles à Pemto en une seule fois.": {
+    "message": "legacy-bound-569",
+    "values": {}
+  },
+  "Donne les dix lézards à Mark pour recevoir l'armure de pierre.": {
+    "message": "legacy-bound-570",
+    "values": {}
+  },
+  "Donne les trois libellules à Tsukimi puis reparle à Jun.": {
+    "message": "legacy-bound-571",
+    "values": {}
+  },
+  "Donne un silex à Johgo pour rallumer son feu de cuisson.": {
+    "message": "legacy-bound-572",
+    "values": {}
+  },
+  "Donne-lui un durian max puis retourne faire ton rapport à Lobinn.": {
+    "message": "legacy-bound-573",
+    "values": {}
+  },
+  "Décoche une seule flèche à travers les deux anneaux pour révéler le sanctuaire de Shi'Dagoz.": {
+    "message": "legacy-bound-574",
+    "values": {}
+  },
+  "Dépose le coffre près d'Elos puis ouvre-le pour terminer la découverte.": {
+    "message": "legacy-bound-575",
+    "values": {}
+  },
+  "Enregistre le cheval dans un relais puis présente-le à Tabos.": {
+    "message": "legacy-bound-576",
+    "values": {}
+  },
+  "Entre dans la boutique secrète et parle à Egrouss pour valider l'accès permanent.": {
+    "message": "legacy-bound-577",
+    "values": {}
+  },
+  "Entre dans la cité Contrées Gerudos, parle à Riju puis récupère le casque du tonnerre dans le repaire des Yigas.": {
+    "message": "legacy-bound-578",
+    "values": {}
+  },
+  "Entre dans le labyrinthe d'Edal Sud au nord du désert Contrées Gerudos.": {
+    "message": "legacy-bound-579",
+    "values": {}
+  },
+  "Escalade la colonne et active le sanctuaire de Tzuna'Kai à son sommet.": {
+    "message": "legacy-bound-580",
+    "values": {}
+  },
+  "Examine le tableau dans le relais du pied de la Montagne et parle à Mero.": {
+    "message": "legacy-bound-581",
+    "values": {}
+  },
+  "Examine les trois monuments sur la mesa Contrées Gerudos orientale et photographie leurs cartes.": {
+    "message": "legacy-bound-582",
+    "values": {}
+  },
+  "Exécute une attaque plongeante avec cette lance sur le socle de la cascade Voilée pour révéler le sanctuaire de Da'Kikii.": {
+    "message": "legacy-bound-583",
+    "values": {}
+  },
+  "Grimpe au sommet de la paroi de fer et parle à Bagodet.": {
+    "message": "legacy-bound-584",
+    "values": {}
+  },
+  "Marmites": {
+    "message": "legacy-bound-585",
+    "values": {}
+  },
+  "Montre la photo enregistrée à Mébol pour recevoir les jambières zora.": {
+    "message": "legacy-bound-586",
+    "values": {}
+  },
+  "Montre les trois photos à Argose puis accroupis-toi sur une dalle pendant qu'il occupe l'autre.": {
+    "message": "legacy-bound-587",
+    "values": {}
+  },
+  "Montre les trois photos à Lune pour qu'elle accepte de céder l'orbe.": {
+    "message": "legacy-bound-588",
+    "values": {}
+  },
+  "Montre à Fruguette une photo nette où le Staldestrier est reconnu.": {
+    "message": "legacy-bound-589",
+    "values": {}
+  },
+  "Montre à Pecanis une photo reconnue comme Rumy.": {
+    "message": "legacy-bound-590",
+    "values": {}
+  },
+  "Obtiens la Épée de légende dans la forêt Korogu avec treize cœurs permanents.": {
+    "message": "legacy-bound-591",
+    "values": {}
+  },
+  "Parle plusieurs fois à Plèle dans les sources chaudes Goron et déchiffre ses indications.": {
+    "message": "legacy-bound-592",
+    "values": {}
+  },
+  "Parle à Allium au bazar Assek et observe la tempête qui se dissipe le matin ou le soir.": {
+    "message": "legacy-bound-593",
+    "values": {}
+  },
+  "Parle à Asarim sur le rocher de la baie d'Horon et écoute son chant.": {
+    "message": "legacy-bound-594",
+    "values": {}
+  },
+  "Parle à Azasha devant la bijouterie fermée de la cité Contrées Gerudos.": {
+    "message": "legacy-bound-595",
+    "values": {}
+  },
+  "Parle à Bacchyas dans le village d'Écaraille puis rejoins la plage d'Aris.": {
+    "message": "legacy-bound-596",
+    "values": {}
+  },
+  "Parle à Benjamin devant l'entrée de la cité Contrées Gerudos pour apprendre qu'un marchand vend une tenue adaptée.": {
+    "message": "legacy-bound-597",
+    "values": {}
+  },
+  "Parle à Caly dans sa cabane près du fort d'Elimith et lis ses recherches.": {
+    "message": "legacy-bound-598",
+    "values": {}
+  },
+  "Parle à Camailla au village Piaf et cherche sa fille Quill.": {
+    "message": "legacy-bound-599",
+    "values": {}
+  },
+  "Parle à Cherrola dans la boutique de flèches de Cocorico.": {
+    "message": "legacy-bound-600",
+    "values": {}
+  },
+  "Parle à Clévia à Elimith et observe les trois cèdres alignés sur la montagne au nord.": {
+    "message": "legacy-bound-601",
+    "values": {}
+  },
+  "Parle à Coquis dans la forêt Korogu puis suis Oaki sans te faire voir.": {
+    "message": "legacy-bound-602",
+    "values": {}
+  },
+  "Parle à Cézam au relais du canyon Contrées Gerudos et apprends que ses quatre compagnons ont disparu.": {
+    "message": "legacy-bound-603",
+    "values": {}
+  },
+  "Parle à Dézelle puis à Hamel près de l'auberge d'Elimith.": {
+    "message": "legacy-bound-604",
+    "values": {}
+  },
+  "Parle à Elos sur le pont près du relais de la rivière et observe le coffre au fond de l'eau.": {
+    "message": "legacy-bound-605",
+    "values": {}
+  },
+  "Parle à Filip à Elimith puis gravis le mont Lanelle avec une protection contre le froid.": {
+    "message": "legacy-bound-606",
+    "values": {}
+  },
+  "Parle à Fruguette au relais des prairies gelées.": {
+    "message": "legacy-bound-607",
+    "values": {}
+  },
+  "Parle à Fuhgo dans la cité Goron.": {
+    "message": "legacy-bound-608",
+    "values": {}
+  },
+  "Parle à Glanis dans la forêt Korogu puis suis le chemin en utilisant seulement les indices donnés par les arbres.": {
+    "message": "legacy-bound-609",
+    "values": {}
+  },
+  "Parle à Gottah au relais de la Rivière puis explore la bibliothèque du château d'Hyrule.": {
+    "message": "legacy-bound-610",
+    "values": {}
+  },
+  "Parle à Johgo dans l'auberge du village Piaf.": {
+    "message": "legacy-bound-611",
+    "values": {}
+  },
+  "Parle à Jun puis à Tsukimi au relais du sud d'Akkala.": {
+    "message": "legacy-bound-612",
+    "values": {}
+  },
+  "Parle à Junoh sur une plateforme du village Piaf.": {
+    "message": "legacy-bound-613",
+    "values": {}
+  },
+  "Parle à Jérine au laboratoire antique d'Akkala et repère l'île en forme de crâne.": {
+    "message": "legacy-bound-614",
+    "values": {}
+  },
+  "Parle à Kasah au relais du pont de Tabanta et observe la falaise qu'il indique.": {
+    "message": "legacy-bound-615",
+    "values": {}
+  },
+  "Parle à Lamenn devant la cité Contrées Gerudos et pars vers les statues d'épéistes dans la tempête de sable.": {
+    "message": "legacy-bound-616",
+    "values": {}
+  },
+  "Parle à Landonn dans la cité Goron puis descends vers le tunnel de Gorko.": {
+    "message": "legacy-bound-617",
+    "values": {}
+  },
+  "Parle à Lasto au relais de l'est d'Akkala puis rejoins la source de la Force.": {
+    "message": "legacy-bound-618",
+    "values": {}
+  },
+  "Parle à Lobinn dans la caserne après la disparition de Brihk.": {
+    "message": "legacy-bound-619",
+    "values": {}
+  },
+  "Parle à Lune sur la plage d'Araiso et photographie un Gardien volant, un petit Gardien et un Gardien marcheur.": {
+    "message": "legacy-bound-620",
+    "values": {}
+  },
+  "Parle à Mark à la mine du Sud sur la route de la cité Goron.": {
+    "message": "legacy-bound-621",
+    "values": {}
+  },
+  "Parle à Mei puis retourne annoncer à Nelsice qu'elle est saine et sauve.": {
+    "message": "legacy-bound-622",
+    "values": {}
+  },
+  "Parle à Merveila dans la cité Contrées Gerudos.": {
+    "message": "legacy-bound-623",
+    "values": {}
+  },
+  "Parle à Mohino au village Piaf et observe la montagne en forme d'oiseau qu'elle décrit.": {
+    "message": "legacy-bound-624",
+    "values": {}
+  },
+  "Parle à Mébol au domaine zora après avoir obtenu l'appareil photo.": {
+    "message": "legacy-bound-625",
+    "values": {}
+  },
+  "Parle à Naye dans la ferme d'Elimith puis suis la piste vers la plage au sud.": {
+    "message": "legacy-bound-626",
+    "values": {}
+  },
+  "Parle à Papistus dans la forêt Korogu.": {
+    "message": "legacy-bound-627",
+    "values": {}
+  },
+  "Parle à Parisse au relais de la Rivière.": {
+    "message": "legacy-bound-628",
+    "values": {}
+  },
+  "Parle à Pecanis dans la forêt Korogu après avoir débloqué l'appareil photo.": {
+    "message": "legacy-bound-629",
+    "values": {}
+  },
+  "Parle à Pemto, l'enfant zora qui court près de la statue.": {
+    "message": "legacy-bound-630",
+    "values": {}
+  },
+  "Parle à Pirou au relais du canyon Contrées Gerudos.": {
+    "message": "legacy-bound-631",
+    "values": {}
+  },
+  "Parle à Pistou près de la marmite du relais des Piafs.": {
+    "message": "legacy-bound-632",
+    "values": {}
+  },
+  "Parle à Plati près de la marmite d'Écaraille.": {
+    "message": "legacy-bound-633",
+    "values": {}
+  },
+  "Parle à Pohrpi affalée devant le sanctuaire dans les sables de l'Est puis rends-toi à la glacière du nord.": {
+    "message": "legacy-bound-634",
+    "values": {}
+  },
+  "Parle à Quill puis retourne rassurer Camailla.": {
+    "message": "legacy-bound-635",
+    "values": {}
+  },
+  "Parle à Rhodoni dans la cité Contrées Gerudos puis examine les sept statues des héroïnes.": {
+    "message": "legacy-bound-636",
+    "values": {}
+  },
+  "Parle à Sasan lorsque la lettre atteint l'île Mercay puis retrouve Sasan et Alfine au domaine zora.": {
+    "message": "legacy-bound-637",
+    "values": {}
+  },
+  "Parle à Shimina au relais du Lac pendant qu'elle redoute les impacts de foudre.": {
+    "message": "legacy-bound-638",
+    "values": {}
+  },
+  "Parle à Staille au camp d'archerie montée puis rejoins la prairie d'Obbaba.": {
+    "message": "legacy-bound-639",
+    "values": {}
+  },
+  "Parle à Surosse au relais des alpages puis rejoins la plaine de Firone.": {
+    "message": "legacy-bound-640",
+    "values": {}
+  },
+  "Parle à Telago près de l'entrée du domaine zora.": {
+    "message": "legacy-bound-641",
+    "values": {}
+  },
+  "Parle à Tholu au relais du pont de Tabanta et accepte son offrande.": {
+    "message": "legacy-bound-642",
+    "values": {}
+  },
+  "Parle à Tiklama près de son jardin dans la cité Contrées Gerudos puis remonte l'écoulement pollué.": {
+    "message": "legacy-bound-643",
+    "values": {}
+  },
+  "Parle à Zucchi dans le canyon Contrées Gerudos et accepte de lui vendre un cheval.": {
+    "message": "legacy-bound-644",
+    "values": {}
+  },
+  "Photographie la tête du fossile d'Ordinn, le corps entier du fossile Contrées Gerudos et les côtes du fossile d'Hébra.": {
+    "message": "legacy-bound-645",
+    "values": {}
+  },
+  "Photographie le fragment de monument lumineux près des ruines de Palmorae, puis parle à Argose.": {
+    "message": "legacy-bound-646",
+    "values": {}
+  },
+  "Place les trois orbes dans les socles correspondants pour révéler le sanctuaire de Tawa'Jin.": {
+    "message": "legacy-bound-647",
+    "values": {}
+  },
+  "Prérequis publié : Module appareil photo": {
+    "message": "legacy-bound-648",
+    "values": {}
+  },
+  "Présente le cheval à Staille puis enregistre-le dans un relais si tu veux le conserver.": {
+    "message": "legacy-bound-649",
+    "values": {}
+  },
+  "Radeaux": {
+    "message": "legacy-bound-650",
+    "values": {}
+  },
+  "Rapporte le viscère à Merveila.": {
+    "message": "legacy-bound-651",
+    "values": {}
+  },
+  "Redescends et reparle à Shimina une fois le danger supprimé.": {
+    "message": "legacy-bound-652",
+    "values": {}
+  },
+  "Rejoins la grande peinture rouge au sud du sommet Contrées Gerudos et place-toi sur la dalle devant elle.": {
+    "message": "legacy-bound-653",
+    "values": {}
+  },
+  "Rejoins la statue de la huitième héroïne dans les hauteurs Contrées Gerudos et photographie son torse et son visage.": {
+    "message": "legacy-bound-654",
+    "values": {}
+  },
+  "Rejoins le domaine zora, parle au roi Dorefah et obtiens l'armure zora.": {
+    "message": "legacy-bound-655",
+    "values": {}
+  },
+  "Rejoins le grand fossile Contrées Gerudos au sud-ouest et trouve Brihk épuisée sous le squelette.": {
+    "message": "legacy-bound-656",
+    "values": {}
+  },
+  "Remets les dix gemmes à Telago, puis utilise son échange répétable si souhaité.": {
+    "message": "legacy-bound-657",
+    "values": {}
+  },
+  "Remets les trois ingrédients à Plati et accepte la paella qu'elle prépare.": {
+    "message": "legacy-bound-658",
+    "values": {}
+  },
+  "Remonte le chemin du domaine zora en suivant les panneaux et les rencontres avec Sidon ; évite les parois glissantes sous la pluie.": {
+    "message": "legacy-bound-659",
+    "values": {}
+  },
+  "Reparle à Vocah lorsque les sept cocottes sont réunies.": {
+    "message": "legacy-bound-660",
+    "values": {}
+  },
+  "Retourne auprès de Naye après la disparition du groupe de monstres.": {
+    "message": "legacy-bound-661",
+    "values": {}
+  },
+  "Retourne voir Bacchyas après la validation de la zone nettoyée.": {
+    "message": "legacy-bound-662",
+    "values": {}
+  },
+  "Retourne voir Cherrola après l'allumage simultané des quatre torches.": {
+    "message": "legacy-bound-663",
+    "values": {}
+  },
+  "Retourne voir Deza après la destruction des deux machines.": {
+    "message": "legacy-bound-664",
+    "values": {}
+  },
+  "Retourne voir Fuhgo pour annoncer la victoire.": {
+    "message": "legacy-bound-665",
+    "values": {}
+  },
+  "Retourne voir Papistus après l'activation des trois sanctuaires.": {
+    "message": "legacy-bound-666",
+    "values": {}
+  },
+  "Retourne voir Surosse après l'élimination complète de la bande.": {
+    "message": "legacy-bound-667",
+    "values": {}
+  },
+  "Retrouve Gonguron dans le tunnel, apporte à Landonn un rôti de caillasse obtenu à la rôtisserie Gortram.": {
+    "message": "legacy-bound-668",
+    "values": {}
+  },
+  "Salle active": {
+    "message": "legacy-bound-669",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Bénédiction de Ritah'Zumo.": {
+    "message": "legacy-bound-670",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Bénédiction de Tou'Karo.": {
+    "message": "legacy-bound-671",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Bénédiction de Tzuna'Kai.": {
+    "message": "legacy-bound-672",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Mécanismes de Jizu'Kafi.": {
+    "message": "legacy-bound-673",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Mécanismes de Katsu'Tosa.": {
+    "message": "legacy-bound-674",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Épreuve basique de force.": {
+    "message": "legacy-bound-675",
+    "values": {}
+  },
+  "Sanctuaire de la région Akkala : Épreuve moyenne de force.": {
+    "message": "legacy-bound-676",
+    "values": {}
+  },
+  "Sanctuaire de la région Centre d'Hyrule : Au travers des portes.": {
+    "message": "legacy-bound-677",
+    "values": {}
+  },
+  "Sanctuaire de la région Centre d'Hyrule : Force massive.": {
+    "message": "legacy-bound-678",
+    "values": {}
+  },
+  "Sanctuaire de la région Centre d'Hyrule : Passerelle de fer.": {
+    "message": "legacy-bound-679",
+    "values": {}
+  },
+  "Sanctuaire de la région Centre d'Hyrule : Épreuve basique de force.": {
+    "message": "legacy-bound-680",
+    "values": {}
+  },
+  "Sanctuaire de la région Centre d'Hyrule : Épreuve moyenne de force.": {
+    "message": "legacy-bound-681",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Attendre le bon moment.": {
+    "message": "legacy-bound-682",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Bénédiction de Ma'Nora.": {
+    "message": "legacy-bound-683",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Deux guides vers les cieux.": {
+    "message": "legacy-bound-684",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Mouvements parallèles.": {
+    "message": "legacy-bound-685",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Observer les mouvements.": {
+    "message": "legacy-bound-686",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Secret enfoui.": {
+    "message": "legacy-bound-687",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Viser dans la quiétude.": {
+    "message": "legacy-bound-688",
+    "values": {}
+  },
+  "Sanctuaire de la région Collines d'Hyrule : Épreuve moyenne de force.": {
+    "message": "legacy-bound-689",
+    "values": {}
+  },
+  "Sanctuaire de la région Contrées Gerudos : Bénédiction de Kiha'U.": {
+    "message": "legacy-bound-690",
+    "values": {}
+  },
+  "Sanctuaire de la région Contrées Gerudos : Danger pour la glace.": {
+    "message": "legacy-bound-691",
+    "values": {}
+  },
+  "Sanctuaire de la région Contrées Gerudos : Deux types de bombe.": {
+    "message": "legacy-bound-692",
+    "values": {}
+  },
+  "Sanctuaire de la région Contrées Gerudos : Mécanismes de Juni'Shi.": {
+    "message": "legacy-bound-693",
+    "values": {}
+  },
+  "Sanctuaire de la région Contrées Gerudos : Épreuve moyenne de force.": {
+    "message": "legacy-bound-694",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Bénédiction de Jitah'Sami.": {
+    "message": "legacy-bound-695",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Bénédiction de Thano'A.": {
+    "message": "legacy-bound-696",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Mécanismes de Myama'Gana.": {
+    "message": "legacy-bound-697",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Rouages du temps.": {
+    "message": "legacy-bound-698",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Trois boîtes.": {
+    "message": "legacy-bound-699",
+    "values": {}
+  },
+  "Sanctuaire de la région Est de Necluda : Trois éléments de sagesse.": {
+    "message": "legacy-bound-700",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Bénédiction de Kugu'Chide.": {
+    "message": "legacy-bound-701",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Bénédiction de Kyuka'Nata.": {
+    "message": "legacy-bound-702",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Bénédiction de Tawa'Jin.": {
+    "message": "legacy-bound-703",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Capacités d'adaptation.": {
+    "message": "legacy-bound-704",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Equilibre des caisses.": {
+    "message": "legacy-bound-705",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Le bon moment.": {
+    "message": "legacy-bound-706",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Trouver l'équilibre.": {
+    "message": "legacy-bound-707",
+    "values": {}
+  },
+  "Sanctuaire de la région Firone : Épreuve moyenne de force.": {
+    "message": "legacy-bound-708",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Bénédiction de Da'Chokahi.": {
+    "message": "legacy-bound-709",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Bénédiction de Kito'Wawai.": {
+    "message": "legacy-bound-710",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Bénédiction de Kun'Shidaji.": {
+    "message": "legacy-bound-711",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Bénédiction de Mahmu'Lano.": {
+    "message": "legacy-bound-712",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Bénédiction de Rona'Kahta.": {
+    "message": "legacy-bound-713",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : De courbe en courbe.": {
+    "message": "legacy-bound-714",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Modérer sa force.": {
+    "message": "legacy-bound-715",
+    "values": {}
+  },
+  "Sanctuaire de la région Grande forêt d'Hyrule : Étoiles en nombre.": {
+    "message": "legacy-bound-716",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Bénédiction de Kaza'Tokki.": {
+    "message": "legacy-bound-717",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Bénédiction de Lano'Kuhii.": {
+    "message": "legacy-bound-718",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Bénédiction de To'Kumo.": {
+    "message": "legacy-bound-719",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Le chemin de l'orbe.": {
+    "message": "legacy-bound-720",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Mur rouge dissimulé.": {
+    "message": "legacy-bound-721",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Pas à pas.": {
+    "message": "legacy-bound-722",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Pour bloquer le vent.": {
+    "message": "legacy-bound-723",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Préparation psychologique.": {
+    "message": "legacy-bound-724",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Savoir quand s'arrêter.": {
+    "message": "legacy-bound-725",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Simultanéité.": {
+    "message": "legacy-bound-726",
+    "values": {}
+  },
+  "Sanctuaire de la région Hébra : Une percée.": {
+    "message": "legacy-bound-727",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Bénédiction de Shi'Kuchofu.": {
+    "message": "legacy-bound-728",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Créer sa propre voie.": {
+    "message": "legacy-bound-729",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Fendre les cieux.": {
+    "message": "legacy-bound-730",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Saisir l'instant.": {
+    "message": "legacy-bound-731",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Épreuve basique de force.": {
+    "message": "legacy-bound-732",
+    "values": {}
+  },
+  "Sanctuaire de la région Lac Hylia : Épreuve moyenne de force.": {
+    "message": "legacy-bound-733",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de Dira'Ma.": {
+    "message": "legacy-bound-734",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de Kioshi'Oh.": {
+    "message": "legacy-bound-735",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de Mii'Suu.": {
+    "message": "legacy-bound-736",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de Rakyu'Uro.": {
+    "message": "legacy-bound-737",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de Suma'Sama.": {
+    "message": "legacy-bound-738",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Bénédiction de To'Kayuu.": {
+    "message": "legacy-bound-739",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Cinq de fer.": {
+    "message": "legacy-bound-740",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Circuit électrique.": {
+    "message": "legacy-bound-741",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Conduire l'électricité.": {
+    "message": "legacy-bound-742",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Dans la boîte.": {
+    "message": "legacy-bound-743",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Double emploi.": {
+    "message": "legacy-bound-744",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Entre calme et chaos.": {
+    "message": "legacy-bound-745",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Le choix du gabarit.": {
+    "message": "legacy-bound-746",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Pouvoir de l'électricité.": {
+    "message": "legacy-bound-747",
+    "values": {}
+  },
+  "Sanctuaire de la région Landes Sauvages : Rompre les courbes.": {
+    "message": "legacy-bound-748",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Bouclier d'eau.": {
+    "message": "legacy-bound-749",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Bénédiction de Da'Kikii.": {
+    "message": "legacy-bound-750",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Bénédiction de Shi'Yota.": {
+    "message": "legacy-bound-751",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : De pilier en pilier.": {
+    "message": "legacy-bound-752",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Forces de pression.": {
+    "message": "legacy-bound-753",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : L'art de la fonte.": {
+    "message": "legacy-bound-754",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : L'ascension après la chute.": {
+    "message": "legacy-bound-755",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Les cinq flammes.": {
+    "message": "legacy-bound-756",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Les marches du succès.": {
+    "message": "legacy-bound-757",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Main salvatrice.": {
+    "message": "legacy-bound-758",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Un temps pour la lumière.": {
+    "message": "legacy-bound-759",
+    "values": {}
+  },
+  "Sanctuaire de la région Lanelle : Épreuve basique de force.": {
+    "message": "legacy-bound-760",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Bénédiction de Gu'Achitoh.": {
+    "message": "legacy-bound-761",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Dans l'angle mort.": {
+    "message": "legacy-bound-762",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Durée de vol.": {
+    "message": "legacy-bound-763",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Flammes vacillantes.": {
+    "message": "legacy-bound-764",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : La flamme bleue.": {
+    "message": "legacy-bound-765",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Le parfait équilibre.": {
+    "message": "legacy-bound-766",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Ouvrir la voie.": {
+    "message": "legacy-bound-767",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Parer les flammes.": {
+    "message": "legacy-bound-768",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Pouvoir des flammes.": {
+    "message": "legacy-bound-769",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Question de trajectoire.": {
+    "message": "legacy-bound-770",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Répandre le feu.": {
+    "message": "legacy-bound-771",
+    "values": {}
+  },
+  "Sanctuaire de la région Ordinn : Sur la pente de la convoitise.": {
+    "message": "legacy-bound-772",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Bénédiction de Rahna'Loki.": {
+    "message": "legacy-bound-773",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Enseignement de Taro'Nihi.": {
+    "message": "legacy-bound-774",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Guidé par le vent.": {
+    "message": "legacy-bound-775",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Mécanismes de Toto'Isa.": {
+    "message": "legacy-bound-776",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Suivre la voie de l'eau.": {
+    "message": "legacy-bound-777",
+    "values": {}
+  },
+  "Sanctuaire de la région Ouest de Necluda : Suivre les flots.": {
+    "message": "legacy-bound-778",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Arrêter le temps.": {
+    "message": "legacy-bound-779",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Guidé par la lumière.": {
+    "message": "legacy-bound-780",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : La balle au bond.": {
+    "message": "legacy-bound-781",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Le temps de la réflexion.": {
+    "message": "legacy-bound-782",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Piliers de glace.": {
+    "message": "legacy-bound-783",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Puissance magnétique.": {
+    "message": "legacy-bound-784",
+    "values": {}
+  },
+  "Sanctuaire de la région Plateau du Prélude : Soif de destruction.": {
+    "message": "legacy-bound-785",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : Canons.": {
+    "message": "legacy-bound-786",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : Contrôler le vent.": {
+    "message": "legacy-bound-787",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : La voie cachée du vent.": {
+    "message": "legacy-bound-788",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : La voie du vent.": {
+    "message": "legacy-bound-789",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : Moulins à vent.": {
+    "message": "legacy-bound-790",
+    "values": {}
+  },
+  "Sanctuaire de la région Tabanta : Vents porteurs.": {
+    "message": "legacy-bound-791",
+    "values": {}
+  },
+  "Stalhinox - près de Ancien château d'Edal - Sud": {
+    "message": "legacy-bound-792",
+    "values": {}
+  },
+  "Stalhinox - près de Ancien parc de la forêt": {
+    "message": "legacy-bound-793",
+    "values": {}
+  },
+  "Stalhinox - près de Camp d'entraînement au tir à l'arc": {
+    "message": "legacy-bound-794",
+    "values": {}
+  },
+  "Stalhinox - près de Geôles": {
+    "message": "legacy-bound-795",
+    "values": {}
+  },
+  "Stalhinox - près de Grand fossile d'Hébra": {
+    "message": "legacy-bound-796",
+    "values": {}
+  },
+  "Stalhinox - près de Pont de Faroria": {
+    "message": "legacy-bound-797",
+    "values": {}
+  },
+  "Stalhinox - près de Pont du Puîné": {
+    "message": "legacy-bound-798",
+    "values": {}
+  },
+  "Stalhinox - près de Relais de l'est d'Akkala": {
+    "message": "legacy-bound-799",
+    "values": {}
+  },
+  "Stalhinox - près de Ruines du parc Sandine": {
+    "message": "legacy-bound-800",
+    "values": {}
+  },
+  "Stalhinox - près de Temple oublié": {
+    "message": "legacy-bound-801",
+    "values": {}
+  },
+  "Sélectionne le champignon dans le détecteur, suis le signal jusqu'à un autre exemplaire et rapporte-le à Canel.": {
+    "message": "legacy-bound-802",
+    "values": {}
+  },
+  "Termine les quêtes secondaires de Cocorico nécessaires puis parle à Pahya après la disparition de l'orbe.": {
+    "message": "legacy-bound-803",
+    "values": {}
+  },
+  "Tiens-toi nu sur le socle pendant que la lune devient rouge pour révéler le sanctuaire de Midda'Loki.": {
+    "message": "legacy-bound-804",
+    "values": {}
+  },
+  "Tire une flèche dans les yeux lumineux pour révéler le sanctuaire de Kamu'Yuo.": {
+    "message": "legacy-bound-805",
+    "values": {}
+  },
+  "Traverse les ruines et active le sanctuaire de Dako'Tawa au cœur de la tempête.": {
+    "message": "legacy-bound-806",
+    "values": {}
+  },
+  "Trouver le sujet - Cherche Fée dans la section Faune.": {
+    "message": "legacy-bound-807",
+    "values": {}
+  },
+  "Vérifier l'Expansion Pass - Charge une sauvegarde créée avec l'Expansion Pass installé.": {
+    "message": "legacy-bound-808",
+    "values": {}
+  },
+  "souvenir": {
+    "message": "legacy-bound-809",
+    "values": {}
+  },
+  "souvenirs": {
+    "message": "legacy-bound-810",
+    "values": {}
+  },
+  "Écoute Asarim au sommet de la tour Contrées Gerudos et repère le socle au sud-est.": {
+    "message": "legacy-bound-811",
+    "values": {}
+  },
+  "Écoute Asarim dans la plaine de Rabia et cherche un cerf mâle.": {
+    "message": "legacy-bound-812",
+    "values": {}
+  },
+  "Écoute Asarim près du pont de Jeddo puis repère les deux anneaux de roche alignés.": {
+    "message": "legacy-bound-813",
+    "values": {}
+  },
+  "Écoute Asarim sur la crête d'Hyrule puis localise le socle près du chant.": {
+    "message": "legacy-bound-814",
+    "values": {}
+  },
+  "Écoute la conversation à la Cantina de la cité Contrées Gerudos pour obtenir des indices sur le mot de passe.": {
+    "message": "legacy-bound-815",
+    "values": {}
+  },
+  "Écoute le chant de Asarim dans la baie de Kitano.": {
+    "message": "legacy-bound-816",
+    "values": {}
+  },
+  "Écoute le chant de Asarim près du lac Calora et repère le tertre orange.": {
+    "message": "legacy-bound-817",
+    "values": {}
+  },
+  "Élimine tous les ennemis, parle aux quatre voyageurs puis retourne voir Cézam.": {
+    "message": "legacy-bound-818",
+    "values": {}
+  },
+  "Équipe l'armure zora, remonte la cascade et reparle à Gruve.": {
+    "message": "legacy-bound-819",
+    "values": {}
+  },
+  "Équipe la baguette devant Almus et parle-lui sans la casser.": {
+    "message": "legacy-bound-820",
+    "values": {}
+  },
+  "Équipe la Épée de légende devant Aliza et reparle-lui.": {
+    "message": "legacy-bound-821",
+    "values": {}
+  },
+  "Accompagnement - Stalhinox 010": {
+    "message": "legacy-bound-822",
+    "values": {
+      "value0": "010",
+      "number0": 10.0
+    }
+  }
+}

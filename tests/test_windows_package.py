@@ -3,9 +3,16 @@ import unittest
 from pathlib import Path
 
 from botw_companion.versioning import CURRENT_VERSION
+from botw_companion.i18n import locale_resource
 
 
 class WindowsPackageTests(unittest.TestCase):
+    def test_build_requires_the_shared_locale_registry(self):
+        script = (self.root / "tools/build_windows_app.ps1").read_text(encoding="utf-8")
+        self.assertIn(r'"_internal\botw_companion\locales\registry.json"', script)
+        self.assertNotIn(r'"_internal\botw_companion\web\index.html"', script)
+        self.assertIn("--package-self-test", script)
+
     def test_inno_setup_verifies_the_exact_downloaded_release(self):
         script = (self.root / "tools/install_inno_setup_ci.ps1").read_text(encoding="utf-8")
         self.assertIn('release verify-asset $ReleaseTag $installer --repo "jrsoftware/issrc"', script)
@@ -78,7 +85,8 @@ class WindowsPackageTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn('"pyinstaller==6.22.2"', script)
-        self.assertIn('"certifi==2025.8.3"', script)
+        self.assertIn('requirements-runtime.txt', script)
+        self.assertIn('certifi==2025.8.3', (self.root / 'requirements-runtime.txt').read_text(encoding='utf-8'))
         self.assertIn("--package-self-test", script)
         self.assertIn("--package-network-self-test", script)
         self.assertIn("cartography_reference_fr_compiled.json", script)
@@ -198,7 +206,7 @@ class WindowsPackageTests(unittest.TestCase):
 
     def test_browser_suite_covers_the_complete_user_path(self):
         script = (self.root / "tools" / "browser_smoke.js").read_text(encoding="utf-8")
-        markup = (self.root / "botw_companion" / "web" / "index.html").read_text(encoding="utf-8")
+        markup = locale_resource("index.html", "fr").read_text(encoding="utf-8")
         for selector in (
             "#bloodMoonCountdown", "#syncStatus", "#zoomIn", "#mapReset",
             "#manualComplete", "#detailRoute", "#closeDetails", "#toggleRoute",

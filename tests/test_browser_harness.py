@@ -1,3 +1,5 @@
+from pathlib import Path
+import subprocess
 import unittest
 
 from tools.browser_test_server import BrowserTestDsu, BrowserTestSync, build_report
@@ -7,6 +9,20 @@ class BrowserHarnessTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.report = build_report()
+
+    def test_update_fixture_localization_bootstrap(self):
+        result = subprocess.run(
+            ["node", "--test", str(Path(__file__).with_name("browser_update_bootstrap.cjs"))],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_browser_launch_isolation(self):
+        result = subprocess.run(
+            ["node", "--test", str(Path(__file__).with_name("browser_launch.cjs"))],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_report_exercises_windows_sync_and_blood_moon_widgets(self):
         self.assertEqual(self.report["sauvegarde"]["plateforme"], "Windows")

@@ -1,14 +1,15 @@
 /* Persist the presentation language without changing personal data. */
 (() => {
+    if (globalThis.BOTWI18n?.failed) return;
     const key = 'botw-companion-language';
-    const valid = value => value === 'fr' || value === 'en';
-    const current = document.documentElement.lang === 'en' ? 'en' : 'fr';
+    const valid = value => BOTWI18n.resolve(value);
+    const current = BOTWI18n.locale;
     const url = new URL(window.location.href);
     const explicit = url.searchParams.get('lang');
-    const cookie = document.cookie.match(/(?:^|;\s*)botw-language=(fr|en)(?:;|$)/)?.[1];
+    const cookie = document.cookie.match(/(?:^|;\s*)botw-language=([^;]*)(?:;|$)/)?.[1];
     let saved;
     try { saved = localStorage.getItem(key); } catch (_) { /* Storage may be disabled. */ }
-    const desired = valid(explicit) ? explicit : valid(cookie) ? cookie : valid(saved) ? saved : current;
+    const desired = valid(explicit) || valid(cookie) || valid(saved) || current;
     function remember(language) {
         try { localStorage.setItem(key, language); } catch (_) { /* The cookie remains usable. */ }
         document.cookie = `botw-language=${language}; Path=/; Max-Age=63072000; SameSite=Strict`;

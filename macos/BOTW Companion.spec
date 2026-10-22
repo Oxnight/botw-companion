@@ -18,6 +18,8 @@ datas = collect_data_files(
     ],
 )
 datas.extend(collect_data_files("certifi"))
+datas.extend(collect_data_files("babel"))
+datas.extend(collect_data_files("pytz"))
 datas.extend([
     (str(project_root / "LICENSE"), "."),
     (str(project_root / "THIRD_PARTY_NOTICES.md"), "."),

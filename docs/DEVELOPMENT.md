@@ -7,7 +7,7 @@ in [`INSTALLATION.md`](INSTALLATION.md).
 
 - Git
 - Python 3.10 or later; Python 3.12 is recommended
-- Node.js and npm only for browser tests
+- Node.js and npm for browser tests and locale generation
 
 Clone the project:
 
@@ -37,6 +37,23 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -e .
 ```
+
+Activate `.venv` in each new terminal before using `python`.
+
+On macOS/Linux with bash or zsh:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+After activation, `python` and `python -m pip` use this environment. The commands
+in [TRANSLATING.md](TRANSLATING.md) assume it is active.
 
 ## Running from source
 
@@ -132,24 +149,27 @@ add it to `tools/audit_distribution.py`.
 
 Only the maintainer prepares releases. See [RELEASE_PROCESS.md](RELEASE_PROCESS.md).
 
-## English presentation assets
+## Shared localization resources
 
-French browser sources remain canonical. After editing UI text, update the
-English reference in `botw_companion/data/localization_en.json` and curated
-translations in `localization_en_ui.json`, then rebuild:
+Follow [TRANSLATING.md](TRANSLATING.md) for source roles, complete locale
+addition, Fluent messages, official terms and review requirements. Install the
+pinned runtime and development dependencies, then build/check all enabled locales:
 
 ```bash
+python -m pip install -r requirements-runtime.txt
 npm ci --ignore-scripts
-python tools/build_english_assets.py
-python tools/build_english_assets.py --check
+python tools/i18n.py build
+python tools/i18n.py check
+python tools/i18n.py coverage
 python tools/audit_localization.py
+node --test tests/*.cjs
 ```
 
-The compiler uses Acorn only during development. Generated assets, reference
-strings, and dynamic message patterns are packaged with the application; no
-translation service or model is used at runtime. Run the English tests and
-browser smoke suite after modifying either language. API identifiers and
-personal-data endpoints are not presentation translations.
+Generated locale resources are tracked product inputs to offline/native builds.
+The compatibility English build command delegates to the generic builder.
+Installed applications use bundled Fluent and CLDR data without npm, a network
+service or a development checkout. Keep API identifiers and personal content
+outside translation. Run the full Python and browser suites after changes.
 
 ## Repository tools
 

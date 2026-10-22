@@ -16,6 +16,18 @@ class ReleaseSecurityTests(unittest.TestCase):
     def setUpClass(cls):
         cls.root = Path(__file__).resolve().parents[1]
 
+    def test_every_audit_job_installs_runtime_dependencies_first(self):
+        workflow = (self.root / ".github/workflows/release.yml").read_text(encoding="utf-8")
+        jobs = {
+            "windows": workflow.split("  windows:\n", 1)[1].split("  macos:\n", 1)[0],
+            "macos": workflow.split("  macos:\n", 1)[1].split("  publish:\n", 1)[0],
+            "publish": workflow.split("  publish:\n", 1)[1],
+        }
+        for name, job in jobs.items():
+            with self.subTest(job=name):
+                audit = job.index("tools/audit_distribution.py")
+                self.assertIn("-r requirements-runtime.txt", job[:audit])
+
     def test_every_action_is_pinned_and_publication_is_least_privilege(self):
         workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(
             encoding="utf-8"

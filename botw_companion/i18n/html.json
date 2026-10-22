@@ -1,0 +1,587 @@
+{
+  "page-skip-to-main-content": {
+    "kind": "text"
+  },
+  "page-navigation-of-categories": {
+    "kind": "attribute"
+  },
+  "page-legend-of-the-states": {
+    "kind": "attribute"
+  },
+  "page-to-do": {
+    "kind": "text"
+  },
+  "page-in-progress": {
+    "kind": "text"
+  },
+  "page-completed": {
+    "kind": "text"
+  },
+  "page-informational": {
+    "kind": "text"
+  },
+  "page-save": {
+    "kind": "text"
+  },
+  "page-emulator": {
+    "kind": "text"
+  },
+  "page-loading": {
+    "kind": "text"
+  },
+  "page-progress-towards-100": {
+    "kind": "text"
+  },
+  "page-loading-the-latest-save": {
+    "kind": "text"
+  },
+  "page-slot-analysis": {
+    "kind": "text"
+  },
+  "page-selection-in-progress": {
+    "kind": "text"
+  },
+  "page-date-unknown": {
+    "kind": "text"
+  },
+  "page-local-emulator": {
+    "kind": "text"
+  },
+  "page-source-of-the-gyroscope": {
+    "kind": "text"
+  },
+  "page-source-of-the-gyroscope-2": {
+    "kind": "attribute"
+  },
+  "page-detection-of-the-controllers": {
+    "kind": "text"
+  },
+  "page-enable": {
+    "kind": "text"
+  },
+  "page-disabled": {
+    "kind": "text"
+  },
+  "page-local-server-stopped": {
+    "kind": "text"
+  },
+  "page-quality-of-signal": {
+    "kind": "text"
+  },
+  "page-inactive-diagnostic": {
+    "kind": "text"
+  },
+  "page-enable-the-gyroscope-to-measure-signal-quality": {
+    "kind": "text"
+  },
+  "page-gyro-quality-measurements": {
+    "kind": "attribute"
+  },
+  "page-frequency-received": {
+    "kind": "text"
+  },
+  "page-frequency-sent": {
+    "kind": "text"
+  },
+  "page-age-of-the-sample": {
+    "kind": "text"
+  },
+  "page-jitter": {
+    "kind": "text"
+  },
+  "page-jitter-sent": {
+    "kind": "text"
+  },
+  "page-abnormal-timestamps": {
+    "kind": "text"
+  },
+  "page-packages-sent": {
+    "kind": "text"
+  },
+  "page-network-errors": {
+    "kind": "text"
+  },
+  "page-disconnections-reconnections": {
+    "kind": "text"
+  },
+  "page-valid-refused-calibrations": {
+    "kind": "text"
+  },
+  "page-synchronization-and-application": {
+    "kind": "attribute"
+  },
+  "page-ryujinx-sync": {
+    "kind": "text"
+  },
+  "page-first-reading-pending": {
+    "kind": "text"
+  },
+  "page-checking-the-save": {
+    "kind": "text"
+  },
+  "page-synchronization-commands": {
+    "kind": "attribute"
+  },
+  "page-check-all": {
+    "kind": "text"
+  },
+  "page-read-now": {
+    "kind": "text"
+  },
+  "page-language": {
+    "kind": "text"
+  },
+  "page-french": {
+    "kind": "text"
+  },
+  "page-help": {
+    "kind": "text"
+  },
+  "page-updates": {
+    "kind": "text"
+  },
+  "page-quit": {
+    "kind": "text"
+  },
+  "page-recent-history": {
+    "kind": "text"
+  },
+  "page-no-event": {
+    "kind": "text"
+  },
+  "page-update-available": {
+    "kind": "text"
+  },
+  "page-a-new-version-is-available": {
+    "kind": "text"
+  },
+  "page-preparing-the-download": {
+    "kind": "text"
+  },
+  "page-download-the-update": {
+    "kind": "text"
+  },
+  "page-cancel": {
+    "kind": "text"
+  },
+  "page-try-again": {
+    "kind": "text"
+  },
+  "page-release-notes": {
+    "kind": "text"
+  },
+  "page-later": {
+    "kind": "text"
+  },
+  "page-next-blood-moon": {
+    "kind": "text"
+  },
+  "page-reading-the-internal-counter": {
+    "kind": "text"
+  },
+  "page-analyzing": {
+    "kind": "text"
+  },
+  "page-analysis-of-the-last-save": {
+    "kind": "text"
+  },
+  "page-7-day-threshold": {
+    "kind": "text"
+  },
+  "page-schedule": {
+    "kind": "text"
+  },
+  "page-trigger": {
+    "kind": "text"
+  },
+  "page-measurement-of-the-last-save": {
+    "kind": "text"
+  },
+  "page-botw-map": {
+    "kind": "text"
+  },
+  "page-official-percentage-of-the-map": {
+    "kind": "text"
+  },
+  "page-ongoing-analysis": {
+    "kind": "text"
+  },
+  "page-formula": {
+    "kind": "text"
+  },
+  "page-automatic": {
+    "kind": "text"
+  },
+  "page-base-game": {
+    "kind": "text"
+  },
+  "page-base-game-dlc": {
+    "kind": "text"
+  },
+  "page-cover": {
+    "kind": "text"
+  },
+  "page-completion-profile": {
+    "kind": "text"
+  },
+  "page-ongoing-analysis-2": {
+    "kind": "text"
+  },
+  "page-profile": {
+    "kind": "text"
+  },
+  "page-elements-that-prevent-100": {
+    "kind": "text"
+  },
+  "page-tracking-manuel-local": {
+    "kind": "text"
+  },
+  "page-loading-2": {
+    "kind": "text"
+  },
+  "page-separated-from-the-automatic-analysis-and-the": {
+    "kind": "text"
+  },
+  "page-see-the-validations": {
+    "kind": "text"
+  },
+  "page-export": {
+    "kind": "text"
+  },
+  "page-import": {
+    "kind": "text"
+  },
+  "page-control-of-personal-cases": {
+    "kind": "text"
+  },
+  "page-manually-validated-objectives": {
+    "kind": "text"
+  },
+  "page-no-lens-manually-checked": {
+    "kind": "text"
+  },
+  "page-close-the-list-of-manual-validations": {
+    "kind": "attribute"
+  },
+  "page-close": {
+    "kind": "text"
+  },
+  "page-search-in-manual-validations": {
+    "kind": "attribute"
+  },
+  "page-search-for-a-goal-a-note-a": {
+    "kind": "attribute"
+  },
+  "page-filter-manual-validations-by-category": {
+    "kind": "attribute"
+  },
+  "page-all-categories": {
+    "kind": "text"
+  },
+  "page-search-for-a-goal": {
+    "kind": "attribute"
+  },
+  "page-search-for-a-shrine-a-quest-a": {
+    "kind": "attribute"
+  },
+  "page-filter-by-progress-status": {
+    "kind": "attribute"
+  },
+  "page-to-do-in-progress-and-info": {
+    "kind": "text"
+  },
+  "page-show-all": {
+    "kind": "text"
+  },
+  "page-completed-all": {
+    "kind": "text"
+  },
+  "page-validated-automatically": {
+    "kind": "text"
+  },
+  "page-validated-manually": {
+    "kind": "text"
+  },
+  "page-automatically-validated-manually": {
+    "kind": "text"
+  },
+  "page-informational-markers": {
+    "kind": "text"
+  },
+  "page-filter-by-additional-content": {
+    "kind": "attribute"
+  },
+  "page-all-contents": {
+    "kind": "text"
+  },
+  "page-base-game-2": {
+    "kind": "text"
+  },
+  "page-expansion-pass-complete": {
+    "kind": "text"
+  },
+  "page-expansion-pass-bonus": {
+    "kind": "text"
+  },
+  "page-dlc-1-the-master-trials": {
+    "kind": "text"
+  },
+  "page-dlc-2-the-champions-ballad": {
+    "kind": "text"
+  },
+  "page-amiibo-content": {
+    "kind": "text"
+  },
+  "page-master-mode": {
+    "kind": "text"
+  },
+  "page-updated-xenoblade": {
+    "kind": "text"
+  },
+  "page-filter-by-game-mode": {
+    "kind": "attribute"
+  },
+  "page-mode-of-save": {
+    "kind": "text"
+  },
+  "page-all-modes-warned": {
+    "kind": "text"
+  },
+  "page-placements-in-normal-mode": {
+    "kind": "text"
+  },
+  "page-placements-in-expert-mode": {
+    "kind": "text"
+  },
+  "page-filter-by-location-type": {
+    "kind": "attribute"
+  },
+  "page-all-locations": {
+    "kind": "text"
+  },
+  "page-displayable-on-hyrule": {
+    "kind": "text"
+  },
+  "page-interior-maps": {
+    "kind": "text"
+  },
+  "page-list-only": {
+    "kind": "text"
+  },
+  "page-without-contact-information": {
+    "kind": "text"
+  },
+  "page-without-natural-location": {
+    "kind": "text"
+  },
+  "page-filter-by-variant": {
+    "kind": "attribute"
+  },
+  "page-all-variants": {
+    "kind": "text"
+  },
+  "page-filter-by-region": {
+    "kind": "attribute"
+  },
+  "page-all-regions": {
+    "kind": "text"
+  },
+  "page-game-session": {
+    "kind": "text"
+  },
+  "page-route-planner": {
+    "kind": "text"
+  },
+  "page-no-steps-selected": {
+    "kind": "text"
+  },
+  "page-show": {
+    "kind": "text"
+  },
+  "page-name": {
+    "kind": "text"
+  },
+  "page-new": {
+    "kind": "text"
+  },
+  "page-duplicate": {
+    "kind": "text"
+  },
+  "page-delete": {
+    "kind": "text"
+  },
+  "page-optimization": {
+    "kind": "text"
+  },
+  "page-direct-distance": {
+    "kind": "text"
+  },
+  "page-regional-priority": {
+    "kind": "text"
+  },
+  "page-privileged-teleports": {
+    "kind": "text"
+  },
+  "page-objectives": {
+    "kind": "text"
+  },
+  "page-add-filtered-results": {
+    "kind": "text"
+  },
+  "page-optimize-the-route": {
+    "kind": "text"
+  },
+  "page-point-of-start": {
+    "kind": "text"
+  },
+  "page-choose-on-the-map": {
+    "kind": "text"
+  },
+  "page-use-the-open-form": {
+    "kind": "text"
+  },
+  "page-use-these-coordinates": {
+    "kind": "text"
+  },
+  "page-reset-the-start": {
+    "kind": "text"
+  },
+  "page-add-goals-from-results-or-a-record": {
+    "kind": "text"
+  },
+  "page-start-first-objective": {
+    "kind": "text"
+  },
+  "page-regions": {
+    "kind": "text"
+  },
+  "page-indicative-calculation-terrain-weather-climbing-and-hazards": {
+    "kind": "text"
+  },
+  "page-export-the-session": {
+    "kind": "text"
+  },
+  "page-import-a-session": {
+    "kind": "text"
+  },
+  "page-export-to-text": {
+    "kind": "text"
+  },
+  "page-back-up-all-data": {
+    "kind": "text"
+  },
+  "page-emptying-the-session": {
+    "kind": "text"
+  },
+  "page-hyrule-map": {
+    "kind": "text"
+  },
+  "page-dezoomer": {
+    "kind": "attribute"
+  },
+  "page-zoom-out-the-map": {
+    "kind": "attribute"
+  },
+  "page-see-the-full-map": {
+    "kind": "attribute"
+  },
+  "page-show-all-map": {
+    "kind": "attribute"
+  },
+  "page-zoom-in": {
+    "kind": "attribute"
+  },
+  "page-zoom-the-map": {
+    "kind": "attribute"
+  },
+  "page-topographic-map-of-hyrule": {
+    "kind": "attribute"
+  },
+  "page-move-the-map-wheel-to-zoom": {
+    "kind": "text"
+  },
+  "page-remaining-items": {
+    "kind": "text"
+  },
+  "page-close-2": {
+    "kind": "attribute"
+  },
+  "page-help-center": {
+    "kind": "text"
+  },
+  "page-discover-botw-companion": {
+    "kind": "text"
+  },
+  "page-find-an-explanation-of-each-function-or": {
+    "kind": "text"
+  },
+  "page-close-the-help-center": {
+    "kind": "attribute"
+  },
+  "page-chapters-of-the-help-center": {
+    "kind": "attribute"
+  },
+  "page-overview": {
+    "kind": "text"
+  },
+  "page-resume-the-tour": {
+    "kind": "text"
+  },
+  "page-launching-the-essential-journey": {
+    "kind": "text"
+  },
+  "page-essential-tour": {
+    "kind": "text"
+  },
+  "page-step-1-of-10": {
+    "kind": "text"
+  },
+  "page-close-the-guided-tour": {
+    "kind": "attribute"
+  },
+  "page-skip-the-tour": {
+    "kind": "text"
+  },
+  "page-previous": {
+    "kind": "text"
+  },
+  "page-next": {
+    "kind": "text"
+  },
+  "ui-slot-3": {
+    "kind": "text"
+  },
+  "localization-unavailable": {
+    "kind": "attribute"
+  },
+  "page-static-gyroscope": {
+    "kind": "text"
+  },
+  "page-static-5-s": {
+    "kind": "text"
+  },
+  "page-static-10-s": {
+    "kind": "text"
+  },
+  "page-static-15-s": {
+    "kind": "text"
+  },
+  "page-static-30-s": {
+    "kind": "text"
+  },
+  "page-static-60-s": {
+    "kind": "text"
+  },
+  "page-static-pause": {
+    "kind": "text"
+  },
+  "page-static-application": {
+    "kind": "text"
+  },
+  "page-static-session": {
+    "kind": "text"
+  },
+  "page-static-session-2": {
+    "kind": "text"
+  }
+}

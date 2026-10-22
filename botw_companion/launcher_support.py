@@ -6,7 +6,8 @@ import json
 import logging
 from pathlib import Path
 
-from .english import translate_text
+from .i18n import default_locale, message, resolve, LocalizationError
+from .i18n.presentation import translate_text
 from .persistence import atomic_write_json, read_json
 
 
@@ -14,15 +15,15 @@ def saved_language(data_root: Path) -> str:
     try:
         value = read_json(data_root / "presentation.json")
     except (OSError, json.JSONDecodeError):
-        return "fr"
+        return default_locale()
     language = value.get("language") if isinstance(value, dict) else None
-    return language if language in ("fr", "en") else "fr"
+    return resolve(language) or default_locale()
 
 
 def remember_language(data_root: Path, language: str) -> None:
     # Keep this outside the older, strict preferences schema: rollback to an
     # earlier release must still be able to read all functional preferences.
-    if language not in ("fr", "en"):
+    if not isinstance(language, str) or resolve(language) != language:
         raise ValueError("Unsupported presentation language")
     atomic_write_json(data_root / "presentation.json", {"language": language})
 
@@ -47,9 +48,11 @@ def launcher_log(path: Path, name: str):
 
 def launcher_error(error: Exception, log_path: Path, *, known: bool) -> str:
     # A broken preferences file must not prevent the startup error being shown.
-    language = saved_language(log_path.parent)
-    detail = str(error) if known else "Une erreur inattendue s’est produite. Consulte le journal pour les détails."
-    if language == "en":
-        detail = translate_text(detail)
-        return f"BOTW Companion cannot start.\n\n{detail}\n\nLog: {log_path}"
-    return f"BOTW Companion ne peut pas démarrer.\n\n{detail}\n\nJournal : {log_path}"
+    try:
+        language = saved_language(log_path.parent)
+        detail = translate_text(str(error), language) if known else message('launcher-unexpected', language)
+        return message('launcher-error', language, value0=detail, value1=str(log_path))
+    except (OSError, ValueError, KeyError, TypeError, LocalizationError):
+        # A broken catalog must not hide the startup error.
+        detail = str(error) if known else "Une erreur inattendue s’est produite. Consulte le journal pour les détails."
+        return f"BOTW Companion ne peut pas démarrer.\n\n{detail}\n\nJournal : {log_path}"

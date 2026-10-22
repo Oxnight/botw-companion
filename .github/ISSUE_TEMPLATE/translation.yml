@@ -1,0 +1,16 @@
+name: Translation contribution
+description: Coordinate a new locale or terminology correction.
+body:
+  - type: input
+    id: locale
+    attributes:
+      label: Locale, script and region
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope, references and human review
+      description: Read docs/TRANSLATING.md. Identify the official terminology sources, proposed scope, reviewer and incomplete areas. Do not submit machine-filled caches or private game data. Keep unrelated bugs in separate issues.
+    validations:
+      required: true

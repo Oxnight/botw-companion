@@ -4,21 +4,23 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const {localize} = require("./i18n_context.js");
 const available = {update_available: true, latest_version: "9.8.7", status: "update_available"};
 const reply = data => ({ok: true, json: async () => data});
 
 function setup(filename, fetch, timers = {setTimeout, clearTimeout}) {
-  const source = fs.readFileSync(path.join(__dirname, "../botw_companion/web", filename), "utf8");
+  const source = fs.readFileSync(path.join(__dirname, "../botw_companion/web", "app.js"), "utf8");
   const actions = source.slice(source.indexOf("async function checkForUpdates("), source.indexOf("function loadRouteState("));
   const button = {disabled: false}, shown = [], messages = [];
   const context = vm.createContext({fetch, AbortController, UPDATE_CHECK_TIMEOUT_MS: 45000,
     ...timers, $: () => button, showAvailableUpdate: (data, manual) => shown.push({data, manual}),
     toast: (...args) => messages.push(args)});
+  localize(context, filename);
   vm.runInContext(actions, context);
   return {context, button, shown, messages};
 }
 
-for (const filename of ["app.js", "app_en.js"]) {
+for (const filename of ["fr", "en"]) {
   test(`${filename}: automatic detection survives one interrupted request`, async () => {
     let calls = 0;
     const s = setup(filename, async url => {

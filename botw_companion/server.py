@@ -17,7 +17,8 @@ import threading
 from urllib.parse import parse_qs, unquote, urlsplit
 import webbrowser
 
-from .english import english_presentation
+from .i18n import resolve, default_locale, locale_resource, download_header
+from .i18n.presentation import present
 from .backup import CompanionBackup
 from .browser_handoff import BrowserHandoff
 from .manual_tracking import ManualTrackingError, ManualTrackingStore
@@ -195,26 +196,29 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
 
         def _language(self) -> str:
             query = parse_qs(urlsplit(self.path).query).get("lang", [None])[0]
-            if query in {"fr", "en"}:
-                return query
+            if resolve(query):
+                return resolve(query)
             supplied = self.headers.get("X-BOTW-Language")
-            if supplied in {"fr", "en"}:
-                return supplied
+            if resolve(supplied):
+                return resolve(supplied)
             cookie = SimpleCookie()
             try:
                 cookie.load(self.headers.get("Cookie", ""))
             except CookieError:
-                return "fr"
+                return default_locale()
             saved = cookie.get("botw-language")
-            return saved.value if saved and saved.value in {"fr", "en"} else "fr"
+            return resolve(saved.value if saved else None) or default_locale()
 
         def _json_response(self, status: int, payload: object, **headers: str) -> None:
             language = self._language()
             path = urlsplit(self.path).path
             personal = any(path == prefix or path.startswith(prefix + "/")
                            for prefix in ("/api/manual", "/api/routes", "/api/preferences", "/api/backup"))
-            if language == "en" and (not personal or status >= 400):
-                payload = english_presentation(payload)
+            if not personal or status >= 400:
+                try:
+                    payload = present(payload, language)
+                except (OSError, ValueError, KeyError, TypeError):
+                    status, payload = 503, {"erreur": "Localization resources are unavailable."}
             body = json.dumps(payload, ensure_ascii=False).encode()
             compressed = len(body) >= 1024 and "gzip" in self.headers.get("Accept-Encoding", "").lower()
             if compressed:
@@ -228,13 +232,8 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 self.send_header("Vary", "Accept-Encoding, X-BOTW-Language, Cookie")
             self.send_header("Content-Length", str(len(body)))
             for name, value in headers.items():
-                if language == "en" and name == "Content_Disposition":
-                    for french, english in {
-                        'botw-companion-suivi-manuel.json': 'botw-companion-manual-tracking.json',
-                        'botw-companion-itineraires.json': 'botw-companion-routes.json',
-                        'botw-companion-sauvegarde.json': 'botw-companion-backup.json',
-                    }.items():
-                        value = value.replace(french, english)
+                if name == "Content_Disposition":
+                    value = download_header(value, language)
                 self.send_header(name.replace("_", "-"), value)
             self.end_headers()
             self.wfile.write(body)
@@ -432,15 +431,15 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 return
             name = path.lstrip("/") or "index.html"
             tile_request = re.fullmatch(r"map-tiles/z[1-3]/\d+_\d+\.webp", name)
-            if name not in {"index.html", "app.js", "route_planner.js", "language.js", "browser_session.js", "style.css", "metrics.css", "armor.css", "hyrule-map.webp"} and not tile_request:
+            if name not in {"index.html", "app.js", "route_planner.js", "language.js", "browser_session.js", "i18n.js", "locale.js", "style.css", "metrics.css", "armor.css", "hyrule-map.webp"} and not tile_request:
                 self.send_error(404)
                 return
             language = self._language()
-            resource = name
-            if language == "en" and name in {"index.html", "app.js", "route_planner.js"}:
-                stem, extension = name.rsplit(".", 1)
-                resource = stem + "_en." + extension
-            content = web_root.joinpath(*resource.split("/")).read_bytes()
+            try:
+                content = locale_resource(name, language).read_bytes()
+            except (OSError, ValueError, KeyError, TypeError):
+                self._json_response(503, {"erreur": "Localization resources are unavailable."})
+                return
             if name.endswith(".css"):
                 content = re.sub(r"var\((--[\w-]+)\)",
                                  lambda match: theme_colors.get(match.group(1), match.group(0)),
@@ -457,7 +456,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                     "webp": "image/webp"}[name.rsplit(".", 1)[1]]
             self.send_response(200)
             self.send_header("Content-Type", f"{mime}; charset=utf-8")
-            localized = name in {"index.html", "app.js", "route_planner.js"}
+            localized = name in {"index.html", "app.js", "route_planner.js", "locale.js"}
             if localized:
                 self.send_header("Content-Language", language)
                 self.send_header("Vary", "X-BOTW-Language, Cookie")
@@ -479,7 +478,7 @@ def serve(payload_factory, port: int = 8765, open_browser: bool = True,
                 try:
                     data = self._read_json()
                     if (not isinstance(data, dict) or set(data) != {"language"}
-                            or data["language"] not in ("fr", "en")):
+                            or resolve(data["language"]) != data["language"] or not isinstance(data["language"], str)):
                         raise ManualTrackingError("Langue invalide")
                     remember_language(preference_store.path.parent, data["language"])
                     self._json_response(200, data)

@@ -56,7 +56,7 @@ fi
   --disable-pip-version-check \
   --quiet \
   "pyinstaller==6.22.2" \
-  "certifi==2025.8.3"
+  -r "$PROJECT_ROOT/requirements-runtime.txt"
 
 cd "$PROJECT_ROOT"
 "$BUILD_PYTHON" -m PyInstaller --noconfirm --clean "$SPEC_PATH"

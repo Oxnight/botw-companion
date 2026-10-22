@@ -1,0 +1,10 @@
+name: Feature request
+description: Discuss a focused improvement before implementation.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Player need and proposed behavior
+      description: Explain the use case, expected behavior and relevant alternatives. Use synthetic examples.
+    validations:
+      required: true
