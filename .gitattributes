@@ -5,6 +5,7 @@
 licenses/*.txt text eol=lf
 
 # Locale checks compare generated UTF-8/LF bytes, including after checkout.
+botw_companion/i18n/*.json text eol=lf
 botw_companion/locales/** text eol=lf
 botw_companion/web/i18n.js text eol=lf
 

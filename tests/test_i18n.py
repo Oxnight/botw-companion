@@ -283,6 +283,23 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
             builder.build(self.root, check=True)
         self.assertEqual(fingerprint(self.root), stale)
 
+    def test_shared_source_crlf_changes_revisions_and_check_rejects_it_without_writing(self):
+        expected = builder.manifests(self.package)
+        for name in ('contract.json', 'legacy-patterns.json', 'legacy-glossary.json',
+                     'cache-source.json', 'message-bindings.json'):
+            path = self.package / 'i18n' / name
+            content = path.read_bytes()
+            self.assertNotIn(b'\r\n', content)
+            path.write_bytes(content.replace(b'\n', b'\r\n'))
+        actual = builder.manifests(self.package)
+        for locale in expected['locales']:
+            self.assertNotEqual(actual['locales'][locale]['revision'], expected['locales'][locale]['revision'])
+        stale = fingerprint(self.root)
+        with patch.object(Path, 'write_bytes', side_effect=AssertionError('Check must not write')):
+            with self.assertRaisesRegex(ValueError, 'Stale'):
+                builder.build(self.root, check=True)
+        self.assertEqual(fingerprint(self.root), stale)
+
     def test_output_writers_preserve_utf8_lf_under_windows_text_translation(self):
         from tools import import_legacy_prose as importer
 
@@ -438,6 +455,17 @@ class LocalizationCheckoutTests(unittest.TestCase):
         original = git('cat-file', 'blob', source)
         self.assertIn(b'\n', original)
         self.assertNotIn(b'\r\n', original)
+        package = ROOT / 'botw_companion'
+        inputs = sorted((package / 'i18n').glob('*.json'))
+        for locale in builder.manifests(package)['locales']:
+            inputs.extend(package / 'locales' / locale / name
+                          for name in ('locale.json', 'messages.ftl', 'prose.json', 'game.json'))
+        # Locale revisions hash the source bytes before catalog generation.
+        for path in inputs:
+            relative = path.relative_to(ROOT).as_posix()
+            with self.subTest(source=relative):
+                self.assertEqual(git('cat-file', '--filters', '--path=' + relative, source), original)
+                self.assertNotIn(b'\r\n', path.read_bytes())
         for path, content in builder.outputs(ROOT):
             relative = path.relative_to(ROOT).as_posix()
             with self.subTest(resource=relative):

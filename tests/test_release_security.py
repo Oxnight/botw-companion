@@ -28,6 +28,23 @@ class ReleaseSecurityTests(unittest.TestCase):
                 audit = job.index("tools/audit_distribution.py")
                 self.assertIn("-r requirements-runtime.txt", job[:audit])
 
+    def test_native_jobs_install_node_dependencies_once_before_their_consumers(self):
+        workflow = (self.root / ".github/workflows/release.yml").read_text(encoding="utf-8")
+        jobs = {
+            "windows": workflow.split("  windows:\n", 1)[1].split("  macos:\n", 1)[0],
+            "macos": workflow.split("  macos:\n", 1)[1].split("  publish:\n", 1)[0],
+        }
+        for name, job in jobs.items():
+            with self.subTest(job=name):
+                self.assertEqual(job.count("npm ci --ignore-scripts"), 1)
+                installed = job.index("npm ci --ignore-scripts")
+                for consumer in ("-m unittest discover -s tests -v", "npx playwright install",
+                                 "tools/i18n.py check", "tools/audit_localization.py",
+                                 "tools/run_browser_smoke."):
+                    self.assertLess(installed, job.index(consumer))
+        self.assertIn("npx playwright install firefox", jobs["windows"])
+        self.assertIn("npx playwright install chromium firefox webkit", jobs["macos"])
+
     def test_every_action_is_pinned_and_publication_is_least_privilege(self):
         workflow = (self.root / ".github" / "workflows" / "release.yml").read_text(
             encoding="utf-8"
