@@ -41,8 +41,22 @@ probe-rich = { $open }<img onerror="throw 1">{ $name }{ $close }
 '''
 
 
+@contextmanager
+def windows_text_writes():
+    native_open = Path.open
+
+    def windows_open(path, mode='r', *args, **kwargs):
+        if 'b' not in mode and any(flag in mode for flag in ('w', 'a')):
+            if kwargs.get('newline') is None:
+                kwargs['newline'] = '\r\n'
+        return native_open(path, mode, *args, **kwargs)
+
+    with patch.object(Path, 'open', windows_open):
+        yield
+
+
 def write(path, data):
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
 def fingerprint(root):
@@ -91,10 +105,11 @@ class LocalizationTests(unittest.TestCase):
                          'probe-number': {'params': ['count'], 'rich': False, 'markup': []},
                          'probe-values': {'params': ['first', 'second'], 'rich': False, 'markup': []},
                          'probe-rich': {'params': ['open', 'name', 'close'], 'rich': True, 'markup': ['open', 'close']}})
-        write(self.package / 'i18n/contract.json', contract)
-        for locale in ('fr', 'en'):
-            with (self.package / 'locales' / locale / 'messages.ftl').open('a', encoding='utf-8') as out:
-                out.write(PROBES)
+        with windows_text_writes():
+            write(self.package / 'i18n/contract.json', contract)
+            for locale in ('fr', 'en'):
+                with (self.package / 'locales' / locale / 'messages.ftl').open('a', encoding='utf-8', newline='\n') as out:
+                    out.write(PROBES)
         builder.build(self.root)
 
     def add_locale(self, identity='zz-proof', formatting='ru-RU', direction='rtl'):
@@ -122,7 +137,7 @@ class LocalizationTests(unittest.TestCase):
     }
 ''').body[0]
         tree.body = [replacement if isinstance(item, ast.Message) and item.id.name == 'renderitems-result' else item for item in tree.body]
-        path.write_text(FluentSerializer().serialize(tree), encoding='utf-8')
+        path.write_text(FluentSerializer().serialize(tree), encoding='utf-8', newline='\n')
         return folder
 
     def test_resources_only_extension_reaches_html_api_and_launcher(self):
@@ -277,7 +292,7 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
         before = fingerprint(self.root)
         builder.build(self.root)
         self.assertEqual(fingerprint(self.root), before)
-        path = self.package / 'locales/en/browser.js'; path.write_text('stale', encoding='utf-8')
+        path = self.package / 'locales/en/browser.js'; path.write_text('stale', encoding='utf-8', newline='\n')
         stale = fingerprint(self.root)
         with self.assertRaisesRegex(ValueError, 'Stale'):
             builder.build(self.root, check=True)
@@ -300,19 +315,35 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
                 builder.build(self.root, check=True)
         self.assertEqual(fingerprint(self.root), stale)
 
+    def test_fixture_sources_preserve_utf8_lf_under_windows_text_translation(self):
+        with windows_text_writes():
+            probe = self.root / 'newline-probe.txt'
+            probe.write_text('proof\n', encoding='utf-8')
+            self.assertEqual(probe.read_bytes(), b'proof\r\n')
+            probe.unlink()
+
+            folder = self.add_locale()
+        paths = [*sorted((self.package / 'i18n').glob('*.json')), *sorted(folder.iterdir())]
+        for locale in ('fr', 'en'):
+            path = self.package / 'locales' / locale / 'messages.ftl'
+            self.assertTrue(path.read_bytes().endswith(PROBES.encode('utf-8')))
+            paths.append(path)
+        for path in paths:
+            with self.subTest(source=path.relative_to(self.root).as_posix()):
+                content = path.read_bytes()
+                self.assertNotIn(b'\r\n', content)
+                content.decode('utf-8')
+        for path in (self.package / 'i18n/contract.json', folder / 'locale.json', folder / 'prose.json'):
+            self.assertEqual(path.read_bytes(),
+                             (json.dumps(builder.read(path), ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+        self.assertEqual(builder.read(folder / 'locale.json')['native_name'], 'Synthetic 日本語 АБВ')
+        self.assertEqual(builder.read(folder / 'prose.json')['strings']['Sanctuaires'], 'Proof 日本語 АБВ')
+
     def test_output_writers_preserve_utf8_lf_under_windows_text_translation(self):
         from tools import import_legacy_prose as importer
 
-        native_open = Path.open
-
-        def windows_open(path, mode='r', *args, **kwargs):
-            if 'b' not in mode and any(flag in mode for flag in ('w', 'a')):
-                if kwargs.get('newline') is None:
-                    kwargs['newline'] = '\r\n'
-            return native_open(path, mode, *args, **kwargs)
-
         before = fingerprint(self.root)
-        with patch.object(Path, 'open', windows_open):
+        with windows_text_writes():
             probe = self.root / 'newline-probe.txt'
             probe.write_text('proof\n', encoding='utf-8')
             self.assertEqual(probe.read_bytes(), b'proof\r\n')
@@ -363,10 +394,10 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
         shutil.rmtree(folder)
         folder = self.add_locale()
         original_text = (folder / 'locale.json').read_text(encoding='utf-8')
-        (folder / 'locale.json').write_text(original_text.replace('"schema": 1', '"schema": 1, "schema": 1'), encoding='utf-8')
+        (folder / 'locale.json').write_text(original_text.replace('"schema": 1', '"schema": 1, "schema": 1'), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, 'Duplicate JSON key'):
             builder.build(self.root)
-        (folder / 'locale.json').write_text(original_text, encoding='utf-8')
+        (folder / 'locale.json').write_text(original_text, encoding='utf-8', newline='\n')
         for change in ({'aliases': ['EN']}, {'id': 'en'}, {'fallback': 'zz-proof'}, {'unexpected': 1}, {'format_locale': '../en'}, {'direction': 'auto'}):
             original = builder.read(folder / 'locale.json'); write(folder / 'locale.json', {**original, **change})
             with self.assertRaises((ValueError, KeyError)):
@@ -391,7 +422,7 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
             i18n.catalog.cache_clear()
             self.assertIn('cannot', launcher_error(ValueError('bad'), data / 'x.log', known=True).lower().replace('ne peut pas', 'cannot'))
             self.assertNotIn('private unexpected detail', launcher_error(ValueError('private unexpected detail'), data / 'x.log', known=False))
-            (data / 'presentation.json').write_text('{broken', encoding='utf-8')
+            (data / 'presentation.json').write_text('{broken', encoding='utf-8', newline='\n')
             self.assertEqual(saved_language(data), 'fr')
 
     def test_catalog_parser_rejects_malformed_missing_variables_and_rich_slot_changes(self):
@@ -406,10 +437,10 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
                original.replace('maximumFractionDigits: 2', 'maximumFractionDigits: "invalid"'),
                original.replace('maximumFractionDigits: 2', 'maximumFractionDigits: -1')]
         for text in bad:
-            path.write_text(text, encoding='utf-8')
+            path.write_text(text, encoding='utf-8', newline='\n')
             with self.assertRaises(ValueError):
                 builder.build(self.root)
-        path.write_text(original, encoding='utf-8')
+        path.write_text(original, encoding='utf-8', newline='\n')
 
     def test_utf8_and_download_names_do_not_change_actual_paths(self):
         with loaded(self.package):
