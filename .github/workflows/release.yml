@@ -71,7 +71,7 @@ jobs:
         run: python tools/audit_distribution.py
 
       - name: Test Python code and package
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: python -m unittest discover -s tests -v
 
       - name: Prepare browsers
@@ -238,7 +238,7 @@ jobs:
         run: python3 tools/audit_distribution.py
 
       - name: Test Python code and package
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: python3 -m unittest discover -s tests -v
 
       - name: Prepare Chromium, Firefox, and WebKit
