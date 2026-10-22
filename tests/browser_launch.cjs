@@ -292,24 +292,26 @@ test("the final success report follows browser closure and owned-home removal", 
   assert(!fs.existsSync(f.launched[0].options.env.CFFIXED_USER_HOME));
 });
 
-test("cleanup failure after application assertions fails the run without a success report", async t => {
-  const calls = [];
-  const f = runLauncher(t, "firefox", "darwin", "success", directory => {
-    calls.push(directory);
-    throw Object.assign(new Error("Synthetic persistent ENOTEMPTY"), {code: "ENOTEMPTY"});
+for (const code of ["ENOTEMPTY", "EACCES"]) {
+  test(`cleanup failure after application assertions fails the run without a success report (${code})`, async t => {
+    const calls = [];
+    const f = runLauncher(t, "firefox", "darwin", "success", directory => {
+      calls.push(directory);
+      throw Object.assign(new Error("Synthetic persistent ENOTEMPTY"), {code});
+    });
+    await flush(); await flush();
+    const home = f.launched[0].options.env.CFFIXED_USER_HOME;
+    assert.deepEqual(f.events, ["close-start", "close-finished", "cleanup-start", "cleanup-start"]);
+    assert.deepEqual(calls, [home, home]);
+    assert(fs.existsSync(home));
+    assert.deepEqual(f.exits, [1]);
+    assert.equal(f.lifecycle.exitCode, 1);
+    assert.equal(f.errors.length, 2);
+    assert.equal(f.errors[0].code, code);
+    assert.equal(f.errors[1][0], "Firefox test home cleanup failed:");
+    assert(!f.logs.some(value => value.status === "ok"));
   });
-  await flush(); await flush();
-  const home = f.launched[0].options.env.CFFIXED_USER_HOME;
-  assert.deepEqual(f.events, ["close-start", "close-finished", "cleanup-start", "cleanup-start"]);
-  assert.deepEqual(calls, [home, home]);
-  assert(fs.existsSync(home));
-  assert.deepEqual(f.exits, [1]);
-  assert.equal(f.lifecycle.exitCode, 1);
-  assert.equal(f.errors.length, 2);
-  assert.equal(f.errors[0].code, "ENOTEMPTY");
-  assert.equal(f.errors[1][0], "Firefox test home cleanup failed:");
-  assert(!f.logs.some(value => value.status === "ok"));
-});
+}
 
 test("browser close failure after application assertions prevents a success report", async t => {
   const f = runLauncher(t, "firefox", "darwin", "close-failure");
@@ -346,7 +348,7 @@ for (const exitCode of [0, 124]) {
 
 function protectedHome(t, controls = {}) {
   const f = fixture(t), lifecycle = new EventEmitter(), calls = [], removals = [], errors = [];
-  const failure = Object.assign(new Error("Synthetic protected home ENOTEMPTY"), {code: "ENOTEMPTY"});
+  const failure = Object.assign(new Error("Synthetic protected home cleanup failure"), {code: controls.code ?? "ENOTEMPTY"});
   let repaired = false;
   const create = launchHelper((directory, options) => {
     removals.push({directory, options});
@@ -376,25 +378,27 @@ function protectedHome(t, controls = {}) {
   return {...f, launch, home, directories, calls, removals, errors, lifecycle, failure};
 }
 
-test("macOS protected-home recovery removes only the recognized delete ACL once", t => {
-  const f = protectedHome(t);
-  f.launch.cleanupOnExit();
-  f.launch.cleanup(); f.launch.cleanup();
-  assert.equal(f.calls.length, 2);
-  assert.deepEqual(f.calls[0].args, ["-lde", ...f.directories]);
-  assert.deepEqual(f.calls[1].args, ["-h", "-a", "everyone deny delete", ...f.directories]);
-  for (const call of f.calls) {
-    assert.equal(call.options.timeout, 500);
-    assert.equal(call.options.maxBuffer, 16384);
-  }
-  assert.equal(f.removals.length, 2);
-  for (const call of f.removals) {
-    assert.equal(call.directory, f.home);
-    assert.deepEqual({...call.options}, {recursive: true, force: true, maxRetries: 3, retryDelay: 100});
-  }
-  assert(!fs.existsSync(f.home)); assert(fs.existsSync(f.previousHome));
-  assert.equal(f.lifecycle.listenerCount("exit"), 0);
-});
+for (const code of ["ENOTEMPTY", "EPERM", "EACCES"]) {
+  test(`macOS protected-home recovery removes only the recognized delete ACL once (${code})`, t => {
+    const f = protectedHome(t, {code});
+    f.launch.cleanupOnExit();
+    f.launch.cleanup(); f.launch.cleanup();
+    assert.equal(f.calls.length, 2);
+    assert.deepEqual(f.calls[0].args, ["-lde", ...f.directories]);
+    assert.deepEqual(f.calls[1].args, ["-h", "-a", "everyone deny delete", ...f.directories]);
+    for (const call of f.calls) {
+      assert.equal(call.options.timeout, 500);
+      assert.equal(call.options.maxBuffer, 16384);
+    }
+    assert.equal(f.removals.length, 2);
+    for (const call of f.removals) {
+      assert.equal(call.directory, f.home);
+      assert.deepEqual({...call.options}, {recursive: true, force: true, maxRetries: 3, retryDelay: 100});
+    }
+    assert(!fs.existsSync(f.home)); assert(fs.existsSync(f.previousHome));
+    assert.equal(f.lifecycle.listenerCount("exit"), 0);
+  });
+}
 
 for (const acl of ["group:everyone allow read", "group:everyone deny delete,writeattr", "other deny delete"]) {
   test(`unrecognized home ACL is left intact: ${acl}`, t => {
@@ -408,37 +412,41 @@ for (const acl of ["group:everyone allow read", "group:everyone deny delete,writ
   });
 }
 
-test("home-folder symlinks and their targets are excluded from ACL changes", t => {
-  const f = protectedHome(t);
-  const library = path.join(f.home, "Library");
-  fs.rmSync(path.join(f.home, "Documents"), {recursive: true});
-  fs.rmSync(library, {recursive: true});
-  fs.symlinkSync(f.previousHome, path.join(f.home, "Documents"), "junction");
-  fs.symlinkSync(f.previousHome, library, "junction");
-  f.launch.cleanup();
-  assert.deepEqual(f.calls[0].args, ["-lde", path.join(f.home, "Downloads")]);
-  assert.deepEqual(f.calls[1].args, ["-h", "-a", "everyone deny delete", path.join(f.home, "Downloads")]);
-  assert.equal(fs.readFileSync(path.join(f.previousHome, "sentinel"), "utf8"), "keep");
-});
+for (const code of ["ENOTEMPTY", "EACCES"]) {
+  test(`home-folder symlinks and their targets are excluded from ACL changes (${code})`, t => {
+    const f = protectedHome(t, {code});
+    const library = path.join(f.home, "Library");
+    fs.rmSync(path.join(f.home, "Documents"), {recursive: true});
+    fs.rmSync(library, {recursive: true});
+    fs.symlinkSync(f.previousHome, path.join(f.home, "Documents"), "junction");
+    fs.symlinkSync(f.previousHome, library, "junction");
+    f.launch.cleanup();
+    assert.deepEqual(f.calls[0].args, ["-lde", path.join(f.home, "Downloads")]);
+    assert.deepEqual(f.calls[1].args, ["-h", "-a", "everyone deny delete", path.join(f.home, "Downloads")]);
+    assert.equal(fs.readFileSync(path.join(f.previousHome, "sentinel"), "utf8"), "keep");
+  });
+}
 
 for (const replaced of ["root", "Library"]) {
-  test(`a replaced ${replaced} directory is never removed or given different ACLs`, t => {
-    const controls = {}, f = protectedHome(t, controls);
-    const target = replaced === "root" ? f.home : path.join(f.home, "Library");
-    const saved = path.join(f.root, "retained-original");
-    function replace() {
-      fs.renameSync(target, saved);
-      fs.mkdirSync(target);
-      fs.writeFileSync(path.join(target, "foreign-sentinel"), "keep");
-    }
-    if (replaced === "root") replace();
-    else controls.afterListing = replace;
-    assert.throws(() => f.launch.cleanup(), error => /identity changed/.test(error.message) ||
-      (error === f.failure && /identity changed/.test(error.cause?.message)));
-    assert(!f.calls.some(call => call.command === "/bin/chmod"));
-    assert.equal(fs.readFileSync(path.join(target, "foreign-sentinel"), "utf8"), "keep");
-    assert.equal(f.launch.options().env.CFFIXED_USER_HOME, f.home);
-  });
+  for (const code of ["ENOTEMPTY", "EACCES"]) {
+    test(`a replaced ${replaced} directory is never removed or given different ACLs (${code})`, t => {
+      const controls = {code}, f = protectedHome(t, controls);
+      const target = replaced === "root" ? f.home : path.join(f.home, "Library");
+      const saved = path.join(f.root, "retained-original");
+      function replace() {
+        fs.renameSync(target, saved);
+        fs.mkdirSync(target);
+        fs.writeFileSync(path.join(target, "foreign-sentinel"), "keep");
+      }
+      if (replaced === "root") replace();
+      else controls.afterListing = replace;
+      assert.throws(() => f.launch.cleanup(), error => /identity changed/.test(error.message) ||
+        (error === f.failure && /identity changed/.test(error.cause?.message)));
+      assert(!f.calls.some(call => call.command === "/bin/chmod"));
+      assert.equal(fs.readFileSync(path.join(target, "foreign-sentinel"), "utf8"), "keep");
+      assert.equal(f.launch.options().env.CFFIXED_USER_HOME, f.home);
+    });
+  }
 }
 
 for (const [command, error] of [["/bin/ls", undefined], ["/bin/ls", Object.assign(new Error("Synthetic timeout"), {code: "ETIMEDOUT"})], ["/bin/chmod", undefined]]) {
@@ -452,23 +460,36 @@ for (const [command, error] of [["/bin/ls", undefined], ["/bin/ls", Object.assig
   });
 }
 
-test("persistent ENOTEMPTY after ACL recovery fails without another recovery loop", t => {
-  const f = protectedHome(t, {persistent: true});
+for (const code of ["ENOTEMPTY", "EACCES"]) {
+  test(`persistent removal failure after ACL recovery fails without another recovery loop (${code})`, t => {
+    const f = protectedHome(t, {persistent: true, code});
+    assert.throws(() => f.launch.cleanup(), error => error === f.failure);
+    assert.equal(f.removals.length, 2);
+    assert.equal(f.calls.length, 2);
+    assert.equal(f.launch.options().env.CFFIXED_USER_HOME, f.home);
+    assert(fs.existsSync(f.home));
+  });
+}
+
+for (const code of ["ENOTEMPTY", "EACCES"]) {
+  test(`forced-exit cleanup can recover protected home folders after the child-kill hook (${code})`, t => {
+    const f = protectedHome(t, {code}), events = [];
+    f.lifecycle.exitCode = 124;
+    f.lifecycle.once("exit", () => { assert(fs.existsSync(f.home)); events.push("child-killed"); });
+    f.launch.cleanupOnExit();
+    f.lifecycle.emit("exit", 124);
+    assert.deepEqual(events, ["child-killed"]);
+    assert.deepEqual(f.errors, []);
+    assert.equal(f.lifecycle.exitCode, 124);
+    assert(!fs.existsSync(f.home));
+  });
+}
+
+test("EACCES without the recognized home ACL remains a visible owned-directory failure", t => {
+  const f = protectedHome(t, {code: "EACCES", acl: "group:everyone allow read"});
   assert.throws(() => f.launch.cleanup(), error => error === f.failure);
-  assert.equal(f.removals.length, 2);
-  assert.equal(f.calls.length, 2);
+  assert.equal(f.calls.length, 1);
+  assert.equal(f.removals.length, 1);
   assert.equal(f.launch.options().env.CFFIXED_USER_HOME, f.home);
   assert(fs.existsSync(f.home));
-});
-
-test("forced-exit cleanup can recover protected home folders after the child-kill hook", t => {
-  const f = protectedHome(t), events = [];
-  f.lifecycle.exitCode = 124;
-  f.lifecycle.once("exit", () => { assert(fs.existsSync(f.home)); events.push("child-killed"); });
-  f.launch.cleanupOnExit();
-  f.lifecycle.emit("exit", 124);
-  assert.deepEqual(events, ["child-killed"]);
-  assert.deepEqual(f.errors, []);
-  assert.equal(f.lifecycle.exitCode, 124);
-  assert(!fs.existsSync(f.home));
 });

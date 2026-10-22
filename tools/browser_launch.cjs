@@ -63,7 +63,7 @@ function createBrowserLaunchEnvironment(target, {platform = process.platform,
     if (directory && directoryExists(directory, identity)) {
       const options = {recursive: true, force: true, maxRetries: 3, retryDelay: 100};
       try { rmSync(directory, options); } catch (error) {
-        if (!["ENOTEMPTY", "EPERM"].includes(error.code)) throw error;
+        if (!["ENOTEMPTY", "EPERM", "EACCES"].includes(error.code)) throw error;
         let repaired;
         try { repaired = removeHomeDeleteProtection(); } catch (cause) { error.cause = cause; throw error; }
         if (!repaired) throw error;

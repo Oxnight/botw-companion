@@ -423,3 +423,24 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
         result = subprocess.run([sys.executable, '-X', 'utf8=0', str(ROOT / 'tools/i18n.py'), 'check', '--root', str(self.root)],
             env={**os.environ, 'PYTHONUTF8': '0', 'PYTHONIOENCODING': 'ascii', 'LC_ALL': 'C'}, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr.decode('ascii', errors='replace'))
+
+
+class LocalizationCheckoutTests(unittest.TestCase):
+    def test_generated_resources_keep_lf_with_windows_checkout_filters(self):
+        environment = {**os.environ, 'GIT_OPTIONAL_LOCKS': '0'}
+
+        def git(*arguments):
+            return subprocess.run(['git', '-c', 'core.autocrlf=true', *arguments],
+                                  cwd=ROOT, env=environment, capture_output=True, check=True).stdout
+
+        # Use an existing text blob without creating a repository or touching the index.
+        source = 'HEAD:tools/i18n.py'
+        original = git('cat-file', 'blob', source)
+        self.assertIn(b'\n', original)
+        self.assertNotIn(b'\r\n', original)
+        for path, content in builder.outputs(ROOT):
+            relative = path.relative_to(ROOT).as_posix()
+            with self.subTest(resource=relative):
+                checked_out = git('cat-file', '--filters', '--path=' + relative, source)
+                self.assertEqual(checked_out, original)
+                self.assertEqual(path.read_bytes(), content.encode('utf-8'))
