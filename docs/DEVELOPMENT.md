@@ -6,8 +6,10 @@ in [`INSTALLATION.md`](INSTALLATION.md).
 ## Requirements
 
 - Git
-- Python 3.10 or later; Python 3.12 is recommended
+- Python 3.12 for development and validation
 - Node.js and npm for browser tests and locale generation
+
+The package supports Python 3.10 or later, as declared in `pyproject.toml`.
 
 Clone the project:
 
@@ -19,23 +21,19 @@ cd botw-companion
 Create the environment with `uv`:
 
 ```bash
-uv sync
+uv sync --python 3.12
 ```
 
 Or use Python directly:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e .
+python3.12 -m venv .venv
 ```
 
 On Windows PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -e .
 ```
 
 Activate `.venv` in each new terminal before using `python`.
@@ -55,25 +53,32 @@ On Windows PowerShell:
 After activation, `python` and `python -m pip` use this environment. The commands
 in [TRANSLATING.md](TRANSLATING.md) assume it is active.
 
+If you created the environment with Python, install the project after activation:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
 ## Running from source
 
 ```bash
-.venv/bin/python -m botw_companion interface
+python -m botw_companion interface
 ```
 
 To use a specific save directory:
 
 ```bash
-.venv/bin/python -m botw_companion interface "/path/to/slot"
+python -m botw_companion interface "/path/to/slot"
 ```
 
 Other commands:
 
 ```bash
-.venv/bin/python -m botw_companion analyse
-.venv/bin/python -m botw_companion reste --categorie sanctuaires
-.venv/bin/python -m botw_companion surveille --intervalle 3
-.venv/bin/python -m botw_companion --help
+python -m botw_companion analyse
+python -m botw_companion reste --categorie sanctuaires
+python -m botw_companion surveille --intervalle 3
+python -m botw_companion --help
 ```
 
 Command names remain French because they are part of the player-facing
@@ -82,9 +87,10 @@ application.
 ## Python tests and audits
 
 ```bash
-.venv/bin/python -m unittest discover -s tests
-.venv/bin/python tools/audit_distribution.py
-.venv/bin/python tools/check_version_consistency.py
+npm ci --ignore-scripts
+python -m unittest discover -s tests
+python tools/audit_distribution.py
+python tools/check_version_consistency.py
 ```
 
 Tests use synthetic data. Never add a personal save to the repository.
@@ -94,7 +100,7 @@ Tests use synthetic data. Never add a personal save to the repository.
 ```bash
 npm ci --ignore-scripts
 npx playwright install chromium firefox webkit
-python3 tools/browser_test_server.py --port 18765
+python tools/browser_test_server.py --port 18765
 ```
 
 In another terminal:
@@ -237,7 +243,7 @@ recovery assertions retain their limits. Local success does not establish
 GitHub runner, artifact-transfer, environment-protection or publication success.
 
 Native builds run from a source copy under the ignored
-`test-results/codex-handoff/results/local-run-*/source`, including new source
+`test-results/local-validation/local-run-*/source`, including new source
 files, without `.git`, local agent instructions, environments or build outputs.
 The installed application and the working checkout's `build/` and `dist/` stay
 outside that copy. Package output and synthetic native-test diagnostics are

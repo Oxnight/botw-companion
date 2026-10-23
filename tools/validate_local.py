@@ -136,7 +136,7 @@ def main(argv=None):
     parser.add_argument('--previous-package', type=Path)
     parser.add_argument('--minimum-package', type=Path)
     args = parser.parse_args(argv)
-    output = args.output_dir or ROOT / 'test-results/codex-handoff/results' / ('local-run-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'))
+    output = args.output_dir or ROOT / 'test-results/local-validation' / ('local-run-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'))
     env = environment()
     try:
         if args.phase in ('browsers', 'packages', 'all'):

@@ -46,12 +46,15 @@ Examples include `fix/cemu-detection`, `docs/windows-installation`, and
 
 ## Verify your changes
 
-Run the required checks:
+Use Python 3.12 for development and validation. Activate the environment described
+in the [development guide](docs/DEVELOPMENT.md), then install the pinned Node
+dependencies before running the required checks:
 
 ```bash
-python3 tools/audit_distribution.py
-python3 tools/check_version_consistency.py
-python3 -m unittest discover -s tests
+npm ci --ignore-scripts
+python tools/audit_distribution.py
+python tools/check_version_consistency.py
+python -m unittest discover -s tests
 ```
 
 For translation work, follow the complete [translator guide](docs/TRANSLATING.md),
