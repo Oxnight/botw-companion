@@ -10,6 +10,43 @@ from tools.upgrade_baselines import FIRST_STABLE
 
 
 class VersioningTests(unittest.TestCase):
+    def test_component_project_version_can_match_the_application_version(self):
+        from tools.check_version_consistency import literal_version_errors
+        for value in ('1.1.0', '2.3.4'):
+            version = ReleaseVersion.parse(value)
+            for declaration in (
+                f'project(JoyConDSU VERSION {value} LANGUAGES C)\n',
+                f'project(JoyConDSU\n    VERSION {value}\n    DESCRIPTION "Motion server"\n    LANGUAGES C\n)\n',
+            ):
+                with self.subTest(version=value, declaration=declaration), tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    source = root / 'third_party/JoyConDSU/CMakeLists.txt'
+                    source.parent.mkdir(parents=True)
+                    source.write_text(declaration, encoding='utf-8', newline='\n')
+                    self.assertEqual(literal_version_errors(root, version), [])
+
+    def test_component_exception_keeps_application_duplicates_visible(self):
+        from tools.check_version_consistency import literal_version_errors
+        version = ReleaseVersion.parse('1.1.0')
+        declaration = f'project(JoyConDSU VERSION {version.display} LANGUAGES C)\n'
+        duplicate = f'set(BOTW_COMPANION_VERSION "{version.display}")\n'
+        for relative, text in (
+            ('third_party/JoyConDSU/CMakeLists.txt', declaration + duplicate),
+            ('third_party/JoyConDSU/CMakeLists.txt',
+             f'project(JoyConDSU VERSION {version.display} DESCRIPTION "BOTW Companion {version.display}")\n'),
+            ('third_party/JoyConDSU/CMakeLists.txt', f'project(BOTWCompanion VERSION {version.display})\n'),
+            ('third_party/other/CMakeLists.txt', declaration),
+            ('third_party/JoyConDSU/component.cmake', duplicate),
+            ('botw_companion/accidental_source.py', f'version = "{version.display}"\n'),
+        ):
+            with self.subTest(source=relative, text=text), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                source = root / relative
+                source.parent.mkdir(parents=True)
+                source.write_text(text, encoding='utf-8', newline='\n')
+                self.assertEqual(literal_version_errors(root, version),
+                                 [f'{source}: version courante dupliquée hors de botw_companion/VERSION'])
+
     def test_version_guard_ignores_operational_output_and_still_rejects_source_duplicates(self):
         from tools.check_version_consistency import literal_version_errors
         with tempfile.TemporaryDirectory() as directory:

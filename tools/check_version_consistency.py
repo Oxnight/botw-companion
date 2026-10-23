@@ -100,6 +100,12 @@ def literal_version_errors(root: Path, version: ReleaseVersion) -> list[str]:
             continue
         if path == root / "tools" / "upgrade_baselines.py":
             text = re.sub(r'^FIRST_STABLE = ReleaseVersion\.parse\("[^"\n]+"\)$', "", text, flags=re.MULTILINE)
+        if path == root / "third_party" / "JoyConDSU" / "CMakeLists.txt":
+            # JoyConDSU has its own project version; keep scanning the other literals.
+            text = re.sub(
+                r"^([ \t]*project\([ \t]*JoyConDSU[ \t\r\n]+VERSION[ \t\r\n]+)\d+\.\d+\.\d+(?=[ \t\r\n)])",
+                r"\1", text, flags=re.MULTILINE,
+            )
         if any(pattern.search(text) for pattern in patterns):
             findings.append(f"{path}: version courante dupliquée hors de botw_companion/VERSION")
     return findings
