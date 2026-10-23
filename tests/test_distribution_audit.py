@@ -1,6 +1,9 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import ast
+import os
+import subprocess
+import sys
 import unittest
 
 from tools.audit_distribution import (
@@ -16,6 +19,19 @@ from tools.audit_distribution import (
 
 
 class DistributionAuditTests(unittest.TestCase):
+    def test_direct_entry_point_without_source_pythonpath(self):
+        root = Path(__file__).resolve().parents[1]
+        environment = {key: value for key, value in os.environ.items()
+                       if key not in {"PYTHONPATH", "PYTHONHOME"}}
+        environment["GIT_OPTIONAL_LOCKS"] = "0"
+        with TemporaryDirectory() as temporary:
+            result = subprocess.run(
+                [sys.executable, "-I", str(root / "tools/audit_distribution.py")],
+                cwd=temporary, env=environment, capture_output=True, text=True,
+            )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("repository hygiene, and release assets passed the audit", result.stdout)
+
     def test_release_source_audit_rejects_missing_browser_script(self):
         with TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -42,7 +42,7 @@ def find_release_id(payload: object, tag: str, state: str = "any") -> int:
         if state == "published" and draft:
             continue
         identifier = release.get("id")
-        if not isinstance(identifier, int) or identifier <= 0:
+        if not isinstance(identifier, int) or isinstance(identifier, bool) or identifier <= 0:
             raise ReleaseLookupError("matching release has no valid database id")
         matches.append(identifier)
     if not matches:

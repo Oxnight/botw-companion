@@ -5,6 +5,7 @@ const {chromium, firefox, webkit} = require("playwright");
 const {source: axeSource} = require("axe-core");
 const {mkdir} = require("node:fs/promises");
 const {readTimeout, createWatchdog} = require("./browser_watchdog.cjs");
+const {createBrowserLaunchEnvironment} = require("./browser_launch.cjs");
 
 const ACTION_TIMEOUT_MS = 20000;
 const NAVIGATION_TIMEOUT_MS = 30000;
@@ -13,6 +14,7 @@ const RUN_TIMEOUT_MS = readTimeout(process.env.BOTW_BROWSER_TEST_TIMEOUT_MS, 120
 const LAUNCH_TIMEOUT_MS = readTimeout(process.env.BOTW_BROWSER_LAUNCH_TIMEOUT_MS, 90000);
 const UPDATE_CHECK_TIMEOUT_MS = readTimeout(process.env.BOTW_BROWSER_UPDATE_TIMEOUT_MS, 90000);
 let currentStage = "initialisation";
+let launchEnvironment;
 
 async function assertListFocusFits(page) {
   const originalViewport = page.viewportSize();
@@ -1236,6 +1238,7 @@ async function runBilingual(browser, baseUrl, browserName) {
 (async () => {
   const url = process.argv[2] || "http://127.0.0.1:8765";
   const target = String(process.argv[3] || process.env.BOTW_BROWSER || "chromium").toLowerCase();
+  launchEnvironment = createBrowserLaunchEnvironment(target);
   const localChromium = process.env.BOTW_CHROMIUM_EXECUTABLE_PATH;
   const launchers = {
     chromium: () => chromium.launch({
@@ -1244,7 +1247,7 @@ async function runBilingual(browser, baseUrl, browserName) {
     }),
     chrome: () => chromium.launch({headless: true, channel: "chrome"}),
     edge: () => chromium.launch({headless: true, channel: "msedge"}),
-    firefox: () => firefox.launch({headless: true}),
+    firefox: () => firefox.launch({headless: true, ...launchEnvironment.options()}),
     webkit: () => webkit.launch({headless: true})
   };
   if (!launchers[target]) throw new Error(`Navigateur inconnu : ${target}`);
@@ -1255,13 +1258,15 @@ async function runBilingual(browser, baseUrl, browserName) {
       stage: currentStage,
       ...deadline
     }));
+    launchEnvironment.cleanupOnExit();
     process.exit(124);
   });
-  let browser;
+  let browser, result;
   try {
     watchdog.start("launch", LAUNCH_TIMEOUT_MS);
     progress(target, "lancement");
     browser = await launchers[target]();
+    launchEnvironment.cleanupOnExit();
     watchdog.start("update-regressions", UPDATE_CHECK_TIMEOUT_MS);
     progress(target, "updates:browser-handoff-and-guide-alignment");
     await require("./browser_update_checks.cjs").runBrowserUpdateChecks(browser);
@@ -1272,11 +1277,12 @@ async function runBilingual(browser, baseUrl, browserName) {
     await runLocalTimezone(browser, url, target);
     await runBilingual(browser, url, target);
     progress(target, "storage:disabled-quota-corrupt-cache");
-    await require("./browser_storage_checks.cjs").runBrowserStorageChecks(browser, url);
-    console.log(JSON.stringify({
+    await require("./browser_storage_checks.cjs").runBrowserStorageChecks(browser, url,
+      stage => progress(target, stage));
+    result = {
       status: "ok", browser: target, ...desktop, responsive: true,
       zoom_200: true, reduced_motion: true, local_timezone: true, bilingual: true, storage_recovery: true
-    }));
+    };
   } finally {
     try {
       if (browser) {
@@ -1284,8 +1290,14 @@ async function runBilingual(browser, baseUrl, browserName) {
         progress(target, "navigateur:fermeture");
         await closeWithTimeout(browser, "la fermeture du navigateur");
       }
+      launchEnvironment.cleanup();
     } finally {
       watchdog.stop();
     }
   }
-})().catch(error => { console.error(error); process.exit(1); });
+  console.log(JSON.stringify(result));
+})().catch(error => {
+  console.error(error);
+  launchEnvironment?.cleanupOnExit();
+  process.exit(1);
+});

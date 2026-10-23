@@ -9,7 +9,8 @@ import unittest
 from botw_companion.analyzer import analyze
 from botw_companion.english import english_presentation, translate_text, TECHNICAL_FIELDS
 from botw_companion.quest_walkthroughs import QUEST_WALKTHROUGHS
-from tools.build_english_assets import markup, english_morphology
+from tools.build_english_assets import markup
+from botw_companion.i18n import locale_resource, message
 from tools.localization_checks import has_french_prose, has_bad_english
 import test_server_security as server_fixture
 
@@ -37,8 +38,6 @@ class EnglishTests(unittest.TestCase):
         source = '<button class="coffres" data-id="ZXQ0QXZ" title="Voir sur la carte" aria-label="Voir ZXQ1QXZ sur la carte">Carte</button>'
         expected = '<button class="coffres" data-id="ZXQ0QXZ" title="View on map" aria-label="View ZXQ1QXZ on the map">Map</button>'
         self.assertEqual(markup(source), expected)
-        self.assertEqual(english_morphology('${count} completed${count > 1 ? "s" : ""}'), '${count} completed')
-        self.assertEqual(english_morphology('${count} chest${count > 1 ? "s" : ""}'), '${count} chest${count > 1 ? "s" : ""}')
 
     def test_official_terms_inside_instructions_and_item_variants(self):
         pairs = {'Cinetis': 'Stasis', 'Tetralame Mort-Subite': 'One-Hit Obliterator',
@@ -135,8 +134,8 @@ class EnglishTests(unittest.TestCase):
 
     def test_html_controls_keep_identifiers_and_values_in_both_languages(self):
         french, english = Controls(), Controls()
-        french.feed((ROOT / 'botw_companion/web/index.html').read_text(encoding='utf-8'))
-        english.feed((ROOT / 'botw_companion/web/index_en.html').read_text(encoding='utf-8'))
+        french.feed(locale_resource('index.html', 'fr').read_text(encoding='utf-8'))
+        english.feed(locale_resource('index.html', 'en').read_text(encoding='utf-8'))
         self.assertEqual(french.controls, english.controls)
         self.assertIn('Help', english.visible)
         self.assertNotIn('Aide', english.visible)

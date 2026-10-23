@@ -310,8 +310,7 @@ def main() -> None:
         raise RuntimeError(f"Marqueurs officiels incomplets : {len(official_locations)}/187")
     catalog["official_map_locations"] = official_locations
 
-    # These three markers count toward the official map, but the historical
-    # `locations` source did not expose them.
+    # Add official map markers absent from the locations list.
     extra_location_regions = {
         "Location_AncientLabo": "Akkala",
         "Location_HatenoLabo": "Hateno",

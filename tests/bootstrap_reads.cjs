@@ -4,17 +4,19 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const {localize} = require("./i18n_context.js");
 
 function setup(filename, fetch, timers = {setTimeout, clearTimeout}) {
-  const source = fs.readFileSync(path.join(__dirname, "../botw_companion/web", filename), "utf8");
+  const source = fs.readFileSync(path.join(__dirname, "../botw_companion/web", "app.js"), "utf8");
   const start = source.indexOf("async function fetchStartupJson(");
   assert.notEqual(start, -1);
   const context = vm.createContext({fetch, AbortController, documentLeaving: false, ...timers});
+  localize(context, filename);
   vm.runInContext(source.slice(start, source.indexOf("async function loadRuntimePlatform(", start)), context);
   return context;
 }
 
-for (const filename of ["app.js", "app_en.js"]) {
+for (const filename of ["fr", "en"]) {
   test(`${filename}: retries one failed GET and keeps the successful data`, async () => {
     let calls = 0;
     const c = setup(filename, async (url, options) => {

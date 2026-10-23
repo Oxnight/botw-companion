@@ -1,0 +1,8 @@
+{
+  "base_commit": "8009763a0623dd660a963a93def8fc2569c42202",
+  "capture": "Unchanged presenter captured before edits; protocol-shaped values use the original presentation exclusion contract.",
+  "total_inputs": 42438,
+  "presentation_inputs": 38672,
+  "presentation_sha256": "bdca25084d7702e84cf4fa6ef2ad3b0f0a306e950af39d89cc59ebe16e5e0368",
+  "protocol_inputs": 3766
+}

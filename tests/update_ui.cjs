@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const {localize} = require("./i18n_context.js");
 const {test} = require("node:test");
 const source = fs.readFileSync(path.join(__dirname, "../botw_companion/web/app.js"), "utf8");
 const actions = source.slice(source.indexOf("async function installVerifiedUpdate("),
@@ -21,6 +22,7 @@ function setup(fetch, confirm = () => true) {
     $: id => id === "#downloadUpdate" ? button : progress,
     toast() {}, refreshUpdateDownload: async () => {}, startUpdateDownload: async () => {},
   });
+  localize(context);
   vm.runInContext(actions, context);
   return {context, button, handoffs};
 }

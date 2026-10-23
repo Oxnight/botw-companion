@@ -4,12 +4,11 @@ import hashlib
 from importlib.resources import files
 import json
 import re
+from .i18n import registry, resource_errors, locale_resource
 
 
 DATA_FILES = (
     "localization_fr.json",
-    "localization_en.json",
-    "localization_en_ui.json",
     "nomenclature_fr_reference.json",
     "catalog_fr_compiled.json",
     "cartography_reference_fr_compiled.json",
@@ -22,10 +21,7 @@ DATA_FILES = (
     "boss_reference.json",
 )
 WEB_FILES = (
-    "index.html",
-    "index_en.html",
-    "app_en.js",
-    "route_planner_en.js",
+    "i18n.js",
     "language.js",
     "browser_session.js",
     "app.js",
@@ -139,6 +135,7 @@ def offline_resource_errors(*, windows_dsu: bool = False,
         for name in names
         if not _resource(root, name).is_file()
     ]
+    errors.extend(resource_errors())
     manifest_path = _resource(web_root, "map-tiles/manifest.json")
     if manifest_path.is_file():
         try:
@@ -166,15 +163,20 @@ def remote_runtime_dependencies() -> list[str]:
     """Detect a remote web resource automatically required by the interface."""
     web_root = files("botw_companion.web")
     findings = []
-    html = web_root.joinpath("index.html").read_text(encoding="utf-8")
-    for match in re.finditer(r"(?:src|href)=[\"'](https?://[^\"']+)", html, re.I):
-        findings.append(match.group(1))
+    for locale in registry()['locales']:
+        html = locale_resource('index.html', locale).read_text(encoding='utf-8')
+        for match in re.finditer(r"(?:src|href)=[\"'](https?://[^\"']+)", html, re.I):
+            findings.append(match.group(1))
     for name in ("style.css", "metrics.css", "armor.css"):
         css = web_root.joinpath(name).read_text(encoding="utf-8")
         for match in re.finditer(r"url\(\s*[\"']?(https?://[^\"')\s]+)", css, re.I):
             findings.append(match.group(1))
-    for name in ("app.js", "route_planner.js"):
+    for name in ("app.js", "route_planner.js", "language.js", "browser_session.js", "i18n.js"):
         script = web_root.joinpath(name).read_text(encoding="utf-8")
         for match in re.finditer(r"fetch\(\s*[\"'`](https?://[^\"'`]+)", script, re.I):
+            findings.append(match.group(1))
+    for locale in registry()['locales']:
+        script = locale_resource('locale.js', locale).read_text(encoding='utf-8')
+        for match in re.finditer(r"(?:fetch|import)\(\s*[\"'`](https?://[^\"'`]+)", script, re.I):
             findings.append(match.group(1))
     return sorted(set(findings))

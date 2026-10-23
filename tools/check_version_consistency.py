@@ -86,7 +86,7 @@ def literal_version_errors(root: Path, version: ReleaseVersion) -> list[str]:
     ]
     for path in root.rglob("*"):
         generated = any(
-            part in {"build", "dist", "__pycache__", ".pytest_cache", "node_modules", ".venv", "venv"}
+            part in {"build", "dist", "test-results", "__pycache__", ".pytest_cache", "node_modules", ".venv", "venv"}
             or part.endswith(".egg-info")
             for part in path.parts
         )

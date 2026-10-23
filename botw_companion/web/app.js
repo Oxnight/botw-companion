@@ -101,9 +101,9 @@ window.BOTWBrowserSession.init(sessionToken, () => {
 });
 let availableUpdateVersion = null;
 let runtimePlatform = {
-    label: "Système local",
+    label: BOTWI18n.t("app-local-system", {}),
     native_dsu_engine: "DSU",
-    relaunch_hint: "Tu peux fermer cet onglet. Relance BOTW Companion pour redémarrer l’application."
+    relaunch_hint: BOTWI18n.t("app-you-can-close-this-tab-relaunch-botw", {})
 };
 const LIST_PAGE_SIZE = 300;
 let listRenderLimit = LIST_PAGE_SIZE;
@@ -149,16 +149,16 @@ function rememberDismissedUpdate(version) {
 function showAvailableUpdate(data, manual = false) {
     const releaseUrl = trustedGitHubReleaseUrl(data.release_url, "release");
     if (!releaseUrl || typeof data.latest_version !== "string") {
-        if (manual) toast("La réponse de mise à jour n’est pas valide", true);
+        if (manual) toast(BOTWI18n.t("showavailableupdate-the-update-response-is-not-valid", {}), true);
         return;
     }
     if (!manual && dismissedUpdateVersion() === data.latest_version) return;
     $("#updateTitle").textContent = data.title || `BOTW Companion ${data.latest_version}`;
     $("#updateVersions").textContent =
-        `Version installée : ${data.current_version} • Nouvelle version : ${data.latest_version}`;
+        BOTWI18n.t("showavailableupdate-installed-version-new-version", {value0: String(data.current_version), value1: String(data.latest_version)});
     availableUpdateVersion = data.latest_version;
     $("#downloadUpdate").disabled = false;
-    $("#downloadUpdate").textContent = "Télécharger la mise à jour";
+    $("#downloadUpdate").textContent = BOTWI18n.t("showavailableupdate-download-the-update", {});
     $("#updateReleaseNotes").href = releaseUrl;
     $("#updateBanner").hidden = false;
     refreshUpdateDownload();
@@ -185,15 +185,15 @@ function renderUpdateDownload(state) {
         (state.status === "ready_to_install" && !state.can_install);
     if (state.status === "ready_to_install") {
         $("#downloadUpdate").textContent = state.can_install
-            ? "Installer et redémarrer"
-            : "Téléchargement vérifié";
+            ? BOTWI18n.t("renderupdatedownload-install-and-restart", {})
+            : BOTWI18n.t("renderupdatedownload-verified-download", {});
     } else if (active) {
-        $("#downloadUpdate").textContent = state.status === "verifying" ? "Vérification…" : "Téléchargement…";
+        $("#downloadUpdate").textContent = state.status === "verifying" ? BOTWI18n.t("renderupdatedownload-checking", {}) : BOTWI18n.t("renderupdatedownload-downloading", {});
     } else {
-        $("#downloadUpdate").textContent = "Télécharger la mise à jour";
+        $("#downloadUpdate").textContent = BOTWI18n.t("renderupdatedownload-download-the-update", {});
     }
     const amount = state.bytes_total > 0
-        ? `${formatUpdateBytes(state.bytes_received)} sur ${formatUpdateBytes(state.bytes_total)} (${progress.toFixed(1)} %)`
+        ? BOTWI18n.t("renderupdatedownload-of", {value0: String(formatUpdateBytes(state.bytes_received)), value1: String(formatUpdateBytes(state.bytes_total)), value2: String(progress.toFixed(1))})
         : "";
     const rate = state.bytes_per_second > 0
         ? ` • ${formatUpdateBytes(state.bytes_per_second)}/s`
@@ -206,9 +206,9 @@ function renderUpdateDownload(state) {
         try { previous = sessionStorage.getItem(UPDATE_INSTALL_NOTICE_KEY); } catch (_error) {}
         if (notice !== previous && ["succeeded", "failed", "cancelled"].includes(installation.status)) {
             const logHint = installation.log_available && installation.log_path
-                ? ` Journal : ${installation.log_path}`
+                ? BOTWI18n.t("renderupdatedownload-log", {value0: String(installation.log_path)})
                 : "";
-            toast((installation.message || "État de la mise à jour disponible") + logHint,
+            toast((installation.message || BOTWI18n.t("renderupdatedownload-update-status-available", {})) + logHint,
                 installation.status !== "succeeded");
             try { sessionStorage.setItem(UPDATE_INSTALL_NOTICE_KEY, notice); } catch (_error) {}
         }
@@ -224,7 +224,7 @@ function scheduleUpdateDownloadPoll() {
 async function refreshUpdateDownload() {
     try {
         const response = await fetch("/api/update/download");
-        if (!response.ok) throw Error("service indisponible");
+        if (!response.ok) throw Error(BOTWI18n.t("refreshupdatedownload-service-unavailable", {}));
         renderUpdateDownload(await response.json());
     } catch (_error) {
         clearTimeout(updateDownloadTimer);
@@ -234,7 +234,7 @@ async function refreshUpdateDownload() {
 async function updateDownloadAction(action) {
     const response = await fetch(`/api/update/download/${action}`, { method: "POST" });
     const state = await response.json();
-    if (!response.ok) throw Error(state.erreur || "service indisponible");
+    if (!response.ok) throw Error(state.erreur || BOTWI18n.t("updatedownloadaction-service-unavailable", {}));
     renderUpdateDownload(state);
     scheduleUpdateDownloadPoll();
 }
@@ -243,26 +243,26 @@ async function startUpdateDownload() {
     try {
         await updateDownloadAction("start");
     } catch (_error) {
-        toast("Le téléchargement ne peut pas démarrer pour le moment", true);
+        toast(BOTWI18n.t("startupdatedownload-download-cannot-start-at-this-time", {}), true);
     }
 }
 
 async function installVerifiedUpdate() {
     const platformMessage = runtimePlatform.id === "macos"
-        ? "Un relais macOS séparé vérifiera le DMG Apple Silicon, remplacera l’application, " +
-          "puis la redémarrera. macOS peut demander ton autorisation."
-        : "L’assistant Windows s’ouvrira ensuite et l’application redémarrera après l’installation. " +
-          "Windows ne sera pas redémarré.";
+        ? BOTWI18n.t("installverifiedupdate-a-separate-macos-stable-will-check-the", {}) +
+          BOTWI18n.t("installverifiedupdate-then-restart-it-macos-can-ask-for", {})
+        : BOTWI18n.t("installverifiedupdate-the-windows-wizard-will-then-open-and", {}) +
+          BOTWI18n.t("installverifiedupdate-windows-will-not-be-restarted", {});
     if (updateInstallationPending || !confirm(
-        "Installer cette mise à jour maintenant ?\n\n" +
-        "BOTW Companion et JoyConDSU vont s’arrêter proprement. " +
+        BOTWI18n.t("installverifiedupdate-install-this-update-now", {}) +
+        BOTWI18n.t("installverifiedupdate-botw-companion-and-joycondsu-will-shut-down", {}) +
         platformMessage
     )) return false;
     updateInstallationPending = true;
     clearTimeout(updateDownloadTimer);
     const button = $("#downloadUpdate");
     button.disabled = true;
-    button.textContent = "Préparation de l’installation…";
+    button.textContent = BOTWI18n.t("installverifiedupdate-preparing-installation", {});
     try {
         const response = await fetch("/api/update/install", {
             method: "POST",
@@ -270,16 +270,16 @@ async function installVerifiedUpdate() {
             body: JSON.stringify({client_id: window.BOTWBrowserSession.clientId})
         });
         const state = await response.json();
-        if (!response.ok) throw Error(state.erreur || "service indisponible");
+        if (!response.ok) throw Error(state.erreur || BOTWI18n.t("installverifiedupdate-service-unavailable", {}));
         $("#updateProgressText").textContent =
-            state.message || "Arrêt sécurisé avant l’installation…";
+            state.message || BOTWI18n.t("installverifiedupdate-secure-shutdown-before-installation", {});
         window.BOTWBrowserSession.installed(state.browser_handoff);
         return true;
     } catch (error) {
         updateInstallationPending = false;
         button.disabled = false;
-        button.textContent = "Installer et redémarrer";
-        toast(error.message || "L’installation ne peut pas démarrer", true);
+        button.textContent = BOTWI18n.t("installverifiedupdate-install-and-restart", {});
+        toast(error.message || BOTWI18n.t("installverifiedupdate-installation-cannot-start", {}), true);
         return false;
     }
 }
@@ -290,7 +290,7 @@ async function handleUpdatePrimaryAction() {
     $("#downloadUpdate").disabled = true;
     try {
         const response = await fetch("/api/update/download");
-        if (!response.ok) throw Error("service indisponible");
+        if (!response.ok) throw Error(BOTWI18n.t("handleupdateprimaryaction-service-unavailable", {}));
         const state = await response.json();
         if (state.status === "ready_to_install" && state.can_install) {
             await installVerifiedUpdate();
@@ -298,7 +298,7 @@ async function handleUpdatePrimaryAction() {
         }
         await startUpdateDownload();
     } catch (_error) {
-        toast("La mise à jour ne peut pas démarrer pour le moment", true);
+        toast(BOTWI18n.t("handleupdateprimaryaction-the-update-cannot-start-at-this-time", {}), true);
     } finally {
         updatePrimaryBusy = false;
         if (!updateInstallationPending) await refreshUpdateDownload();
@@ -313,7 +313,7 @@ async function checkForUpdates(manual = false) {
     const timer = setTimeout(() => controller.abort(), UPDATE_CHECK_TIMEOUT_MS);
     if (manual) {
         button.disabled = true;
-        button.textContent = "Vérification…";
+        button.textContent = BOTWI18n.t("checkforupdates-checking", {});
     }
     try {
         let data;
@@ -325,7 +325,7 @@ async function checkForUpdates(manual = false) {
                 response = await fetch(`/api/update${manual ? "?force=1" : ""}`, {
                     signal: controller.signal
                 });
-                if (!response.ok) throw Error("service indisponible");
+                if (!response.ok) throw Error(BOTWI18n.t("checkforupdates-service-unavailable", {}));
                 data = await response.json();
                 break;
             } catch (error) {
@@ -338,21 +338,21 @@ async function checkForUpdates(manual = false) {
         if (data.update_available === true) {
             showAvailableUpdate(data, manual);
         } else if (manual && data.status === "up_to_date") {
-            toast("BOTW Companion est à jour");
+            toast(BOTWI18n.t("checkforupdates-botw-companion-is-up-to-date", {}));
         } else if (manual && data.status === "unsupported") {
-            toast("La vérification automatique n’est pas disponible sur ce système", true);
+            toast(BOTWI18n.t("checkforupdates-automatic-verification-is-not-available-on-this", {}), true);
         } else if (manual) {
-            toast(data.message || "Vérification impossible pour le moment", true);
+            toast(data.message || BOTWI18n.t("checkforupdates-unable-to-verify-at-the-moment", {}), true);
         }
     } catch (_error) {
         if (manual) {
-            toast("Connexion indisponible. BOTW Companion reste utilisable hors ligne.", true);
+            toast(BOTWI18n.t("checkforupdates-connection-unavailable-botw-companion-remains-usable-offline", {}), true);
         }
     } finally {
         clearTimeout(timer);
         if (manual) {
             button.disabled = false;
-            button.textContent = "Mises à jour";
+            button.textContent = BOTWI18n.t("checkforupdates-updates", {});
         }
     }
 }
@@ -369,7 +369,7 @@ function loadRouteState() {
 
     return {
         schema_version: 1,
-        name: "Session BOTW",
+        name: BOTWI18n.t("loadroutestate-botw-session", {}),
         start: null,
         entries: [],
         updated_at: null
@@ -408,7 +408,7 @@ function savePreference(name, value) {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw Error(data.erreur || "Préférences impossibles à enregistrer");
+                throw Error(data.erreur || BOTWI18n.t("savepreference-unable-to-save-preferences", {}));
             }
             preferencesData = data;
         })
@@ -419,236 +419,236 @@ function savePreference(name, value) {
 const HELP_CHAPTERS = [
     {
         id: "privacy",
-        title: "Confidentialité et mode hors ligne",
-        summary: "Ce qui reste sur ton appareil et ce qui nécessite Internet.",
+        title: BOTWI18n.t("app-privacy-and-offline-mode", {}),
+        summary: BOTWI18n.t("app-what-stays-on-your-device-and-what", {}),
         target: "header",
         points: [
-            "L’analyse de la sauvegarde, la carte, les guides, le suivi manuel et les itinéraires fonctionnent localement.",
-            "La sauvegarde et les données personnelles du Companion ne sont envoyées à aucun service distant.",
-            "Une connexion est utilisée uniquement lorsque tu demandes une vérification de mise à jour ou ouvres une source externe. Une panne de réseau ne bloque pas le Companion."
+            BOTWI18n.t("app-save-analysis-the-map-guides-manual-tracking", {}),
+            BOTWI18n.t("app-your-game-saves-and-personal-companion-data", {}),
+            BOTWI18n.t("app-a-connection-is-used-only-when-you", {})
         ],
-        tip: "Les services locaux du Companion écoutent seulement sur 127.0.0.1, c’est-à-dire ton propre ordinateur."
+        tip: BOTWI18n.t("app-the-companions-local-services-only-listen-to", {})
     },
     {
         id: "save",
-        title: "Sauvegarde et slot analysé",
-        summary: "Comprendre la détection de Ryujinx ou Cemu et le choix du slot.",
+        title: BOTWI18n.t("app-save-and-slot-analyzed", {}),
+        summary: BOTWI18n.t("app-understand-the-detection-of-ryujinx-or-cemu", {}),
         target: "#savePreview",
         points: [
-            "Le bandeau supérieur indique l’émulateur détecté, la plateforme et le slot actuellement conservé.",
-            "BOTW Companion compare les sauvegardes prises en charge et retient la progression la plus récente d’après les informations internes du jeu.",
-            "L’aperçu, la date et la source permettent de vérifier que tu consultes bien la partie attendue. Une écriture incomplète n’écrase jamais le dernier rapport valide."
+            BOTWI18n.t("app-the-top-panel-shows-the-detected-emulator", {}),
+            BOTWI18n.t("app-botw-companion-compares-supported-save-files-and", {}),
+            BOTWI18n.t("app-the-preview-date-and-source-help-you", {})
         ],
-        tip: "Si la mauvaise partie apparaît, vérifie le chemin de sauvegarde de l’émulateur puis utilise « Lire maintenant »."
+        tip: BOTWI18n.t("app-if-the-wrong-part-appears-check-the", {})
     },
     {
         id: "sync",
-        title: "Synchronisation de la sauvegarde",
-        summary: "Intervalle, pause, lecture immédiate et historique.",
+        title: BOTWI18n.t("app-synchronization-of-the-save", {}),
+        summary: BOTWI18n.t("app-interval-pause-immediate-and-historical-reading", {}),
         target: ".syncSaveArea",
         points: [
-            "Choisis l’intervalle auquel le Companion vérifie si la sauvegarde a réellement changé.",
-            "« Pause » suspend les lectures automatiques sans arrêter l’application. « Lire maintenant » déclenche une vérification immédiate.",
-            "L’historique récent distingue une lecture réussie, une sauvegarde inchangée et une erreur temporaire. Le dernier résultat valide reste affiché en cas d’échec."
+            BOTWI18n.t("app-choose-the-interval-at-which-the-companion", {}),
+            BOTWI18n.t("app-pause-suspends-automatic-readings-without-stopping-the", {}),
+            BOTWI18n.t("app-recent-history-distinguishes-between-a-successful-read", {})
         ],
-        tip: "Une vérification fréquente n’accélère pas l’écriture de l’émulateur ; 30 secondes convient dans la plupart des cas."
+        tip: BOTWI18n.t("app-frequent-checking-does-not-speed-up-the", {})
     },
     {
         id: "completion",
-        title: "Les deux pourcentages",
-        summary: "Distinguer la carte officielle du profil de complétion.",
+        title: BOTWI18n.t("app-the-two-percentages", {}),
+        summary: BOTWI18n.t("app-understand-the-difference-between-map-completion-and", {}),
         target: ".hero",
         points: [
-            "Le pourcentage officiel reproduit le compteur de carte de BOTW : Korogus, sanctuaires, lieux, tours, créatures cartographiques et contenu DLC applicable.",
-            "Le profil de complétion est un indicateur plus large propre au Companion. Il mesure les objectifs que la sauvegarde permet de confirmer automatiquement.",
-            "Les deux nombres n’ont donc ni le même total ni le même rôle. Le sélecteur de formule ou de profil permet d’examiner le jeu de base, le DLC et les profils spécialisés."
+            BOTWI18n.t("app-the-official-percentage-reproduces-botws-map-completion", {}),
+            BOTWI18n.t("app-the-completion-profile-is-a-broader-indicator", {}),
+            BOTWI18n.t("app-the-two-numbers-do-not-have-the", {})
         ],
-        tip: "Déplie « éléments empêchant le 100 % » pour voir précisément ce qui manque au profil sélectionné."
+        tip: BOTWI18n.t("app-expand-items-preventing-100-to-see-exactly", {})
     },
     {
         id: "sidebar",
-        title: "Filtres de carte et navigation latérale",
-        summary: "Choisir rapidement les familles d’objectifs affichées.",
+        title: BOTWI18n.t("app-map-filters-and-side-navigation", {}),
+        summary: BOTWI18n.t("app-quickly-choose-the-families-of-objectives-displayed", {}),
         target: "#categories",
         points: [
-            "La colonne située à gauche de l’écran regroupe les grandes familles : voyage et lieux, quêtes et souvenirs, trésors et autres objectifs.",
-            "Chaque case active ou masque une catégorie entière. « Tout » sélectionne toutes les catégories et « Aucun » permet de repartir d’une vue vide.",
-            "Les compteurs placés à droite indiquent la progression détectée dans chaque catégorie. La légende en bas rappelle la différence entre à faire, en cours, terminé et informatif."
+            BOTWI18n.t("app-the-column-to-the-left-of-the", {}),
+            BOTWI18n.t("app-each-checkbox-shows-or-hides-an-entire", {}),
+            BOTWI18n.t("app-the-counters-on-the-right-indicate-the", {})
         ],
-        tip: "Commence par cocher une ou deux catégories dans la colonne gauche, puis utilise les filtres détaillés au-dessus de la liste."
+        tip: BOTWI18n.t("app-start-by-checking-one-or-two-categories", {})
     },
     {
         id: "navigation",
-        title: "Recherche et filtres détaillés",
-        summary: "Affiner les catégories choisies dans la colonne gauche.",
+        title: BOTWI18n.t("app-detailed-search-and-filters", {}),
+        summary: BOTWI18n.t("app-refine-the-selected-categories-in-the-left", {}),
         target: ".toolbar",
         points: [
-            "Après avoir choisi les catégories dans la colonne gauche, la recherche accepte un nom, une région ou un terme présent dans une fiche.",
-            "Les filtres séparent les états, contenus additionnels, modes de jeu, localisations, variantes et régions.",
-            "Un objectif peut être automatique, manuel, mixte ou informatif. Le bandeau de portée signale les limites du filtre actif afin d’éviter une interprétation incorrecte."
+            BOTWI18n.t("app-after-choosing-the-categories-in-the-left", {}),
+            BOTWI18n.t("app-filters-separate-states-additional-content-game-modes", {}),
+            BOTWI18n.t("app-a-lens-can-be-automatic-manual-mixed", {})
         ],
-        tip: "Commence par une catégorie, puis affine avec la recherche : la carte et la liste utilisent exactement le même périmètre."
+        tip: BOTWI18n.t("app-start-with-a-category-then-refine-with", {})
     },
     {
         id: "map",
-        title: "Carte d’Hyrule",
-        summary: "Déplacement, zoom, marqueurs et ouverture des fiches.",
+        title: BOTWI18n.t("app-hyrule-map", {}),
+        summary: BOTWI18n.t("app-pan-and-zoom-the-map-use-markers", {}),
         target: ".mapPanel",
         points: [
-            "Déplace la carte par glisser-déposer, utilise la molette ou les boutons pour zoomer, et le bouton maison pour revenir à la vue d’ensemble.",
-            "Les marqueurs reprennent l’état des objectifs filtrés. Sélectionner un marqueur ouvre la même fiche que son entrée dans la liste.",
-            "Certains objectifs se déroulent dans un intérieur ou ne possèdent pas de coordonnées fiables : ils restent accessibles dans la liste sans faux emplacement sur Hyrule."
+            BOTWI18n.t("app-drag-and-drop-the-map-use-the", {}),
+            BOTWI18n.t("app-markers-return-the-status-of-filtered-objectives", {}),
+            BOTWI18n.t("app-some-objectives-take-place-in-an-interior", {})
         ],
-        tip: "La carte et toutes ses tuiles sont intégrées à l’application et restent disponibles hors ligne."
+        tip: BOTWI18n.t("app-the-map-and-all-its-tiles-are", {})
     },
     {
         id: "guides",
-        title: "Fiches, preuves et guides",
-        summary: "Lire le statut, les solutions et leurs limites.",
+        title: BOTWI18n.t("app-objective-details-evidence-and-guides", {}),
+        summary: BOTWI18n.t("app-read-the-status-solutions-and-their-limitations", {}),
         target: ".listPanel",
         points: [
-            "Chaque fiche rassemble l’état détecté, la position disponible, les étapes utiles, les récompenses, coffres ou conditions associées.",
-            "Une preuve automatique vient de la sauvegarde ; elle n’affirme jamais une action que les données du jeu ne permettent pas de distinguer.",
-            "Les guides peuvent inclure des sources externes. Leur consultation nécessite Internet, mais le contenu essentiel de la fiche est déjà embarqué."
+            BOTWI18n.t("app-each-detail-panel-shows-the-detected-status", {}),
+            BOTWI18n.t("app-automatic-proof-comes-from-the-save-it", {}),
+            BOTWI18n.t("app-the-guides-may-include-external-sources-their", {})
         ],
-        tip: "Les mentions de limite ou de validation manuelle sont volontaires : elles évitent de transformer une absence de preuve en faux résultat."
+        tip: BOTWI18n.t("app-limit-or-manual-validation-statements-are-voluntary", {})
     },
     {
         id: "manual",
-        title: "Suivi manuel et sauvegarde des données",
-        summary: "Cases personnelles, notes, import et export.",
+        title: BOTWI18n.t("app-manual-tracking-and-data-backups", {}),
+        summary: BOTWI18n.t("app-personal-checkboxes-notes-import-and-export", {}),
         target: ".manualBar",
         points: [
-            "Le suivi manuel complète l’analyse sans modifier le pourcentage officiel ni prétendre provenir de la sauvegarde du jeu.",
-            "Tu peux revoir les validations, ajouter des notes et retirer une case depuis le panneau de contrôle.",
-            "Les exports permettent de transférer ou sauvegarder tes validations et les données du Companion. Un import vérifie le format avant de remplacer les données locales."
+            BOTWI18n.t("app-manual-tracking-completes-the-analysis-without-changing", {}),
+            BOTWI18n.t("app-you-can-review-validations-add-notes-and", {}),
+            BOTWI18n.t("app-exports-allow-you-to-transfer-or-save", {})
         ],
-        tip: "Effectue régulièrement « Sauvegarder toutes les données » si tu prévois de changer d’ordinateur."
+        tip: BOTWI18n.t("app-regularly-save-all-data-if-you-plan", {})
     },
     {
         id: "routes",
-        title: "Planificateur d’itinéraire",
-        summary: "Créer, ordonner et conserver des sessions de jeu.",
+        title: BOTWI18n.t("app-route-planner", {}),
+        summary: BOTWI18n.t("app-create-order-and-maintain-gaming-sessions", {}),
         target: "#routePlanner",
         points: [
-            "Ajoute les résultats filtrés ou un objectif précis à une session, puis choisis un point de départ facultatif.",
-            "L’optimisation peut privilégier la distance directe, les régions ou les téléportations. Les étapes verrouillées conservent leur position.",
-            "Le calcul est indicatif : il ne simule ni relief, météo, escalade, ennemis ni ressources consommées. Les sessions peuvent être dupliquées, importées ou exportées."
+            BOTWI18n.t("app-add-filtered-results-or-a-specific-goal", {}),
+            BOTWI18n.t("app-optimization-can-focus-on-direct-distance-regions", {}),
+            BOTWI18n.t("app-the-calculation-is-indicative-it-does-not", {})
         ],
-        tip: "Verrouille les étapes obligatoires avant d’optimiser pour conserver l’ordre des rendez-vous importants."
+        tip: BOTWI18n.t("app-lock-mandatory-steps-before-optimizing-to-keep", {})
     },
     {
         id: "blood_moon",
-        title: "Lune de sang",
-        summary: "Interpréter le compteur interne et l’estimation.",
+        title: BOTWI18n.t("app-blood-looney", {}),
+        summary: BOTWI18n.t("app-interpret-the-internal-counter-and-estimate", {}),
         target: "#bloodMoonPanel",
         points: [
-            "Le panneau lit le compteur enregistré par BOTW et estime le temps de jeu actif restant avant le seuil normal des sept jours.",
-            "Une lune peut être programmée puis reportée si les conditions du jeu ne permettent pas la cinématique à minuit.",
-            "L’estimation dépend de la dernière sauvegarde lue : un jeu en pause, un menu ou une période non sauvegardée peut expliquer un écart avec le temps réel."
+            BOTWI18n.t("app-the-panel-reads-the-counter-recorded-by", {}),
+            BOTWI18n.t("app-a-moon-can-be-programmed-and-then", {}),
+            BOTWI18n.t("app-the-estimate-depends-on-the-last-save", {})
         ],
-        tip: "Le pourcentage représente l’avancement du minuteur connu, pas une probabilité aléatoire de déclenchement."
+        tip: BOTWI18n.t("app-the-percentage-represents-the-progress-of-the", {})
     },
     {
         id: "dsu",
-        title: "Gyroscope JoyConDSU",
-        summary: "Manette, calibration, diagnostic et émulateur.",
+        title: BOTWI18n.t("ui-gyroscope-joycondsu", {}),
+        summary: BOTWI18n.t("app-controller-calibration-diagnosis-and-emulator", {}),
         target: "#dsuControl",
         points: [
-            "Sélectionne une manette compatible, puis active le moteur seulement lorsque ton émulateur doit recevoir ses mouvements.",
-            "Le diagnostic mesure fréquence, retard, jitter, pertes et recalibrations. Une qualité insuffisante peut venir du Bluetooth, de la veille ou d’une autre application utilisant la manette.",
-            "L’émulateur doit être configuré pour le serveur DSU local 127.0.0.1:26760. Le moteur reste désactivé par défaut et s’arrête proprement avec le Companion."
+            BOTWI18n.t("app-select-a-compatible-controller-then-activate-the", {}),
+            BOTWI18n.t("app-the-diagnosis-measures-frequency-delay-jitter-loss", {}),
+            BOTWI18n.t("app-the-emulator-must-be-configured-for-the", {})
         ],
-        tip: "Pose la manette immobile pendant la calibration et évite de lancer plusieurs serveurs DSU sur le même port."
+        tip: BOTWI18n.t("app-set-the-controller-to-stand-still-during", {})
     },
     {
         id: "application",
-        title: "Mises à jour, aide et fermeture",
-        summary: "Gérer l’application sans perdre tes données.",
+        title: BOTWI18n.t("app-updates-help-and-closure", {}),
+        summary: BOTWI18n.t("app-manage-the-application-without-losing-your-data", {}),
         target: ".appActions",
         points: [
-            "« Mises à jour » consulte la dernière Release compatible avec un délai court. Le téléchargement démarre uniquement après confirmation, peut reprendre après une coupure et doit être vérifié avant toute installation.",
-            "Le bouton Aide rouvre ce centre et permet de reprendre le parcours ou d’afficher directement un chapitre.",
-            "Utilise « Quitter » pour arrêter proprement le serveur local et JoyConDSU. Les données personnelles restent dans le dossier de données de l’application, séparé de l’installation."
+            BOTWI18n.t("app-updates-consults-the-latest-release-compatible-with", {}),
+            BOTWI18n.t("app-the-help-button-reopens-this-center-so", {}),
+            BOTWI18n.t("app-use-quit-to-cleanly-shut-down-the", {})
         ],
         tip: () => runtimePlatform.data_directory
-            ? `Données et journaux locaux : ${runtimePlatform.data_directory}`
-            : "Les données et journaux sont conservés dans le dossier de données de l’application, séparé du programme installé."
+            ? BOTWI18n.t("app-local-data-and-logs", {value0: String(runtimePlatform.data_directory)})
+            : BOTWI18n.t("app-data-and-logs-are-kept-in-the", {})
     }
 ];
 
 const ESSENTIAL_TUTORIAL_STEPS = [
     {
         chapter: "privacy",
-        title: "Bienvenue dans BOTW Companion",
-        description: "Le Companion analyse ta progression sur cet ordinateur et reste utilisable sans connexion Internet.",
-        detail: "Ta sauvegarde n’est pas envoyée. Seules les mises à jour et les sources externes utilisent Internet, lorsque tu les demandes.",
+        title: BOTWI18n.t("app-welcome-to-botw-companion", {}),
+        description: BOTWI18n.t("app-the-companion-analyzes-your-progress-on-this", {}),
+        detail: BOTWI18n.t("app-your-save-is-not-sent-only-updates", {}),
         target: "header"
     },
     {
         chapter: "save",
-        title: "Vérifie la sauvegarde retenue",
-        description: "L’émulateur, le slot, la date et l’aperçu confirment quelle partie est actuellement analysée.",
+        title: BOTWI18n.t("app-check-the-save-retained", {}),
+        description: BOTWI18n.t("app-the-emulator-slot-date-and-preview-confirm", {}),
         detail: () => {
             const save = report?.sauvegarde || {};
-            return `${save.emulateur || "Émulateur détecté"} • ${save.plateforme || runtimePlatform.label || "Système local"} • slot ${save.slot || "en cours de détection"}`;
+            return `${save.emulateur || BOTWI18n.t("app-detected-emulator", {})} • ${save.plateforme || runtimePlatform.label || BOTWI18n.t("app-local-system-2", {})} • slot ${save.slot || BOTWI18n.t("app-in-the-process-of-detection", {})}`;
         },
         target: "#savePreview"
     },
     {
         chapter: "sync",
-        title: "Garde la progression à jour",
-        description: "Choisis l’intervalle de lecture, mets la synchronisation en pause ou demande une lecture immédiate.",
-        detail: "Une erreur temporaire ne remplace jamais le dernier rapport valide. L’historique récent explique chaque lecture.",
+        title: BOTWI18n.t("app-keep-progress-up-to-date", {}),
+        description: BOTWI18n.t("app-choose-the-save-reading-interval-pause-synchronization", {}),
+        detail: BOTWI18n.t("app-a-temporary-error-never-replaces-the-last", {}),
         target: ".syncSaveArea"
     },
     {
         chapter: "completion",
-        title: "Deux mesures, deux usages",
-        description: "L’anneau doré reproduit la carte officielle de BOTW ; l’anneau vert mesure les objectifs automatiquement vérifiables du profil choisi.",
-        detail: "Leurs totaux sont différents. Déplie les éléments bloquants pour comprendre précisément ce qui manque au profil de complétion.",
+        title: BOTWI18n.t("app-two-measures-two-purposes", {}),
+        description: BOTWI18n.t("app-the-golden-ring-reproduces-the-official-botw", {}),
+        detail: BOTWI18n.t("app-their-totals-are-different-expands-the-blocking", {}),
         target: ".hero"
     },
     {
         chapter: "sidebar",
-        title: "Choisis les catégories dans la colonne gauche",
-        description: "Les cases de la navigation latérale affichent ou masquent des familles entières d’objectifs dans la liste et sur la carte.",
-        detail: "Utilise « Tout » ou « Aucun » pour partir rapidement d’une vue complète ou vide. Les compteurs et la légende résument la progression de chaque famille.",
+        title: BOTWI18n.t("app-select-the-categories-in-the-left-column", {}),
+        description: BOTWI18n.t("app-the-side-navigation-boxes-show-or-hide", {}),
+        detail: BOTWI18n.t("app-use-all-or-none-to-quickly-start", {}),
         target: "#categories"
     },
     {
         chapter: "navigation",
-        title: "Trouve ce qui t’intéresse",
-        description: "Après les catégories de gauche, combine recherche et filtres détaillés pour préciser les objectifs affichés dans la liste et sur la carte.",
-        detail: "Les états automatique, manuel, mixte et informatif restent distincts afin de ne jamais confondre une preuve de sauvegarde avec une case personnelle.",
+        title: BOTWI18n.t("app-find-out-what-interests-you", {}),
+        description: BOTWI18n.t("app-after-selecting-categories-on-the-left-combine", {}),
+        detail: BOTWI18n.t("app-the-automatic-manual-mixed-and-informative-states", {}),
         target: ".toolbar"
     },
     {
         chapter: "map",
-        title: "Explore la carte et les fiches",
-        description: "Déplace et zoome la carte, puis sélectionne un marqueur ou un résultat pour ouvrir sa fiche détaillée.",
-        detail: "Les objectifs intérieurs ou sans coordonnées fiables restent dans la liste plutôt que d’être placés arbitrairement sur Hyrule.",
+        title: BOTWI18n.t("app-explore-the-map-and-objective-details", {}),
+        description: BOTWI18n.t("app-move-and-zooms-the-map-then-selects", {}),
+        detail: BOTWI18n.t("app-internal-or-untrusted-targets-remain-in-the", {}),
         target: ".mapPanel"
     },
     {
         chapter: "manual",
-        title: "Conserve tes validations personnelles",
-        description: "Le suivi manuel, les notes et les exports complètent l’analyse automatique sans modifier le compteur officiel.",
-        detail: "Le planificateur situé plus bas permet ensuite de regrouper ces objectifs en sessions et d’en optimiser l’ordre indicatif.",
+        title: BOTWI18n.t("app-keep-your-personal-validations", {}),
+        description: BOTWI18n.t("app-manual-tracking-notes-and-exports-complete-the", {}),
+        detail: BOTWI18n.t("app-the-planner-located-below-then-allows-to", {}),
         target: ".manualBar"
     },
     {
         chapter: "blood_moon",
-        title: "Anticipe la lune de sang",
-        description: "Ce panneau interprète le minuteur enregistré dans la dernière sauvegarde et les étapes de programmation du jeu.",
-        detail: "L’estimation suit le temps de jeu actif connu. Une cinématique peut être reportée si les conditions ne sont pas réunies à minuit.",
+        title: BOTWI18n.t("app-anticipate-the-blood-moon", {}),
+        description: BOTWI18n.t("app-this-panel-interprets-the-timer-in-the", {}),
+        detail: BOTWI18n.t("app-the-estimate-follows-the-known-active-play", {}),
         target: "#bloodMoonPanel"
     },
     {
         chapter: "dsu",
-        title: "Active le gyroscope seulement si nécessaire",
-        description: "JoyConDSU est inclus, mais reste désactivé tant que ton émulateur n’a pas besoin des mouvements de la manette.",
-        detail: "Le bouton Aide permet de retrouver les 13 chapitres, dont les filtres latéraux, la configuration DSU, les itinéraires, les sauvegardes et les mises à jour.",
+        title: BOTWI18n.t("app-activate-the-gyroscope-only-if-necessary", {}),
+        description: BOTWI18n.t("app-joycondsu-is-included-but-remains-disabled-as", {}),
+        detail: BOTWI18n.t("app-the-help-button-allows-you-to-find", {}),
         target: "#dsuControl"
     }
 ];
@@ -679,14 +679,14 @@ function renderHelpOverview() {
     helpChapterId = null;
     updateHelpNavigation();
     $("#helpContent").innerHTML =
-        `<p class="eyebrow">BIEN DÉMARRER</p>` +
-        `<h3>Choisis le niveau d’aide qui te convient</h3>` +
-        `<p>Le parcours essentiel présente dix repères directement dans l’interface. Les chapitres détaillés restent disponibles ici à tout moment.</p>` +
+        BOTWI18n.t("renderhelpoverview-good-start", {value0: String(`</p>`), value1: String(`<p class="eyebrow">`)}) +
+        BOTWI18n.t("renderhelpoverview-choose-the-level-of-help-that-suits", {value0: String(`</h3>`), value1: String(`<h3>`)}) +
+        BOTWI18n.t("renderhelpoverview-the-essential-tour-introduces-ten-key-areas", {value0: String(`</p>`), value1: String(`<p>`)}) +
         `<div class="helpOverviewCards">` +
-        `<article><b>Parcours guidé</b><span>10 étapes contextuelles • environ 3 minutes</span></article>` +
-        `<article><b>Centre d’aide</b><span>13 chapitres complets • entièrement hors ligne</span></article>` +
+        BOTWI18n.t("renderhelpoverview-guided-tour-10-contextual-steps-about-3", {value0: String(`</article>`), value1: String(`</span>`), value2: String(`<span>`), value3: String(`</b>`), value4: String(`<b>`), value5: String(`<article>`)}) +
+        BOTWI18n.t("renderhelpoverview-help-center-13-complete-chapters-fully-offline", {value0: String(`</article>`), value1: String(`</span>`), value2: String(`<span>`), value3: String(`</b>`), value4: String(`<b>`), value5: String(`<article>`)}) +
         `</div>` +
-        `<p class="helpPrivacyNote"><b>Aucune action n’est déclenchée pendant le parcours.</b> Les éléments sont seulement mis en évidence ; tes filtres, validations et sauvegardes ne sont jamais modifiés.</p>`;
+        BOTWI18n.t("renderhelpoverview-no-action-is-triggered-during-the-tour", {value0: String(`</p>`), value1: String(`</b>`), value2: String(`<b>`), value3: String(`<p class="helpPrivacyNote">`)});
 }
 
 function renderHelpChapter(id, focus = true) {
@@ -699,12 +699,12 @@ function renderHelpChapter(id, focus = true) {
     helpChapterId = id;
     updateHelpNavigation();
     $("#helpContent").innerHTML =
-        `<p class="eyebrow">CHAPITRE ${String(HELP_CHAPTERS.indexOf(chapter) + 1).padStart(2, "0")}</p>` +
+        BOTWI18n.t("renderhelpchapter-chapter", {value0: String(String(HELP_CHAPTERS.indexOf(chapter) + 1).padStart(2, "0")), value1: String(`</p>`), value2: String(`<p class="eyebrow">`)}) +
         `<h3>${esc(chapter.title)}</h3>` +
         `<p>${esc(chapter.summary)}</p>` +
         `<ul>${chapter.points.map(point => `<li>${esc(point)}</li>`).join("")}</ul>` +
-        `<p class="helpTip"><b>À retenir</b>${esc(tip)}</p>` +
-        `<button class="showHelpTarget" type="button" data-start-chapter="${esc(chapter.id)}">Voir dans l’interface</button>`;
+        BOTWI18n.t("renderhelpchapter-to-remember", {value0: String(esc(tip)), value1: String(`</p>`), value2: String(`</b>`), value3: String(`<b>`), value4: String(`<p class="helpTip">`)}) +
+        BOTWI18n.t("renderhelpchapter-view-in-the-interface", {value1: String(`</button>`), value2: String(`<button class="showHelpTarget" type="button" data-start-chapter="${esc(chapter.id)}">`)});
     if (focus) $("#helpContent").focus({ preventScroll: true });
 }
 
@@ -715,7 +715,7 @@ function updateResumeTutorialButton() {
         return;
     }
     button.hidden = false;
-    button.textContent = `Reprendre à l’étape ${tutorialResume.index + 1}`;
+    button.textContent = BOTWI18n.t("updateresumetutorialbutton-resume-at-step", {value0: String(tutorialResume.index + 1)});
 }
 
 function showHelp(chapterId = null, returnFocus = document.activeElement) {
@@ -1038,18 +1038,18 @@ function renderTutorialStep(focusHeading = false) {
     delete $("#tutorialCard").dataset.positionedStep;
     $("#tutorialPreview").shadowRoot?.replaceChildren();
     $("#tutorialKind").textContent = tutorialState.kind === "essential"
-        ? "PARCOURS ESSENTIEL"
-        : "AIDE CONTEXTUELLE";
-    $("#tutorialStepLabel").textContent = `Étape ${tutorialState.index + 1} sur ${total}`;
+        ? BOTWI18n.t("rendertutorialstep-essential-tour", {})
+        : BOTWI18n.t("rendertutorialstep-contextual-help", {});
+    $("#tutorialStepLabel").textContent = BOTWI18n.t("rendertutorialstep-step-of", {value0: String(tutorialState.index + 1), value1: String(total)});
     $("#tutorialProgressBar").style.width = `${(tutorialState.index + 1) / total * 100}%`;
     $("#tutorialTitle").textContent = step.title;
     $("#tutorialDescription").textContent = step.description;
     $("#tutorialDetail").textContent = target
         ? detail
-        : `${detail || ""} Cette partie de l’interface n’est pas disponible dans l’état actuel, mais l’explication reste accessible.`.trim();
+        : BOTWI18n.t("rendertutorialstep-this-part-of-the-interface-is-not", {value0: String(detail || "")}).trim();
     $("#previousTutorial").hidden = tutorialState.index === 0;
     $("#skipTutorial").hidden = tutorialState.kind !== "essential";
-    $("#nextTutorial").textContent = last ? "Terminer" : "Suivant";
+    $("#nextTutorial").textContent = last ? BOTWI18n.t("rendertutorialstep-finish", {}) : BOTWI18n.t("rendertutorialstep-next", {});
     if (target) {
         target.scrollIntoView({
             behavior: "auto",
@@ -1225,7 +1225,7 @@ async function migrateBrowserPreferences() {
     });
     const data = await response.json();
     if (!response.ok) {
-        throw Error(data.erreur || "Migration des préférences impossible");
+        throw Error(data.erreur || BOTWI18n.t("migratebrowserpreferences-migration-of-preferences-is-impossible", {}));
     }
     preferencesData = data;
 }
@@ -1274,14 +1274,14 @@ function filterGroupsForDisplay() {
     ) {
         treasures.types.push({
             id: SHRINE_CHESTS_REMAINING_FILTER,
-            label: "Sanctuaires terminés - coffres restants",
+            label: BOTWI18n.t("filtergroupsfordisplay-completed-shrines-remaining-chests", {}),
             count: remaining.length
         });
         treasures.types.sort(
             (left, right) =>
                 left.label.localeCompare(
                     right.label,
-                    "fr"
+                    BOTWI18n.formatLocale
                 )
         );
     }
@@ -1356,10 +1356,10 @@ function trackingMode(x) {
 
 function trackingLabel(x) {
     return {
-        mixed: "Automatique + manuel",
-        automatic: "Automatique",
-        manual: "Manuel",
-        none: x.informational ? "Informatif" : "À faire"
+        mixed: BOTWI18n.t("trackinglabel-automatic-manual", {}),
+        automatic: BOTWI18n.t("trackinglabel-automatic", {}),
+        manual: BOTWI18n.t("trackinglabel-manual", {}),
+        none: x.informational ? BOTWI18n.t("trackinglabel-informational", {}) : BOTWI18n.t("trackinglabel-to-do", {})
     }[trackingMode(x)]
 }
 
@@ -1461,7 +1461,7 @@ function saveRouteState() {
             if (!response.ok) {
                 throw Error(
                     data.erreur ||
-                    "Enregistrement des itinéraires impossible"
+                    BOTWI18n.t("saveroutestate-routes-cannot-be-recorded", {})
                 );
             }
 
@@ -1491,10 +1491,10 @@ function refreshVariants() {
                 .map(x => x.subtype)
                 .filter(Boolean)
         )
-    ].sort((a, b) => a.localeCompare(b, "fr"));
+    ].sort((a, b) => a.localeCompare(b, BOTWI18n.formatLocale));
 
     select.innerHTML =
-        '<option value="all">Toutes les variantes</option>' +
+        BOTWI18n.t("refreshvariants-all-variants", {value0: String(`</option>`), value1: String(`<option value="all">`)}) +
         variants
             .map(x => `<option value="${esc(x)}">${esc(x)}</option>`)
             .join("");
@@ -1598,7 +1598,7 @@ function refreshProfileSelect() {
                     profile.available === false ? 'disabled' : ''
                 }>${esc(profile.label)}${
                     profile.available === false
-                        ? ' - indisponible'
+                        ? BOTWI18n.t("refreshprofileselect-unavailable", {})
                         : ''
                 }</option>`
         )
@@ -1624,15 +1624,15 @@ function selectedCompletionScore() {
     if (!profile || profile.available === false) {
         return {
             available: false,
-            label: profile?.label || "Profil",
-            note: p.mode || "Profil indisponible"
+            label: profile?.label || BOTWI18n.t("selectedcompletionscore-profile", {}),
+            note: p.mode || BOTWI18n.t("selectedcompletionscore-profile-unavailable", {})
         };
     }
 
     const formula = report.referentiel_100.formula.expression,
         inventory = report.referentiel_100.inventory_constraints,
         inventoryNote = profile.id === "amiibo"
-            ? ` Collection séparée : ${inventory.all_unique_armor} armures existent pour ${inventory.armor_inventory_limit} emplacements.`
+            ? BOTWI18n.t("selectedcompletionscore-separate-collection-armor-pieces-exist-for-slots", {value0: String(inventory.all_unique_armor), value1: String(inventory.armor_inventory_limit)})
             : "";
     return {
         available: true,
@@ -1642,7 +1642,7 @@ function selectedCompletionScore() {
         pourcentage: p.total
             ? 100 * p.faits / p.total
             : 0,
-        note: `${profile.scope} Formule : ${formula}.${inventoryNote}`,
+        note: BOTWI18n.t("selectedcompletionscore-formula", {value0: String(profile.scope), value1: String(formula), value2: String(inventoryNote)}),
         blockers: p.blocking_categories || [], remaining: p.remaining || 0,
         effectiveProfile: p.effective_profile || profile.id, profileId: profile.id
     };
@@ -1652,19 +1652,19 @@ function renderCompletionBlockers(score) {
     const summary = $("#completionBlockerSummary"), list = $("#completionBlockerList"),
         details = $("#completionBlockers");
     if (!score.available) {
-        summary.textContent = "Profil indisponible pour cette sauvegarde";
+        summary.textContent = BOTWI18n.t("rendercompletionblockers-profile-unavailable-for-this-save", {});
         list.innerHTML = ""; details.open = false; return;
     }
     if (!score.remaining) {
-        summary.textContent = "Aucun élément n’empêche le 100 %";
-        list.innerHTML = "<li>Ce profil est complet.</li>"; details.open = false; return;
+        summary.textContent = BOTWI18n.t("rendercompletionblockers-there-is-nothing-to-prevent-the-100", {});
+        list.innerHTML = BOTWI18n.t("rendercompletionblockers-this-profile-is-complete", {value0: String(`</li>`), value1: String(`<li>`)}); details.open = false; return;
     }
-    summary.textContent = `${score.remaining.toLocaleString("fr-FR")} éléments empêchent le 100 %`;
+    summary.textContent = BOTWI18n.t("rendercompletionblockers-items-prevent-100-completion", {value0: String(score.remaining.toLocaleString(BOTWI18n.formatLocale))});
     list.innerHTML = score.blockers.map(category => {
         const examples = category.examples.map(item => esc(item.name)).join(" • "),
             more = Math.max(0, category.remaining - category.examples.length);
-        return `<li><b>${esc(category.label)} : ${category.remaining.toLocaleString("fr-FR")}</b>` +
-            `<span>${examples}${more ? ` • +${more.toLocaleString("fr-FR")} autres` : ""}</span></li>`;
+        return `<li><b>${esc(category.label)} : ${category.remaining.toLocaleString(BOTWI18n.formatLocale)}</b>` +
+            `<span>${examples}${more ? BOTWI18n.t("rendercompletionblockers-more", {value0: String(more.toLocaleString(BOTWI18n.formatLocale))}) : ""}</span></li>`;
     }).join("");
 }
 
@@ -1827,14 +1827,14 @@ function renderBloodMoon() {
 
     if (!moon.available) {
         $("#bloodMoonCountdown").textContent =
-            "Estimation indisponible";
+            BOTWI18n.t("renderbloodmoon-estimation-unavailable", {});
 
         $("#bloodMoonStatus").textContent =
             moon.status_label ||
-            "Compteur interne absent.";
+            BOTWI18n.t("renderbloodmoon-internal-counter-unavailable", {});
 
         $("#bloodMoonPhase").textContent =
-            "Indisponible";
+            BOTWI18n.t("renderbloodmoon-unavailable", {});
 
         $("#bloodMoonPercent").textContent = "-";
         $("#bloodMoonThreshold").textContent = "-";
@@ -1842,10 +1842,10 @@ function renderBloodMoon() {
         $("#bloodMoonEvent").textContent = "-";
 
         $("#bloodMoonMeasuredAt").textContent =
-            "Aucune mesure disponible";
+            BOTWI18n.t("renderbloodmoon-no-measurements-available", {});
 
         $("#bloodMoonInternal").textContent =
-            "Aucune valeur exploitable dans la dernière sauvegarde.";
+            BOTWI18n.t("renderbloodmoon-no-value-exploitable-in-the-last-save", {});
 
         $("#bloodMoonAccuracy").textContent =
             moon.accuracy_label || "-";
@@ -1865,13 +1865,13 @@ function renderBloodMoon() {
 
     const phase =
         moon.scheduled
-            ? "Cycle validé • programmée"
+            ? BOTWI18n.t("renderbloodmoon-validated-cycle-programmed", {})
             : moon.status === "just_occurred"
-                ? "Nouveau cycle"
-                : "Cycle en cours • non programmée";
+                ? BOTWI18n.t("renderbloodmoon-new-cycle", {})
+                : BOTWI18n.t("renderbloodmoon-current-cycle-unscheduled", {});
 
     $("#bloodMoonCountdown").textContent =
-        `≈ ${duration} de jeu actif`;
+        BOTWI18n.t("renderbloodmoon-of-active-play", {value0: String(duration)});
 
     $("#bloodMoonPhase").textContent = phase;
 
@@ -1882,49 +1882,43 @@ function renderBloodMoon() {
 
     $("#bloodMoonStatus").textContent =
         moon.scheduled
-            ? "La lune de sang est validée : elle se déclenchera au prochain minuit autorisé."
-            : "Temps restant estimé depuis la dernière sauvegarde avant le déclenchement réel.";
+            ? BOTWI18n.t("renderbloodmoon-the-blood-moon-is-validated-it-will", {})
+            : BOTWI18n.t("renderbloodmoon-estimated-time-remaining-since-the-last-save", {});
 
     $("#bloodMoonThreshold").textContent =
         moon.scheduled
-            ? "Atteint"
-            : `dans ≈ ${bloodMoonDuration(
+            ? BOTWI18n.t("renderbloodmoon-reached", {})
+            : BOTWI18n.t("renderbloodmoon-in", {value0: String(bloodMoonDuration(
                 moon.active_seconds_until_threshold
-            )}`;
+            ))});
 
     $("#bloodMoonScheduled").textContent =
         moon.scheduled
-            ? "Validée"
-            : `dans ≈ ${bloodMoonDuration(
+            ? BOTWI18n.t("renderbloodmoon-validated", {})
+            : BOTWI18n.t("renderbloodmoon-in-2", {value0: String(bloodMoonDuration(
                 moon.active_seconds_until_scheduled
-            )}`;
+            ))});
 
     $("#bloodMoonEvent").textContent =
-        `dans ≈ ${duration}`;
+        BOTWI18n.t("renderbloodmoon-in-3", {value0: String(duration)});
 
     $("#bloodMoonMeasuredAt").textContent =
         savedAt !== "-"
-            ? `Mesure exacte de la sauvegarde à ${savedAt}`
-            : "Mesure exacte de la dernière sauvegarde";
+            ? BOTWI18n.t("renderbloodmoon-exact-value-from-the-save-at", {value0: String(savedAt)})
+            : BOTWI18n.t("renderbloodmoon-exact-measurement-of-the-last-save", {});
 
     $("#bloodMoonInternal").textContent =
-        `Compteur ${
-            Number(moon.timer_value).toLocaleString(
-                "fr-FR",
+        BOTWI18n.t("renderbloodmoon-counter-game-time", {value0: String(Number(moon.timer_value).toLocaleString(
+                BOTWI18n.formatLocale,
                 {
                     maximumFractionDigits: 1
                 }
-            )
-        } / ${
-            Number(moon.timer_target).toLocaleString("fr-FR")
-        } • heure du jeu ${moon.game_time_label}`;
+            )), value1: String(Number(moon.timer_target).toLocaleString(BOTWI18n.formatLocale)), value2: String(moon.game_time_label)});
 
     $("#bloodMoonAccuracy").textContent =
-        `Le compteur baisse uniquement pendant le jeu actif et se recale à chaque sauvegarde.${
-            moon.may_be_delayed
-                ? " Le déclenchement est actuellement susceptible d’être reporté."
-                : ""
-        }`;
+        BOTWI18n.t("renderbloodmoon-the-counter-decreases-only-during-active-play", {value0: String(moon.may_be_delayed
+                ? BOTWI18n.t("renderbloodmoon-the-trigger-is-currently-subject-to-postponement", {})
+                : "")});
 
     $("#bloodMoonProgress").style.width =
         `${Math.max(
@@ -1956,11 +1950,11 @@ function renderDsuSources(state) {
     if (!controllers.length) {
         const option = document.createElement("option");
         option.value = "";
-        option.textContent = "Aucune manette détectée";
+        option.textContent = BOTWI18n.t("renderdsusources-no-controller-detected", {});
         select.appendChild(option);
         select.value = "";
         $("#dsuCapabilities").textContent =
-            "Connecte une manette en USB ou Bluetooth puis attends la détection.";
+            BOTWI18n.t("renderdsusources-connect-a-controller-via-usb-or-bluetooth", {});
         return null;
     }
 
@@ -1968,10 +1962,10 @@ function renderDsuSources(state) {
         const option = document.createElement("option");
         option.value = String(controller.id);
         const suffix = controller.compatible
-            ? " - gyroscope disponible"
+            ? BOTWI18n.t("renderdsusources-gyroscope-available", {})
             : controller.kind === "joycon_single"
-                ? " - associe les deux Joy-Con"
-                : " - gyroscope indisponible";
+                ? BOTWI18n.t("renderdsusources-combine-the-two-joy-cons", {})
+                : BOTWI18n.t("renderdsusources-gyroscope-unavailable", {});
         option.textContent = `${controller.name}${suffix}`;
         option.dataset.compatible = controller.compatible ? "1" : "0";
         select.appendChild(option);
@@ -1985,13 +1979,13 @@ function renderDsuSources(state) {
 
     const vidPid = controllerVidPid(chosen);
     const kind = chosen.kind === "joycon_pair"
-        ? "Paire Joy-Con / grip"
-        : chosen.type || "Manette";
+        ? BOTWI18n.t("renderdsusources-joy-con-pair-grip", {})
+        : chosen.type || BOTWI18n.t("renderdsusources-controller", {});
     $("#dsuCapabilities").textContent = chosen.compatible
-        ? `${kind}${vidPid} • gyroscope + accéléromètre disponibles`
+        ? BOTWI18n.t("renderdsusources-gyroscope-and-accelerometer-available", {value0: String(kind), value1: String(vidPid)})
         : chosen.kind === "joycon_single"
-            ? `${kind}${vidPid} • utilise la paire Joy-Con combinée`
-            : `${kind}${vidPid} • aucun gyroscope exploitable par SDL3`;
+            ? BOTWI18n.t("renderdsusources-uses-the-combined-joy-con-pair", {value0: String(kind), value1: String(vidPid)})
+            : BOTWI18n.t("renderdsusources-no-gyroscope-usable-by-sdl3", {value0: String(kind), value1: String(vidPid)});
     return chosen;
 }
 
@@ -2011,14 +2005,14 @@ function dsuMetric(value, digits = 1, suffix = "") {
 
 function dsuCounter(value) {
     const numeric = Number(value);
-    return Number.isFinite(numeric) ? numeric.toLocaleString("fr-FR") : "-";
+    return Number.isFinite(numeric) ? numeric.toLocaleString(BOTWI18n.formatLocale) : "-";
 }
 
 function renderDsuDiagnostic(state) {
     const diagnostic = state?.diagnostic || {
         status: "inactive",
-        label: "Diagnostic inactif",
-        summary: "Active le gyroscope pour mesurer la qualité du signal."
+        label: BOTWI18n.t("renderdsudiagnostic-inactive-diagnostic", {}),
+        summary: BOTWI18n.t("renderdsudiagnostic-enable-the-gyroscope-to-measure-signal-quality", {})
     };
     const telemetry = state?.telemetry || {};
     const quality = $("#dsuQuality");
@@ -2027,22 +2021,22 @@ function renderDsuDiagnostic(state) {
     $("#dsuQualitySummary").textContent = diagnostic.summary;
     $("#dsuReceivedRate").textContent = dsuMetric(telemetry.received_hz, 1, " Hz");
     $("#dsuSentRate").textContent = Number(telemetry.clients || 0) === 0 && telemetry.sent_hz !== undefined
-        ? "En attente de l’émulateur"
+        ? BOTWI18n.t("renderdsudiagnostic-waiting-for-the-emulator", {})
         : dsuMetric(telemetry.sent_hz, 1, " Hz");
     $("#dsuSampleAge").textContent = dsuMetric(telemetry.sample_age_ms, 1, " ms");
     $("#dsuReceivedJitter").textContent = telemetry.received_jitter_mean_ms === undefined
         ? "-"
-        : `${dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.received_jitter_max_ms, 2, " ms")} max.`;
+        : BOTWI18n.t("renderdsudiagnostic-avg-max", {value0: String(dsuMetric(telemetry.received_jitter_mean_ms, 2, " ms")), value1: String(dsuMetric(telemetry.received_jitter_max_ms, 2, " ms"))});
     $("#dsuSentJitter").textContent = telemetry.sent_jitter_mean_ms === undefined
         ? "-"
-        : `${dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")} moy. • ${dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms")} max.`;
+        : BOTWI18n.t("renderdsudiagnostic-avg-max-2", {value0: String(dsuMetric(telemetry.sent_jitter_mean_ms, 2, " ms")), value1: String(dsuMetric(telemetry.sent_jitter_max_ms, 2, " ms"))});
     $("#dsuTimestampErrors").textContent = telemetry.duplicate_timestamps === undefined
         ? "-"
-        : `${dsuCounter(telemetry.duplicate_timestamps)} doublons • ${dsuCounter(telemetry.regressive_timestamps)} régressifs`;
+        : BOTWI18n.t("renderdsudiagnostic-duplicates-timestamps-out-of-order", {value0: String(dsuCounter(telemetry.duplicate_timestamps)), value1: String(dsuCounter(telemetry.regressive_timestamps))});
     $("#dsuSentPackets").textContent = dsuCounter(telemetry.sent_packets);
     $("#dsuNetworkErrors").textContent = telemetry.send_errors === undefined
         ? "-"
-        : `${dsuCounter(telemetry.send_errors)} UDP • ${dsuCounter(telemetry.invalid_requests)} requêtes invalides`;
+        : BOTWI18n.t("renderdsudiagnostic-udp-invalid-requests", {value0: String(dsuCounter(telemetry.send_errors)), value1: String(dsuCounter(telemetry.invalid_requests))});
     $("#dsuReconnects").textContent = telemetry.disconnects === undefined
         ? "-"
         : `${dsuCounter(telemetry.disconnects)} / ${dsuCounter(telemetry.reconnects)}`;
@@ -2054,8 +2048,8 @@ function renderDsuDiagnostic(state) {
 function renderDsu(state) {
     state = state || {
         state: "error",
-        state_label: "État DSU inaccessible",
-        message: "Le Companion ne peut pas interroger le serveur local.",
+        state_label: BOTWI18n.t("renderdsu-inaccessible-dsu-status", {}),
+        message: BOTWI18n.t("renderdsu-the-companion-cannot-query-the-local-server", {}),
         running: false
     };
 
@@ -2068,9 +2062,9 @@ function renderDsu(state) {
         state.engine_name || runtimePlatform.native_dsu_engine || "DSU";
     $("#dsuControl").title = [
         state.message,
-        state.log_path ? `Journal : ${state.log_path}` : null
+        state.log_path ? BOTWI18n.t("renderdsu-log", {value0: String(state.log_path)}) : null
     ].filter(Boolean).join("\n");
-    $("#toggleDsu").textContent = state.running ? "Désactiver" : "Activer";
+    $("#toggleDsu").textContent = state.running ? BOTWI18n.t("renderdsu-disable", {}) : BOTWI18n.t("renderdsu-enable", {});
     $("#toggleDsu").classList.toggle("active", state.running);
     $("#dsuSource").disabled = dsuBusy || state.running;
     $("#toggleDsu").disabled =
@@ -2108,18 +2102,18 @@ async function loadRuntimePlatform() {
     try {
         const {response, data} = await fetchStartupJson("/api/version");
         if (!response.ok) {
-            throw Error("Plateforme inaccessible");
+            throw Error(BOTWI18n.t("loadruntimeplatform-platform-unavailable", {}));
         }
         runtimePlatform = {
             ...runtimePlatform,
             ...(data.platform || {})
         };
         $("#runtimePlatform").textContent =
-            String(runtimePlatform.label || "Système local").toUpperCase();
+            String(runtimePlatform.label || BOTWI18n.t("loadruntimeplatform-local-system", {})).toUpperCase();
         $("#dsuEngineLabel").textContent =
             runtimePlatform.native_dsu_engine || "DSU";
     } catch (_error) {
-        $("#runtimePlatform").textContent = "SYSTÈME LOCAL";
+        $("#runtimePlatform").textContent = BOTWI18n.t("loadruntimeplatform-local-system-2", {});
     }
 }
 
@@ -2142,7 +2136,7 @@ async function copyText(text) {
     const copied = document.execCommand("copy");
     field.remove();
     if (!copied) {
-        throw Error("Copie impossible dans ce navigateur");
+        throw Error(BOTWI18n.t("copytext-unable-to-copy-in-this-browser", {}));
     }
 }
 
@@ -2164,14 +2158,14 @@ async function refreshDsu() {
         const response = await fetch(`/api/dsu?t=${Date.now()}`, {signal: controller.signal});
         state = await response.json();
         if (!response.ok) {
-            throw Error(state.message || "État DSU inaccessible");
+            throw Error(state.message || BOTWI18n.t("refreshdsu-inaccessible-dsu-status", {}));
         }
         renderDsu(state);
     } catch (error) {
         if (controller.signal.aborted) return;
         renderDsu({
             state: "error",
-            state_label: "État DSU inaccessible",
+            state_label: BOTWI18n.t("refreshdsu-inaccessible-dsu-status-2", {}),
             message: error.message,
             running: false
         });
@@ -2201,9 +2195,9 @@ async function toggleDsu() {
         state = await response.json();
         renderDsu(state);
         if (!response.ok) {
-            throw Error(state.message || "Commande DSU impossible");
+            throw Error(state.message || BOTWI18n.t("toggledsu-dsu-command-failed", {}));
         }
-        toast(stop ? "Gyroscope désactivé" : "Serveur DSU activé - laisse la manette immobile");
+        toast(stop ? BOTWI18n.t("toggledsu-gyroscope-disabled", {}) : BOTWI18n.t("toggledsu-dsu-server-enabled-leaves-the-controller-motionless", {}));
         scheduleDsu(state);
     } catch (error) {
         toast(error.message, true);
@@ -2238,12 +2232,12 @@ async function load(showToast = false) {
         if (!preferencesResponse.ok) {
             throw Error(
                 preferences.erreur ||
-                "Préférences inaccessibles"
+                BOTWI18n.t("load-inaccessible-preferences", {})
             );
         }
 
         preferencesData = preferences;
-        const language = document.documentElement.lang === "en" ? "en" : "fr";
+        const language = BOTWI18n.locale;
         if (!nativeLanguageSaved) {
             const languageController = new AbortController();
             const languageDeadline = setTimeout(() => languageController.abort(), 4000);
@@ -2258,7 +2252,7 @@ async function load(showToast = false) {
                 if (!languageResponse.ok) throw Error(saved.erreur);
                 nativeLanguageSaved = true;
             } catch (error) {
-                toast("La langue des dialogues de lancement n’a pas pu être enregistrée.", true);
+                toast(BOTWI18n.t("load-the-language-for-startup-dialogs-could-not", {}), true);
             } finally {
                 clearTimeout(languageDeadline);
             }
@@ -2273,21 +2267,21 @@ async function load(showToast = false) {
         if (!reportResponse.ok) {
             throw Error(
                 data.erreur ||
-                "Analyse impossible"
+                BOTWI18n.t("load-analysis-failed", {})
             );
         }
 
         if (!manualResponse.ok) {
             throw Error(
                 manual.erreur ||
-                "Suivi manuel inaccessible"
+                BOTWI18n.t("load-manual-tracking-unavailable", {})
             );
         }
 
         if (!routesResponse.ok) {
             throw Error(
                 routes.erreur ||
-                "Itinéraires inaccessibles"
+                BOTWI18n.t("load-inaccessible-routes", {})
             );
         }
 
@@ -2301,7 +2295,7 @@ async function load(showToast = false) {
         if (!catalogResponse.ok) {
             throw Error(
                 catalog.erreur ||
-                "Catalogue inaccessible"
+                BOTWI18n.t("load-catalog-unavailable", {})
             );
         }
 
@@ -2310,7 +2304,7 @@ async function load(showToast = false) {
             data.report_revision_key
         ) {
             throw Error(
-                "La sauvegarde a changé pendant le chargement du catalogue; actualise la page"
+                BOTWI18n.t("load-the-save-has-changed-during-catalog-loading", {})
             );
         }
 
@@ -2361,7 +2355,7 @@ async function load(showToast = false) {
             await saveRouteState();
 
             toast(
-                "Ancien itinéraire transféré dans les données de l’application"
+                BOTWI18n.t("load-old-route-transferred-in-the-application-data", {})
             );
         }
 
@@ -2369,7 +2363,7 @@ async function load(showToast = false) {
 
         if (showToast) {
             toast(
-                "Sauvegarde, suivi et itinéraires relus"
+                BOTWI18n.t("load-back-up-and-restore-manual-tracking-and", {})
             );
         }
     } catch (e) {
@@ -2421,15 +2415,13 @@ function renderAll() {
     const saveDate = localSaveDateTime(s.timestamp, s.date);
 
     $("#saveInfo").textContent =
-        `Slot ${s.slot} • ${
-            s.mode === "expert"
-                ? "Mode Expert"
-                : "Mode normal"
-        } • ${saveDate} • ${s.chemin}`;
+        BOTWI18n.t("ui-slot-2", {value0: String(s.slot), value1: String(s.mode === "expert"
+                ? BOTWI18n.t("renderall-master-mode", {})
+                : BOTWI18n.t("renderall-normal-mode", {})), value2: String(saveDate), value3: String(s.chemin)});
 
     renderSavePreview(s, saveDate);
 
-    const emulatorLabel = String(s.emulateur || "Émulateur").toUpperCase();
+    const emulatorLabel = String(s.emulateur || BOTWI18n.t("renderall-emulator", {})).toUpperCase();
     const runtimeEmulator = $("#runtimeEmulator");
     if (runtimeEmulator) runtimeEmulator.textContent = emulatorLabel;
 
@@ -2444,35 +2436,31 @@ function renderAll() {
     );
 
     $("#mapScore").textContent =
-        `${mapScore.faits.toLocaleString("fr-FR")} marqueurs sur ${mapScore.total.toLocaleString("fr-FR")}`;
+        BOTWI18n.t("renderall-markers-on", {value0: String(mapScore.faits.toLocaleString(BOTWI18n.formatLocale)), value1: String(mapScore.total.toLocaleString(BOTWI18n.formatLocale))});
 
     const formula =
         mapScore.selected_mode === "dlc"
-            ? "Formule jeu + DLC"
-            : "Formule jeu de base";
+            ? BOTWI18n.t("renderall-base-game-dlc-formula", {})
+            : BOTWI18n.t("renderall-formula-basic-game", {});
 
     $("#mapStatus").textContent =
         mapScore.visible_dans_le_jeu
-            ? `Pourcentage officiel de la carte actuellement visible dans BOTW. ${formula}${
-                mapScore.selection === "automatique"
-                    ? " sélectionnée automatiquement."
-                    : " imposée manuellement."
-            }`
-            : `Prévision exacte du pourcentage de carte. Ce compteur reste masqué dans BOTW jusqu’à la première victoire contre Ganon. ${formula}${
-                mapScore.selection === "automatique"
-                    ? " sélectionnée automatiquement."
-                    : " imposée manuellement."
-            }`;
+            ? BOTWI18n.t("renderall-official-percentage-of-the-map-currently-visible", {value0: String(formula), value1: String(mapScore.selection === "automatique"
+                    ? BOTWI18n.t("renderall-selected-automatically", {})
+                    : BOTWI18n.t("renderall-imposed-manually", {}))})
+            : BOTWI18n.t("renderall-exact-prediction-of-map-completion-this-counter", {value0: String(formula), value1: String(mapScore.selection === "automatique"
+                    ? BOTWI18n.t("renderall-selected-automatically-2", {})
+                    : BOTWI18n.t("renderall-imposed-manually-2", {}))});
 
     const labels = {
-        korogus: "Korogus",
-        sanctuaires_base: "Sanctuaires",
+        korogus: BOTWI18n.t("renderall-koroks", {}),
+        sanctuaires_base: BOTWI18n.t("renderall-shrines", {}),
         marqueurs_carte:
-            "Lieux + tours + créatures",
+            BOTWI18n.t("renderall-places-towers-creatures", {}),
         sanctuaires_dlc:
-            "Sanctuaires DLC",
+            BOTWI18n.t("renderall-shrines-dlc", {}),
         donjon_final_dlc:
-            "Donjon final DLC"
+            BOTWI18n.t("renderall-final-dlc-dungeon", {})
     };
 
     $("#mapBreakdown").innerHTML =
@@ -2497,8 +2485,8 @@ function renderAll() {
 
     $("#score").textContent =
         score.available
-            ? `${score.faits.toLocaleString("fr-FR")} éléments validés sur ${score.total.toLocaleString("fr-FR")}`
-            : `${score.label} indisponible pour cette sauvegarde`;
+            ? BOTWI18n.t("renderall-completed-items-out-of", {value0: String(score.faits.toLocaleString(BOTWI18n.formatLocale)), value1: String(score.total.toLocaleString(BOTWI18n.formatLocale))})
+            : BOTWI18n.t("renderall-unavailable-for-this-save", {value0: String(score.label)});
 
     $("#scoreNote").textContent = score.note;
     renderCompletionBlockers(score);
@@ -2533,7 +2521,7 @@ function renderAll() {
     const old = $("#region").value;
 
     $("#region").innerHTML =
-        '<option value="all">Toutes les régions</option>' +
+        BOTWI18n.t("renderall-all-regions", {value0: String(`</option>`), value1: String(`<option value="all">`)}) +
         regions
             .map(x => `<option>${esc(x)}</option>`)
             .join("");
@@ -2553,18 +2541,18 @@ function renderAll() {
 }
 
 function renderSavePreview(save, saveDate) {
-    const mode = save.mode === "expert" ? "Expert" : "normal",
-        emulator = save.emulateur || "Émulateur",
-        platform = save.plateforme || runtimePlatform.label || "Système local",
+    const mode = save.mode === "expert" ? BOTWI18n.t("rendersavepreview-master-mode", {}) : BOTWI18n.t("rendersavepreview-normal-mode", {}),
+        emulator = save.emulateur || BOTWI18n.t("rendersavepreview-emulator", {}),
+        platform = save.plateforme || runtimePlatform.label || BOTWI18n.t("rendersavepreview-local-system", {}),
         revision = String(report.report_revision_key || `${save.slot}:${save.date}`),
         image = $("#saveCaption"),
         fallback = $("#saveCaptionFallback");
 
-    $("#saveSlotTitle").textContent = `Slot ${save.slot} • Mode ${mode}`;
-    $("#saveSlotDate").textContent = `Dernière sauvegarde : ${saveDate}`;
+    $("#saveSlotTitle").textContent = BOTWI18n.t("rendersavepreview-slot", {value0: String(save.slot), value1: String(mode)});
+    $("#saveSlotDate").textContent = BOTWI18n.t("rendersavepreview-latest-save", {value0: String(saveDate)});
     $("#saveSlotSource").textContent = `${emulator} • ${platform}`;
-    $("#savePreview").title = save.detection_mode || "Slot sélectionné automatiquement";
-    fallback.textContent = `SLOT ${save.slot}`;
+    $("#savePreview").title = save.detection_mode || BOTWI18n.t("rendersavepreview-slot-selected-automatically", {});
+    fallback.textContent = BOTWI18n.t("ui-slot", {value0: String(save.slot)});
 
     if (saveCaptionRevision === revision) {
         return;
@@ -2573,7 +2561,7 @@ function renderSavePreview(save, saveDate) {
     saveCaptionRevision = revision;
     image.hidden = true;
     fallback.hidden = false;
-    image.alt = `Aperçu du slot ${save.slot}, mode ${mode}, sauvegardé le ${saveDate}`;
+    image.alt = BOTWI18n.t("rendersavepreview-preview-of-slot-mode-saved-on", {value0: String(save.slot), value1: String(mode), value2: String(saveDate)});
     image.dataset.revision = revision;
     image.onload = () => {
         if (image.dataset.revision === revision) {
@@ -2593,7 +2581,7 @@ function renderSavePreview(save, saveDate) {
 function syncDate(value) {
     return value
         ? new Date(value).toLocaleTimeString(
-            "fr-FR",
+            BOTWI18n.formatLocale,
             {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -2609,13 +2597,13 @@ function localSaveDateTime(timestamp, fallback = null) {
         ? new Date(numeric * 1000)
         : (fallback ? new Date(fallback) : null);
     if (!date || Number.isNaN(date.getTime())) return "-";
-    const localDate = new Intl.DateTimeFormat("fr-FR", {
+    const localDate = new Intl.DateTimeFormat(BOTWI18n.formatLocale, {
         dateStyle: "short"
     }).format(date);
-    const localTime = new Intl.DateTimeFormat("fr-FR", {
+    const localTime = new Intl.DateTimeFormat(BOTWI18n.formatLocale, {
         timeStyle: "medium"
     }).format(date);
-    return `${localDate} à ${localTime}`;
+    return BOTWI18n.t("localsavedatetime-at", {value0: String(localDate), value1: String(localTime)});
 }
 
 function localSaveTime(timestamp, fallback = null) {
@@ -2624,7 +2612,7 @@ function localSaveTime(timestamp, fallback = null) {
         ? new Date(numeric * 1000)
         : (fallback ? new Date(fallback) : null);
     if (!date || Number.isNaN(date.getTime())) return "-";
-    return new Intl.DateTimeFormat("fr-FR", {
+    return new Intl.DateTimeFormat(BOTWI18n.formatLocale, {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
@@ -2641,29 +2629,29 @@ function updateSync(meta, error = null) {
 
     $("#syncStatus").textContent =
         error
-            ? "Synchronisation temporairement indisponible"
+            ? BOTWI18n.t("updatesync-synchronization-temporarily-unavailable", {})
             : meta.status_label ||
-                "Première lecture en attente";
+                BOTWI18n.t("updatesync-first-reading-pending", {});
 
     $("#syncDot").className =
         `sync-${status}`;
 
     const mode =
         meta.save_mode === "expert"
-            ? "Expert"
+            ? BOTWI18n.t("updatesync-master-mode", {})
             : meta.save_mode === "normal"
                 ? "normal"
                 : "-";
 
     const candidate =
         meta.candidate_slot
-            ? ` • candidat ${meta.candidate_slot}`
+            ? BOTWI18n.t("updatesync-candidate", {value0: String(meta.candidate_slot)})
             : "";
 
     $("#syncTimes").textContent =
         error
-            ? `${error} • dernier rapport conservé`
-            : `Dernière lecture réussie à ${syncDate(meta.last_success_at)} • sauvegarde interne à ${localSaveTime(meta.save_timestamp, meta.save_timestamp_at)} • slot ${meta.slot || "-"} (${mode})${candidate} • révision ${meta.report_revision || 0}`;
+            ? BOTWI18n.t("updatesync-last-report-retained", {value0: String(error)})
+            : BOTWI18n.t("updatesync-last-successful-read-at-internal-save-at", {value0: String(syncDate(meta.last_success_at)), value1: String(localSaveTime(meta.save_timestamp, meta.save_timestamp_at)), value2: String(meta.slot || "-"), value3: String(mode), value4: String(candidate), value5: String(meta.report_revision || 0)});
 
     const events = meta.events || [];
 
@@ -2675,7 +2663,7 @@ function updateSync(meta, error = null) {
                         `<p><time>${esc(syncDate(event.at))}</time><span>${esc(event.message)}</span></p>`
                 )
                 .join("")
-            : '<p>Aucun événement.</p>';
+            : BOTWI18n.t("updatesync-no-event", {value0: String(`</p>`), value1: String(`<p>`)});
 }
 
 function scheduleSync() {
@@ -2722,7 +2710,7 @@ async function sendHeartbeat() {
 async function quitCompanion() {
     if (
         !confirm(
-            "Arrêter BOTW Companion ? Le suivi manuel et les itinéraires déjà enregistrés seront conservés."
+            BOTWI18n.t("quitcompanion-stop-botw-companion-manual-tracking-and-previously", {})
         )
     ) {
         return;
@@ -2743,7 +2731,7 @@ async function quitCompanion() {
     }
 
     document.body.innerHTML =
-        `<main class="shutdownPage"><div class="panel"><h1>BOTW Companion est arrêté</h1><p>${esc(runtimePlatform.relaunch_hint)}</p></div></main>`;
+        BOTWI18n.t("quitcompanion-botw-companion-has-stopped", {value0: String(esc(runtimePlatform.relaunch_hint)), value1: String(`</main>`), value2: String(`</div>`), value3: String(`</p>`), value4: String(`<p>`), value5: String(`</h1>`), value6: String(`<h1>`), value7: String(`<div class="panel">`), value8: String(`<main class="shutdownPage">`)});
 }
 
 async function checkSync(force = false) {
@@ -2753,7 +2741,7 @@ async function checkSync(force = false) {
         updateSync({
             status: "analyse",
             status_label:
-                "Lecture immédiate demandée",
+                BOTWI18n.t("checksync-immediate-reading-required", {}),
             events:
                 report?.synchronisation?.events || []
         });
@@ -2768,7 +2756,7 @@ async function checkSync(force = false) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Synchronisation impossible"
+                BOTWI18n.t("checksync-synchronization-failed", {})
             );
         }
 
@@ -2776,14 +2764,14 @@ async function checkSync(force = false) {
             await load(false);
 
             toast(
-                "Nouvelle sauvegarde analysée et catalogue actualisé"
+                BOTWI18n.t("checksync-new-save-analyzed-and-updated-catalog", {})
             );
         } else {
             updateSync(data.synchronisation);
 
             if (force) {
                 toast(
-                    "Sauvegarde relue - contenu inchangé"
+                    BOTWI18n.t("checksync-re-read-save-unchanged-content", {})
                 );
             }
         }
@@ -2891,23 +2879,23 @@ function renderFilterNav() {
                                     ).length,
                                 progress =
                                     trackable.length
-                                        ? `${done.toLocaleString("fr-FR")}/${trackable.length.toLocaleString("fr-FR")}`
-                                        : `${items.length.toLocaleString("fr-FR")} pts`,
+                                        ? `${done.toLocaleString(BOTWI18n.formatLocale)}/${trackable.length.toLocaleString(BOTWI18n.formatLocale)}`
+                                        : `${items.length.toLocaleString(BOTWI18n.formatLocale)} pts`,
                                 hint =
                                     trackable.length
-                                        ? `${done} terminé${done > 1 ? 's' : ''} sur ${trackable.length}`
-                                        : `${items.length} point${items.length > 1 ? 's' : ''} informatif${items.length > 1 ? 's' : ''} - sans statut terminé`;
+                                        ? BOTWI18n.t("renderfilternav-completed-of", {value0: String(done), value1: String(done > 1 ? 's' : ''), value2: String(trackable.length), count: done})
+                                        : BOTWI18n.t("renderfilternav-informational-point-no-completion-status", {value0: String(items.length), value1: String(items.length > 1 ? 's' : ''), value2: String(items.length > 1 ? 's' : ''), count: items.length});
 
                             return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${progress}</small></label>`
                         })
                         .join("");
 
-                return `<details class="filterGroup" open><summary><span>${esc(group.label)}</span><small title="Filtres actifs">${checked}/${visibleTypes.length} filtres</small></summary><div>${types}</div></details>`;
+                return BOTWI18n.t("renderfilternav-filters", {value0: String(esc(group.label)), value1: String(checked), value2: String(visibleTypes.length), value3: String(types), value4: String(`</details>`), value5: String(`</div>`), value6: String(`<div>`), value7: String(`</summary>`), value8: String(`</small>`), value10: String(`<small title="${BOTWI18n.t("renderfilternav-active-filters", {})}">`), value11: String(`</span>`), value12: String(`<span>`), value13: String(`<summary>`), value14: String(`<details class="filterGroup" open>`)});
             })
             .join("");
 
     $("#categories").innerHTML =
-        `<div class="filterHeading"><b>Filtres de carte</b><span><button data-filter-action="all">Tout</button><button data-filter-action="none">Aucun</button></span></div>${groups}`;
+        BOTWI18n.t("renderfilternav-map-filters-all-none", {value0: String(groups), value1: String(`</div>`), value2: String(`</span>`), value3: String(`</button>`), value4: String(`<button data-filter-action="none">`), value5: String(`</button>`), value6: String(`<button data-filter-action="all">`), value7: String(`<span>`), value8: String(`</b>`), value9: String(`<b>`), value10: String(`<div class="filterHeading">`)});
 
     document
         .querySelectorAll(
@@ -3058,13 +3046,13 @@ function armorLine(x) {
 
     const ready =
         next?.possible
-            ? " • matériaux prêts"
+            ? BOTWI18n.t("armorline-materials-ready", {})
             : "";
 
     return `${x.etoiles || "☆☆☆☆"}${
         x.possede
-            ? ` • niveau ${x.niveau}/4`
-            : " • non possédée"
+            ? BOTWI18n.t("armorline-level-4", {value0: String(x.niveau)})
+            : BOTWI18n.t("armorline-not-possessed", {})
     }${ready}`;
 }
 
@@ -3074,10 +3062,10 @@ function renderItems() {
     const items = filtered();
 
     $("#resultCount").textContent =
-        `${items.length} résultat${items.length > 1 ? 's' : ''}`;
+        BOTWI18n.t("renderitems-result", {value0: String(items.length), value1: String(items.length > 1 ? 's' : ''), count: items.length});
 
     $("#mapCount").textContent =
-        `${items.filter(x => x.x != null && x.z != null).length} localisés`;
+        BOTWI18n.t("renderitems-with-coordinates", {value0: String(items.filter(x => x.x != null && x.z != null).length)});
 
     renderFilterScopeNotice(items);
 
@@ -3092,7 +3080,7 @@ function renderItems() {
     $("#listTitle").textContent =
         labels.length === 1
             ? labels[0]
-            : "Éléments filtrés";
+            : BOTWI18n.t("renderitems-filtered-elements", {});
 
     const planned = routeIds();
 
@@ -3115,7 +3103,7 @@ function renderItems() {
                             x.subtype,
                             x.region,
                             x.nearby
-                                ? `près de ${x.nearby}`
+                                ? BOTWI18n.t("renderitems-near", {value0: String(x.nearby)})
                                 : null,
                             x.trial,
                             x.quest,
@@ -3127,16 +3115,16 @@ function renderItems() {
                             x.content_origin !== "base"
                                 ? x.content_origin_label
                                 : null
-                        ].filter(Boolean).join(" • "))}</span>${x.raison ? `<span class="itemMeta">${esc(x.raison)}</span>` : ""}</span><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span></button>${x.x != null ? `<button type="button" class="routeAdd ${planned.has(itemId(x)) ? 'active' : ''}" data-route-add="${esc(itemId(x))}" aria-label="${planned.has(itemId(x)) ? 'Retirer' : 'Ajouter'} ${esc(x.name || x.display_name || x.id)} ${planned.has(itemId(x)) ? 'de' : 'à'} l’itinéraire" title="${planned.has(itemId(x)) ? 'Retirer de' : 'Ajouter à'} l’itinéraire">${planned.has(itemId(x)) ? '✓' : '+'}</button>` : ""}</div>`
+                        ].filter(Boolean).join(" • "))}</span>${x.raison ? `<span class="itemMeta">${esc(x.raison)}</span>` : ""}</span><span class="coords">${x.x != null ? `X ${x.x.toFixed(0)} · Z ${x.z.toFixed(0)}` : ""}</span></button>${x.x != null ? BOTWI18n.t("renderitems", {value6: String(planned.has(itemId(x)) ? '✓' : '+'), value7: String(`</button>`), value10: String(`<button type="button" class="routeAdd ${planned.has(itemId(x)) ? 'active' : ''}" data-route-add="${esc(itemId(x))}" aria-label="${BOTWI18n.t("renderitems-the-route-2", {value2: String(planned.has(itemId(x)) ? BOTWI18n.t("renderitems-remove", {}) : BOTWI18n.t("renderitems-add", {})),value3: String(esc(x.name || x.display_name || x.id)),value4: String(planned.has(itemId(x)) ? BOTWI18n.t("renderitems-of", {}) : BOTWI18n.t("renderitems-at", {}))})}" title="${BOTWI18n.t("renderitems-the-route", {value5: String(planned.has(itemId(x)) ? BOTWI18n.t("renderitems-remove-from", {}) : BOTWI18n.t("renderitems-add-to", {}))})}">`)}) : ""}</div>`
                 )
                 .join("") +
 
                 (
                     more
-                        ? `<button id="showMoreResults" class="showMoreResults">Afficher ${Math.min(LIST_PAGE_SIZE, more)} résultats supplémentaires • ${more.toLocaleString("fr-FR")} restant${more > 1 ? 's' : ''}</button>`
+                        ? BOTWI18n.t("renderitems-show-more-results-remaining", {value0: String(Math.min(LIST_PAGE_SIZE, more)), value1: String(more.toLocaleString(BOTWI18n.formatLocale)), value2: String(more > 1 ? 's' : ''), value3: String(`</button>`), value4: String(`<button id="showMoreResults" class="showMoreResults">`), count: more})
                         : ""
                 )
-            : '<div class="empty">Aucun élément avec ces filtres.</div>';
+            : BOTWI18n.t("renderitems-no-items-with-these-filters", {value0: String(`</div>`), value1: String(`<div class="empty">`)});
 
     renderMap(items);
 
@@ -3219,15 +3207,15 @@ function renderFilterScopeNotice(items) {
     const warning =
         mode === "all" &&
         saveMode === "normal"
-            ? `Affichage volontaire de tous les modes : ${expert.toLocaleString("fr-FR")} placement${expert > 1 ? 's' : ''} exclusif${expert > 1 ? 's' : ''} au mode Expert est inclus.`
+            ? BOTWI18n.t("renderfilterscopenotice-all-modes-are-displayed-placement-exclusive-to", {value0: String(expert.toLocaleString(BOTWI18n.formatLocale)), value1: String(expert > 1 ? 's' : ''), value2: String(expert > 1 ? 's' : ''), count: expert})
             : mode === "normal"
-                ? "Les placements exclusifs au mode Expert sont masqués."
+                ? BOTWI18n.t("renderfilterscopenotice-placements-exclusive-to-master-mode-are-hidden", {})
                 : mode === "expert"
-                    ? "Les placements communs et exclusifs au mode Expert sont affichables."
+                    ? BOTWI18n.t("renderfilterscopenotice-common-placements-and-placements-exclusive-to-master", {})
                     : "";
 
     $("#filterScopeNotice").innerHTML =
-        `<b>Périmètre contrôlé</b><span>${esc(warning)} ${map.toLocaleString("fr-FR")} sur Hyrule • ${interior.toLocaleString("fr-FR")} sur cartes intérieures • ${list.toLocaleString("fr-FR")} seulement dans la liste.</span>${audit.status && audit.status !== "complete" ? '<strong>Les compteurs de référence nécessitent une vérification.</strong>' : ''}`;
+        BOTWI18n.t("renderfilterscopenotice-verified-coverage-on-hyrule-on-interior-maps", {value0: String(esc(warning)), value1: String(map.toLocaleString(BOTWI18n.formatLocale)), value2: String(interior.toLocaleString(BOTWI18n.formatLocale)), value3: String(list.toLocaleString(BOTWI18n.formatLocale)), value4: String(audit.status && audit.status !== "complete" ? BOTWI18n.t("renderfilterscopenotice-the-reference-counters-require-verification", {value0: String(`</strong>`), value1: String(`<strong>`)}) : ''), value5: String(`</span>`), value6: String(`<span>`), value7: String(`</b>`), value8: String(`<b>`)});
 }
 
 async function select(id, fromList = false) {
@@ -3276,7 +3264,7 @@ async function select(id, fromList = false) {
     $("#closeDetails").focus();
 
     $("#detailContent").innerHTML =
-        '<div class="detailLoading"><b id="detailTitle">Chargement de la fiche…</b><small>Les détails sont récupérés localement à la demande.</small></div>';
+        BOTWI18n.t("select-loading-details-details-are-retrieved-locally-on", {value0: String(`</div>`), value1: String(`</small>`), value2: String(`<small>`), value3: String(`</b>`), value4: String(`<b id="detailTitle">`), value5: String(`<div class="detailLoading">`)});
 
     try {
         let detailed =
@@ -3293,7 +3281,7 @@ async function select(id, fromList = false) {
             if (!response.ok) {
                 throw Error(
                     payload.erreur ||
-                    "Fiche inaccessible"
+                    BOTWI18n.t("select-details-unavailable", {})
                 );
             }
 
@@ -3302,7 +3290,7 @@ async function select(id, fromList = false) {
                 report.report_revision_key
             ) {
                 throw Error(
-                    "Cette fiche appartient à une autre révision de la sauvegarde"
+                    BOTWI18n.t("select-this-sheet-belongs-to-another-revision-of", {})
                 );
             }
 
@@ -3728,7 +3716,7 @@ function renderMap(items) {
                         points.length
                 };
 
-            return `<button type="button" title="Zoomer sur ${group.length} éléments" aria-label="Zoomer sur ${group.length} éléments" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${group.length}</button>`;
+            return BOTWI18n.t("rendermap", {value6: String(group.length), value7: String(`</button>`), value10: String(`<button type="button" title="${BOTWI18n.t("rendermap-zoom-to-items-2", {value0: String(group.length)})}" aria-label="${BOTWI18n.t("rendermap-zoom-to-items", {value1: String(group.length)})}" data-cluster-x="${p.x}" data-cluster-y="${p.y}" class="marker cluster" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">`)});
         }).join("");
 
     const selected =
@@ -3753,7 +3741,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button type="button" title="${esc(point.label)}" aria-label="Étape ${index + 1} : ${esc(point.label)}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return BOTWI18n.t("rendermap-2", {value6: String(index + 1), value7: String(`</button>`), value9: String(`<button type="button" title="${esc(point.label)}" aria-label="${BOTWI18n.t("rendermap-step", {value1: String(index + 1),value2: String(esc(point.label))})}" data-route-index="${index}" class="marker waypoint" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">`)})
             }
         ).join("");
 
@@ -3768,7 +3756,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(point);
 
-                return `<button type="button" title="Étape ${index + 1} - ${esc(point.name)}" aria-label="Étape planifiée ${index + 1} : ${esc(point.name)}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? 'locked' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">${index + 1}</button>`
+                return BOTWI18n.t("rendermap-3", {value8: String(index + 1), value9: String(`</button>`), value12: String(`<button type="button" title="${BOTWI18n.t("rendermap-step-2", {value0: String(index + 1),value1: String(esc(point.name))})}" aria-label="${BOTWI18n.t("rendermap-planned-step", {value2: String(index + 1),value3: String(esc(point.name))})}" data-planner-index="${index}" class="marker plannerWaypoint ${point.locked ? 'locked' : ''}" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">`)})
             }
         ).join("");
 
@@ -3778,7 +3766,7 @@ function renderMap(items) {
                 const p =
                     worldPoint(start);
 
-                return `<button type="button" title="Départ - ${esc(start.label || 'point personnalisé')}" aria-label="Point de départ : ${esc(start.label || 'point personnalisé')}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">D</button>`
+                return BOTWI18n.t("rendermap-d", {value4: String(`</button>`), value7: String(`<button type="button" title="${BOTWI18n.t("rendermap-start", {value0: String(esc(start.label || BOTWI18n.t("rendermap-custom-point", {})))})}" aria-label="${BOTWI18n.t("rendermap-starting-point", {value1: String(esc(start.label || BOTWI18n.t("rendermap-custom-point-2", {})))})}" class="marker routeStart" style="left:${p.x / MAP_W * 100}%;top:${p.y / MAP_H * 100}%">`)})
             })()
             : "";
 
@@ -3917,66 +3905,66 @@ function renderMap(items) {
 function helpFor(x) {
     const coord =
         x.x != null
-            ? `Le marqueur est placé aux coordonnées X ${x.x.toFixed(1)}, Z ${x.z.toFixed(1)}.`
-            : "Cet objectif n’a pas encore de coordonnées fiables dans la base locale.";
+            ? BOTWI18n.t("helpfor-the-marker-is-placed-at-coordinates-x", {value0: String(x.x.toFixed(1)), value1: String(x.z.toFixed(1))})
+            : BOTWI18n.t("helpfor-this-objective-does-not-yet-have-reliable", {});
 
     if (x.farm) {
-        return `${coord} Ce point de farm reste toujours affiché : l’ennemi réapparaît après une lune de sang, même si une victoire antérieure est enregistrée. ${x.scalable ? "Sa famille et sa position sont fiables, mais sa variante peut avoir évolué avec la difficulté du monde." : "La variante statique indiquée provient des données de placement du jeu."}`;
+        return BOTWI18n.t("helpfor-this-farm-point-is-always-displayed-the", {value0: String(coord), value1: String(x.scalable ? BOTWI18n.t("helpfor-its-family-and-location-are-reliable-but", {}) : BOTWI18n.t("helpfor-the-static-variant-shown-comes-from-the", {}))});
     }
 
     const guide = {
         sanctuaires:
-            `${coord} Active le point de téléportation, termine l’épreuve${x.trial ? ` « ${x.trial} »` : ""} et examine l’autel. Pense au coffre facultatif avant de sortir.${x.quest ? ` L’accès dépend de la quête « ${x.quest} ».` : ""}`,
+            BOTWI18n.t("helpfor-activate-the-travel-point-complete-the-trial", {value0: String(coord), value1: String(x.trial ? ` « ${x.trial} »` : ""), value2: String(x.quest ? BOTWI18n.t("helpfor-access-depends-on-the-quest", {value0: String(x.quest)}) : "")}),
 
         coffres_sanctuaires:
-            `${coord} Retourne dans ce sanctuaire et vérifie chaque salle avant l’autel. ${x.raison || "Le coffre n’est pas validé dans la sauvegarde."}`,
+            BOTWI18n.t("helpfor-return-to-this-shrine-and-check-every", {value0: String(coord), value1: String(x.raison || BOTWI18n.t("helpfor-the-chest-is-not-marked-as-opened", {}))}),
 
         coffres_monde:
-            `${coord} Le coffre possède un flag permanent : son ouverture sera détectée à la prochaine sauvegarde.${x.contenu ? ` Contenu identifié : ${x.contenu}.` : ""}`,
+            BOTWI18n.t("helpfor-this-chest-has-a-permanent-flag-opening", {value0: String(coord), value1: String(x.contenu ? BOTWI18n.t("helpfor-identified-content", {value0: String(x.contenu)}) : "")}),
 
         coffres_donjons:
-            `Explore le secteur ${x.secteur || "du donjon"} avant de le quitter. Ce coffre possède un flag permanent et sera validé automatiquement après sauvegarde.`,
+            BOTWI18n.t("helpfor-explore-the-area-before-leaving-this-chest", {value0: String(x.secteur || BOTWI18n.t("helpfor-the-dungeon", {}))}),
 
         korogus:
-            `${coord} Cherche le petit puzzle environnemental autour du point : pierres, cercle, fleurs, moulinet, ballon, souche ou offrande. Le type exact du puzzle n’est pas conservé dans la sauvegarde.`,
+            BOTWI18n.t("helpfor-look-for-a-small-environmental-puzzle-near", {value0: String(coord)}),
 
         tours:
-            `${coord} Atteins le sommet puis examine le terminal Sheikah. La prochaine sauvegarde validera automatiquement la tour.`,
+            BOTWI18n.t("helpfor-reach-the-top-and-examine-the-sheikah", {value0: String(coord)}),
 
         lieux:
-            `${coord} Traverse précisément cette zone à pied jusqu’à ce que son nom apparaisse à l’écran. Une simple proximité ou un survol peut ne pas déclencher le flag.`,
+            BOTWI18n.t("helpfor-walk-through-this-area-until-its-name", {value0: String(coord)}),
 
         quetes_sanctuaires:
-            `${coord} Ce premier marqueur est le départ de la quête. La destination ${x.sanctuaire ? `« ${x.sanctuaire} »` : "du sanctuaire"} est listée séparément ci-dessous, avec les éventuels objectifs intermédiaires.`,
+            BOTWI18n.t("helpfor-this-first-marker-is-the-start-of", {value0: String(coord), value1: String(x.sanctuaire ? `« ${x.sanctuaire} »` : BOTWI18n.t("helpfor-the-shrine", {}))}),
 
         quetes_principales:
-            `${coord} Commence par le marqueur de départ puis consulte les objectifs détaillés ci-dessous. Le compagnon attend le flag officiel de fin, pas seulement l’activation de la quête.`,
+            BOTWI18n.t("helpfor-start-at-the-first-marker-then-check", {value0: String(coord)}),
 
         quetes_secondaires:
-            `${coord} Le premier marqueur indique où commencer ou, pour le crossover Xenoblade, le premier indice. Le statut actuel est « ${x.statut} »${x.region ? ` dans la région ${x.region}` : ""}.`,
+            BOTWI18n.t("helpfor-the-first-marker-shows-where-to-start", {value0: String(coord), value1: String(x.statut), value2: String(x.region ? BOTWI18n.t("helpfor-in-the-region", {value0: String(x.region)}) : "")}),
 
         souvenirs:
-            `${coord} Rejoins précisément le marqueur puis déclenche la scène. Une simple visite du lieu ne suffit pas : la cinématique doit avoir été enregistrée.`,
+            BOTWI18n.t("helpfor-reach-the-marker-and-then-trigger-the", {value0: String(coord)}),
 
         hinox:
-            `${coord} Abats ce Hinox puis effectue une sauvegarde. Son flag individuel est celui utilisé pour la médaille de Kilton.`,
+            BOTWI18n.t("helpfor-defeat-this-hinox-then-save-your-game", {value0: String(coord)}),
 
         talus:
-            `${coord} Abats ce Lithorok puis effectue une sauvegarde. Attaque le gisement sur son corps pour infliger des dégâts.`,
+            BOTWI18n.t("helpfor-defeat-this-stone-talus-then-save-your", {value0: String(coord)}),
 
         moldarquors:
-            `${coord} Attire le Moldarquor avec une bombe posée au sol, fais-la exploser lorsqu’il bondit, puis attaque-le et sauvegarde.`,
+            BOTWI18n.t("helpfor-lure-the-molduga-with-a-bomb-on", {value0: String(coord)}),
 
         compendium:
-            `Photographie ${x.name} avec le module appareil photo jusqu’à obtenir l’identification, ou achète l’image auprès du laboratoire antique d’Elimith lorsque cette option est disponible.`,
+            BOTWI18n.t("helpfor-photograph-with-the-camera-rune-until-it", {value0: String(x.name)}),
 
         armures:
-            `Obtiens au moins une fois ${x.name}. La possession et son niveau réel (${x.etoiles || "☆☆☆☆"}) sont lus directement dans l’inventaire de la sauvegarde.`,
+            BOTWI18n.t("helpfor-obtain-at-least-once-ownership-and-its", {value0: String(x.name), value1: String(x.etoiles || "☆☆☆☆")}),
 
         armures_max:
             x.possede
-                ? `Améliore ${x.name} chez une Grande Fée jusqu’au niveau 4. Niveau actuellement détecté : ${x.niveau}/4 (${x.etoiles}).`
-                : `Obtiens d’abord ${x.name}, puis améliore-la quatre fois auprès des Grandes Fées.`,
+                ? BOTWI18n.t("helpfor-upgrade-at-a-great-fairy-fountain-to", {value0: String(x.name), value1: String(x.niveau), value2: String(x.etoiles)})
+                : BOTWI18n.t("helpfor-first-obtain-then-upgrade-it-four-times", {value0: String(x.name)}),
     };
 
     return guide[x.categorie] || coord;
@@ -4000,22 +3988,22 @@ function guideList(
 
 function frenchSourceName(name, itemName) {
     if (name.startsWith("Zelda Wiki - ")) {
-        return `Zelda Wiki - article sur « ${itemName} »`;
+        return BOTWI18n.t("frenchsourcename-zelda-wiki-article-about", {value0: String(itemName)});
     }
 
     const exact = {
         "BOTW Event Flow Viewer - flux de quête":
-            "Visualiseur des flux d’événements BOTW",
+            BOTWI18n.t("frenchsourcename-viewer-of-botw-event-flows", {}),
         "BOTW Object Map":
-            "Carte des objets BOTW (ObjMap)",
+            BOTWI18n.t("frenchsourcename-map-of-botw-objects-objmap", {}),
         "Zelda Dungeon Interactive Map":
-            "Zelda Dungeon - carte interactive",
+            BOTWI18n.t("frenchsourcename-zelda-dungeon-interactive-map", {}),
         "Zelda Dungeon - Leviathan Bones":
-            "Zelda Dungeon - article sur les fossiles de baleine",
+            BOTWI18n.t("frenchsourcename-zelda-dungeon-article-on-whale-fossils", {}),
         "Zelda Dungeon - Sunken Treasure":
-            "Zelda Dungeon - article sur les trésors engloutis",
+            BOTWI18n.t("frenchsourcename-zelda-dungeon-article-on-the-sunken-treasures", {}),
         "Zelda Dungeon - Épreuves de l'Épée":
-            "Zelda Dungeon - Épreuves de l’épée"
+            BOTWI18n.t("frenchsourcename-zelda-dungeon-trials-of-the-sword", {})
     };
 
     return exact[name] || name;
@@ -4026,56 +4014,56 @@ function guideSources(sources, itemName) {
         return "";
     }
 
-    return `<div class="guideSources"><small>SOURCES DE CONTRÔLE</small>${sources.map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(frenchSourceName(source.name, itemName))} ↗</a>`).join("")}</div>`;
+    return BOTWI18n.t("guidesources-reference-sources", {value0: String(sources.map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(frenchSourceName(source.name, itemName))} ↗</a>`).join("")), value1: String(`</div>`), value2: String(`</small>`), value3: String(`<small>`), value4: String(`<div class="guideSources">`)});
 }
 
 function renderDetails(x) {
     const category =
         report.categories[x.categorie]?.label ||
         x.filter_label ||
-        "Information cartographique";
+        BOTWI18n.t("renderdetails-map-information", {});
 
     const displayLabels = {
         map_and_list:
-            "Carte d'Hyrule et liste",
+            BOTWI18n.t("renderdetails-hyrule-map-and-list", {}),
         interior_only:
-            "Carte intérieure et liste",
+            BOTWI18n.t("renderdetails-internal-map-and-list", {}),
         list_only:
-            "Liste seulement"
+            BOTWI18n.t("renderdetails-list-only", {})
     };
 
     const facts = [
-        ["Région", x.region],
-        ["Origine", x.content_origin_label],
-        ["Placement", x.placement_label],
-        ["Couverture", x.coverage_label],
-        ["Affichage", displayLabels[x.display_scope]],
-        ["Localisation", x.location_status_label],
-        ["Mode", x.game_mode_label],
-        ["Activité", x.activity_scope_label],
-        ["Variante initiale", x.subtype],
-        ["Récompense", x.reward],
+        [BOTWI18n.t("renderdetails-region", {}), x.region],
+        [BOTWI18n.t("renderdetails-origin", {}), x.content_origin_label],
+        [BOTWI18n.t("renderdetails-position", {}), x.placement_label],
+        [BOTWI18n.t("renderdetails-coverage", {}), x.coverage_label],
+        [BOTWI18n.t("renderdetails-display", {}), displayLabels[x.display_scope]],
+        [BOTWI18n.t("renderdetails-location", {}), x.location_status_label],
+        [BOTWI18n.t("ui-mode", {}), x.game_mode_label],
+        [BOTWI18n.t("renderdetails-activity", {}), x.activity_scope_label],
+        [BOTWI18n.t("renderdetails-initial-variant", {}), x.subtype],
+        [BOTWI18n.t("renderdetails-reward", {}), x.reward],
         [
-            "Farm lune de sang",
+            BOTWI18n.t("renderdetails-farm-blood-moon", {}),
             x.farm
-                ? "Toujours affiché"
+                ? BOTWI18n.t("renderdetails-always-displayed", {})
                 : null
         ],
         [
-            "Évolution",
+            BOTWI18n.t("renderdetails-developments", {}),
             x.scalable
-                ? "Variante susceptible d’évoluer"
+                ? BOTWI18n.t("renderdetails-variant-that-may-change", {})
                 : null
         ],
-        ["Point proche", x.nearby],
-        ["Épreuve", x.trial],
-        ["Quête liée", x.quest],
-        ["Sanctuaire", x.sanctuaire],
-        ["Contenu", x.contenu],
-        ["Secteur", x.secteur || x.section],
-        ["Ensemble", x.set],
+        [BOTWI18n.t("renderdetails-nearby-location", {}), x.nearby],
+        [BOTWI18n.t("renderdetails-test", {}), x.trial],
+        [BOTWI18n.t("renderdetails-linked-quest", {}), x.quest],
+        [BOTWI18n.t("renderdetails-shrine", {}), x.sanctuaire],
+        [BOTWI18n.t("renderdetails-contents", {}), x.contenu],
+        [BOTWI18n.t("renderdetails-sector", {}), x.secteur || x.section],
+        [BOTWI18n.t("renderdetails-set", {}), x.set],
         [
-            "Niveau",
+            BOTWI18n.t("renderdetails-level", {}),
             x.niveau != null
                 ? `${x.niveau}/4 ${x.etoiles}`
                 : null
@@ -4099,7 +4087,7 @@ function renderDetails(x) {
 
     const recipe =
         upgrade
-            ? `<div class="detailSection"><h3>Matériaux pour atteindre ${"★".repeat(upgrade.niveau_cible)}</h3><div class="recipe">${upgrade.materiaux.map(m => `<div class="recipeRow ${m.disponible ? 'ready' : 'missing'}"><span>${esc(m.name)}</span><b>${m.possede} / ${m.requis}</b><small>${m.manque ? `manque ${m.manque}` : 'prêt'}</small></div>`).join("")}</div></div>`
+            ? BOTWI18n.t("renderdetails-materials-to-reach", {value0: String("★".repeat(upgrade.niveau_cible)), value1: String(upgrade.materiaux.map(m => `<div class="recipeRow ${m.disponible ? 'ready' : 'missing'}"><span>${esc(m.name)}</span><b>${m.possede} / ${m.requis}</b><small>${m.manque ? BOTWI18n.t("renderdetails-missing", {value0: String(m.manque)}) : BOTWI18n.t("renderdetails-ready", {})}</small></div>`).join("")), value2: String(`</div>`), value3: String(`</div>`), value4: String(`<div class="recipe">`), value5: String(`</h3>`), value6: String(`<h3>`), value7: String(`<div class="detailSection">`)})
             : "";
 
     const geo =
@@ -4107,7 +4095,7 @@ function renderDetails(x) {
 
     const geoBlock =
         geo.length
-            ? `<div class="detailSection"><h3>${geo.length > 1 ? "Étapes et localisations" : "Localisation"}</h3><div class="geoPoints">${geo.map((p, i) => `<article class="geoPoint"><div><b>${esc(p.label)}</b><small>${esc(p.nearby ? `Près de ${p.nearby}${p.nearby_distance_m != null ? ` • environ ${p.nearby_distance_m} m` : ""}` : "Coordonnées du monde")}</small><span>X ${Number(p.x).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</span></div><div class="geoActions"><button data-geo-center="${i}">Carte</button><button data-geo-copy="${i}">Copier</button><a href="https://objmap.zeldamods.org/#/map/z6,${p.x},${p.z}" target="_blank" rel="noreferrer">ObjMap ↗</a></div></article>`).join("")}</div></div>`
+            ? `<div class="detailSection"><h3>${geo.length > 1 ? BOTWI18n.t("renderdetails-steps-and-locations", {}) : BOTWI18n.t("renderdetails-location-2", {})}</h3><div class="geoPoints">${geo.map((p, i) => BOTWI18n.t("renderdetails-x-z-map-copy-objmap", {value0: String(esc(p.label)), value1: String(esc(p.nearby ? BOTWI18n.t("renderdetails-near", {value0: String(p.nearby), value1: String(p.nearby_distance_m != null ? BOTWI18n.t("renderdetails-approximately-m", {value0: String(p.nearby_distance_m)}) : "")}) : BOTWI18n.t("renderdetails-world-coordinates", {}))), value2: String(Number(p.x).toFixed(2)), value3: String(Number(p.z).toFixed(2)), value8: String(`</article>`), value9: String(`</div>`), value10: String(`</a>`), value11: String(`<a href="https://objmap.zeldamods.org/#/map/z6,${p.x},${p.z}" target="_blank" rel="noreferrer">`), value12: String(`</button>`), value13: String(`<button data-geo-copy="${i}">`), value14: String(`</button>`), value15: String(`<button data-geo-center="${i}">`), value16: String(`<div class="geoActions">`), value17: String(`</div>`), value18: String(`</span>`), value19: String(`<span>`), value20: String(`</small>`), value21: String(`<small>`), value22: String(`</b>`), value23: String(`<b>`), value24: String(`<div>`), value25: String(`<article class="geoPoint">`)})).join("")}</div></div>`
             : "";
 
     const guide = x.guide;
@@ -4122,15 +4110,15 @@ function renderDetails(x) {
 
     const interiorBlock =
         interiorPoints.length
-            ? `<div class="detailSection interiorCard"><h3>${esc(x.interior_map_label || "Carte intérieure")}</h3><p>${interiorPoints.length} coffre${interiorPoints.length > 1 ? 's' : ''} physique${interiorPoints.length > 1 ? 's' : ''} référencé${interiorPoints.length > 1 ? 's' : ''} dans les données du jeu.</p><div class="interiorPoints">${interiorPoints.map((p, i) => { const detail = guide?.chest_details?.[i] || p; return `<article><span>${detail.number || i + 1}</span><div><b>${esc(p.content || x.contenu || "Coffre")}</b>${detail.area ? `<small>${esc(detail.area)}</small>` : `<small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small>`}${detail.access_label ? `<em>${esc(detail.access_label)}</em>` : ""}${detail.access ? `<p>${esc(detail.access)}</p>` : ""}</div></article>`; }).join("")}</div><small class="interiorNote">Ces coordonnées appartiennent à ${esc(x.interior_map)} : elles ne sont volontairement pas superposées à la carte d'Hyrule.</small></div>`
+            ? BOTWI18n.t("renderdetails-physical-chest-recorded-in-the-game-data", {value0: String(esc(x.interior_map_label || BOTWI18n.t("renderdetails-interior-map", {}))), value1: String(interiorPoints.length), value2: String(interiorPoints.length > 1 ? 's' : ''), value3: String(interiorPoints.length > 1 ? 's' : ''), value4: String(interiorPoints.length > 1 ? 's' : ''), value5: String(interiorPoints.map((p, i) => { const detail = guide?.chest_details?.[i] || p; return `<article><span>${detail.number || i + 1}</span><div><b>${esc(p.content || x.contenu || BOTWI18n.t("renderdetails-treasure-chest", {}))}</b>${detail.area ? `<small>${esc(detail.area)}</small>` : `<small>X ${Number(p.x).toFixed(2)} • Y ${Number(p.y).toFixed(2)} • Z ${Number(p.z).toFixed(2)}</small>`}${detail.access_label ? `<em>${esc(detail.access_label)}</em>` : ""}${detail.access ? `<p>${esc(detail.access)}</p>` : ""}</div></article>`; }).join("")), value6: String(esc(x.interior_map)), value7: String(`</div>`), value8: String(`</small>`), value9: String(`<small class="interiorNote">`), value10: String(`</div>`), value11: String(`<div class="interiorPoints">`), value12: String(`</p>`), value13: String(`<p>`), value14: String(`</h3>`), value15: String(`<h3>`), value16: String(`<div class="detailSection interiorCard">`), count: interiorPoints.length})
             : "";
 
     const stateLabels = {
-        termine: "Terminé",
-        actuel: "Étape actuelle",
-        a_faire: "À faire",
-        a_verifier: "À vérifier",
-        verrouille: "Après activation"
+        termine: BOTWI18n.t("renderdetails-completed", {}),
+        actuel: BOTWI18n.t("renderdetails-current-stage", {}),
+        a_faire: BOTWI18n.t("renderdetails-to-do", {}),
+        a_verifier: BOTWI18n.t("renderdetails-to-be-checked", {}),
+        verrouille: BOTWI18n.t("renderdetails-after-activation", {})
     };
 
     const qualityBlock =
@@ -4140,44 +4128,44 @@ function renderDetails(x) {
 
     const evidenceBlock =
         guide?.quest_evidence
-            ? `<div class="guideEvidence"><small>PREUVE DU FLUX DE QUÊTE</small><p>${guide.quest_evidence.event_nodes} nœuds • ${guide.quest_evidence.event_actions} actions • ${guide.quest_evidence.message_references} références de dialogue</p></div>`
+            ? BOTWI18n.t("renderdetails-proof-of-the-quest-flow-nodes-actions", {value0: String(guide.quest_evidence.event_nodes), value1: String(guide.quest_evidence.event_actions), value2: String(guide.quest_evidence.message_references), value3: String(`</div>`), value4: String(`</p>`), value5: String(`<p>`), value6: String(`</small>`), value7: String(`<small>`), value8: String(`<div class="guideEvidence">`)})
             : "";
 
     const trialBlock =
         guide?.trial_rooms?.length
-            ? `<div class="trialRooms"><h3>Salles de ce niveau</h3>${guide.trial_rooms.map(room => `<article class="trialRoom ${esc(room.kind)}"><span>${room.floor}</span><div><small>${esc(room.kind_label)}</small><b>${esc(room.enemies)}</b><p>${esc(room.strategy)}</p></div></article>`).join("")}</div>`
+            ? BOTWI18n.t("renderdetails-rooms-at-this-level", {value0: String(guide.trial_rooms.map(room => `<article class="trialRoom ${esc(room.kind)}"><span>${room.floor}</span><div><small>${esc(room.kind_label)}</small><b>${esc(room.enemies)}</b><p>${esc(room.strategy)}</p></div></article>`).join("")), value1: String(`</div>`), value2: String(`</h3>`), value3: String(`<h3>`), value4: String(`<div class="trialRooms">`)})
             : "";
 
     const bossBlock =
         guide?.boss_profile
-            ? `<div class="guideBoss"><small>PROFIL DU COMBAT</small><b>${esc(guide.boss_profile.variant)}</b><p><strong>Point faible :</strong> ${esc(guide.boss_profile.weak_point)}</p>${guide.boss_profile.scaling ? `<p>${esc(guide.boss_profile.scaling)}</p>` : ""}</div>`
+            ? BOTWI18n.t("renderdetails-combat-profile-weak-point", {value0: String(esc(guide.boss_profile.variant)), value1: String(esc(guide.boss_profile.weak_point)), value2: String(guide.boss_profile.scaling ? `<p>${esc(guide.boss_profile.scaling)}</p>` : ""), value3: String(`</div>`), value4: String(`</p>`), value5: String(`</strong>`), value6: String(`<strong>`), value7: String(`<p>`), value8: String(`</b>`), value9: String(`<b>`), value10: String(`</small>`), value11: String(`<small>`), value12: String(`<div class="guideBoss">`)})
             : "";
 
     const guideBlock =
         guide
-            ? `<div class="detailSection guideCard"><div class="guideTitle"><h3>Fiche d’accompagnement personnalisée</h3>${guide.specificity_label ? `<span>${esc(guide.specificity_label)}</span>` : ""}</div>${qualityBlock}<p class="guideSummary">${esc(guide.summary)}</p>${guide.mechanic ? `<div class="guideMechanic"><small>MÉCANIQUE</small><b>${esc(guide.mechanic)}</b></div>` : ""}${bossBlock}<div class="currentAction"><small>PROCHAINE ACTION</small><b>${esc(guide.current_action)}</b></div>${guideList("Prérequis", guide.prerequisites)}${guideList("Préparation", guide.preparation)}${evidenceBlock}${trialBlock}${guide?.trial_rooms?.length ? "" : guideList("Solution détaillée", guide.detailed_steps, true, "solution")}${guide.chest_solution ? `<div class="guideChest"><small>COFFRE DU SANCTUAIRE</small><p>${esc(guide.chest_solution)}</p></div>` : ""}${guideList("Récompenses", guide.rewards, false, "rewards")}<div class="guideSteps">${(guide.steps || []).map((s, i) => `<article class="guideStep ${esc(s.state)}"><span>${i + 1}</span><div><b>${esc(s.title)}</b><p>${esc(s.instruction)}</p><small>${esc(stateLabels[s.state] || s.state)}</small></div>${s.geo_point_index != null && geo[s.geo_point_index] ? `<button data-guide-center="${s.geo_point_index}">Carte</button>` : ""}</article>`).join("")}</div>${guideList("Conseils", guide.tips, false, "tips")}${guideList("À savoir", guide.warnings, false, "warnings")}<div class="completionProof"><small>${guide.completion.automatic === false ? "SUIVI" : "VALIDATION AUTOMATIQUE"}</small><p>${esc(guide.completion.condition)}</p></div>${guideSources(guide.sources, x.name || "cet objectif")}</div>`
-            : `<div class="detailSection"><h3>Comment le terminer</h3><p>${esc(helpFor(x))}</p></div>`;
+            ? BOTWI18n.t("renderdetails-objective-guide-next-action", {value0: String(guide.specificity_label ? `<span>${esc(guide.specificity_label)}</span>` : ""), value1: String(qualityBlock), value2: String(esc(guide.summary)), value3: String(guide.mechanic ? BOTWI18n.t("renderdetails-mechanic", {value0: String(esc(guide.mechanic)), value1: String(`</div>`), value2: String(`</b>`), value3: String(`<b>`), value4: String(`</small>`), value5: String(`<small>`), value6: String(`<div class="guideMechanic">`)}) : ""), value4: String(bossBlock), value5: String(esc(guide.current_action)), value6: String(guideList(BOTWI18n.t("renderdetails-prerequisite", {}), guide.prerequisites)), value7: String(guideList(BOTWI18n.t("renderdetails-preparation", {}), guide.preparation)), value8: String(evidenceBlock), value9: String(trialBlock), value10: String(guide?.trial_rooms?.length ? "" : guideList(BOTWI18n.t("renderdetails-detailed-solution", {}), guide.detailed_steps, true, "solution")), value11: String(guide.chest_solution ? BOTWI18n.t("renderdetails-shrine-chest", {value0: String(esc(guide.chest_solution)), value1: String(`</div>`), value2: String(`</p>`), value3: String(`<p>`), value4: String(`</small>`), value5: String(`<small>`), value6: String(`<div class="guideChest">`)}) : ""), value12: String(guideList(BOTWI18n.t("renderdetails-rewards", {}), guide.rewards, false, "rewards")), value13: String((guide.steps || []).map((s, i) => `<article class="guideStep ${esc(s.state)}"><span>${i + 1}</span><div><b>${esc(s.title)}</b><p>${esc(s.instruction)}</p><small>${esc(stateLabels[s.state] || s.state)}</small></div>${s.geo_point_index != null && geo[s.geo_point_index] ? BOTWI18n.t("renderdetails-map", {value1: String(`</button>`), value2: String(`<button data-guide-center="${s.geo_point_index}">`)}) : ""}</article>`).join("")), value14: String(guideList(BOTWI18n.t("renderdetails-tips", {}), guide.tips, false, "tips")), value15: String(guideList(BOTWI18n.t("renderdetails-notes", {}), guide.warnings, false, "warnings")), value16: String(guide.completion.automatic === false ? BOTWI18n.t("renderdetails-tracking", {}) : BOTWI18n.t("renderdetails-automatic-completion", {})), value17: String(esc(guide.completion.condition)), value18: String(guideSources(guide.sources, x.name || BOTWI18n.t("renderdetails-this-objective", {}))), value19: String(`</div>`), value20: String(`</div>`), value21: String(`</p>`), value22: String(`<p>`), value23: String(`</small>`), value24: String(`<small>`), value25: String(`<div class="completionProof">`), value26: String(`</div>`), value27: String(`<div class="guideSteps">`), value28: String(`</div>`), value29: String(`</b>`), value30: String(`<b>`), value31: String(`</small>`), value32: String(`<small>`), value33: String(`<div class="currentAction">`), value34: String(`</p>`), value35: String(`<p class="guideSummary">`), value36: String(`</div>`), value37: String(`</h3>`), value38: String(`<h3>`), value39: String(`<div class="guideTitle">`), value40: String(`<div class="detailSection guideCard">`)})
+            : BOTWI18n.t("renderdetails-how-to-finish-it", {value0: String(esc(helpFor(x))), value1: String(`</div>`), value2: String(`</p>`), value3: String(`<p>`), value4: String(`</h3>`), value5: String(`<h3>`), value6: String(`<div class="detailSection">`)});
 
     const manual =
         manualEntry(x),
         farmWarning =
             x.farm
-                ? "Cet état n’enlève jamais ce point de farm de sa catégorie : l’ennemi réapparaît à la lune de sang."
-                : "La validation reste conservée après une nouvelle analyse de la sauvegarde.";
+                ? BOTWI18n.t("renderdetails-this-state-never-removes-this-farm-point", {})
+                : BOTWI18n.t("renderdetails-the-validation-remains-after-a-new-analysis", {});
 
     const scopeBlock =
         x.coverage_note
-            ? `<div class="detailSection scopeWarning"><h3>Limite de couverture</h3><p>${esc(x.coverage_note)}</p></div>`
+            ? BOTWI18n.t("renderdetails-limit-of-coverage", {value0: String(esc(x.coverage_note)), value1: String(`</div>`), value2: String(`</p>`), value3: String(`<p>`), value4: String(`</h3>`), value5: String(`<h3>`), value6: String(`<div class="detailSection scopeWarning">`)})
             : "";
 
     const manualBlock =
-        `<div class="detailSection manualTracking"><h3>Suivi manuel persistant</h3><div class="statusSplit"><span><small>Sauvegarde</small><b>${x.termine ? 'Validé automatiquement' : 'Non validé automatiquement'}</b></span><span><small>Personnel</small><b>${manual.completed ? 'Validé manuellement' : 'Non coché'}</b></span></div><label class="manualCheck"><input id="manualComplete" type="checkbox" ${manual.completed ? 'checked' : ''}><span>Marquer cet objectif comme fait manuellement</span></label><label class="manualNoteLabel">Note personnelle<textarea id="manualNoteInput" maxlength="1000" placeholder="Optionnel : record, coffre vérifié, prochaine action…">${esc(manual.note || "")}</textarea></label><button id="saveManualNote">Enregistrer la note</button><p class="manualHint">${esc(farmWarning)}</p></div>`;
+        BOTWI18n.t("renderdetails-persistent-manual-tracking-save-personal-mark-this", {value0: String(x.termine ? BOTWI18n.t("renderdetails-validated-automatically", {}) : BOTWI18n.t("renderdetails-not-automatically-validated", {})), value1: String(manual.completed ? BOTWI18n.t("renderdetails-validated-manually", {}) : BOTWI18n.t("renderdetails-not-checked", {})), value3: String(esc(manual.note || "")), value4: String(esc(farmWarning)), value5: String(`</div>`), value6: String(`</p>`), value7: String(`<p class="manualHint">`), value8: String(`</button>`), value9: String(`<button id="saveManualNote">`), value10: String(`</label>`), value11: String(`</textarea>`), value13: String(`<textarea id="manualNoteInput" maxlength="1000" placeholder="${BOTWI18n.t("renderdetails-optional-personal-best-checked-chest-next-action", {})}">`), value14: String(`<label class="manualNoteLabel">`), value15: String(`</label>`), value16: String(`</span>`), value17: String(`<span>`), value18: String(`<input id="manualComplete" type="checkbox" ${manual.completed ? 'checked' : ''}>`), value19: String(`<label class="manualCheck">`), value20: String(`</div>`), value21: String(`</span>`), value22: String(`</b>`), value23: String(`<b>`), value24: String(`</small>`), value25: String(`<small>`), value26: String(`<span>`), value27: String(`</span>`), value28: String(`</b>`), value29: String(`<b>`), value30: String(`</small>`), value31: String(`<small>`), value32: String(`<span>`), value33: String(`<div class="statusSplit">`), value34: String(`</h3>`), value35: String(`<h3>`), value36: String(`<div class="detailSection manualTracking">`)});
 
     const inRoute =
         routeIds().has(itemId(x));
 
     $("#detailContent").innerHTML =
-        `<p class="detailEyebrow">${esc(category)}</p><h2 id="detailTitle">${esc(x.name || x.id)}</h2><p class="detailMeta">${esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))}</p><span class="detailStatus"><i class="dot ${stateClass(x)}" aria-hidden="true"></i>${esc(trackingLabel(x))}</span>${facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""}${scopeBlock}${manualBlock}${guideBlock}${geoBlock}${interiorBlock}${recipe}${coords && !geo.length ? `<div class="detailSection"><h3>Coordonnées BOTW</h3><p>X ${x.x.toFixed(2)} • Z ${x.z.toFixed(2)}</p></div>` : ""}<div class="detailActions">${coords ? `<button id="detailRoute">${inRoute ? 'Retirer de' : 'Ajouter à'} l’itinéraire</button><button id="detailCenter">Centrer sur la carte</button><button id="copyCoords">Copier le point principal</button><a href="${objmap}" target="_blank" rel="noreferrer">ObjMap ↗</a>` : ""}<a href="${search}" target="_blank" rel="noreferrer">Chercher un guide ↗</a></div>`;
+        BOTWI18n.t("renderdetails-find-a-guide", {value0: String(esc(category)), value1: String(esc(x.name || x.id)), value2: String(esc([x.region, x.dlc ? "DLC" : null].filter(Boolean).join(" • "))), value4: String(esc(trackingLabel(x))), value5: String(facts.length ? `<div class="detailFacts">${facts.map(([k, v]) => `<div class="detailFact"><small>${esc(k)}</small>${esc(v)}</div>`).join("")}</div>` : ""), value6: String(scopeBlock), value7: String(manualBlock), value8: String(guideBlock), value9: String(geoBlock), value10: String(interiorBlock), value11: String(recipe), value12: String(coords && !geo.length ? BOTWI18n.t("renderdetails-botw-coordinates-x-z", {value0: String(x.x.toFixed(2)), value1: String(x.z.toFixed(2)), value2: String(`</div>`), value3: String(`</p>`), value4: String(`<p>`), value5: String(`</h3>`), value6: String(`<h3>`), value7: String(`<div class="detailSection">`)}) : ""), value13: String(coords ? BOTWI18n.t("renderdetails-the-route-center-on-the-map-copy", {value0: String(inRoute ? BOTWI18n.t("renderdetails-remove-from", {}) : BOTWI18n.t("renderdetails-add-to", {})), value2: String(`</a>`), value3: String(`<a href="${objmap}" target="_blank" rel="noreferrer">`), value4: String(`</button>`), value5: String(`<button id="copyCoords">`), value6: String(`</button>`), value7: String(`<button id="detailCenter">`), value8: String(`</button>`), value9: String(`<button id="detailRoute">`)}) : ""), value15: String(`</div>`), value16: String(`</a>`), value17: String(`<a href="${search}" target="_blank" rel="noreferrer">`), value18: String(`<div class="detailActions">`), value19: String(`</span>`), value20: String(`</i>`), value21: String(`<i class="dot ${stateClass(x)}" aria-hidden="true">`), value22: String(`<span class="detailStatus">`), value23: String(`</p>`), value24: String(`<p class="detailMeta">`), value25: String(`</h2>`), value26: String(`<h2 id="detailTitle">`), value27: String(`</p>`), value28: String(`<p class="detailEyebrow">`)});
 
     const drawer =
         $("#itemDetails");
@@ -4213,7 +4201,7 @@ function renderDetails(x) {
                 );
 
                 toast(
-                    "Coordonnées copiées"
+                    BOTWI18n.t("renderdetails-coordinates-copied", {})
                 );
             };
     }
@@ -4259,7 +4247,7 @@ function renderDetails(x) {
                         );
 
                         toast(
-                            "Coordonnées copiées"
+                            BOTWI18n.t("renderdetails-coordinates-copied-2", {})
                         );
                     }
         );
@@ -4319,13 +4307,13 @@ function renderManualSummary() {
             ).length;
 
     $("#manualScore").textContent =
-        `${completed.toLocaleString("fr-FR")} objectif${completed === 1 ? '' : 's'} coché${completed === 1 ? '' : 's'}`;
+        BOTWI18n.t("rendermanualsummary-completed-objective", {value0: String(completed.toLocaleString(BOTWI18n.formatLocale)), value1: String(completed === 1 ? '' : 's'), value2: String(completed === 1 ? '' : 's'), count: completed});
 
     $("#manualNote").textContent =
-        `${notes} note${notes === 1 ? '' : 's'} • révision ${manualTracking.revision} • séparé du score automatique`;
+        BOTWI18n.t("rendermanualsummary-note-revision-separate-from-the-automatic-score", {value0: String(notes), value1: String(notes === 1 ? '' : 's'), value2: String(manualTracking.revision), count: notes});
 
     $("#toggleManualReview").textContent =
-        `Validations (${completed.toLocaleString("fr-FR")})`;
+        BOTWI18n.t("ui-validations", {value0: String(completed.toLocaleString(BOTWI18n.formatLocale))});
 
     renderManualReview();
 }
@@ -4334,7 +4322,7 @@ function manualSearchText(value) {
     return String(value || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .toLocaleLowerCase("fr");
+        .toLocaleLowerCase(BOTWI18n.formatLocale);
 }
 
 function manualCompletedRecords() {
@@ -4378,20 +4366,20 @@ function manualCompletedRecords() {
             const byDate = String(right.entry.updated_at || "")
                 .localeCompare(String(left.entry.updated_at || ""));
 
-            return byDate || left.name.localeCompare(right.name, "fr");
+            return byDate || left.name.localeCompare(right.name, BOTWI18n.formatLocale);
         });
 }
 
 function manualDate(value) {
     if (!value) {
-        return "date inconnue";
+        return BOTWI18n.t("manualdate-unknown-date", {});
     }
 
     const date = new Date(value);
 
     return Number.isNaN(date.getTime())
-        ? "date inconnue"
-        : date.toLocaleString("fr-FR", {
+        ? BOTWI18n.t("manualdate-unknown-date-2", {})
+        : date.toLocaleString(BOTWI18n.formatLocale, {
             dateStyle: "short",
             timeStyle: "short"
         });
@@ -4412,10 +4400,10 @@ function renderManualReview() {
                 record.categoryId,
                 record.categoryLabel
             ])
-        ).entries()].sort((left, right) => left[1].localeCompare(right[1], "fr"));
+        ).entries()].sort((left, right) => left[1].localeCompare(right[1], BOTWI18n.formatLocale));
 
     categorySelect.innerHTML =
-        '<option value="all">Toutes les catégories</option>' +
+        BOTWI18n.t("rendermanualreview-all-categories", {value0: String(`</option>`), value1: String(`<option value="all">`)}) +
         categories.map(
             ([id, label]) => `<option value="${esc(id)}">${esc(label)}</option>`
         ).join("");
@@ -4441,20 +4429,20 @@ function renderManualReview() {
         });
 
     $("#manualReviewSummary").textContent = records.length
-        ? `${records.length.toLocaleString("fr-FR")} validation${records.length === 1 ? '' : 's'} manuelle${records.length === 1 ? '' : 's'} • ${filtered.length.toLocaleString("fr-FR")} affichée${filtered.length === 1 ? '' : 's'}`
-        : "Aucun objectif coché manuellement.";
+        ? BOTWI18n.t("rendermanualreview-manual-completion-displayed", {value0: String(records.length.toLocaleString(BOTWI18n.formatLocale)), value1: String(records.length === 1 ? '' : 's'), value2: String(records.length === 1 ? '' : 's'), value3: String(filtered.length.toLocaleString(BOTWI18n.formatLocale)), value4: String(filtered.length === 1 ? '' : 's'), count: records.length, count2: filtered.length})
+        : BOTWI18n.t("rendermanualreview-no-lens-manually-checked", {});
 
     if (!filtered.length) {
-        list.innerHTML = `<div class="manualReviewEmpty">${records.length ? "Aucune validation ne correspond à cette recherche." : "Les objectifs cochés manuellement apparaîtront ici."}</div>`;
+        list.innerHTML = `<div class="manualReviewEmpty">${records.length ? BOTWI18n.t("rendermanualreview-no-validation-matches-this-search", {}) : BOTWI18n.t("rendermanualreview-manually-completed-objectives-will-appear-here", {})}</div>`;
         return;
     }
 
     list.innerHTML = filtered.map(record => {
         const status = record.item
             ? record.automatic
-                ? "Aussi validé automatiquement"
-                : "Non validé automatiquement"
-            : "Fiche absente du catalogue actuel",
+                ? BOTWI18n.t("rendermanualreview-also-automatically-validated", {})
+                : BOTWI18n.t("rendermanualreview-not-automatically-validated", {})
+            : BOTWI18n.t("rendermanualreview-missing-from-the-current-catalogue", {}),
             meta = [
                 record.region,
                 status,
@@ -4464,7 +4452,7 @@ function renderManualReview() {
                 ? `<p class="manualReviewNote">Note : ${esc(record.entry.note)}</p>`
                 : "";
 
-        return `<article class="manualReviewItem"><div><span class="manualReviewCategory">${esc(record.categoryLabel)}</span><h3>${esc(record.name)}</h3><p>${esc(meta)}</p>${note}</div><div class="manualReviewItemActions"><button type="button" data-manual-open="${esc(record.trackingId)}"${record.item ? "" : " disabled"}>Ouvrir la fiche</button><label class="manualReviewToggle"><input type="checkbox" checked data-manual-uncheck="${esc(record.trackingId)}"> Validé</label></div></article>`;
+        return BOTWI18n.t("rendermanualreview-open-details-completed", {value0: String(esc(record.categoryLabel)), value1: String(esc(record.name)), value2: String(esc(meta)), value3: String(note), value7: String(`</article>`), value8: String(`</div>`), value9: String(`</label>`), value10: String(`<input type="checkbox" checked data-manual-uncheck="${esc(record.trackingId)}">`), value11: String(`<label class="manualReviewToggle">`), value12: String(`</button>`), value13: String(`<button type="button" data-manual-open="${esc(record.trackingId)}"${record.item ? "" : " disabled"}>`), value14: String(`<div class="manualReviewItemActions">`), value15: String(`</div>`), value16: String(`</p>`), value17: String(`<p>`), value18: String(`</h3>`), value19: String(`<h3>`), value20: String(`</span>`), value21: String(`<span class="manualReviewCategory">`), value22: String(`<div>`), value23: String(`<article class="manualReviewItem">`)});
     }).join("");
 
     list.querySelectorAll("[data-manual-open]").forEach(button => {
@@ -4512,7 +4500,7 @@ async function uncheckManualFromReview(trackingId, checkbox) {
     }
 
     if (!confirm(
-        `Annuler la validation manuelle de « ${record.name} » ? La note personnelle sera conservée.`
+        BOTWI18n.t("uncheckmanualfromreview-clear-the-manual-completion-of-your-personal", {value0: String(record.name)})
     )) {
         checkbox.checked = true;
         return;
@@ -4558,7 +4546,7 @@ async function saveManualById(
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Enregistrement impossible"
+                BOTWI18n.t("savemanualbyid-saving-failed", {})
             );
         }
 
@@ -4575,8 +4563,8 @@ async function saveManualById(
 
         toast(
             completed
-                ? "Validation manuelle enregistrée"
-                : "Validation manuelle annulée"
+                ? BOTWI18n.t("savemanualbyid-manual-validation-registered", {})
+                : BOTWI18n.t("savemanualbyid-manual-validation-cancelled", {})
         );
 
         return true;
@@ -4635,12 +4623,12 @@ async function importManualFile(file) {
             if (!response.ok) {
                 throw Error(
                     data.erreur ||
-                    "Restauration impossible"
+                    BOTWI18n.t("importmanualfile-restore-failed", {})
                 );
             }
             await load(false);
             toast(
-                "Suivi, itinéraires et préférences restaurés"
+                BOTWI18n.t("importmanualfile-restored-tracking-routes-and-preferences", {})
             );
             return;
         }
@@ -4670,7 +4658,7 @@ async function importManualFile(file) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Import impossible"
+                BOTWI18n.t("importmanualfile-import-failed", {})
             );
         }
 
@@ -4679,13 +4667,13 @@ async function importManualFile(file) {
         renderAll();
 
         toast(
-            "Suivi manuel importé et fusionné"
+            BOTWI18n.t("importmanualfile-imported-and-merged-manual-tracking", {})
         );
 
     } catch (error) {
         toast(
             error.message ||
-            "Fichier invalide",
+            BOTWI18n.t("importmanualfile-invalid-file", {}),
             true
         );
     }
@@ -4722,7 +4710,7 @@ function toggleRouteItem(id) {
             item.z == null
         ) {
             toast(
-                "Cet élément n’a pas de coordonnées fiables",
+                BOTWI18n.t("togglerouteitem-this-element-does-not-have-reliable-coordinates", {}),
                 true
             );
 
@@ -4734,7 +4722,7 @@ function toggleRouteItem(id) {
             ROUTE_LIMIT
         ) {
             toast(
-                `Une session est limitée à ${ROUTE_LIMIT} étapes`,
+                BOTWI18n.t("togglerouteitem-a-session-is-limited-to-steps", {value0: String(ROUTE_LIMIT)}),
                 true
             );
 
@@ -4797,12 +4785,12 @@ function addFilteredToRoute() {
 
     if (!added.length) {
         toast(
-            "Aucun nouveau résultat localisé à ajouter",
+            BOTWI18n.t("addfilteredtoroute-no-new-localized-results-to-add", {}),
             true
         );
     } else {
         toast(
-            `${added.length} étape${added.length > 1 ? 's' : ''} ajoutée${added.length > 1 ? 's' : ''}${available.length > capacity ? ` • limite de ${ROUTE_LIMIT} atteinte` : ''}`
+            BOTWI18n.t("addfilteredtoroute-step-added", {value0: String(added.length), value1: String(added.length > 1 ? 's' : ''), value2: String(added.length > 1 ? 's' : ''), value3: String(available.length > capacity ? BOTWI18n.t("addfilteredtoroute-limit-of-reached", {value0: String(ROUTE_LIMIT)}) : ''), count: added.length})
         );
     }
 }
@@ -4850,7 +4838,7 @@ function optimizeCurrentRoute() {
 
     if (points.length < 2) {
         toast(
-            "Ajoute au moins deux étapes",
+            BOTWI18n.t("optimizecurrentroute-add-at-least-two-steps", {}),
             true
         );
 
@@ -4892,7 +4880,7 @@ function optimizeCurrentRoute() {
     renderItems();
 
     toast(
-        "Ordre optimisé - étapes verrouillées et indisponibles conservées"
+        BOTWI18n.t("optimizecurrentroute-optimized-order-locked-and-unavailable-steps-retained", {})
     );
 }
 
@@ -4905,7 +4893,7 @@ function setRouteStart(point) {
                 label:
                     point.label ||
                     point.name ||
-                    "Point personnalisé"
+                    BOTWI18n.t("setroutestart-custom-point", {})
             }
             : null;
 
@@ -4962,8 +4950,8 @@ function renderRoute() {
 
     $("#routeSummary").textContent =
         points.length
-            ? `${points.length} étape${points.length > 1 ? 's' : ''} • ${formatDistance(total)}${missing ? ` • ${missing} indisponible${missing > 1 ? 's' : ''}` : ''}`
-            : "Aucune étape sélectionnée.";
+            ? BOTWI18n.t("renderroute-step", {value0: String(points.length), value1: String(points.length > 1 ? 's' : ''), value2: String(formatDistance(total)), value3: String(missing ? BOTWI18n.t("renderroute-unavailable", {value0: String(missing), value1: String(missing > 1 ? 's' : ''), count: missing}) : ''), count: points.length})
+            : BOTWI18n.t("renderroute-no-steps-selected", {});
 
     $("#routeSessionName").value =
         routeState.name;
@@ -4991,18 +4979,14 @@ function renderRoute() {
         routeState.id;
 
     $("#routeStartLabel").textContent =
-        `Départ : ${
-            routeState.start
+        BOTWI18n.t("renderroute-departure", {value0: String(routeState.start
                 ? `${routeState.start.label} - X ${Math.round(routeState.start.x)}, Z ${Math.round(routeState.start.z)}`
-                : "premier objectif"
-        }`;
+                : BOTWI18n.t("renderroute-premier-objective", {}))});
 
     $("#routeRegions").textContent =
-        `Régions : ${
-            regions.length
+        BOTWI18n.t("renderroute-regions", {value0: String(regions.length
                 ? regions.join(", ")
-                : "-"
-        }`;
+                : "-")});
 
     $("#routeStartX").value =
         routeState.start?.x ?? "";
@@ -5034,13 +5018,13 @@ function renderRoute() {
                             region =
                                 value.item?.region ||
                                 snapshot.region ||
-                                "Région inconnue";
+                                BOTWI18n.t("renderroute-unknown-region", {});
 
-                        return `<article class="routeStep ${value.item ? '' : 'unavailable'}" data-route-step="${stateIndex}"><span>${index + 1}</span><div><b>${esc(name)}</b><small>${value.item ? `${esc(region)} • ${leg.index === 1 && !routeState.start ? "départ" : `+ ${formatDistance(leg.distance)}`} • cumul ${formatDistance(leg.cumulative)}` : `Étape indisponible dans le catalogue actuel • conservée avec ses anciennes informations`}</small></div><div class="routeStepActions">${value.item ? `<button data-route-focus="${esc(entry.tracking_id)}" title="Voir sur la carte" aria-label="Voir ${esc(name)} sur la carte">⌖</button>` : ""}<button data-route-up="${stateIndex}" title="Monter" aria-label="Monter ${esc(name)}">↑</button><button data-route-down="${stateIndex}" title="Descendre" aria-label="Descendre ${esc(name)}">↓</button><button data-route-lock="${stateIndex}" class="${entry.locked ? 'active' : ''}" title="Verrouiller cette position" aria-label="${entry.locked ? 'Déverrouiller' : 'Verrouiller'} la position de ${esc(name)}">${entry.locked ? '🔒' : '○'}</button><button data-route-remove="${esc(entry.tracking_id)}" title="Retirer" aria-label="Retirer ${esc(name)} de l’itinéraire">×</button></div></article>`
+                        return BOTWI18n.t("renderroute-2", {value2: String(index + 1), value3: String(esc(name)), value4: String(value.item ? BOTWI18n.t("renderroute-total", {value0: String(esc(region)), value1: String(leg.index === 1 && !routeState.start ? BOTWI18n.t("renderroute-start", {}) : `+ ${formatDistance(leg.distance)}`), value2: String(formatDistance(leg.cumulative))}) : BOTWI18n.t("renderroute-step-unavailable-in-the-current-catalog-its", {})), value5: String(value.item ? BOTWI18n.t("renderroute", {value2: String(`</button>`), value5: String(`<button data-route-focus="${esc(entry.tracking_id)}" title="${BOTWI18n.t("renderroute-view-on-map", {})}" aria-label="${BOTWI18n.t("renderroute-view-on-the-map", {value1: String(esc(name))})}">`)}) : ""), value14: String(entry.locked ? '🔒' : '○'), value17: String(`</article>`), value18: String(`</div>`), value19: String(`</button>`), value22: String(`<button data-route-remove="${esc(entry.tracking_id)}" title="${BOTWI18n.t("renderroute-remove", {})}" aria-label="${BOTWI18n.t("renderroute-remove-from-the-route", {value16: String(esc(name))})}">`), value23: String(`</button>`), value26: String(`<button data-route-lock="${stateIndex}" class="${entry.locked ? 'active' : ''}" title="${BOTWI18n.t("renderroute-lock-this-position", {})}" aria-label="${BOTWI18n.t("renderroute-the-position-of", {value12: String(entry.locked ? BOTWI18n.t("renderroute-unlock", {}) : BOTWI18n.t("renderroute-lock", {})),value13: String(esc(name))})}">`), value27: String(`</button>`), value30: String(`<button data-route-down="${stateIndex}" title="${BOTWI18n.t("renderroute-move-down-2", {})}" aria-label="${BOTWI18n.t("renderroute-move-down", {value9: String(esc(name))})}">`), value31: String(`</button>`), value34: String(`<button data-route-up="${stateIndex}" title="${BOTWI18n.t("renderroute-move-up-2", {})}" aria-label="${BOTWI18n.t("renderroute-move-up", {value7: String(esc(name))})}">`), value35: String(`<div class="routeStepActions">`), value36: String(`</div>`), value37: String(`</small>`), value38: String(`<small>`), value39: String(`</b>`), value40: String(`<b>`), value41: String(`<div>`), value42: String(`</span>`), value43: String(`<span>`), value44: String(`<article class="routeStep ${value.item ? '' : 'unavailable'}" data-route-step="${stateIndex}">`)})
                     }
                 )
                 .join("")
-            : '<div class="empty">Ajoute des objectifs depuis les résultats ou une fiche.</div>';
+            : BOTWI18n.t("renderroute-add-goals-from-results-or-a-record", {value0: String(`</div>`), value1: String(`<div class="empty">`)});
 
     document
         .querySelectorAll(
@@ -5247,7 +5231,7 @@ function downloadRoute(format) {
 
     if (!payload.steps.length) {
         toast(
-            "L’itinéraire est vide",
+            BOTWI18n.t("downloadroute-the-route-is-empty", {}),
             true
         );
 
@@ -5264,28 +5248,26 @@ function downloadRoute(format) {
             : [
                 `BOTW COMPANION - ${payload.name}`,
 
-                `Départ : ${
-                    payload.start
+                BOTWI18n.t("downloadroute-departure", {value0: String(payload.start
                         ? `${payload.start.label} (X ${Math.round(payload.start.x)}, Z ${Math.round(payload.start.z)})`
-                        : "premier objectif"
-                }`,
+                        : BOTWI18n.t("downloadroute-premier-objective", {}))}),
 
-                `Distance géographique : ${formatDistance(payload.total_distance_m)}`,
+                BOTWI18n.t("downloadroute-geographic-distance", {value0: String(formatDistance(payload.total_distance_m))}),
 
-                `Régions : ${payload.regions.join(", ")}`,
+                BOTWI18n.t("downloadroute-regions", {value0: String(payload.regions.join(", "))}),
 
                 "",
 
                 ...payload.steps.map(
                     step =>
                         step.available
-                            ? `${step.order}. ${step.name} - ${step.region || "région non indiquée"} - X ${Number(step.x).toFixed(0)}, Z ${Number(step.z).toFixed(0)} - +${formatDistance(step.distance_from_previous_m)}${step.locked ? " - verrouillée" : ""}`
-                            : `${step.order}. ${step.name} - indisponible dans le catalogue actuel, conservée${step.locked ? " - verrouillée" : ""}`
+                            ? `${step.order}. ${step.name} - ${step.region || BOTWI18n.t("downloadroute-region-not-indicated", {})} - X ${Number(step.x).toFixed(0)}, Z ${Number(step.z).toFixed(0)} - +${formatDistance(step.distance_from_previous_m)}${step.locked ? BOTWI18n.t("downloadroute-locked", {}) : ""}`
+                            : BOTWI18n.t("downloadroute-unavailable-in-the-current-catalog-retained", {value0: String(step.order), value1: String(step.name), value2: String(step.locked ? BOTWI18n.t("downloadroute-locked-2", {}) : "")})
                 ),
 
                 "",
 
-                "Distance indicative : la stratégie organise les objectifs mais ne simule ni relief, météo, escalade ni dangers."
+                BOTWI18n.t("downloadroute-indicative-distance-the-strategy-organizes-the-objectives", {})
 
             ].join("\n");
 
@@ -5327,7 +5309,7 @@ function downloadRoute(format) {
 }
 
 function routeSessionTemplate(
-    name = "Nouvelle session"
+    name = BOTWI18n.t("routesessiontemplate-new-session", {})
 ) {
     const id =
         `session-${
@@ -5377,7 +5359,7 @@ function createRouteSession(
         ).length >= 100
     ) {
         toast(
-            "Le planificateur est limité à 100 sessions",
+            BOTWI18n.t("createroutesession-the-planner-is-limited-to-100-sessions", {}),
             true
         );
 
@@ -5387,8 +5369,8 @@ function createRouteSession(
     const session =
         routeSessionTemplate(
             copy
-                ? `${routeState.name} - copie`
-                : "Nouvelle session"
+                ? BOTWI18n.t("createroutesession-copy", {value0: String(routeState.name)})
+                : BOTWI18n.t("createroutesession-new-session", {})
         );
 
     if (copy) {
@@ -5428,8 +5410,8 @@ function createRouteSession(
 
     toast(
         copy
-            ? "Session dupliquée"
-            : "Nouvelle session créée"
+            ? BOTWI18n.t("createroutesession-duplicate-session", {})
+            : BOTWI18n.t("createroutesession-new-session-created", {})
     );
 }
 
@@ -5440,7 +5422,7 @@ function deleteRouteSession() {
         ).length === 1
     ) {
         toast(
-            "Crée une autre session avant de supprimer celle-ci",
+            BOTWI18n.t("deleteroutesession-create-another-session-before-deleting-it", {}),
             true
         );
 
@@ -5449,7 +5431,7 @@ function deleteRouteSession() {
 
     if (
         !confirm(
-            `Supprimer définitivement la session « ${routeState.name} » ?`
+            BOTWI18n.t("deleteroutesession-permanently-delete-the-session", {value0: String(routeState.name)})
         )
     ) {
         return;
@@ -5507,7 +5489,7 @@ async function importRouteFile(file) {
         if (!response.ok) {
             throw Error(
                 data.erreur ||
-                "Import impossible"
+                BOTWI18n.t("importroutefile-import-failed", {})
             );
         }
 
@@ -5523,13 +5505,13 @@ async function importRouteFile(file) {
         renderMap(filtered());
 
         toast(
-            "Session importée sans supprimer les itinéraires existants"
+            BOTWI18n.t("importroutefile-imported-session-without-removing-existing-routes", {})
         );
 
     } catch (error) {
         toast(
             error.message ||
-            "Fichier d’itinéraire invalide",
+            BOTWI18n.t("importroutefile-invalid-route-file", {}),
             true
         );
     }
@@ -5766,7 +5748,7 @@ mapEl.addEventListener(
                     wy * 10 - 5000
                 ),
             label:
-                "Point choisi sur la carte"
+                BOTWI18n.t("app-point-chosen-on-the-map", {})
         });
 
         routePickStart = false;
@@ -5780,7 +5762,7 @@ mapEl.addEventListener(
         );
 
         toast(
-            "Point de départ défini"
+            BOTWI18n.t("app-defined-starting-point", {})
         );
     }
 );
@@ -5969,7 +5951,7 @@ $("#syncInterval").onchange =
         scheduleSync();
 
         toast(
-            `Vérification toutes les ${syncInterval} secondes`
+            BOTWI18n.t("app-check-every-seconds", {value0: String(syncInterval)})
         );
     };
 
@@ -5980,8 +5962,8 @@ $("#pauseSync").onclick =
 
         $("#pauseSync").textContent =
             syncPaused
-                ? "Reprendre"
-                : "Pause";
+                ? BOTWI18n.t("app-resume", {})
+                : BOTWI18n.t("ui-pause", {});
 
         $("#pauseSync").classList.toggle(
             "active",
@@ -5994,7 +5976,7 @@ $("#pauseSync").onclick =
 
         if (syncPaused) {
             toast(
-                "Synchronisation automatique en pause"
+                BOTWI18n.t("app-automatic-pause-synchronization", {})
             )
         }
     };
@@ -6025,7 +6007,7 @@ $("#cancelUpdateDownload").onclick =
         try {
             await updateDownloadAction("cancel");
         } catch (_error) {
-            toast("Impossible d’annuler le téléchargement", true);
+            toast(BOTWI18n.t("app-unable-to-cancel-download", {}), true);
         }
     };
 
@@ -6034,7 +6016,7 @@ $("#retryUpdateDownload").onclick =
         try {
             await updateDownloadAction("retry");
         } catch (_error) {
-            toast("Impossible de reprendre le téléchargement", true);
+            toast(BOTWI18n.t("app-unable-to-resume-download", {}), true);
         }
     };
 
@@ -6243,8 +6225,8 @@ $("#pickRouteStart").onclick =
 
         toast(
             routePickStart
-                ? "Clique sur la carte pour placer le départ"
-                : "Sélection du départ annulée"
+                ? BOTWI18n.t("app-click-on-the-map-to-place-the", {})
+                : BOTWI18n.t("app-selection-of-the-cancelled-departure", {})
         );
     };
 
@@ -6262,7 +6244,7 @@ $("#useSelectedStart").onclick =
             item.x == null
         ) {
             toast(
-                "Ouvre d’abord une fiche localisée",
+                BOTWI18n.t("app-first-open-a-localised-file", {}),
                 true
             );
 
@@ -6276,7 +6258,7 @@ $("#useSelectedStart").onclick =
         });
 
         toast(
-            "Départ défini depuis la fiche ouverte"
+            BOTWI18n.t("app-starting-point-set-from-the-open-detail", {})
         );
     };
 
@@ -6296,7 +6278,7 @@ $("#applyRouteStart").onclick =
             !Number.isFinite(z)
         ) {
             toast(
-                "Saisis des coordonnées X et Z valides",
+                BOTWI18n.t("app-enter-valid-x-and-z-coordinates", {}),
                 true
             );
 
@@ -6307,11 +6289,11 @@ $("#applyRouteStart").onclick =
             x,
             z,
             label:
-                "Coordonnées personnalisées"
+                BOTWI18n.t("app-contact-information", {})
         });
 
         toast(
-            "Coordonnées de départ appliquées"
+            BOTWI18n.t("app-applied-start-coordinates", {})
         );
     };
 
@@ -6320,7 +6302,7 @@ $("#clearRouteStart").onclick =
         setRouteStart(null);
 
         toast(
-            "Le premier objectif redevient le départ"
+            BOTWI18n.t("app-the-first-objective-is-used-as-the", {})
         );
     };
 
@@ -6370,7 +6352,7 @@ $("#routeSessionName").onchange =
                 routeState.name;
 
             toast(
-                "Le nom de session ne peut pas être vide",
+                BOTWI18n.t("app-the-session-name-cannot-be-empty", {}),
                 true
             );
 
@@ -6391,7 +6373,7 @@ $("#routeStrategy").onchange =
         saveRouteState();
 
         toast(
-            "Stratégie enregistrée pour cette session"
+            BOTWI18n.t("app-strategy-recorded-for-this-session", {})
         );
     };
 
@@ -6411,7 +6393,7 @@ $("#clearRoute").onclick =
         if (
             !routeState.entries.length ||
             confirm(
-                "Vider toutes les étapes de cette session ?"
+                BOTWI18n.t("app-empty-all-the-steps-of-this-session", {})
             )
         ) {
             routeState.entries = [];
@@ -6433,8 +6415,8 @@ $("#toggleRoute").onclick =
 
         $("#toggleRoute").textContent =
             hidden
-                ? "Masquer"
-                : "Afficher";
+                ? BOTWI18n.t("app-hide", {})
+                : BOTWI18n.t("app-show", {});
 
         $("#toggleRoute").setAttribute(
             "aria-expanded",

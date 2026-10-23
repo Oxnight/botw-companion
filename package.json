@@ -4,6 +4,8 @@
   "devDependencies": {
     "acorn": "8.15.0",
     "axe-core": "4.13.0",
-    "playwright": "1.62.0"
+    "playwright": "1.62.0",
+    "@fluent/bundle": "0.19.1",
+    "esbuild": "0.25.12"
   }
 }

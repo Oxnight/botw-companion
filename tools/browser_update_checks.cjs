@@ -3,58 +3,106 @@ const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert/strict");
+const root = path.resolve(__dirname, "../botw_companion/web");
+const bootstrap = fs.readFileSync(path.join(root, "app.js"), "utf8").split("window.fetch =")[0];
+
+function handleUpdateRequest(request, response, state) {
+  const {token, handoff} = state;
+  const url = new URL(request.url, "http://127.0.0.1");
+  response.setHeader("Cache-Control", "no-store");
+  if (url.pathname === "/api/version") {
+    response.setHeader("Content-Type", "application/json");
+    response.end(JSON.stringify({application: "BOTW Companion", session_token: token, browser_handoff: handoff}));
+  } else if (url.pathname === "/api/browser/claim") {
+    let body = "";
+    request.on("data", chunk => { body += chunk; });
+    request.on("end", () => {
+      const {token, handoff} = state;
+      const data = JSON.parse(body);
+      if (request.headers["x-botw-session-token"] !== token) {
+        response.writeHead(403); response.end("{}"); return;
+      }
+      if (handoff && data.id === handoff.id && !handoff.claimed_by &&
+          [null, data.client_id].includes(handoff.client_id)) handoff.claimed_by = data.client_id;
+      response.setHeader("Content-Type", "application/json");
+      response.end(JSON.stringify({browser_handoff: handoff}));
+    });
+  } else if (url.pathname === "/locale.js") {
+    const locale = url.searchParams.get("lang");
+    if (!["fr", "en"].includes(locale)) {
+      response.writeHead(404, {"Content-Type": "text/plain; charset=utf-8"});
+      response.end("Unknown fixture locale");
+      return;
+    }
+    response.setHeader("Content-Type", "text/javascript; charset=utf-8");
+    response.end(fs.readFileSync(path.join(root, "../locales", locale, "browser.js")));
+  } else if (["/i18n.js", "/language.js", "/browser_session.js", "/style.css", "/metrics.css", "/armor.css"].includes(url.pathname)) {
+    response.setHeader("Content-Type", url.pathname.endsWith(".js") ? "text/javascript; charset=utf-8" : "text/css; charset=utf-8");
+    response.end(fs.readFileSync(path.join(root, url.pathname.slice(1))));
+  } else if (url.pathname === "/unrelated") {
+    response.end("<!doctype html><title>Unrelated page</title><h1>Keep this page</h1>");
+  } else {
+    const lang = url.searchParams.get("lang") === "en" ? "en" : "fr";
+    response.setHeader("Content-Type", "text/html; charset=utf-8");
+    // Tabs share cookies, but each document must load its own locale catalog.
+    response.end(`<!doctype html><html lang="${lang}"><head><title>BOTW Companion</title><meta name="botw-session-token" content="${token}">
+      <script src="/locale.js?lang=${lang}"></script><script src="/i18n.js"></script><script src="/language.js"></script>
+      <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/metrics.css"><link rel="stylesheet" href="/armor.css">
+      </head><body><select id="languageSelect"><option value="fr">Français</option><option value="en">English</option></select><main class="detailSection"><div class="guideTitle">
+      <h3>${lang === "en" ? "Objective guide" : "Fiche d’accompagnement personnalisée"}</h3>
+      <span>${lang === "en" ? "Obstacle or individual lock confirmed" : "Conseils propres à cette famille cartographique"}</span>
+      </div><output id="version">${token}</output></main><script src="/browser_session.js"></script>
+      <script>${bootstrap}</script><script>window.BOTWBrowserSession.init(${url.pathname === "/late" ? '"old-session"' : 'sessionToken'},()=>{window.stopped=true;});</script></body></html>`);
+  }
+}
+
+async function assertHandoffBootstrap(page, language) {
+  const state = await page.evaluate(() => ({
+    catalog: globalThis.BOTWLocaleData?.locale?.id,
+    formatter: typeof globalThis.BOTWI18n?.t,
+    failed: globalThis.BOTWI18n?.failed,
+    locale: globalThis.BOTWI18n?.locale,
+    language: document.documentElement.lang,
+    session: typeof window.BOTWBrowserSession?.init
+  }));
+  assert.deepEqual(state, {catalog: language, formatter: "function", failed: false,
+    locale: language, language, session: "function"},
+  `Handoff fixture BOTWI18n bootstrap failed at ${page.url()}; load /locale.js?lang=${language} and /i18n.js before language/session scripts: ${JSON.stringify(state)}`);
+}
+
+function trackHandoffErrors(context) {
+  const errors = [];
+  context.on("weberror", failure => {
+    const error = {url: failure.page()?.url() ?? "unknown page", message: failure.error().message};
+    errors.push(error);
+    console.error("Handoff page error:", JSON.stringify(error));
+  });
+  return errors;
+}
+
+function assertNoHandoffErrors(errors) {
+  assert.deepEqual(errors, [], "Handoff fixture JavaScript errors: " + JSON.stringify(errors));
+}
 
 async function runBrowserUpdateChecks(browser) {
-  const root = path.resolve(__dirname, "../botw_companion/web");
   let token = "old-session", handoff = null;
-  const bootstrap = fs.readFileSync(path.join(root, "app.js"), "utf8").split("window.fetch =")[0];
+  const state = {get token() { return token; }, get handoff() { return handoff; }};
   const requests = [];
   const server = http.createServer((request, response) => {
-    const url = new URL(request.url, "http://127.0.0.1");
-    requests.push({path: url.pathname, token});
-    response.setHeader("Cache-Control", "no-store");
-    if (url.pathname === "/api/version") {
-      response.setHeader("Content-Type", "application/json");
-      response.end(JSON.stringify({application: "BOTW Companion", session_token: token, browser_handoff: handoff}));
-    } else if (url.pathname === "/api/browser/claim") {
-      let body = "";
-      request.on("data", chunk => { body += chunk; });
-      request.on("end", () => {
-        const data = JSON.parse(body);
-        if (request.headers["x-botw-session-token"] !== token) {
-          response.writeHead(403); response.end("{}"); return;
-        }
-        if (handoff && data.id === handoff.id && !handoff.claimed_by &&
-            [null, data.client_id].includes(handoff.client_id)) handoff.claimed_by = data.client_id;
-        response.setHeader("Content-Type", "application/json");
-        response.end(JSON.stringify({browser_handoff: handoff}));
-      });
-    } else if (["/language.js", "/browser_session.js", "/style.css", "/metrics.css", "/armor.css"].includes(url.pathname)) {
-      response.setHeader("Content-Type", url.pathname.endsWith(".js") ? "text/javascript" : "text/css");
-      response.end(fs.readFileSync(path.join(root, url.pathname.slice(1))));
-    } else if (url.pathname === "/unrelated") {
-      response.end("<!doctype html><title>Unrelated page</title><h1>Keep this page</h1>");
-    } else {
-      const lang = url.searchParams.get("lang") === "en" ? "en" : "fr";
-      response.setHeader("Content-Type", "text/html; charset=utf-8");
-      response.end(`<!doctype html><html lang="${lang}"><head><title>BOTW Companion</title><meta name="botw-session-token" content="${token}"><script src="/language.js"></script>
-        <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/metrics.css"><link rel="stylesheet" href="/armor.css">
-        </head><body><select id="languageSelect"><option value="fr">Français</option><option value="en">English</option></select><main class="detailSection"><div class="guideTitle">
-        <h3>${lang === "en" ? "Objective guide" : "Fiche d’accompagnement personnalisée"}</h3>
-        <span>${lang === "en" ? "Obstacle or individual lock confirmed" : "Conseils propres à cette famille cartographique"}</span>
-        </div><output id="version">${token}</output></main><script src="/browser_session.js"></script>
-        <script>${bootstrap}</script><script>window.BOTWBrowserSession.init(${url.pathname === "/late" ? '"old-session"' : 'sessionToken'},()=>{window.stopped=true;});</script></body></html>`);
-    }
+    requests.push({path: new URL(request.url, "http://127.0.0.1").pathname, token});
+    handleUpdateRequest(request, response, state);
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
   const context = await browser.newContext({viewport: {width: 1200, height: 900}});
+  const errors = trackHandoffErrors(context);
   try {
     const selected = await context.newPage();
-    selected.on('pageerror', error => console.error('Handoff page error:', error.message));
     await selected.goto(url + "/?lang=en");
+    await assertHandoffBootstrap(selected, "en");
     const duplicate = await context.newPage();
     await duplicate.goto(url + "/?lang=fr");
+    await assertHandoffBootstrap(duplicate, "fr");
     // Exercise the documented policy fallback even on engines that happen
     // to allow closing a manually created one-entry test page.
     await duplicate.evaluate(() => { window.close = () => {}; });
@@ -64,6 +112,7 @@ async function runBrowserUpdateChecks(browser) {
     await selected.evaluate(url => window.open(url + "/?lang=fr"), url);
     const popup = await popupPromise;
     await popup.waitForLoadState();
+    await assertHandoffBootstrap(popup, "fr");
     await popup.waitForFunction(() => !!window.BOTWBrowserSession);
     const clientId = await selected.evaluate(() => window.BOTWBrowserSession.clientId);
     const prepared = {id: "verified-update-handoff", client_id: clientId};
@@ -88,6 +137,7 @@ async function runBrowserUpdateChecks(browser) {
       await selected.locator("#languageSelect").selectOption(lang);
       await selected.waitForFunction(language => document.documentElement.lang === language &&
         !!window.BOTWBrowserSession, lang);
+      await assertHandoffBootstrap(selected, lang);
       assert.equal(await selected.evaluate(() => window.BOTWBrowserSession.clientId), clientId);
       assert.equal(await selected.locator("#version").textContent(), "updated-session");
       await selected.waitForTimeout(100);
@@ -98,6 +148,7 @@ async function runBrowserUpdateChecks(browser) {
       await selected[direction]();
       await selected.waitForFunction(lang => document.documentElement.lang === lang &&
         !!window.BOTWBrowserSession, language);
+      await assertHandoffBootstrap(selected, language);
       assert.equal(await selected.evaluate(() => window.BOTWBrowserSession.clientId), clientId);
       await selected.waitForTimeout(100);
       assert.equal(await selected.evaluate(() => !!window.stopped), false,
@@ -114,11 +165,13 @@ async function runBrowserUpdateChecks(browser) {
     assert.equal(await selected.evaluate(() => !!window.stopped), false,
       "A delayed announcement retired the updated document");
     await selected.reload();
+    await assertHandoffBootstrap(selected, "fr");
     assert.equal(await selected.evaluate(() => window.BOTWBrowserSession.clientId), clientId);
     // An old launch fragment cannot override the current server's token.
     const staleUrl = await context.newPage();
     await staleUrl.addInitScript(() => { window.close = () => { window.closeAttempts = (window.closeAttempts || 0) + 1; }; });
     await staleUrl.goto(url + "/?lang=en#session=old-session");
+    await assertHandoffBootstrap(staleUrl, "en");
     await staleUrl.waitForTimeout(150);
     assert.equal(await staleUrl.evaluate(() => sessionToken), "updated-session");
     assert.equal(await staleUrl.evaluate(() => !!window.stopped || !!window.closeAttempts), false);
@@ -132,6 +185,7 @@ async function runBrowserUpdateChecks(browser) {
     assert.equal(handoff.claimed_by, clientId);
     await selected.locator("#languageSelect").selectOption("en");
     await selected.waitForFunction(() => document.documentElement.lang === "en" && !!window.BOTWBrowserSession);
+    await assertHandoffBootstrap(selected, "en");
     assert.equal(await selected.evaluate(() => window.BOTWBrowserSession.clientId), clientId);
     await selected.waitForTimeout(100);
     assert.equal(await selected.evaluate(() => !!window.stopped), false);
@@ -142,6 +196,7 @@ async function runBrowserUpdateChecks(browser) {
     const reopened = await context.newPage();
     await reopened.addInitScript(() => { window.close = () => { window.closeAttempts = (window.closeAttempts || 0) + 1; }; });
     await reopened.goto(url + "/?lang=en");
+    await assertHandoffBootstrap(reopened, "en");
     await reopened.waitForTimeout(150);
     assert.equal(await reopened.evaluate(() => !!window.stopped || !!window.closeAttempts), false);
     assert.equal(await reopened.locator("#version").textContent(), "second-updated-session");
@@ -150,6 +205,7 @@ async function runBrowserUpdateChecks(browser) {
     handoff = {id: "fallback-update-handoff", client_id: null, claimed_by: null};
     const fallback = await context.newPage();
     await fallback.goto(url + "/?lang=fr");
+    await assertHandoffBootstrap(fallback, "fr");
     await fallback.waitForFunction(() => window.BOTWBrowserSession && !window.stopped);
     await new Promise((resolve, reject) => {
       const deadline = Date.now() + 5000;
@@ -163,6 +219,7 @@ async function runBrowserUpdateChecks(browser) {
     const late = await context.newPage();
     await late.addInitScript(() => { window.close = () => {}; });
     await late.goto(url + "/late?lang=en").catch(() => {});
+    await assertHandoffBootstrap(late, "en");
     if (!late.isClosed()) await late.waitForFunction(() => !!document.querySelector(".shutdownPage")).catch(error => {
       if (!late.isClosed()) throw error;
     });
@@ -173,6 +230,7 @@ async function runBrowserUpdateChecks(browser) {
     const expired = await context.newPage();
     await expired.addInitScript(() => { window.close = () => {}; });
     await expired.goto(url + '/?lang=en');
+    await assertHandoffBootstrap(expired, "en");
     const expiredId = await expired.evaluate(() => window.BOTWBrowserSession.clientId);
     await expired.evaluate(client => window.BOTWBrowserSession.installed({id: 'expired-handoff', client_id: client}), expiredId);
     token = 'new-session-after-expiry';
@@ -183,6 +241,7 @@ async function runBrowserUpdateChecks(browser) {
     const ordinaryRestart = await context.newPage();
     await ordinaryRestart.addInitScript(() => { window.close = () => {}; });
     await ordinaryRestart.goto(url + '/?lang=en');
+    await assertHandoffBootstrap(ordinaryRestart, "en");
     await ordinaryRestart.waitForTimeout(100);
     token = 'ordinary-restart-session';
     await unrelated.evaluate(() => {
@@ -198,6 +257,7 @@ async function runBrowserUpdateChecks(browser) {
     for (const lang of ["fr", "en"]) {
       const page = await context.newPage();
       await page.goto(url + "/?lang=" + lang);
+      await assertHandoffBootstrap(page, lang);
       for (const width of [760, 1200]) {
         await page.setViewportSize({width, height: 900});
         await page.locator("main").evaluate(node => { node.style.width = "min(380px, 90vw)"; });
@@ -216,11 +276,13 @@ async function runBrowserUpdateChecks(browser) {
       await page.close();
     }
   } catch (error) {
-    console.error('Browser handoff fixture state:', JSON.stringify({handoff, requests: requests.slice(-12)}));
+    console.error('Browser handoff fixture state:', JSON.stringify({handoff, errors, requests: requests.slice(-12)}));
     throw error;
   } finally {
     await context.close();
     await new Promise(resolve => server.close(resolve));
   }
+  assertNoHandoffErrors(errors);
 }
-module.exports = {runBrowserUpdateChecks};
+module.exports = {runBrowserUpdateChecks, handleUpdateRequest, assertHandoffBootstrap,
+  trackHandoffErrors, assertNoHandoffErrors};

@@ -1,5 +1,7 @@
 param(
-    [int]$Port = 18765
+    [int]$Port = 18765,
+    [ValidateSet("chrome", "edge", "firefox", "chromium", "webkit")]
+    [string[]]$Browsers = @("chrome", "edge", "firefox")
 )
 
 $ErrorActionPreference = "Stop"
@@ -8,7 +10,7 @@ $server = $null
 
 Push-Location $projectRoot
 try {
-    foreach ($browser in @("chrome", "edge", "firefox")) {
+    foreach ($browser in $Browsers) {
         # A browser context isolates cookies/storage, not the server's files.
         # Give every engine fresh routes, notes, preferences and update state.
         try {

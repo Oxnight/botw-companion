@@ -64,6 +64,40 @@ build.
 
 ## Acorn
 
-Acorn 8.15.0 is an MIT-licensed JavaScript parser used only to compile English
-browser assets during development. Its parser and Node.js dependencies are not
+Acorn 8.15.0 is an MIT-licensed JavaScript parser used only to inspect shared
+browser source and validate message contracts during development. Its parser and Node.js dependencies are not
 bundled in the application. See [Acorn](https://github.com/acornjs/acorn).
+
+## Shared offline localization
+
+The shared Python/browser formatter uses Fluent rather than an application
+parser or translation service. These tested pins are reproducible inputs, not
+a statement that they are the latest available versions.
+
+- **fluent.runtime 0.4.0**, **fluent.syntax 0.19.0**, and browser
+  **@fluent/bundle 0.19.1**: Apache-2.0, Mozilla and Project Fluent contributors.
+  The Python parser is also needed at runtime by FluentResource. The JavaScript
+  runtime is bundled locally in `web/i18n.js`.
+  Sources: <https://github.com/projectfluent/python-fluent> and
+  <https://github.com/projectfluent/fluent.js>.
+  [Apache license](licenses/FLUENT-APACHE-2.0.txt).
+- **Babel 2.17.0** supplies Python CLDR formatting/plural data offline:
+  [BSD license](licenses/BABEL-2.17.0.txt) and
+  [Unicode data terms](licenses/UNICODE-CLDR.txt).
+  Source: <https://github.com/python-babel/babel/tree/v2.17.0>.
+- Fluent's Python dependencies are pinned as **attrs 25.3.0**
+  ([MIT](licenses/ATTRS-25.3.0.txt)), **pytz 2025.2**
+  ([MIT](licenses/PYTZ-2025.2.txt)), and **typing_extensions 4.15.0**
+  ([PSF terms](licenses/TYPING-EXTENSIONS-4.15.0.txt)).
+  Sources: <https://github.com/python-attrs/attrs>,
+  <https://github.com/stub42/pytz>, <https://github.com/python/typing_extensions>.
+- **esbuild 0.25.12** ([MIT](licenses/ESBUILD-0.25.12.txt)) is the development
+  bundler. Installed applications use the bundled runtime and do not require
+  esbuild or npm.
+  Source: <https://github.com/evanw/esbuild/tree/v0.25.12>.
+
+The supplied Fluent Python wheels and npm distributions omit a separate
+license/NOTICE file. Their metadata declares Apache-2.0; the standard license
+text is retained here, with the project attribution above. Upstream source
+and metadata must be reviewed when updating these pins. Browser Intl data
+comes from the installed browser; it is not downloaded by Companion.

@@ -65,23 +65,25 @@ jobs:
           }
 
       - name: Install runtime dependencies
-        run: python -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
+        run: python -m pip install --disable-pip-version-check --quiet -r requirements-runtime.txt
+
+      - name: Install Node dependencies
+        run: npm ci --ignore-scripts
 
       - name: Audit licenses and distribution contents
         run: python tools/audit_distribution.py
 
       - name: Test Python code and package
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: python -m unittest discover -s tests -v
 
       - name: Prepare browsers
         run: |
-          npm ci --ignore-scripts
           npx playwright install firefox
 
-      - name: Check generated English assets
+      - name: Check shared locale resources
         run: |
-          python tools/build_english_assets.py --check
+          python tools/i18n.py check
           python tools/audit_localization.py
 
       - name: Test Chrome, Edge, and Firefox
@@ -232,65 +234,33 @@ jobs:
           fi
 
       - name: Install runtime dependencies
-        run: python3 -m pip install --disable-pip-version-check --quiet "certifi==2025.8.3"
+        run: python3 -m pip install --disable-pip-version-check --quiet -r requirements-runtime.txt
+
+      - name: Install Node dependencies
+        run: npm ci --ignore-scripts
 
       - name: Audit licenses and distribution contents
         run: python3 tools/audit_distribution.py
 
       - name: Test Python code and package
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: python3 -m unittest discover -s tests -v
 
       - name: Prepare Chromium, Firefox, and WebKit
         timeout-minutes: 15
         run: |
-          npm ci --ignore-scripts
           npx playwright install chromium firefox webkit
 
-      - name: Check generated English assets
+      - name: Check shared locale resources
         run: |
-          python3 tools/build_english_assets.py --check
+          python3 tools/i18n.py check
           python3 tools/audit_localization.py
 
       - name: Test the site in all three engines
         shell: bash
         timeout-minutes: 10
         run: |
-          server_pid=""
-          stop_server() {
-            if [[ -n "$server_pid" ]] && kill -0 "$server_pid" 2>/dev/null; then
-              kill "$server_pid" 2>/dev/null || true
-              wait "$server_pid" 2>/dev/null || true
-            fi
-            server_pid=""
-          }
-          trap stop_server EXIT
-          for browser in webkit chromium firefox; do
-            echo "::group::$browser flow"
-            python3 tools/browser_test_server.py --port 18765 >"browser-test-$browser.log" 2>&1 &
-            server_pid=$!
-            ready=0
-            for attempt in {1..120}; do
-              if curl --noproxy '*' --silent --fail --max-time 1 \
-                  http://127.0.0.1:18765/api/version >/dev/null; then
-                ready=1
-                break
-              fi
-              if ! kill -0 "$server_pid" 2>/dev/null; then
-                cat "browser-test-$browser.log"
-                exit 1
-              fi
-              sleep 0.25
-            done
-            if [[ "$ready" != "1" ]]; then
-              cat "browser-test-$browser.log"
-              exit 1
-            fi
-            BOTW_BROWSER_TEST_TIMEOUT_MS=120000 \
-              node tools/browser_smoke.js http://127.0.0.1:18765 "$browser"
-            stop_server
-            echo "::endgroup::"
-          done
+          bash tools/run_browser_smoke.sh
 
       - name: Preserve browser diagnostics on failure
         if: failure()
@@ -403,6 +373,9 @@ jobs:
           python3 tools/verify_release_ref.py \
             --tag "$BUILD_REF_NAME" \
             --commit "$GITHUB_SHA"
+
+      - name: Install runtime dependencies
+        run: python3 -m pip install --disable-pip-version-check --quiet -r requirements-runtime.txt
 
       - name: Audit licenses and distribution contents
         run: python3 tools/audit_distribution.py

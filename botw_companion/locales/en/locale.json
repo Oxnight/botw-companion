@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "id": "en",
+  "native_name": "English",
+  "format_locale": "en-US",
+  "direction": "ltr",
+  "aliases": [],
+  "fallback": null,
+  "enabled": true
+}

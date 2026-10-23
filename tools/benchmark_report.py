@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure the legacy report and the progressive browser transport."""
+"""Compare complete report serialization with split browser transport."""
 
 from __future__ import annotations
 

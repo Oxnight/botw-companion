@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "default": "fr",
+  "locales": {
+    "fr": {
+      "schema": 1,
+      "id": "fr",
+      "native_name": "Français",
+      "format_locale": "fr-FR",
+      "direction": "ltr",
+      "aliases": [],
+      "fallback": null,
+      "enabled": true,
+      "display_names": {
+        "en": "French"
+      },
+      "revision": "0f14af235a6c3cfaaad78048d767af09ea6d0542b6d882a6b402b25a1e7a0eaf"
+    },
+    "en": {
+      "schema": 1,
+      "id": "en",
+      "native_name": "English",
+      "format_locale": "en-US",
+      "direction": "ltr",
+      "aliases": [],
+      "fallback": null,
+      "enabled": true,
+      "revision": "f644a3ff420c4d1f64d3f189dc340706a41aa47e3331980b64a7f6cb91e944a6"
+    }
+  },
+  "aliases": {
+    "en": "en",
+    "fr": "fr"
+  }
+}

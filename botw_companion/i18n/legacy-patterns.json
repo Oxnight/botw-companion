@@ -1,0 +1,6727 @@
+[
+  {
+    "source": "Accompagnement - Stalhinox ZXQ0QXZ",
+    "message": "legacy-template-1",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoile",
+    "message": "legacy-template-2",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoiles",
+    "message": "legacy-template-3",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Après la petite clé, grimpe à l'échelle et saute sur le côté pour atteindre le coffre facultatif. Carte intérieure : Intérieur - Sanctuaire de Rah'Kua. Positions confirmées : coffre ZXQ0QXZ - Petite clé (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Masse perforatrice (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-5",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Atteindre la tour - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-6",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Atteindre le sanctuaire - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-7",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Kio'Dafuna. Positions confirmées : coffre ZXQ0QXZ - Épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-8",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Rino'Himika. Positions confirmées : coffre ZXQ0QXZ - Brise-roc (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-9",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Rukko'Ma. Positions confirmées : coffre ZXQ0QXZ - Opale brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Arc zora (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-10",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Sa'Darj. Positions confirmées : coffre ZXQ0QXZ - Arc de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-11",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Shimo'Itose. Positions confirmées : coffre ZXQ0QXZ - Petite clé (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Rubis brut (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Brise-roc (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Flèche de glace x10 (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ).",
+    "message": "legacy-template-12",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Shora'Ha. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Longue épée de flammes (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Flèche de glace x10 (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Cœur antique géant (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ); coffre ZXQ16QXZ - Épée des sylvains (X ZXQ17QXZ, Y ZXQ18QXZ, Z ZXQ19QXZ); coffre ZXQ20QXZ - Arc royal (X ZXQ21QXZ, Y ZXQ22QXZ, Z ZXQ23QXZ).",
+    "message": "legacy-template-13",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ]
+  },
+  {
+    "source": "Avant l'autel, cherche un brasier, des feuilles ou de la glace qui dissimulent le coffre. Carte intérieure : Intérieur - Sanctuaire de Ta'Mur. Positions confirmées : coffre ZXQ0QXZ - Casse-pierre (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Rubis brut (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Opale brute (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Petite clé (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ).",
+    "message": "legacy-template-14",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  {
+    "source": "Avant la dernière correction, utilise les piliers comme marches pour rejoindre le coffre latéral. Carte intérieure : Intérieur - Sanctuaire de Sata'Kada. Positions confirmées : coffre ZXQ0QXZ - Cœur antique géant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-15",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Depuis le tremplin activé, plane vers le coffre surélevé avant de viser l'autel. Carte intérieure : Intérieur - Sanctuaire de Ruyo'Tahu. Positions confirmées : coffre ZXQ0QXZ - Lame rémige (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-16",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Descends de cheval près de Zucchi et conclus la vente pour ZXQ0QXZ rubis.",
+    "message": "legacy-template-17",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ancien château d'Edal - Nord.",
+    "message": "legacy-template-18",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ancien château d'Edal - Sud.",
+    "message": "legacy-template-19",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Banc fleuri.",
+    "message": "legacy-template-20",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Bazar Assek.",
+    "message": "legacy-template-21",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Camp d'entraînement au tir à l'arc.",
+    "message": "legacy-template-22",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Cité Gerudo.",
+    "message": "legacy-template-23",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Course de morses.",
+    "message": "legacy-template-24",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Domaine Zora.",
+    "message": "legacy-template-25",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Entrée du canyon Gerudo.",
+    "message": "legacy-template-26",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Falaises de la Volonté.",
+    "message": "legacy-template-27",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Forêt Korogu.",
+    "message": "legacy-template-28",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Laboratoire antique d'Akkala.",
+    "message": "legacy-template-29",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Laboratoire antique d'Elimith.",
+    "message": "legacy-template-30",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Lac de barrage de l'est.",
+    "message": "legacy-template-31",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Mine du sud.",
+    "message": "legacy-template-32",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Muraille d'Elimith.",
+    "message": "legacy-template-33",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Plateau du Tonnerre.",
+    "message": "legacy-template-34",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont Goron.",
+    "message": "legacy-template-35",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont d'Ingogo.",
+    "message": "legacy-template-36",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont d'Orlène.",
+    "message": "legacy-template-37",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont de Cocorico.",
+    "message": "legacy-template-38",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont de Faroria.",
+    "message": "legacy-template-39",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont de Jeddo.",
+    "message": "legacy-template-40",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont suspendu de Digdo.",
+    "message": "legacy-template-41",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais de Delass.",
+    "message": "legacy-template-42",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais de l'est d'Akkala.",
+    "message": "legacy-template-43",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais de l'orée de la plaine.",
+    "message": "legacy-template-44",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais de la forêt.",
+    "message": "legacy-template-45",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais de la rivière.",
+    "message": "legacy-template-46",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais des Géminés.",
+    "message": "legacy-template-47",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais des Piafs.",
+    "message": "legacy-template-48",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais des alpages.",
+    "message": "legacy-template-49",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais des marécages.",
+    "message": "legacy-template-50",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais des prairies gelées.",
+    "message": "legacy-template-51",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du canyon Gerudo.",
+    "message": "legacy-template-52",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du lac.",
+    "message": "legacy-template-53",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du pied de la montagne.",
+    "message": "legacy-template-54",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du pont de Tabanta.",
+    "message": "legacy-template-55",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du sud d'Akkala.",
+    "message": "legacy-template-56",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de Soneau.",
+    "message": "legacy-template-57",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de l'étape d'Hyrule.",
+    "message": "legacy-template-58",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de la Palmeraie.",
+    "message": "legacy-template-59",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de temple du Temps.",
+    "message": "legacy-template-60",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines du village d'Adeya.",
+    "message": "legacy-template-61",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Sanctuaire de la Renaissance.",
+    "message": "legacy-template-62",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Sœurs de pierre.",
+    "message": "legacy-template-63",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Temple oublié.",
+    "message": "legacy-template-64",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Tour Gerudo.",
+    "message": "legacy-template-65",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Tour de Tabanta.",
+    "message": "legacy-template-66",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Tour du Prélude.",
+    "message": "legacy-template-67",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village Goron.",
+    "message": "legacy-template-68",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village Piaf.",
+    "message": "legacy-template-69",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village d'Elimith.",
+    "message": "legacy-template-70",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village d'Euzero - magasin général.",
+    "message": "legacy-template-71",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village d'Écaraille.",
+    "message": "legacy-template-72",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village de Cocorico.",
+    "message": "legacy-template-73",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Voie de Lanelle - Accès ouest.",
+    "message": "legacy-template-74",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Île Finalis.",
+    "message": "legacy-template-75",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Île d'Edal.",
+    "message": "legacy-template-76",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Départ de la quête : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-77",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Fontaine ZXQ0QXZ",
+    "message": "legacy-template-78",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Fouille les embranchements après chaque piège ; le coffre est hors de la ligne directe de progression. Carte intérieure : Intérieur - Sanctuaire de Kama'Rahi. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Diamant brut (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Flèche explosive x10 (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-79",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Il y a deux coffres : la petite clé sous le bloc et une arme accessible en planant depuis les rampes supérieures. Carte intérieure : Intérieur - Sanctuaire de Sha'Gehma. Positions confirmées : coffre ZXQ0QXZ - Petite clé (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Épée royale (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-80",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Indice ZXQ0QXZ - ciel austral depuis le milieu du plus grand pont : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Viaduc d'Hylia.",
+    "message": "legacy-template-81",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Indice ZXQ0QXZ - ciel du sud-est depuis la haute montagne enneigée percée : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Chalet de Selmie.",
+    "message": "legacy-template-82",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Indice ZXQ0QXZ - ciel oriental depuis l’œil gauche du crâne : rejoins X ZXQ1QXZ, Z ZXQ2QXZ.",
+    "message": "legacy-template-83",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Inspecte chaque salle ; un passage rocheux destructible à la bombe cache un coffre supplémentaire. Carte intérieure : Intérieur - Sanctuaire de Yakah'Mata. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Épée de chevalier (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Diamant brut (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Rubis argenté (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ); coffre ZXQ16QXZ - Longue épée de vertu (X ZXQ17QXZ, Y ZXQ18QXZ, Z ZXQ19QXZ).",
+    "message": "legacy-template-84",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ]
+  },
+  {
+    "source": "Inspecte les côtés des tapis roulants avant de franchir la dernière porte. Carte intérieure : Intérieur - Sanctuaire de Jino'Yoh. Positions confirmées : coffre ZXQ0QXZ - Opale brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-85",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Inspecte les côtés et le plafond : un conducteur ou un coffre métallique peut servir de pont électrique. Carte intérieure : Intérieur - Sanctuaire de Dako'Tawa. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Cœur antique (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Bouclier du soleil (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Cimeterre du clair de lune (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ).",
+    "message": "legacy-template-86",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  {
+    "source": "Inspecte les côtés et le plafond : un conducteur ou un coffre métallique peut servir de pont électrique. Carte intérieure : Intérieur - Sanctuaire de Guko'Chise. Positions confirmées : coffre ZXQ0QXZ - Épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-87",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Inspecte les côtés et le plafond : un conducteur ou un coffre métallique peut servir de pont électrique. Carte intérieure : Intérieur - Sanctuaire de Hawa'Kai. Positions confirmées : coffre ZXQ0QXZ - Saphir brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Rubis doré (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Cœur antique (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-88",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Inspecte les côtés et le plafond : un conducteur ou un coffre métallique peut servir de pont électrique. Carte intérieure : Intérieur - Sanctuaire de Keh'Noi. Positions confirmées : coffre ZXQ0QXZ - Cimeterre gerudo (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-89",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "La réussite de la seconde propulsion ouvre l'accès au coffre avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Dounba'Ta. Positions confirmées : coffre ZXQ0QXZ - Longue épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Arc du faucon (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-90",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Chasu'Keta. Positions confirmées : coffre ZXQ0QXZ - Gants d'escalade (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-91",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Da'Kasoh. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-92",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Dahi'Shiino. Positions confirmées : coffre ZXQ0QXZ - Cœur antique géant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-93",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Gaoma'Asa. Positions confirmées : coffre ZXQ0QXZ - Espadon royal (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-94",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Hya'Miu. Positions confirmées : coffre ZXQ0QXZ - Saphir brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-95",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Kata'Chuki. Positions confirmées : coffre ZXQ0QXZ - Hallebarde royale (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-96",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Kenih'Shika. Positions confirmées : coffre ZXQ0QXZ - Saphir brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-97",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Kima'Kosasa. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-98",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Midda'Loki. Positions confirmées : coffre ZXQ0QXZ - Épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-99",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Muo'Jijm. Positions confirmées : coffre ZXQ0QXZ - Arc de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-100",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Myos'Sino. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-101",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Namika'Oz. Positions confirmées : coffre ZXQ0QXZ - Trident des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-102",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Nia'Nea. Positions confirmées : coffre ZXQ0QXZ - Bouclier de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-103",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Puma'Nitto. Positions confirmées : coffre ZXQ0QXZ - Boomerang (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-104",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Runeh'Koribah. Positions confirmées : coffre ZXQ0QXZ - Petite clé (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Flèche explosive x10 (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Cœur antique géant (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-105",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Sao'Kohi. Positions confirmées : coffre ZXQ0QXZ - Arc de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-106",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Sasa'Kai. Positions confirmées : coffre ZXQ0QXZ - Épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-107",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Sasu'Kosa. Positions confirmées : coffre ZXQ0QXZ - Épée des flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-108",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Shi'Tatanke. Positions confirmées : coffre ZXQ0QXZ - Épée royale (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-109",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Tina'Kyoza. Positions confirmées : coffre ZXQ0QXZ - Hallebarde de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-110",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre apparaît après la victoire, avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Tsutsua'Nima. Positions confirmées : coffre ZXQ0QXZ - Trident des flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-111",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre devient accessible après avoir exécuté toutes les techniques demandées. Carte intérieure : Intérieur - Sanctuaire de Taro'Nihi. Positions confirmées : coffre ZXQ0QXZ - Petit sabre de défiance (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Bouclier de l'égide (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Opale brute (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-112",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Da'Chokahi. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-113",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Da'Kikii. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-114",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Dira'Ma. Positions confirmées : coffre ZXQ0QXZ - Gilet barbare (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-115",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Gu'Achitoh. Positions confirmées : coffre ZXQ0QXZ - Longue épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-116",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Jitah'Sami. Positions confirmées : coffre ZXQ0QXZ - Trident des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-117",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kaza'Tokki. Positions confirmées : coffre ZXQ0QXZ - Culotte barbare (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-118",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kiha'U. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-119",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kito'Wawai. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-120",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kugu'Chide. Positions confirmées : coffre ZXQ0QXZ - Rubis doré (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-121",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kun'Shidaji. Positions confirmées : coffre ZXQ0QXZ - Cœur antique géant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-122",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kyoshi'Oh. Positions confirmées : coffre ZXQ0QXZ - Trident des flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-123",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Kyuka'Nata. Positions confirmées : coffre ZXQ0QXZ - Pantalon isolant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-124",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Lano'Kuhii. Positions confirmées : coffre ZXQ0QXZ - Rubis doré (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-125",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Ma'Nora. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-126",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Mahmu'Lano. Positions confirmées : coffre ZXQ0QXZ - Cœur antique géant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-127",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Mii'Suu. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-128",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Rahna'Loki. Positions confirmées : coffre ZXQ0QXZ - Longue épée de vertu (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-129",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Rakyu'Uro. Positions confirmées : coffre ZXQ0QXZ - Bouclier du soleil (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-130",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Ritah'Zumo. Positions confirmées : coffre ZXQ0QXZ - Cœur antique géant (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-131",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Rona'Kahta. Positions confirmées : coffre ZXQ0QXZ - Longue épée de flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-132",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Shi'Kuchofu. Positions confirmées : coffre ZXQ0QXZ - Fourche électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-133",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Shi'Yota. Positions confirmées : coffre ZXQ0QXZ - Longue épée de flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-134",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Suma'Sama. Positions confirmées : coffre ZXQ0QXZ - Cimeterre du clair de lune (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-135",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Tawa'Jin. Positions confirmées : coffre ZXQ0QXZ - Longue épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-136",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Thano'A. Positions confirmées : coffre ZXQ0QXZ - Souliers d'escalade (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-137",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de To'Kayuu. Positions confirmées : coffre ZXQ0QXZ - Arc gerudo (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-138",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de To'Kumo. Positions confirmées : coffre ZXQ0QXZ - Espadon royal (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-139",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Tou'Karo. Positions confirmées : coffre ZXQ0QXZ - Casque barbare (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-140",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est dans la salle unique, sur le trajet direct vers l'autel. Carte intérieure : Intérieur - Sanctuaire de Tzuna'Kai. Positions confirmées : coffre ZXQ0QXZ - Épée des flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-141",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre est un élément de la solution : garde-le après l'avoir ouvert afin d'actionner la plaque. Carte intérieure : Intérieur - Sanctuaire de Mihzuu'Yo. Positions confirmées : coffre ZXQ0QXZ - Épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-142",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre peut lui-même être métallique : essaie Polaris avant de chercher un chemin physique. Carte intérieure : Intérieur - Sanctuaire de Dahu'Nae. Positions confirmées : coffre ZXQ0QXZ - Opale brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Épée zora (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Ambre brut (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-143",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Le coffre peut lui-même être métallique : essaie Polaris avant de chercher un chemin physique. Carte intérieure : Intérieur - Sanctuaire de Kiroteh'Moh. Positions confirmées : coffre ZXQ0QXZ - Fourche électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-144",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre peut lui-même être métallique : essaie Polaris avant de chercher un chemin physique. Carte intérieure : Intérieur - Sanctuaire de Ma'Ohnu. Positions confirmées : coffre ZXQ0QXZ - Arc de voyageur (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-145",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre peut lui-même être métallique : essaie Polaris avant de chercher un chemin physique. Carte intérieure : Intérieur - Sanctuaire de Wago'Kata. Positions confirmées : coffre ZXQ0QXZ - Ambre brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-146",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Le coffre peut lui-même être métallique : essaie Polaris avant de chercher un chemin physique. Carte intérieure : Intérieur - Sanctuaire de Yao'Mehyo. Positions confirmées : coffre ZXQ0QXZ - Épée de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Opale brute (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-147",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Le parcours latéral derrière l'autel propose un second tir de précision et ouvre le coffre rare. Carte intérieure : Intérieur - Sanctuaire de Mihro'Tsuhi. Positions confirmées : coffre ZXQ0QXZ - Marteau de fer (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Cœur antique géant (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Marteau de fer (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-148",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Les deux ailes donnent chacune accès à un coffre ; l'un contient la petite clé indispensable. Carte intérieure : Intérieur - Sanctuaire de Ma'Kaya. Positions confirmées : coffre ZXQ0QXZ - Espadon de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-149",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Monte sur le toit de l'auberge du bazar Assek, parle à Vivian et achète l'ensemble Contrées Gerudos pour ZXQ0QXZ rubis.",
+    "message": "legacy-template-150",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Kebe'Tawa. Positions confirmées : coffre ZXQ0QXZ - Bouclier du soleil (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-151",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Kima'Zuusu. Positions confirmées : coffre ZXQ0QXZ - Cimeterre du clair de lune (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-152",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Kyu'Ramuhi. Positions confirmées : coffre ZXQ0QXZ - Espadon de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-153",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Monya'Toma. Positions confirmées : coffre ZXQ0QXZ - Épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-154",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Netzu'Yoma. Positions confirmées : coffre ZXQ0QXZ - Lance zora (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-155",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Mémorise la position initiale des objets avant de les déplacer pour pouvoir atteindre le coffre. Carte intérieure : Intérieur - Sanctuaire de Sai'Uuto. Positions confirmées : coffre ZXQ0QXZ - Épée de voyageur (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Cœur antique (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-156",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Objectif - Drak : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Mine abandonnée du nord.",
+    "message": "legacy-template-157",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Fourneau antique : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village d'Elimith.",
+    "message": "legacy-template-158",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Pont d'Ordinn : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont d'Ordinn.",
+    "message": "legacy-template-159",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Poste d'observation : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Course de morses.",
+    "message": "legacy-template-160",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Sidon : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Lac de barrage de l'est.",
+    "message": "legacy-template-161",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Yunobo : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Mine abandonnée du nord.",
+    "message": "legacy-template-162",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif - Zone d'exercice au vol : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Zone d'exercice au vol.",
+    "message": "legacy-template-163",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Forêt Korogu.",
+    "message": "legacy-template-164",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Quartiers principaux.",
+    "message": "legacy-template-165",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village de Cocorico.",
+    "message": "legacy-template-166",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Ancienne caserne d'Akkala.",
+    "message": "legacy-template-167",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Domaine Zora.",
+    "message": "legacy-template-168",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Grand pont de Laruhto.",
+    "message": "legacy-template-169",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Huitième héroïne.",
+    "message": "legacy-template-170",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Lac de barrage de l'est.",
+    "message": "legacy-template-171",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Pont d'Ingogo.",
+    "message": "legacy-template-172",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Pont d'Orlène.",
+    "message": "legacy-template-173",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Repaire des Yigas.",
+    "message": "legacy-template-174",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Ruines de la Palmeraie.",
+    "message": "legacy-template-175",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Ruines de la garnison de Moor.",
+    "message": "legacy-template-176",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Tour des Landes Sauvages.",
+    "message": "legacy-template-177",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Vah'Ruta.",
+    "message": "legacy-template-178",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ près de Viaduc d'Hylia.",
+    "message": "legacy-template-179",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Objectif ZXQ0QXZ : rejoins X ZXQ1QXZ, Z ZXQ2QXZ.",
+    "message": "legacy-template-180",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Observe la trajectoire complète avant le tir ; le coffre demande souvent un angle ou un lancement secondaire. Carte intérieure : Intérieur - Sanctuaire de Ja'Bashif. Positions confirmées : coffre ZXQ0QXZ - Espadon de voyageur (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Ambre brut (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-181",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Observe la trajectoire complète avant le tir ; le coffre demande souvent un angle ou un lancement secondaire. Carte intérieure : Intérieur - Sanctuaire de Kamira'Omuna. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-182",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Observe la trajectoire complète avant le tir ; le coffre demande souvent un angle ou un lancement secondaire. Carte intérieure : Intérieur - Sanctuaire de Shi'Jito. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-183",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Observe la trajectoire complète avant le tir ; le coffre demande souvent un angle ou un lancement secondaire. Carte intérieure : Intérieur - Sanctuaire de Vorida'No. Positions confirmées : coffre ZXQ0QXZ - Arc de l'hirondelle (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Diamant brut (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-184",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Observe la trajectoire complète avant le tir ; le coffre demande souvent un angle ou un lancement secondaire. Carte intérieure : Intérieur - Sanctuaire de Yowaka'Iluta. Positions confirmées : coffre ZXQ0QXZ - Arc de dévotion (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Flèche explosive x5 (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-185",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Obtenir la pièce - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Cité Gerudo.",
+    "message": "legacy-template-186",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Obtenir la pièce - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-187",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Parle à Domida et Prissen au relais des Géminés puis obtiens l'énigme contre ZXQ0QXZ rubis.",
+    "message": "legacy-template-188",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Photographie les deux grilles avant tout déplacement ; chaque sanctuaire possède son propre coffre. Carte intérieure : Intérieur - Sanctuaire de Shibe'Nihro. Positions confirmées : coffre ZXQ0QXZ - Sabre de la défiance (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-189",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Photographie les deux grilles avant tout déplacement ; chaque sanctuaire possède son propre coffre. Carte intérieure : Intérieur - Sanctuaire de Shibe'Nyasu. Positions confirmées : coffre ZXQ0QXZ - Bandana d'escalade (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-190",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Photographie les deux grilles avant tout déplacement ; chaque sanctuaire possède son propre coffre. Carte intérieure : Intérieur - Sanctuaire de Shibe'Nyasu. Positions confirmées : coffre ZXQ0QXZ - Lance du tourment (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-191",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Photographie ou note le motif de référence avant de manipuler la salle. Carte intérieure : Intérieur - Sanctuaire de Kiyo'Uh. Positions confirmées : coffre ZXQ0QXZ - Espadon de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-192",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire d'Etsi'Korima. Positions confirmées : coffre ZXQ0QXZ - Rubis doré (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-193",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Jizu'Kafi. Positions confirmées : coffre ZXQ0QXZ - Lance d'écailles (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-194",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Juni'Shi. Positions confirmées : coffre ZXQ0QXZ - Trident gerudo (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Espadon gerudo (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-195",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Katsu'Tosa. Positions confirmées : coffre ZXQ0QXZ - Longue épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-196",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Myama'Gana. Positions confirmées : coffre ZXQ0QXZ - Arc de dévotion (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-197",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Shado'Lon. Positions confirmées : coffre ZXQ0QXZ - Longue épée de flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-198",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Place d'abord le mécanisme dans une position stable pour le coffre, puis réoriente-le vers la sortie. Carte intérieure : Intérieur - Sanctuaire de Toto'Isa. Positions confirmées : coffre ZXQ0QXZ - Petite clé (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Bouclier de l'égide (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-199",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire d'Ako'Vahta. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Lance rémige (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Saphir brut (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-200",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Daka'Ka. Positions confirmées : coffre ZXQ0QXZ - Rubis argenté (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-201",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Ka'Okyo. Positions confirmées : coffre ZXQ0QXZ - Rubis doré (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Eventail Korogu (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ); coffre ZXQ12QXZ - Cœur antique géant (X ZXQ13QXZ, Y ZXQ14QXZ, Z ZXQ15QXZ); coffre ZXQ16QXZ - Épée des sylvains (X ZXQ17QXZ, Y ZXQ18QXZ, Z ZXQ19QXZ); coffre ZXQ20QXZ - Fourche électrique (X ZXQ21QXZ, Y ZXQ22QXZ, Z ZXQ23QXZ).",
+    "message": "legacy-template-202",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Kiwa'Zatas. Positions confirmées : coffre ZXQ0QXZ - Arc de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-203",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Nohie'Roji. Positions confirmées : coffre ZXQ0QXZ - Bouclier de l'égide (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-204",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Ri'Mona. Positions confirmées : coffre ZXQ0QXZ - Cœur antique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-205",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Sha'Tawa. Positions confirmées : coffre ZXQ0QXZ - Arc de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Rubis violet (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-206",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Uuta'Do. Positions confirmées : coffre ZXQ0QXZ - Épée des flammes (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-207",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Vashi'Ryako. Positions confirmées : coffre ZXQ0QXZ - Ambre brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Espadon de soldat (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-208",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Prends de la hauteur avant de viser le coffre : il est souvent sur une plateforme latérale ou derrière le trajet principal. Carte intérieure : Intérieur - Sanctuaire de Ya'Nahga. Positions confirmées : coffre ZXQ0QXZ - Petit sabre de défiance (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-209",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends de la hauteur dans les ventilateurs pour atteindre la plateforme du coffre avant l'autel. Carte intérieure : Intérieur - Sanctuaire de Sirito'Gheoma. Positions confirmées : coffre ZXQ0QXZ - Flèche explosive x10 (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-210",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Prends le coffre dans le renfoncement droit ; depuis le sommet, redescends en paravoile vers la plateforme du second coffre. Carte intérieure : Intérieur - Sanctuaire de Keha'Rama. Positions confirmées : coffre ZXQ0QXZ - Rubis brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Flèche explosive x5 (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-211",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Regarde derrière et au-dessus de la route principale : le coffre récompense souvent un détour. Carte intérieure : Intérieur - Sanctuaire de Ka'Muh. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-212",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Regarde derrière et au-dessus de la route principale : le coffre récompense souvent un détour. Carte intérieure : Intérieur - Sanctuaire de Kao'Maka. Positions confirmées : coffre ZXQ0QXZ - Opale brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Arc de voyageur (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Rubis doré (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-213",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Regarde derrière et au-dessus de la route principale : le coffre récompense souvent un détour. Carte intérieure : Intérieur - Sanctuaire de Kiha'Tusa. Positions confirmées : coffre ZXQ0QXZ - Arc du faucon (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-214",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Regarde derrière et au-dessus de la route principale : le coffre récompense souvent un détour. Carte intérieure : Intérieur - Sanctuaire de Mau'Eruya. Positions confirmées : coffre ZXQ0QXZ - Bouclier royal (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-215",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Regarde derrière et au-dessus de la route principale : le coffre récompense souvent un détour. Carte intérieure : Intérieur - Sanctuaire de Moa'Kishito. Positions confirmées : coffre ZXQ0QXZ - Rubis brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Épée de chevalier (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-216",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Rejoindre l'objectif - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de l'Orée de la Plaine.",
+    "message": "legacy-template-217",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Bazar Assek.",
+    "message": "legacy-template-218",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de Delass.",
+    "message": "legacy-template-219",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de l'est d'Akkala.",
+    "message": "legacy-template-220",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de l'orée de la plaine.",
+    "message": "legacy-template-221",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de la forêt.",
+    "message": "legacy-template-222",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des alpages.",
+    "message": "legacy-template-223",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des marécages.",
+    "message": "legacy-template-224",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des prairies gelées.",
+    "message": "legacy-template-225",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du canyon Gerudo.",
+    "message": "legacy-template-226",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du lac.",
+    "message": "legacy-template-227",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du sud d'Akkala.",
+    "message": "legacy-template-228",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village d'Elimith.",
+    "message": "legacy-template-229",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village d'Euzero.",
+    "message": "legacy-template-230",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le chien - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village d'Écaraille.",
+    "message": "legacy-template-231",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Annexe des quartiers des gardes.",
+    "message": "legacy-template-232",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Balcon de la salle d'observation.",
+    "message": "legacy-template-233",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Bibliothèque.",
+    "message": "legacy-template-234",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Cabinet du roi.",
+    "message": "legacy-template-235",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Chambre de Zelda.",
+    "message": "legacy-template-236",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Couloir est.",
+    "message": "legacy-template-237",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Deuxième corps de garde.",
+    "message": "legacy-template-238",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Geôles.",
+    "message": "legacy-template-239",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Passage est.",
+    "message": "legacy-template-240",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Premier corps de garde.",
+    "message": "legacy-template-241",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Quartiers des gardes.",
+    "message": "legacy-template-242",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Tour de guet.",
+    "message": "legacy-template-243",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Tour du château.",
+    "message": "legacy-template-244",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le coffre - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-245",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-246",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancienne garnison de Comolo.",
+    "message": "legacy-template-247",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Bazar Assek.",
+    "message": "legacy-template-248",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Cité Gerudo.",
+    "message": "legacy-template-249",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Colonnades antiques.",
+    "message": "legacy-template-250",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Domaine Zora.",
+    "message": "legacy-template-251",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Forêt Korogu.",
+    "message": "legacy-template-252",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Mine du sud.",
+    "message": "legacy-template-253",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des Géminés.",
+    "message": "legacy-template-254",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des marécages.",
+    "message": "legacy-template-255",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines de l'ancien temple.",
+    "message": "legacy-template-256",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du laboratoire royal.",
+    "message": "legacy-template-257",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du parc Sandine.",
+    "message": "legacy-template-258",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du village d'Adeya.",
+    "message": "legacy-template-259",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Salle d'étude de Zelda.",
+    "message": "legacy-template-260",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Sanctuaire de la Renaissance.",
+    "message": "legacy-template-261",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Source de la Force.",
+    "message": "legacy-template-262",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Vah'Naboris.",
+    "message": "legacy-template-263",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Vah'Rudania.",
+    "message": "legacy-template-264",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Vah'Ruta.",
+    "message": "legacy-template-265",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village Goron.",
+    "message": "legacy-template-266",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village Piaf.",
+    "message": "legacy-template-267",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le lieu du souvenir - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Voie de Lanelle - Accès est.",
+    "message": "legacy-template-268",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre le puzzle - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-269",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre ou préparer l'objectif - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Piédestal de l'Épée de légende - Forêt Korogu.",
+    "message": "legacy-template-270",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre ou préparer l'objectif - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Sanctuaire de la Renaissance.",
+    "message": "legacy-template-271",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoindre ou préparer l'objectif - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-272",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Rejoins A-ZXQ0QXZ.",
+    "message": "legacy-template-273",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Rejoins B-ZXQ0QXZ.",
+    "message": "legacy-template-274",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Rejoins Position intérieure X ZXQ0QXZ, Y ZXQ1QXZ, Z ZXQ2QXZ.",
+    "message": "legacy-template-276",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "source": "Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de l'Orée de la Plaine.",
+    "message": "legacy-template-277",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Retourner dans le sanctuaire - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-278",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Récupère avec Polaris le coffre en hauteur près de la plateforme mobile avant de lancer la sphère. Carte intérieure : Intérieur - Sanctuaire de Shada'Ada. Positions confirmées : coffre ZXQ0QXZ - Longue épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-279",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Récupère la Épée de légende après chaque palier ; termine les trois pour maintenir sa puissance à ZXQ0QXZ.",
+    "message": "legacy-template-280",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Réorganise les cubes du milieu pour conduire le courant vers la grille du coffre avant de former l'escalier final. Carte intérieure : Intérieur - Sanctuaire de Takama'Simiri. Positions confirmées : coffre ZXQ0QXZ - Arc royal (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-281",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Da'Chokahi : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Forêt Korogu.",
+    "message": "legacy-template-282",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Da'Kikii : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Domaine Zora.",
+    "message": "legacy-template-283",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Dako'Tawa : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Bazar Assek.",
+    "message": "legacy-template-284",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Dira'Ma : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ancien château d'Edal - Sud.",
+    "message": "legacy-template-285",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Gu'Achitoh : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Falaises de la Volonté.",
+    "message": "legacy-template-286",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Hiro'Hira : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Banc fleuri.",
+    "message": "legacy-template-287",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Jitah'Sami : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Source de la Sagesse.",
+    "message": "legacy-template-288",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Juni'Shi : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont suspendu de Digdo.",
+    "message": "legacy-template-289",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kamu'Yuo : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Muraille d'Elimith.",
+    "message": "legacy-template-290",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kaza'Tokki : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ancien château d'Edal - Nord.",
+    "message": "legacy-template-291",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Keha'Rama : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont d'Ordinn.",
+    "message": "legacy-template-292",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kiha'U : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Huitième héroïne.",
+    "message": "legacy-template-293",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kima'Zuusu : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-294",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kito'Wawai : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-295",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kugu'Chide : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Île Finalis.",
+    "message": "legacy-template-296",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kun'Shidaji : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Forêt Korogu.",
+    "message": "legacy-template-297",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kyoshi'Oh : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de l'est du désert.",
+    "message": "legacy-template-298",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Kyuka'Nata : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont de Faroria.",
+    "message": "legacy-template-299",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Ma'Kaya : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ruines de la Palmeraie.",
+    "message": "legacy-template-300",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Mahmu'Lano : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Forêt Korogu.",
+    "message": "legacy-template-301",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Midda'Loki : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-302",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Mihzuu'Yo : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Vah'Ruta.",
+    "message": "legacy-template-303",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Mii'Suu : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-304",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Myos'Sino : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Sources du Chansonnet.",
+    "message": "legacy-template-305",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Rahna'Loki : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Fontaine de la grande fée.",
+    "message": "legacy-template-306",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Rakyu'Uro : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Course de morses.",
+    "message": "legacy-template-307",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Ritah'Zumo : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-308",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Sasa'Kai : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Tour Gerudo.",
+    "message": "legacy-template-309",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Shi'Dagoz : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Pont de Jeddo.",
+    "message": "legacy-template-310",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Shi'Kuchofu : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Source du Courage.",
+    "message": "legacy-template-311",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Shi'Tatanke : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Camp d'entraînement au tir à l'arc.",
+    "message": "legacy-template-312",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Shi'Yota : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-313",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Suma'Sama : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Ancien château d'Edal - Sud.",
+    "message": "legacy-template-314",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Ta'Mur : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Relais du pied de la montagne.",
+    "message": "legacy-template-315",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Tawa'Jin : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-316",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Thano'A : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Source de la Sagesse.",
+    "message": "legacy-template-317",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Toh'Yassa : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Plateau du Tonnerre.",
+    "message": "legacy-template-318",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Tou'Karo : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Île d'Edal.",
+    "message": "legacy-template-319",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Tsutsua'Nima : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Source de la Force.",
+    "message": "legacy-template-320",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Tzuna'Kai : rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-template-321",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Uuta'Do : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Sœurs de pierre.",
+    "message": "legacy-template-322",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Sanctuaire - Sanctuaire de Vorida'No : rejoins X ZXQ0QXZ, Z ZXQ1QXZ près de Village Piaf.",
+    "message": "legacy-template-323",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Secteur cartographique A-ZXQ0QXZ.",
+    "message": "legacy-template-324",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique B-ZXQ0QXZ.",
+    "message": "legacy-template-325",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique C-ZXQ0QXZ.",
+    "message": "legacy-template-326",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique D-ZXQ0QXZ.",
+    "message": "legacy-template-327",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique E-ZXQ0QXZ.",
+    "message": "legacy-template-328",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique F-ZXQ0QXZ.",
+    "message": "legacy-template-329",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique G-ZXQ0QXZ.",
+    "message": "legacy-template-330",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique H-ZXQ0QXZ.",
+    "message": "legacy-template-331",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique I-ZXQ0QXZ.",
+    "message": "legacy-template-332",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Secteur cartographique J-ZXQ0QXZ.",
+    "message": "legacy-template-333",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Sors le coffre immergé avec Polaris avant de quitter le premier bassin. Carte intérieure : Intérieur - Sanctuaire de Data'Kusu. Positions confirmées : coffre ZXQ0QXZ - Longue épée zora (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-334",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Teste Cryonis sous les grilles, coffres ou plateformes qui semblent hors d'atteinte. Carte intérieure : Intérieur - Sanctuaire de Hayu'Dama. Positions confirmées : coffre ZXQ0QXZ - Rubis violet (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-335",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Teste Cryonis sous les grilles, coffres ou plateformes qui semblent hors d'atteinte. Carte intérieure : Intérieur - Sanctuaire de Hiro'Hira. Positions confirmées : coffre ZXQ0QXZ - Opale brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Flèche de glace x5 (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-336",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Teste Cryonis sous les grilles, coffres ou plateformes qui semblent hors d'atteinte. Carte intérieure : Intérieur - Sanctuaire de Kaya'Miwa. Positions confirmées : coffre ZXQ0QXZ - Épée de chevalier (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Cœur antique (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-337",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Teste Cryonis sous les grilles, coffres ou plateformes qui semblent hors d'atteinte. Carte intérieure : Intérieur - Sanctuaire de Kui'Takka. Positions confirmées : coffre ZXQ0QXZ - Épée des glaces (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-338",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Teste Cryonis sous les grilles, coffres ou plateformes qui semblent hors d'atteinte. Carte intérieure : Intérieur - Sanctuaire de Toumi'Soke. Positions confirmées : coffre ZXQ0QXZ - Lance de voyageur (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-339",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancien château d'Edal - Sud.",
+    "message": "legacy-template-340",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancien parc de la forêt.",
+    "message": "legacy-template-341",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancienne caserne d'Akkala.",
+    "message": "legacy-template-342",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Camp d'entraînement au tir à l'arc.",
+    "message": "legacy-template-343",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Embarcadère.",
+    "message": "legacy-template-344",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Falaises de la Volonté.",
+    "message": "legacy-template-345",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Forêt Korogu.",
+    "message": "legacy-template-346",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Geôles.",
+    "message": "legacy-template-347",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Grand fossile d'Hébra.",
+    "message": "legacy-template-348",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Grand pont de Laruhto.",
+    "message": "legacy-template-349",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Hameau des Anémones.",
+    "message": "legacy-template-350",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Lac de barrage de l'est.",
+    "message": "legacy-template-351",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Place centrale de Lanelle.",
+    "message": "legacy-template-352",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Plateau du Tonnerre.",
+    "message": "legacy-template-353",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont d'Ingogo.",
+    "message": "legacy-template-354",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont d'Orsède.",
+    "message": "legacy-template-355",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont de Faroria.",
+    "message": "legacy-template-356",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont de Jeddo.",
+    "message": "legacy-template-357",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont du Puîné.",
+    "message": "legacy-template-358",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont suspendu de Digdo.",
+    "message": "legacy-template-359",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais de l'est d'Akkala.",
+    "message": "legacy-template-360",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des marécages.",
+    "message": "legacy-template-361",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines de la Palmeraie.",
+    "message": "legacy-template-362",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du parc Sandine.",
+    "message": "legacy-template-363",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du temple des Sages.",
+    "message": "legacy-template-364",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Source de la Force.",
+    "message": "legacy-template-365",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Source du Courage.",
+    "message": "legacy-template-366",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Sources du Chansonnet.",
+    "message": "legacy-template-367",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Sœurs de pierre.",
+    "message": "legacy-template-368",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Temple oublié.",
+    "message": "legacy-template-369",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Tumuli de la plaine d'Uchine.",
+    "message": "legacy-template-370",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village d'Écaraille.",
+    "message": "legacy-template-371",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Voie de Lanelle - Accès est.",
+    "message": "legacy-template-372",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Hinox - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Île Finalis.",
+    "message": "legacy-template-373",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancien château d'Edal - Sud.",
+    "message": "legacy-template-374",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancien hameau de Rauru.",
+    "message": "legacy-template-375",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancien village de Tabanta.",
+    "message": "legacy-template-376",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ancienne garnison de Comolo.",
+    "message": "legacy-template-377",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Camp d'entraînement au tir à l'arc.",
+    "message": "legacy-template-378",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Chalet de Selmie.",
+    "message": "legacy-template-379",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Cratère d'Oriolo.",
+    "message": "legacy-template-380",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Entrée du canyon Gerudo.",
+    "message": "legacy-template-381",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Fontaine de la grande fée.",
+    "message": "legacy-template-382",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Galerie est.",
+    "message": "legacy-template-383",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Laboratoire antique d'Elimith.",
+    "message": "legacy-template-384",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Lac de barrage de l'est.",
+    "message": "legacy-template-385",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Mine abandonnée du nord.",
+    "message": "legacy-template-386",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Mine du sud.",
+    "message": "legacy-template-387",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Muraille d'Elimith.",
+    "message": "legacy-template-388",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont d'Arfan.",
+    "message": "legacy-template-389",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont d'Ordinn.",
+    "message": "legacy-template-390",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont de Cocorico.",
+    "message": "legacy-template-391",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Pont de Faroria.",
+    "message": "legacy-template-392",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des Piafs.",
+    "message": "legacy-template-393",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais des prairies gelées.",
+    "message": "legacy-template-394",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du canyon Gerudo.",
+    "message": "legacy-template-395",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du lac.",
+    "message": "legacy-template-396",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Relais du pont de Tabanta.",
+    "message": "legacy-template-397",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Repaire des Yigas.",
+    "message": "legacy-template-398",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines de l'étape d'Hyrule.",
+    "message": "legacy-template-399",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines de la Palmeraie.",
+    "message": "legacy-template-400",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines de la prison.",
+    "message": "legacy-template-401",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du village d'Adeya.",
+    "message": "legacy-template-402",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Sanctuaire de la Renaissance.",
+    "message": "legacy-template-403",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Source du Courage.",
+    "message": "legacy-template-404",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Village d'Elimith.",
+    "message": "legacy-template-405",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Lithorok - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Zone d'exercice au vol.",
+    "message": "legacy-template-406",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Moldarquor - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Grand fossile du désert.",
+    "message": "legacy-template-407",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Trouver le Moldarquor - Rejoins X ZXQ0QXZ, Z ZXQ1QXZ, près de Ruines du Jugement.",
+    "message": "legacy-template-408",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Un coffre est caché derrière les rochers près de l'entrée ; l'autre se décroche de sa colonne avec Polaris. Carte intérieure : Intérieur - Sanctuaire de Toh'Yassa. Positions confirmées : coffre ZXQ0QXZ - Combinaison isolante (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Opale brute (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-409",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire d'Io'Soho. Positions confirmées : coffre ZXQ0QXZ - Topaze brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Cœur antique (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-410",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Kamu'Yuo. Positions confirmées : coffre ZXQ0QXZ - Lance de soldat (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Opale brute (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-411",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Mo'Latania. Positions confirmées : coffre ZXQ0QXZ - Rubis doré (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Lance des sylvains (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ); coffre ZXQ8QXZ - Arc des sylvains (X ZXQ9QXZ, Y ZXQ10QXZ, Z ZXQ11QXZ).",
+    "message": "legacy-template-412",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Nokki'Mihi. Positions confirmées : coffre ZXQ0QXZ - Diamant brut (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-413",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Rohita'Tigu. Positions confirmées : coffre ZXQ0QXZ - Bouclier des sylvains (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-414",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Shao'Yo. Positions confirmées : coffre ZXQ0QXZ - Topaze brute (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Arc du faucon (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-415",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Shemo'Lata. Positions confirmées : coffre ZXQ0QXZ - Grand boomerang (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Opale brute (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-416",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Shi'Dagoz. Positions confirmées : coffre ZXQ0QXZ - Longue épée électrique (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-417",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Shoda'Sah. Positions confirmées : coffre ZXQ0QXZ - Flèche de glace x5 (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ); coffre ZXQ4QXZ - Petite clé (X ZXQ5QXZ, Y ZXQ6QXZ, Z ZXQ7QXZ).",
+    "message": "legacy-template-418",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "source": "Une plateforme mobile ou un objet figé peut ouvrir un accès temporaire au coffre. Carte intérieure : Intérieur - Sanctuaire de Wa'Modai. Positions confirmées : coffre ZXQ0QXZ - Bouclier de voyageur (X ZXQ1QXZ, Y ZXQ2QXZ, Z ZXQ3QXZ).",
+    "message": "legacy-template-419",
+    "preserve_values": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "source": "ZXQ0QXZ Stalhinox",
+    "message": "legacy-template-420",
+    "preserve_values": [
+      0
+    ],
+    "numeric_values": [
+      0
+    ]
+  },
+  {
+    "source": "Démarrage impossible : ZXQ0QXZ",
+    "message": "legacy-diagnostic-1",
+    "preserve_values": [
+      0
+    ]
+  },
+  {
+    "source": "« ZXQ0QXZ » n’expose pas un gyroscope et un accéléromètre compatibles.",
+    "message": "legacy-diagnostic-2",
+    "preserve_values": [
+      0
+    ]
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoile - Présente la pièce et les matériaux requis à une Grande Fée débloquée.",
+    "message": "legacy-diagnostic-3",
+    "preserve_values": []
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoiles - Présente la pièce et les matériaux requis à une Grande Fée débloquée.",
+    "message": "legacy-diagnostic-4",
+    "preserve_values": []
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoile",
+    "message": "legacy-diagnostic-5",
+    "preserve_values": []
+  },
+  {
+    "source": "Amélioration ZXQ0QXZ étoiles",
+    "message": "legacy-diagnostic-6",
+    "preserve_values": []
+  },
+  {
+    "source": "Référentiel 100 % : ZXQ0QXZ catégories dans ZXQ1QXZ axes ; ZXQ2QXZ catégories obligatoires restent à implémenter.",
+    "message": "legacy-diagnostic-7",
+    "preserve_values": []
+  },
+  {
+    "source": "Cette ZXQ0QXZ est ZXQ1QXZ. La fiche suit son départ, ses points connus et sa validation officielle.",
+    "message": "legacy-diagnostic-8",
+    "preserve_values": []
+  },
+  {
+    "source": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx ou Cemu. Emplacements vérifiés : ZXQ0QXZ",
+    "message": "legacy-diagnostic-9",
+    "preserve_values": []
+  },
+  {
+    "source": "La nouvelle version est installée mais son serveur de validation s’est arrêté (code ZXQ0QXZ).",
+    "message": "legacy-diagnostic-10",
+    "preserve_values": []
+  },
+  {
+    "source": "Entre dans ZXQ0QXZ : « ZXQ1QXZ » ne contient pas de puzzle intérieur supplémentaire.",
+    "message": "legacy-diagnostic-11",
+    "preserve_values": []
+  },
+  {
+    "source": "Obtiens ZXQ0QXZ par sa méthode d'acquisition, puis vérifie sa présence dans ZXQ1QXZ.",
+    "message": "legacy-diagnostic-12",
+    "preserve_values": []
+  },
+  {
+    "source": "Entre dans ZXQ0QXZ et repère le dispositif central correspondant à « ZXQ1QXZ ».",
+    "message": "legacy-diagnostic-13",
+    "preserve_values": []
+  },
+  {
+    "source": "Ouvre le coffre contenant ZXQ0QXZ, puis utilise la case de suivi manuel.",
+    "message": "legacy-diagnostic-14",
+    "preserve_values": []
+  },
+  {
+    "source": "Passage du slot ZXQ0QXZ au slot ZXQ1QXZ; nouvelle sauvegarde analysée.",
+    "message": "legacy-diagnostic-15",
+    "preserve_values": []
+  },
+  {
+    "source": "Dans « ZXQ0QXZ », identifie d'abord le mécanisme principal : ZXQ1QXZ.",
+    "message": "legacy-diagnostic-16",
+    "preserve_values": []
+  },
+  {
+    "source": "Les préférences sont illisibles. Une copie est conservée dans ZXQ0QXZ",
+    "message": "legacy-diagnostic-17",
+    "preserve_values": []
+  },
+  {
+    "source": "Les itinéraires sont illisibles. Une copie est conservée dans ZXQ0QXZ",
+    "message": "legacy-diagnostic-18",
+    "preserve_values": []
+  },
+  {
+    "source": "Le suivi manuel est illisible. Une copie est conservée dans ZXQ0QXZ",
+    "message": "legacy-diagnostic-19",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ vérifiée individuellement - repère ZXQ1QXZ, guide ZXQ2QXZ.",
+    "message": "legacy-diagnostic-20",
+    "preserve_values": []
+  },
+  {
+    "source": "Slot courant ZXQ0QXZ illisible - dernier rapport valide conservé",
+    "message": "legacy-diagnostic-21",
+    "preserve_values": []
+  },
+  {
+    "source": "BOTW Companion ne peut pas démarrer.\n\nZXQ0QXZ\n\nJournal : ZXQ1QXZ",
+    "message": "legacy-diagnostic-22",
+    "preserve_values": []
+  },
+  {
+    "source": "L’état local est illisible. Une copie est conservée dans ZXQ0QXZ",
+    "message": "legacy-diagnostic-23",
+    "preserve_values": []
+  },
+  {
+    "source": "\nCarte officielle BOTW : ZXQ0QXZ / ZXQ1QXZ (ZXQ2QXZ %) - ZXQ3QXZ",
+    "message": "legacy-diagnostic-24",
+    "preserve_values": []
+  },
+  {
+    "source": "Le port local ZXQ0QXZ est déjà occupé par une autre application",
+    "message": "legacy-diagnostic-25",
+    "preserve_values": []
+  },
+  {
+    "source": "Formule : ZXQ0QXZ (ZXQ1QXZ) ; chaque marqueur a le même poids.",
+    "message": "legacy-diagnostic-26",
+    "preserve_values": []
+  },
+  {
+    "source": "Cadre ZXQ0QXZ jusqu'à ce que son nom soit reconnu en orange.",
+    "message": "legacy-diagnostic-27",
+    "preserve_values": []
+  },
+  {
+    "source": "Trésor indiqué par un chien à ZXQ0QXZ. Récompense : ZXQ1QXZ.",
+    "message": "legacy-diagnostic-28",
+    "preserve_values": []
+  },
+  {
+    "source": "coffre ZXQ0QXZ - ZXQ1QXZ (X ZXQ2QXZ, Y ZXQ3QXZ, Z ZXQ4QXZ)",
+    "message": "legacy-diagnostic-29",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ catégorie(s) obligatoire(s) restent incomplètes.",
+    "message": "legacy-diagnostic-30",
+    "preserve_values": []
+  },
+  {
+    "source": "Coffre persistant de ZXQ0QXZZXQ1QXZ. Contenu : ZXQ2QXZ.",
+    "message": "legacy-diagnostic-31",
+    "preserve_values": []
+  },
+  {
+    "source": "Ouvre le coffre identifié ; contenu attendu : ZXQ0QXZ.",
+    "message": "legacy-diagnostic-32",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ individuel suivi pour les médailles de Kilton.",
+    "message": "legacy-diagnostic-33",
+    "preserve_values": []
+  },
+  {
+    "source": "Entrée n° ZXQ0QXZ de la section ZXQ1QXZ du compendium.",
+    "message": "legacy-diagnostic-34",
+    "preserve_values": []
+  },
+  {
+    "source": "Ancien slot ZXQ0QXZ modifié - slot ZXQ1QXZ conservé",
+    "message": "legacy-diagnostic-35",
+    "preserve_values": []
+  },
+  {
+    "source": "BOTW Companion ZXQ0QXZ : paquet macOS arm64 complet",
+    "message": "legacy-diagnostic-36",
+    "preserve_values": []
+  },
+  {
+    "source": "Fichier corrompu ou incomplet dans le slot ZXQ0QXZ",
+    "message": "legacy-diagnostic-37",
+    "preserve_values": []
+  },
+  {
+    "source": "Manifeste DSU Windows incohérent : ZXQ0QXZ=ZXQ1QXZ",
+    "message": "legacy-diagnostic-38",
+    "preserve_values": []
+  },
+  {
+    "source": "Pièce de l'ensemble ZXQ0QXZ, emplacement ZXQ1QXZ.",
+    "message": "legacy-diagnostic-39",
+    "preserve_values": []
+  },
+  {
+    "source": "Manifeste DSU macOS incohérent : ZXQ0QXZ=ZXQ1QXZ",
+    "message": "legacy-diagnostic-40",
+    "preserve_values": []
+  },
+  {
+    "source": "L’installation Windows a échoué (code ZXQ0QXZ).",
+    "message": "legacy-diagnostic-41",
+    "preserve_values": []
+  },
+  {
+    "source": "Obtiens ZXQ0QXZ et conserve-la dans la sacoche.",
+    "message": "legacy-diagnostic-42",
+    "preserve_values": []
+  },
+  {
+    "source": "\nProfil ZXQ0QXZ : ZXQ1QXZ / ZXQ2QXZ (ZXQ3QXZ %)",
+    "message": "legacy-diagnostic-43",
+    "preserve_values": []
+  },
+  {
+    "source": "BOTW Companion ZXQ0QXZ : paquet Windows complet",
+    "message": "legacy-diagnostic-44",
+    "preserve_values": []
+  },
+  {
+    "source": "Écriture en cours dans le slot courant ZXQ0QXZ",
+    "message": "legacy-diagnostic-45",
+    "preserve_values": []
+  },
+  {
+    "source": "Prépare l'amélioration vers le niveau ZXQ0QXZ.",
+    "message": "legacy-diagnostic-46",
+    "preserve_values": []
+  },
+  {
+    "source": "Le planificateur est limité à ZXQ0QXZ sessions",
+    "message": "legacy-diagnostic-47",
+    "preserve_values": []
+  },
+  {
+    "source": "Obtiens ZXQ0QXZ puis effectue une sauvegarde.",
+    "message": "legacy-diagnostic-48",
+    "preserve_values": []
+  },
+  {
+    "source": "Rejoins le point exact X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-diagnostic-49",
+    "preserve_values": []
+  },
+  {
+    "source": "Dernière sauvegarde : slot ZXQ0QXZ - ZXQ1QXZ",
+    "message": "legacy-diagnostic-50",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ élément(s) restant(s) dans ZXQ1QXZ :",
+    "message": "legacy-diagnostic-51",
+    "preserve_values": []
+  },
+  {
+    "source": "Modification détectée dans le slot ZXQ0QXZ.",
+    "message": "legacy-diagnostic-52",
+    "preserve_values": []
+  },
+  {
+    "source": "Repère Object Map ZXQ0QXZ - secteur ZXQ1QXZ",
+    "message": "legacy-diagnostic-53",
+    "preserve_values": []
+  },
+  {
+    "source": "Parcours cartographique vérifié : ZXQ0QXZ.",
+    "message": "legacy-diagnostic-54",
+    "preserve_values": []
+  },
+  {
+    "source": "Sanctuaire de la région ZXQ0QXZ : ZXQ1QXZ.",
+    "message": "legacy-diagnostic-55",
+    "preserve_values": []
+  },
+  {
+    "source": "Souvenir ZXQ0QXZ localisé près de ZXQ1QXZ.",
+    "message": "legacy-diagnostic-56",
+    "preserve_values": []
+  },
+  {
+    "source": "Nouveau slot ZXQ0QXZ corrompu ou incomplet",
+    "message": "legacy-diagnostic-57",
+    "preserve_values": []
+  },
+  {
+    "source": "Sanctuaire de l'épreuve ZXQ0QXZ recherché",
+    "message": "legacy-diagnostic-58",
+    "preserve_values": []
+  },
+  {
+    "source": "Chercher le sujet dans la section ZXQ0QXZ",
+    "message": "legacy-diagnostic-59",
+    "preserve_values": []
+  },
+  {
+    "source": "\nProfil ZXQ0QXZ : indisponible - ZXQ1QXZ.",
+    "message": "legacy-diagnostic-60",
+    "preserve_values": []
+  },
+  {
+    "source": "Nouveau slot ZXQ0QXZ en cours d’écriture",
+    "message": "legacy-diagnostic-61",
+    "preserve_values": []
+  },
+  {
+    "source": "Cherche ZXQ0QXZ dans la section ZXQ1QXZ.",
+    "message": "legacy-diagnostic-62",
+    "preserve_values": []
+  },
+  {
+    "source": "Une session est limitée à ZXQ0QXZ étapes",
+    "message": "legacy-diagnostic-63",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ ZXQ1QXZ / ZXQ2QXZ  reste ZXQ3QXZ",
+    "message": "legacy-diagnostic-64",
+    "preserve_values": []
+  },
+  {
+    "source": "Manifeste DSU Windows invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-65",
+    "preserve_values": []
+  },
+  {
+    "source": "Empreinte DSU Windows invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-66",
+    "preserve_values": []
+  },
+  {
+    "source": "Ressource DSU Windows absente : ZXQ0QXZ",
+    "message": "legacy-diagnostic-67",
+    "preserve_values": []
+  },
+  {
+    "source": "Manifeste des tuiles invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-68",
+    "preserve_values": []
+  },
+  {
+    "source": "Fichier incomplet ou invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-69",
+    "preserve_values": []
+  },
+  {
+    "source": "Écriture en cours dans le slot ZXQ0QXZ",
+    "message": "legacy-diagnostic-70",
+    "preserve_values": []
+  },
+  {
+    "source": "Option de lancement inconnue : ZXQ0QXZ",
+    "message": "legacy-diagnostic-71",
+    "preserve_values": []
+  },
+  {
+    "source": "Manifeste DSU macOS invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-72",
+    "preserve_values": []
+  },
+  {
+    "source": "Empreinte DSU macOS invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-73",
+    "preserve_values": []
+  },
+  {
+    "source": "Ressource DSU macOS absente : ZXQ0QXZ",
+    "message": "legacy-diagnostic-74",
+    "preserve_values": []
+  },
+  {
+    "source": "Ouvre ce coffre contenant : ZXQ0QXZ.",
+    "message": "legacy-diagnostic-75",
+    "preserve_values": []
+  },
+  {
+    "source": "slot ZXQ0QXZ réservé au mode Expert",
+    "message": "legacy-diagnostic-76",
+    "preserve_values": []
+  },
+  {
+    "source": "slot ZXQ0QXZ réservé au mode normal",
+    "message": "legacy-diagnostic-77",
+    "preserve_values": []
+  },
+  {
+    "source": "Catégorie inconnue. Choix : ZXQ0QXZ",
+    "message": "legacy-diagnostic-78",
+    "preserve_values": []
+  },
+  {
+    "source": "Note manuelle invalide pour ZXQ0QXZ",
+    "message": "legacy-diagnostic-79",
+    "preserve_values": []
+  },
+  {
+    "source": "Tuile hors ligne absente : ZXQ0QXZ",
+    "message": "legacy-diagnostic-80",
+    "preserve_values": []
+  },
+  {
+    "source": "Slot ZXQ0QXZ analysé avec succès.",
+    "message": "legacy-diagnostic-81",
+    "preserve_values": []
+  },
+  {
+    "source": "État manuel invalide pour ZXQ0QXZ",
+    "message": "legacy-diagnostic-82",
+    "preserve_values": []
+  },
+  {
+    "source": "Secteur cartographique ZXQ0QXZ.",
+    "message": "legacy-diagnostic-83",
+    "preserve_values": []
+  },
+  {
+    "source": "Coffre facultatif de ZXQ0QXZ.",
+    "message": "legacy-diagnostic-84",
+    "preserve_values": []
+  },
+  {
+    "source": "Préférence invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-85",
+    "preserve_values": []
+  },
+  {
+    "source": "Nouveau slot ZXQ0QXZ analysé",
+    "message": "legacy-diagnostic-86",
+    "preserve_values": []
+  },
+  {
+    "source": "Ajoute ZXQ0QXZ à la sacoche.",
+    "message": "legacy-diagnostic-87",
+    "preserve_values": []
+  },
+  {
+    "source": "Progression interne ZXQ0QXZ",
+    "message": "legacy-diagnostic-88",
+    "preserve_values": []
+  },
+  {
+    "source": "Combat - difficulté ZXQ0QXZ",
+    "message": "legacy-diagnostic-89",
+    "preserve_values": []
+  },
+  {
+    "source": "Rejoins et bats ce ZXQ0QXZ.",
+    "message": "legacy-diagnostic-90",
+    "preserve_values": []
+  },
+  {
+    "source": "Réussir l'épreuve - ZXQ0QXZ",
+    "message": "legacy-diagnostic-91",
+    "preserve_values": []
+  },
+  {
+    "source": " → niveau ZXQ0QXZ (ZXQ1QXZ)",
+    "message": "legacy-diagnostic-92",
+    "preserve_values": []
+  },
+  {
+    "source": "Ressource absente : ZXQ0QXZ",
+    "message": "legacy-diagnostic-93",
+    "preserve_values": []
+  },
+  {
+    "source": "Prérequis publié : ZXQ0QXZ",
+    "message": "legacy-diagnostic-94",
+    "preserve_values": []
+  },
+  {
+    "source": "Module conseillé : ZXQ0QXZ",
+    "message": "legacy-diagnostic-95",
+    "preserve_values": []
+  },
+  {
+    "source": "Va à X ZXQ0QXZ, Z ZXQ1QXZ",
+    "message": "legacy-diagnostic-96",
+    "preserve_values": []
+  },
+  {
+    "source": "ZXQ0QXZ - près de ZXQ1QXZ",
+    "message": "legacy-diagnostic-97",
+    "preserve_values": []
+  },
+  {
+    "source": "Trésor du chien - ZXQ0QXZ",
+    "message": "legacy-diagnostic-98",
+    "preserve_values": []
+  },
+  {
+    "source": "valeur attendue : ZXQ0QXZ",
+    "message": "legacy-diagnostic-99",
+    "preserve_values": []
+  },
+  {
+    "source": "Épreuve nommée - ZXQ0QXZ",
+    "message": "legacy-diagnostic-100",
+    "preserve_values": []
+  },
+  {
+    "source": "Accompagnement - ZXQ0QXZ",
+    "message": "legacy-diagnostic-101",
+    "preserve_values": []
+  },
+  {
+    "source": "Contenu requis : ZXQ0QXZ",
+    "message": "legacy-diagnostic-102",
+    "preserve_values": []
+  },
+  {
+    "source": "recettes.ZXQ0QXZ.ZXQ1QXZ",
+    "message": "legacy-diagnostic-103",
+    "preserve_values": []
+  },
+  {
+    "source": "Quête d'accès : ZXQ0QXZ",
+    "message": "legacy-diagnostic-104",
+    "preserve_values": []
+  },
+  {
+    "source": "Point faible : ZXQ0QXZ",
+    "message": "legacy-diagnostic-105",
+    "preserve_values": []
+  },
+  {
+    "source": "nom attendu : ZXQ0QXZ",
+    "message": "legacy-diagnostic-106",
+    "preserve_values": []
+  },
+  {
+    "source": "Plateforme : ZXQ0QXZ",
+    "message": "legacy-diagnostic-107",
+    "preserve_values": []
+  },
+  {
+    "source": "Résoudre : ZXQ0QXZ",
+    "message": "legacy-diagnostic-108",
+    "preserve_values": []
+  },
+  {
+    "source": "Trouver le ZXQ0QXZ",
+    "message": "legacy-diagnostic-109",
+    "preserve_values": []
+  },
+  {
+    "source": ", près de ZXQ0QXZ",
+    "message": "legacy-diagnostic-110",
+    "preserve_values": []
+  },
+  {
+    "source": "le ZXQ0QXZZXQ1QXZ",
+    "message": "legacy-diagnostic-111",
+    "preserve_values": []
+  },
+  {
+    "source": "Donneur : ZXQ0QXZ",
+    "message": "legacy-diagnostic-112",
+    "preserve_values": []
+  },
+  {
+    "source": "Chemin : ZXQ0QXZ",
+    "message": "legacy-diagnostic-113",
+    "preserve_values": []
+  },
+  {
+    "source": "Erreur : ZXQ0QXZ",
+    "message": "legacy-diagnostic-114",
+    "preserve_values": []
+  },
+  {
+    "source": "niveau ZXQ0QXZ/4",
+    "message": "legacy-diagnostic-115",
+    "preserve_values": []
+  },
+  {
+    "source": "coffre_ZXQ0QXZ",
+    "message": "legacy-diagnostic-116",
+    "preserve_values": []
+  },
+  {
+    "source": "niveau_ZXQ0QXZ",
+    "message": "legacy-diagnostic-117",
+    "preserve_values": []
+  },
+  {
+    "source": "Rejoins X ZXQ0QXZ, Z ZXQ1QXZ.",
+    "message": "legacy-diagnostic-118",
+    "preserve_values": []
+  },
+  {
+    "source": "Rejoins X ZXQ0QXZ, Y ZXQ1QXZ, Z ZXQ2QXZ.",
+    "message": "legacy-diagnostic-119",
+    "preserve_values": []
+  },
+  {
+    "source": "Dossier introuvable : ZXQ0QXZ",
+    "message": "legacy-diagnostic-120",
+    "preserve_values": []
+  },
+  {
+    "source": "Tableau GameData 0xZXQ0QXZ introuvable",
+    "message": "legacy-diagnostic-121",
+    "preserve_values": []
+  },
+  {
+    "source": "Configuration macOS invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-122",
+    "preserve_values": []
+  },
+  {
+    "source": "Configuration Windows invalide : ZXQ0QXZ",
+    "message": "legacy-diagnostic-123",
+    "preserve_values": []
+  }
+]

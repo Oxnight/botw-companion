@@ -6,6 +6,7 @@ from __future__ import annotations
 import ast
 import io
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -14,10 +15,11 @@ import tokenize
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 FORBIDDEN_SUM_FILE = re.compile(r"^(?:sha(?:256)?sums?|checksums?)\.txt$", re.I)
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 PUBLIC_DOCUMENTS = (
-    "README.md", "CONTRIBUTING.md",
+    "README.md", "CONTRIBUTING.md", "docs/TRANSLATING.md",
     "SECURITY.md", "PRIVACY.md", "THIRD_PARTY_NOTICES.md", "DATA_SOURCES.md",
     "docs/INSTALLATION.md", "docs/DSU.md", "docs/TROUBLESHOOTING.md",
     "docs/DEVELOPMENT.md", "docs/UPDATE_SECURITY.md", "docs/RELEASE_PROCESS.md",
@@ -27,6 +29,10 @@ PUBLIC_DOCUMENTS = (
 LEGAL_DOCUMENTS = (
     "LICENSE", "licenses/PYTHON-3.12.txt", "licenses/SDL3-3.4.14.txt",
     "licenses/CERTIFI-MPL-2.0.txt",
+    "licenses/FLUENT-APACHE-2.0.txt", "licenses/BABEL-2.17.0.txt",
+    "licenses/UNICODE-CLDR.txt", "licenses/ATTRS-25.3.0.txt",
+    "licenses/PYTZ-2025.2.txt", "licenses/TYPING-EXTENSIONS-4.15.0.txt",
+    "licenses/ESBUILD-0.25.12.txt",
 )
 REQUIRED_RELEASE_SOURCES = (
     "tools/browser_smoke.js", "tools/browser_test_server.py",
@@ -148,7 +154,7 @@ def public_language_errors(root: Path = ROOT) -> list[str]:
 def source_comment_language_errors(root: Path = ROOT) -> list[str]:
     """Reject likely French prose in source comments and Python docstrings."""
     findings: list[str] = []
-    for path in _repository_files(root):
+    for path in _repository_files(root, include_untracked=True):
         if not path.is_file() or any(part in FORBIDDEN_PARTS for part in path.relative_to(root).parts):
             continue
         relative = path.relative_to(root).as_posix()
@@ -180,13 +186,17 @@ def source_comment_language_errors(root: Path = ROOT) -> list[str]:
     return findings
 
 
-def _repository_files(root: Path) -> list[Path]:
+def _repository_files(root: Path, *, include_untracked: bool = False) -> list[Path]:
     """Return tracked files when Git is available, otherwise all source files."""
     try:
+        arguments = ["git", "-C", str(root), "ls-files", "-z", "--cached"]
+        if include_untracked:
+            arguments.extend(["--others", "--exclude-standard"])
         result = subprocess.run(
-            ["git", "-C", str(root), "ls-files", "-z"],
+            arguments,
             check=True,
             capture_output=True,
+            env={**os.environ, 'GIT_OPTIONAL_LOCKS': '0'},
         )
     except (FileNotFoundError, subprocess.CalledProcessError):
         return [path for path in root.rglob("*") if path.is_file()]
@@ -301,12 +311,21 @@ def audit() -> list[str]:
     errors.extend(repository_hygiene_errors())
 
     project = tomllib.loads(_text("pyproject.toml"))["project"]
-    if project.get("license") != "MIT" or project.get("dependencies") != ["certifi==2025.8.3"]:
+    if project.get("license") != "MIT" or project.get("dependencies") != ["certifi==2025.8.3", "fluent.runtime==0.4.0", "fluent.syntax==0.19.0", "Babel==2.17.0", "attrs==25.3.0", "pytz==2025.2", "typing_extensions==4.15.0"]:
         errors.append("Python dependency scope changed without an audit update")
     node = json.loads(_text("package.json"))
-    expected_dev = {"acorn": "8.15.0", "axe-core": "4.13.0", "playwright": "1.62.0"}
+    expected_dev = {"acorn": "8.15.0", "axe-core": "4.13.0", "playwright": "1.62.0", "@fluent/bundle": "0.19.1", "esbuild": "0.25.12"}
     if node.get("devDependencies") != expected_dev or not node.get("private"):
         errors.append("Node dependency scope changed without an audit update")
+
+    if _text('requirements-runtime.txt').splitlines() != project.get('dependencies'):
+        errors.append('Native/CI runtime pins differ from Python metadata')
+    for package, version in expected_dev.items():
+        lock = json.loads(_text('package-lock.json'))
+        if lock.get('packages', {}).get('node_modules/' + package, {}).get('version') != version:
+            errors.append('Node lock pin differs: ' + package)
+    from botw_companion.i18n import resource_errors
+    errors.extend(resource_errors())
 
     cmake = _text("third_party/JoyConDSU/CMakeLists.txt")
     if "release-3.4.14/SDL3-3.4.14.tar.gz" not in cmake:

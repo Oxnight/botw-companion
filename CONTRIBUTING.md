@@ -18,7 +18,8 @@ are welcome.
 Requirements and build instructions are in the
 [development guide](docs/DEVELOPMENT.md).
 
-Create a focused branch from `master`:
+Fork the repository for an external contribution, then create a focused branch
+from `master`:
 
 ```bash
 git switch -c type/short-description
@@ -35,6 +36,8 @@ Examples include `fix/cemu-detection`, `docs/windows-installation`, and
 - Explain every new runtime dependency and update the applicable license and
   `THIRD_PARTY_NOTICES.md` entries.
 - Keep all core features usable offline.
+- Include deterministic generated product resources required by a source change
+  (compiled offline data and locale outputs). Do not hand-edit those resources.
 - Do not commit build output, virtual environments, `node_modules`, saves,
   logs, or local archives.
 - Keep user data outside the application directory.
@@ -43,13 +46,20 @@ Examples include `fix/cemu-detection`, `docs/windows-installation`, and
 
 ## Verify your changes
 
-Run the required checks:
+Use Python 3.12 for development and validation. Activate the environment described
+in the [development guide](docs/DEVELOPMENT.md), then install the pinned Node
+dependencies before running the required checks:
 
 ```bash
-python3 tools/audit_distribution.py
-python3 tools/check_version_consistency.py
-python3 -m unittest discover -s tests
+npm ci --ignore-scripts
+python tools/audit_distribution.py
+python tools/check_version_consistency.py
+python -m unittest discover -s tests
 ```
+
+For translation work, follow the complete [translator guide](docs/TRANSLATING.md),
+run the generic build/check/coverage commands, and obtain human wording and
+official-terminology review. Keep incomplete locales disabled.
 
 For interface changes, also run the browser tests described in
 [the development guide](docs/DEVELOPMENT.md#browser-tests).
@@ -60,11 +70,16 @@ the native installers.
 
 ## Pull requests
 
+Open a focused PR from your fork/branch targeting `master`; a draft is useful
+while review or native validation is pending. Be respectful, preserve contributor
+attribution, and keep unrelated changes in separate pull requests.
+The maintainer reviews code before authorizing CI for an unfamiliar fork.
+
 Explain the problem, the proposed change, and the checks you ran. Before
 submitting, confirm that:
 
 - all tests pass;
-- the commit contains no generated or personal files;
+- the commit contains no build output, logs, or personal files;
 - the documentation matches the behavior;
 - both supported platforms were considered;
 - licenses were reviewed when a resource or tool was added.
