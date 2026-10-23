@@ -1277,7 +1277,8 @@ async function runBilingual(browser, baseUrl, browserName) {
     await runLocalTimezone(browser, url, target);
     await runBilingual(browser, url, target);
     progress(target, "storage:disabled-quota-corrupt-cache");
-    await require("./browser_storage_checks.cjs").runBrowserStorageChecks(browser, url);
+    await require("./browser_storage_checks.cjs").runBrowserStorageChecks(browser, url,
+      stage => progress(target, stage));
     result = {
       status: "ok", browser: target, ...desktop, responsive: true,
       zoom_200: true, reduced_motion: true, local_timezone: true, bilingual: true, storage_recovery: true

@@ -45,7 +45,7 @@ function runLauncher(t, target, platform, mode = "launch-failure", remove = fs.r
     clearTimeout(id) { pending.delete(id); }
   };
   const launched = [], exits = [], errors = [], logs = [];
-  const applicationPasses = ["success", "close-failure"].includes(mode);
+  const applicationPasses = ["success", "close-failure", "storage-stall"].includes(mode);
   const createEnvironment = launchHelper((directory, options) => {
     if (applicationPasses) events.push("cleanup-start");
     remove(directory, options);
@@ -92,7 +92,12 @@ function runLauncher(t, target, platform, mode = "launch-failure", remove = fs.r
       if (applicationPasses) return;
       throw new Error("Synthetic stop after launch");
     }},
-    "./browser_storage_checks.cjs": {runBrowserStorageChecks: async () => {}}
+    "./browser_storage_checks.cjs": {runBrowserStorageChecks: async (_browser, _url, onProgress) => {
+      if (mode === "storage-stall") {
+        onProgress("storage:disabled:select-sync-interval");
+        return new Promise(() => {});
+      }
+    }}
   };
   const context = vm.createContext({process: fakeProcess, ...timers,
     require(name) { assert(name in modules, name); return modules[name]; },
@@ -290,6 +295,19 @@ test("the final success report follows browser closure and owned-home removal", 
     rendered: 2, manual: true, routes: true, dsu: true, responsive: true, zoom_200: true,
     reduced_motion: true, local_timezone: true, bilingual: true, storage_recovery: true}]);
   assert(!fs.existsSync(f.launched[0].options.env.CFFIXED_USER_HOME));
+});
+
+test("a storage stall reports its operation at the unchanged application deadline", async t => {
+  const f = runLauncher(t, "firefox", "darwin", "storage-stall");
+  await flush(); await flush();
+  const home = f.launched[0].options.env.CFFIXED_USER_HOME;
+  f.expire(120000);
+  assert.deepEqual(f.exits, [124]);
+  assert(f.errors.some(error => typeof error === "string" && JSON.parse(error).stage ===
+    "storage:disabled:select-sync-interval" && JSON.parse(error).phase === "application"));
+  assert.deepEqual(f.events, ["child-killed", "cleanup-start", "cleanup-finished"]);
+  assert(!fs.existsSync(home));
+  assert(!f.logs.some(value => value.status === "ok"));
 });
 
 for (const code of ["ENOTEMPTY", "EACCES"]) {
