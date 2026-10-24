@@ -1,5 +1,8 @@
 from pathlib import Path
+import os
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -14,6 +17,61 @@ class FakeProcess:
 
 
 class WindowsLauncherTests(unittest.TestCase):
+    def test_child_log_encoding_does_not_depend_on_parent_environment(self):
+        for frozen in (False, True):
+            with self.subTest(frozen=frozen), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                calls = []
+                with patch.dict(os.environ, {"PYTHONIOENCODING": "cp1251:strict", "PYTHONUTF8": "0"}):
+                    parent_environment = os.environ.copy()
+                    windows_launcher.launch_server(
+                        root / "python.exe", root, 8765, {}, root / "server.log",
+                        frozen=frozen,
+                        popen=lambda command, **kwargs: calls.append(kwargs) or FakeProcess(),
+                    )
+                    self.assertEqual(dict(os.environ), parent_environment)
+                self.assertEqual(calls[0]["env"]["PYTHONIOENCODING"], "utf-8:backslashreplace")
+
+    def test_source_child_writes_utf8_diagnostics_with_a_restrictive_parent(self):
+        diagnostic = "Échec — Игрок — 日本語 — 🎮"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            package = root / "botw_companion"
+            package.mkdir()
+            (package / "__init__.py").write_bytes(b"")
+            (package / "__main__.py").write_text(
+                "import sys, traceback\n"
+                f"print({diagnostic!r})\n"
+                "try:\n"
+                f"    raise RuntimeError({diagnostic!r})\n"
+                "except RuntimeError:\n"
+                "    traceback.print_exc()\n",
+                encoding="utf-8", newline="\n",
+            )
+
+            def popen(command, **kwargs):
+                if os.name != "nt":
+                    kwargs.pop("creationflags")
+                return subprocess.Popen(command, **kwargs)
+
+            with patch.dict(os.environ, {"PYTHONIOENCODING": "cp1251:strict", "PYTHONUTF8": "0"}):
+                parent_environment = os.environ.copy()
+                process = windows_launcher.launch_server(
+                    Path(sys.executable), root, 8765, {}, root / "server.log", popen=popen,
+                )
+                try:
+                    self.assertEqual(process.wait(timeout=10), 0)
+                finally:
+                    if process.poll() is None:
+                        process.kill()
+                        process.wait(timeout=5)
+                self.assertEqual(dict(os.environ), parent_environment)
+            content = (root / "server.log").read_bytes().decode("utf-8")
+            self.assertEqual(content.splitlines().count(diagnostic), 1)
+            self.assertIn("Traceback (most recent call last):", content)
+            self.assertIn(f"RuntimeError: {diagnostic}", content)
+            self.assertNotIn("UnicodeEncodeError", content)
+
     def test_authenticated_url_and_shutdown_carry_the_session_token(self):
         self.assertEqual(
             windows_launcher.authenticated_browser_url(
@@ -238,6 +296,7 @@ class WindowsLauncherTests(unittest.TestCase):
             )
         _command, options = calls[0]
         self.assertTrue(options["creationflags"] & windows_launcher.CREATE_NO_WINDOW)
+        self.assertEqual(options["env"]["PYTHONIOENCODING"], "utf-8:backslashreplace")
         self.assertEqual(
             options["env"]["BOTW_RYUJINX_PROCESS_NAMES"],
             "Ryujinx.exe;Custom.exe",
