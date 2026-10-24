@@ -222,6 +222,8 @@ def launch_server(python: Path, project_root: Path, port: int,
                   config: Mapping[str, object], log_path: Path, *,
                   popen=subprocess.Popen, frozen: bool = False):
     environment = os.environ.copy()
+    # Source launches also redirect diagnostics to the launcher-owned UTF-8 log.
+    environment["PYTHONIOENCODING"] = "utf-8:backslashreplace"
     for config_key, env_key in (
         ("ryujinx_process_names", "BOTW_RYUJINX_PROCESS_NAMES"),
         ("cemu_process_names", "BOTW_CEMU_PROCESS_NAMES"),
