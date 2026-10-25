@@ -122,5 +122,14 @@ Only factual titles/names are used, not dialogue or guide paragraphs.
 [enemies](https://zelda.kiranico.com/ru/totk/data/enemies) are explicitly marked
 as comparative Tears of the Kingdom references. They do not certify BOTW names.
 Proposed editorial terms and comparisons are listed in
-`docs/RUSSIAN_TERMINOLOGY_REVIEW.md`; the disabled locale is an incremental draft,
+`docs/RUSSIAN_TERMINOLOGY_REVIEW.md`; the disabled locale is a complete draft,
 not a claim of independently validated official terminology.
+
+
+### Russian editorial review (2026-10-24)
+
+Selected quest mechanics and item labels were checked against the sources listed
+in `docs/RUSSIAN_EDITORIAL_REVIEW.json` (`additional_factual_corrections`).
+Only factual corrections and original Russian wording are included; source article
+paragraphs and media are not bundled. The 46-term audit is documented separately
+in `docs/RUSSIAN_TERMINOLOGY_AUDIT.json`; comparative TOTK labels remain provisional.
