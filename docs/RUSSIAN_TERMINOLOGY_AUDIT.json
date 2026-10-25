@@ -1,0 +1,550 @@
+{
+  "date": "2026-10-24",
+  "terms_reviewed": 46,
+  "renamed": 0,
+  "retained": 46,
+  "policy": "No new speculative names. This completes an editorial retain/change decision for all 46 terms, not official BOTW certification. Original provisional evidence flags remain visible.",
+  "results": [
+    {
+      "english": "Ancient Cuirass",
+      "russian_before": "Древняя кираса",
+      "russian_after": "Древняя кираса",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице BOTW русская ячейка пуста; страница самого предмета тоже не даёт русского названия. Убедительного основания для замены нет.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zeldawiki.wiki/wiki/Ancient_Cuirass"
+      ]
+    },
+    {
+      "english": "Blue Sparrow",
+      "russian_before": "Синеволный воробей",
+      "russian_after": "Синеволный воробей",
+      "decision": "retain",
+      "evidence_status": "botw_table_supports_current",
+      "note": "Таблица BOTW содержит «Синеволный воробей» со ссылкой на русскую Хайрулопедию; сравнительная база TOTK совпадает. Необычное написание сохраняется.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters",
+        "https://zeldawiki.wiki/wiki/Data:Translations/BotW/Characters/A-C",
+        "https://zelda.kiranico.com/ru/totk/data/animals"
+      ]
+    },
+    {
+      "english": "Blue-Winged Heron",
+      "russian_before": "Синекрылая цапля",
+      "russian_after": "Синекрылая цапля",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "В таблице BOTW «Синекрыпая цапля» выглядит как ошибка перепечатки; сравнительная база TOTK даёт текущий вариант «Синекрылая цапля». Нового доказательства для изменения текущего исправления нет.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters",
+        "https://zelda.kiranico.com/ru/totk/data/animals"
+      ]
+    },
+    {
+      "english": "Cap of Twilight",
+      "russian_before": "Колпак Героя Сумрака",
+      "russian_after": "Колпак Героя Сумрака",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Cap of the Hero",
+      "russian_before": "Колпак Героя Хайрула",
+      "russian_after": "Колпак Героя Хайрула",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Cap of the Sky",
+      "russian_before": "Колпак Героя Небес",
+      "russian_after": "Колпак Героя Небес",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Cap of the Wind",
+      "russian_before": "Колпак Героя Ветра",
+      "russian_after": "Колпак Героя Ветра",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Classified Envelope",
+      "russian_before": "Секретный конверт",
+      "russian_after": "Секретный конверт",
+      "decision": "retain",
+      "evidence_status": "botw_usage_corroborated",
+      "note": "В таблице BOTW русская ячейка пуста. Найдено независимое сообщение игрока BOTW с названием «Секретный конверт»; это подтверждение употребления, а не проверка скриншота инвентаря.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://4pda.to/forum/index.php?showtopic=807700&st=3460"
+      ]
+    },
+    {
+      "english": "Dark Trousers",
+      "russian_before": "Штаны Тьмы",
+      "russian_after": "Штаны Тьмы",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Extravagant Bridle",
+      "russian_before": "Нарядная узда",
+      "russian_after": "Нарядная узда",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Extravagant Saddle",
+      "russian_before": "Нарядное седло",
+      "russian_after": "Нарядное седло",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Fierce Deity Armor",
+      "russian_before": "Доспехи Лютобога",
+      "russian_after": "Доспехи Лютобога",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Fierce Deity Boots",
+      "russian_before": "Сапоги Лютобога",
+      "russian_after": "Сапоги Лютобога",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Fierce Deity Mask",
+      "russian_before": "Маска Лютобога",
+      "russian_after": "Маска Лютобога",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Fire-Breath Lizalfos",
+      "russian_before": "Огнедышащий заврофос",
+      "russian_after": "Огнедышащий заврофос",
+      "decision": "retain",
+      "evidence_status": "source_entity_mismatch_retained",
+      "note": "Таблица BOTW ошибочно связывает Fire-Breath Lizalfos с серебряным заврофосом и записью 117. Это другая разновидность. Текущее «Огнедышащий заврофос» сохраняется; сравнительная база TOTK не считается доказательством подписи BOTW.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Enemies",
+        "https://zelda.kiranico.com/ru/totk/data/enemies"
+      ]
+    },
+    {
+      "english": "Flamebreaker Boots",
+      "russian_before": "Пожарные сапоги",
+      "russian_after": "Пожарные сапоги",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "В таблице BOTW «Пошарные сапоги», в сравнительной базе TOTK — текущие «Пожарные сапоги». Нового основания менять текущий вариант нет.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Giant Horse",
+      "russian_before": "Огромная лошадь",
+      "russian_after": "Огромная лошадь",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "Таблица BOTW содержит «Оргомная лошадь». Текущий вариант исправляет перестановку букв; надёжного нового варианта не найдено.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters"
+      ]
+    },
+    {
+      "english": "Golden Bokoblin",
+      "russian_before": "Золотой бокоблин",
+      "russian_after": "Золотой бокоблин",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице врагов BOTW русская ячейка пуста. Название остаётся редакторским вариантом; новое предположение не вводится.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Enemies"
+      ]
+    },
+    {
+      "english": "Golden Lizalfos",
+      "russian_before": "Золотой заврофос",
+      "russian_after": "Золотой заврофос",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице врагов BOTW русская ячейка пуста. Название остаётся редакторским вариантом; новое предположение не вводится.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Enemies"
+      ]
+    },
+    {
+      "english": "Golden Moblin",
+      "russian_before": "Золотой моблин",
+      "russian_after": "Золотой моблин",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице врагов BOTW русская ячейка пуста. Название остаётся редакторским вариантом; новое предположение не вводится.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Enemies"
+      ]
+    },
+    {
+      "english": "Knight's Bridle",
+      "russian_before": "Рыцарская узда",
+      "russian_after": "Рыцарская узда",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Knight's Saddle",
+      "russian_before": "Рыцарское седло",
+      "russian_after": "Рыцарское седло",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Misko, the Great Bandit",
+      "russian_before": "Великий бандит Лямбда",
+      "russian_after": "Великий бандит Лямбда",
+      "decision": "retain",
+      "evidence_status": "name_component_corroborated",
+      "note": "Имя Лямбда подтверждается таблицей и цитатой из русского дневника BOTW. Это подтверждает имя персонажа, но не независимо всю формулировку названия задания.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Misko",
+        "https://www.zeldadungeon.net/wiki/Misko"
+      ]
+    },
+    {
+      "english": "Monster Bridle",
+      "russian_before": "Монструозная узда",
+      "russian_after": "Монструозная узда",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Monster Saddle",
+      "russian_before": "Монструозное седло",
+      "russian_after": "Монструозное седло",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Restless Cricket",
+      "russian_before": "Бодрый сверчок",
+      "russian_after": "Бодрый сверчок",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "Таблица BOTW содержит «Болрый сверчок». Это не основание заменять текущий исправленный вариант «Бодрый сверчок».",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters",
+        "https://zeldawiki.wiki/wiki/Data:Translations/BotW/Characters/P-R"
+      ]
+    },
+    {
+      "english": "Royal Bridle",
+      "russian_before": "Королевская узда",
+      "russian_after": "Королевская узда",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант. Русскоязычная запись журнала задания косвенно поддерживает прилагательное «королевский», но не доказывает полную подпись инвентаря.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://nastroy.sunnyfresh.ru/ispytanie-chuvstvo-mery-zelda/"
+      ]
+    },
+    {
+      "english": "Royal Guard's Sword",
+      "russian_before": "Гвардейский меч",
+      "russian_after": "Гвардейский меч",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "Таблица и отдельная статья повторяют «Гвардейцкий меч» из одного набора данных; это не два независимых подтверждения. Текущее «Гвардейский меч» сохраняется; неоднозначность не скрывается.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zeldawiki.wiki/wiki/Royal_Guard%27s_Sword"
+      ]
+    },
+    {
+      "english": "Royal Saddle",
+      "russian_before": "Королевское седло",
+      "russian_after": "Королевское седло",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант. Русскоязычная запись журнала задания косвенно поддерживает прилагательное «королевский», но не доказывает полную подпись инвентаря.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://nastroy.sunnyfresh.ru/ispytanie-chuvstvo-mery-zelda/"
+      ]
+    },
+    {
+      "english": "Tingle's Tights",
+      "russian_before": "Штаны Тингла",
+      "russian_after": "Штаны Тингла",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tireless Frog",
+      "russian_before": "Живучая лягушка",
+      "russian_after": "Живучая лягушка",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "Таблица BOTW содержит «Живучая лягышка». Текущий вариант «Живучая лягушка» сохраняется; прямой снимок подписи BOTW не получен.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters"
+      ]
+    },
+    {
+      "english": "Travel Medallion",
+      "russian_before": "Медальон перемещения",
+      "russian_after": "Медальон перемещения",
+      "decision": "retain",
+      "evidence_status": "botw_usage_corroborated",
+      "note": "В таблице BOTW нет русского названия, но «медальон перемещения» встречается в инструкции к официально продававшемуся DLC и русских видеогайдах BOTW. Текущий вариант сохраняется; точная подпись инвентаря отдельно не подтверждена.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://static.mvideo.ru/ins/6011304.pdf",
+        "https://www.youtube.com/watch?v=wY1FrqrCxJ0"
+      ]
+    },
+    {
+      "english": "Traveler's Bridle",
+      "russian_before": "Походная узда",
+      "russian_after": "Походная узда",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Traveler's Saddle",
+      "russian_before": "Походное седло",
+      "russian_after": "Походное седло",
+      "decision": "retain",
+      "evidence_status": "botw_russian_cell_empty",
+      "note": "В таблице снаряжения BOTW русская ячейка пуста; нового надёжного свидетельства для замены нет. Сохраняется текущий редакторский вариант.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items"
+      ]
+    },
+    {
+      "english": "Trousers of Time",
+      "russian_before": "Штаны Героя Времени",
+      "russian_after": "Штаны Героя Времени",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Trousers of Twilight",
+      "russian_before": "Штаны Героя Сумрака",
+      "russian_after": "Штаны Героя Сумрака",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Trousers of the Hero",
+      "russian_before": "Штаны Героя Хайрула",
+      "russian_after": "Штаны Героя Хайрула",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Trousers of the Sky",
+      "russian_before": "Штаны Героя Небес",
+      "russian_after": "Штаны Героя Небес",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Trousers of the Wind",
+      "russian_before": "Штаны Героя Ветра",
+      "russian_after": "Штаны Героя Ветра",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tunic of Time",
+      "russian_before": "Туника Героя Времени",
+      "russian_after": "Туника Героя Времени",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tunic of Twilight",
+      "russian_before": "Туника Героя Сумрака",
+      "russian_after": "Туника Героя Сумрака",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tunic of the Hero",
+      "russian_before": "Туника Героя Хайрула",
+      "russian_after": "Туника Героя Хайрула",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tunic of the Sky",
+      "russian_before": "Туника Героя Небес",
+      "russian_after": "Туника Героя Небес",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Tunic of the Wind",
+      "russian_before": "Туника Героя Ветра",
+      "russian_after": "Туника Героя Ветра",
+      "decision": "retain",
+      "evidence_status": "comparative_only_retained",
+      "note": "В таблице BOTW русская ячейка пуста. Текущее название поддерживается сравнительной базой TOTK, однако это не подтверждает официальную подпись BOTW. Оставлено без изменения.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zelda.kiranico.com/ru/totk/data/armors"
+      ]
+    },
+    {
+      "english": "Wood Pigeon",
+      "russian_before": "Волнистый голубь",
+      "russian_after": "Волнистый голубь",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "В таблице BOTW «Болнистый голубь»; текущий «Волнистый голубь» совпадает со сравнительной базой TOTK. Не заменяем его ошибочной перепечаткой.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Characters",
+        "https://zelda.kiranico.com/ru/totk/data/animals"
+      ]
+    },
+    {
+      "english": "Wooden Shield",
+      "russian_before": "Деревянный щит",
+      "russian_after": "Деревянный щит",
+      "decision": "retain",
+      "evidence_status": "transcription_conflict_retained",
+      "note": "В таблице BOTW «Девевьянный щит». Текущее исправленное «Деревянный щит» сохраняется; прямой скриншот названия BOTW не найден.",
+      "sources_checked": [
+        "https://zeldawiki.wiki/wiki/Breath_of_the_Wild_Translations/Items",
+        "https://zeldawiki.wiki/wiki/Wooden_Shield"
+      ]
+    }
+  ]
+}
