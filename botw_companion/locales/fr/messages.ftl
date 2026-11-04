@@ -1690,3 +1690,4 @@ legacy-bound-819 = { "Équipe l'armure zora, remonte la cascade et reparle à Gr
 legacy-bound-820 = { "Équipe la baguette devant Almus et parle-lui sans la casser." }
 legacy-bound-821 = { "Équipe la Épée de légende devant Aliza et reparle-lui." }
 legacy-bound-822 = { "Accompagnement - Stalhinox " }{ $value0 }
+renderfilternav-point-count = { $formattedCount } pts

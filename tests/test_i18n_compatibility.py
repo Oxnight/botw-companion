@@ -60,6 +60,11 @@ class HtmlCompatibilityTests(unittest.TestCase):
         presentation = {key: translate_text(key, 'en') for key in keys if not TECHNICAL_VALUE.fullmatch(key)}
         self.assertEqual(len(keys), reference['total_inputs'])
         self.assertEqual(len(presentation), reference['presentation_inputs'])
+        # Assert each reviewed correction, then compare all other outputs with
+        # the captured corpus. A catalog edit cannot silently reset the baseline.
+        for source, correction in reference.get('reviewed_corrections', {}).items():
+            self.assertEqual(presentation[source], correction['after'], source)
+            presentation[source] = correction['before']
         digest = hashlib.sha256(json.dumps(presentation, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
         self.assertEqual(digest, reference['presentation_sha256'])
         for key in keys:

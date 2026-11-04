@@ -544,3 +544,4 @@ ui-mode = Mode
 ui-slot = SLOT { $value0 }
 ui-slot-2 = Slot { $value0 } • { $value1 } • { $value2 } • { $value3 }
 ui-gyroscope-joycondsu = Gyroscope JoyConDSU
+renderfilternav-point-count = { $formattedCount } pts

@@ -14,7 +14,7 @@
       "display_names": {
         "en": "French"
       },
-      "revision": "0f14af235a6c3cfaaad78048d767af09ea6d0542b6d882a6b402b25a1e7a0eaf"
+      "revision": "0a79f3eec5acfec3620d5e7fa0c37dcaa1cdc84817f81cd2e7c2d83a7a505383"
     },
     "en": {
       "schema": 1,
@@ -25,7 +25,7 @@
       "aliases": [],
       "fallback": null,
       "enabled": true,
-      "revision": "f644a3ff420c4d1f64d3f189dc340706a41aa47e3331980b64a7f6cb91e944a6"
+      "revision": "6bea56bd0d41323c2d3341ca812340655419e2936ec04f92b74d9ce300537e21"
     }
   },
   "aliases": {

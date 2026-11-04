@@ -1,8 +1,78 @@
 {
   "base_commit": "8009763a0623dd660a963a93def8fc2569c42202",
-  "capture": "Unchanged presenter captured before edits; protocol-shaped values use the original presentation exclusion contract.",
-  "total_inputs": 42438,
-  "presentation_inputs": 38672,
-  "presentation_sha256": "bdca25084d7702e84cf4fa6ef2ad3b0f0a306e950af39d89cc59ebe16e5e0368",
-  "protocol_inputs": 3766
+  "capture": "Reference prose outputs; reviewed corrections are asserted separately before comparison with the captured digest.",
+  "total_inputs": 42446,
+  "presentation_inputs": 38680,
+  "presentation_sha256": "dc8c442cec89a4f21d56a3baac58985af3947be1753679d87295a2877f194fc6",
+  "protocol_inputs": 3766,
+  "reviewed_corrections": {
+    "Compendium d'Hyrule": {
+      "after": "Hyrule Compendium",
+      "before": "Compendium d'Hyrule"
+    },
+    "Compteur officiel, sans quêtes, coffres, souvenirs ni compendium.": {
+      "after": "Official map counter, excluding quests, chests, memories and the Hyrule Compendium.",
+      "before": "Official counter, without quests, chests, memories or compendium."
+    },
+    "Dans « Enseignement de Taro'Nihi », identifie d'abord le mécanisme principal : tutoriel de combat.": {
+      "after": "In “Ta'loh Naeg's Teaching”, first identify the main mechanism: combat tutorial.",
+      "before": "In “Ta'loh Naeg's Teaching”, first identify the main mechanism: tutoriel de combat."
+    },
+    "Objectifs automatiques du jeu de base, de l'Expansion Pass et de la mise à jour Xenoblade, sans amiibo, suivi manuel ni mode Expert.": {
+      "after": "Automatic objectives in the base game, Expansion Pass and Xenoblade update, excluding amiibo, manual tracking and Master Mode.",
+      "before": "Automatic objectives of the base game, Expansion Pass and Xenoblade update, without amiibo, manual tracking or Expert mode."
+    },
+    "Objectifs automatiques permanents du jeu de base, sans Expansion Pass, Xenoblade, amiibo, suivi manuel ni mode Expert.": {
+      "after": "Permanent automatic objectives in the base game, excluding the Expansion Pass, Xenoblade update, amiibo, manual tracking and Master Mode.",
+      "before": "Permanent automatic objectives of the base game, without Expansion Pass, Xenoblade, amiibo, manual tracking or Expert mode."
+    },
+    "Objets exclusifs soumis au matériel possédé et à l'aléatoire.": {
+      "after": "Exclusive items that depend on the amiibo you own and random drops.",
+      "before": "Exclusive items subject to owned material and randomness."
+    },
+    "Profil base ou DLC choisi depuis les preuves présentes dans la sauvegarde, limité aux validations automatiques.": {
+      "after": "Base-game or DLC profile selected from evidence in the save, limited to automatically tracked objectives.",
+      "before": "Base or DLC profile chosen from the evidence present in the save, limited to automatic validations."
+    },
+    "Progression automatique du slot Expert, indépendante des six slots normaux et du suivi manuel.": {
+      "after": "Automatically tracked progress in the Master Mode save, separate from the six Normal Mode save slots and manual tracking.",
+      "before": "Automatic progression of the Expert slot, independent of the six normal slots and manual tracking."
+    },
+    "Yigas fixes": {
+      "after": "Fixed Yiga encounters",
+      "before": "Yigas fixes"
+    },
+    "appareil gyroscopique": {
+      "after": "motion-controlled apparatus",
+      "before": "appareil gyroscopique"
+    },
+    "bombes et trajectoires": {
+      "after": "bombs and trajectories",
+      "before": "bombes et trajectoires"
+    },
+    "courants ascendants": {
+      "after": "updrafts",
+      "before": "courants ascendants"
+    },
+    "cryonis et niveau d'eau": {
+      "after": "Cryonis and water level",
+      "before": "cryonis et niveau d'eau"
+    },
+    "observation et symboles": {
+      "after": "observation and symbols",
+      "before": "observation et symboles"
+    },
+    "parcours et construction": {
+      "after": "traversal and construction",
+      "before": "parcours et construction"
+    },
+    "sanctuaires jumeaux": {
+      "after": "twin shrines",
+      "before": "sanctuaires jumeaux"
+    },
+    "tutoriel de combat": {
+      "after": "combat tutorial",
+      "before": "tutoriel de combat"
+    }
+  }
 }

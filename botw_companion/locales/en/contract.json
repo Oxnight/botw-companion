@@ -17100,5 +17100,20 @@
     "rich": false,
     "markup": [],
     "browser": false
+  },
+  "renderfilternav-point-count": {
+    "params": [
+      "formattedCount",
+      "count"
+    ],
+    "required": [
+      "formattedCount"
+    ],
+    "raw_counts": {
+      "count": "items.length"
+    },
+    "rich": false,
+    "markup": [],
+    "browser": true
   }
 }

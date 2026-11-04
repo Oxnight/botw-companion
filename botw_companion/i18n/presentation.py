@@ -111,6 +111,11 @@ class Presenter:
             return value
         if isinstance(value, dict):
             result = {key: self.present(child, key) for key, child in value.items()}
+            # Completion profiles use 'scope' for display prose; other scope
+            # fields remain protocol identifiers.
+            if (isinstance(value.get('progress'), dict) and 'label' in value
+                    and isinstance(value.get('scope'), str)):
+                result['scope'] = self.translate_text(value['scope'])
             def align_term(child, previous, official, child_field=''):
                 if child_field in TECHNICAL_FIELDS or child_field.endswith(('_flag', '_path', '_id', '_url', '_sha256')):
                     return child

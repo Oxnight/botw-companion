@@ -1668,6 +1668,12 @@ function renderCompletionBlockers(score) {
     }).join("");
 }
 
+function formatUnit(value, unit, options = {}) {
+    return new Intl.NumberFormat(BOTWI18n.formatLocale, {
+        style: "unit", unit, unitDisplay: "short", ...options, numberingSystem: "latn"
+    }).format(value).replace(/[\u061c\u200e\u200f]/g, "");
+}
+
 function bloodMoonDuration(seconds) {
     if (
         seconds == null ||
@@ -1676,22 +1682,22 @@ function bloodMoonDuration(seconds) {
         return "-";
     }
 
-    const total = Math.max(
-        0,
-        Math.ceil(Number(seconds))
+    const totalMinutes = Math.max(
+        1,
+        Math.ceil(Number(seconds) / 60)
     ),
-        hours = Math.floor(total / 3600),
-        minutes = Math.ceil((total % 3600) / 60);
+        hours = Math.floor(totalMinutes / 60),
+        minutes = totalMinutes % 60;
 
     if (hours && minutes) {
-        return `${hours} h ${minutes.toString().padStart(2, "0")} min`;
+        return `${formatUnit(hours, "hour")} ${formatUnit(minutes, "minute")}`;
     }
 
     if (hours) {
-        return `${hours} h`;
+        return formatUnit(hours, "hour");
     }
 
-    return `${Math.max(1, minutes)} min`;
+    return formatUnit(Math.max(1, minutes), "minute");
 }
 
 const BLOOD_MOON_VISUAL_THRESHOLDS = [
@@ -2880,13 +2886,13 @@ function renderFilterNav() {
                                 progress =
                                     trackable.length
                                         ? `${done.toLocaleString(BOTWI18n.formatLocale)}/${trackable.length.toLocaleString(BOTWI18n.formatLocale)}`
-                                        : `${items.length.toLocaleString(BOTWI18n.formatLocale)} pts`,
+                                        : BOTWI18n.t("renderfilternav-point-count", {formattedCount: items.length.toLocaleString(BOTWI18n.formatLocale, {numberingSystem: "latn"}), count: items.length}),
                                 hint =
                                     trackable.length
                                         ? BOTWI18n.t("renderfilternav-completed-of", {value0: String(done), value1: String(done > 1 ? 's' : ''), value2: String(trackable.length), count: done})
                                         : BOTWI18n.t("renderfilternav-informational-point-no-completion-status", {value0: String(items.length), value1: String(items.length > 1 ? 's' : ''), value2: String(items.length > 1 ? 's' : ''), count: items.length});
 
-                            return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${progress}</small></label>`
+                            return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${esc(progress)}</small></label>`
                         })
                         .join("");
 
@@ -4681,8 +4687,11 @@ async function importManualFile(file) {
 
 function formatDistance(value) {
     return value >= 1000
-        ? `${(value / 1000).toFixed(value >= 10000 ? 1 : 2)} km`
-        : `${Math.round(value)} m`
+        ? formatUnit(value / 1000, "kilometer", {
+            minimumFractionDigits: value >= 10000 ? 1 : 2,
+            maximumFractionDigits: value >= 10000 ? 1 : 2
+        })
+        : formatUnit(Math.round(value), "meter")
 }
 
 function toggleRouteItem(id) {

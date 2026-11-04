@@ -2,7 +2,6 @@ import copy
 import http.client
 from html.parser import HTMLParser
 import json
-from pathlib import Path
 import re
 import unittest
 
@@ -10,11 +9,9 @@ from botw_companion.analyzer import analyze
 from botw_companion.english import english_presentation, translate_text, TECHNICAL_FIELDS
 from botw_companion.quest_walkthroughs import QUEST_WALKTHROUGHS
 from tools.build_english_assets import markup
-from botw_companion.i18n import locale_resource, message
+from botw_companion.i18n import locale_resource
 from tools.localization_checks import has_french_prose, has_bad_english
 import test_server_security as server_fixture
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 class Controls(HTMLParser):
@@ -220,7 +217,10 @@ class EnglishTests(unittest.TestCase):
                 return
             if isinstance(a, dict):
                 self.assertEqual(a.keys(), b.keys())
-                for k in a: walk(a[k], b[k], k)
+                for k in a:
+                    display_scope = (k == 'scope' and isinstance(a.get('progress'), dict)
+                                     and 'label' in a and isinstance(a[k], str))
+                    walk(a[k], b[k], 'profile_description' if display_scope else k)
             elif isinstance(a, list):
                 self.assertEqual(len(a), len(b))
                 for x, y in zip(a, b): walk(x, y, field)
