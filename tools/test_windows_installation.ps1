@@ -1,6 +1,7 @@
 param(
     [string]$InstallerPath = "",
-    [string]$PreviousInstallerPath = ""
+    [string]$PreviousInstallerPath = "",
+    [switch]$InteractiveAssistedUpdate
 )
 
 $ErrorActionPreference = "Stop"
@@ -11,7 +12,10 @@ if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
 
 $projectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $temporaryRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { [IO.Path]::GetTempPath() }
-$testRoot = Join-Path $temporaryRoot "BOTW Companion installation test"
+$testRoot = Join-Path $temporaryRoot "BOTW Companion installation test $([guid]::NewGuid())"
+$uninstallSubkey = "Software\Microsoft\Windows\CurrentVersion\Uninstall\{CE150634-F42B-4815-BE57-F0729FC71365}_is1"
+$desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"
+$startMenuShortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\BOTW Companion\BOTW Companion.lnk"
 $metadata = (& python (Join-Path $projectRoot "tools\release_metadata.py") | ConvertFrom-Json)
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 if (-not $InstallerPath) {
@@ -24,11 +28,120 @@ function Resolve-TestPath([string]$Path) {
     return Join-Path $projectRoot $Path
 }
 
-function Invoke-Installer([string]$Path, [string[]]$ExtraArguments = @()) {
-    $arguments = @("/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-") + $ExtraArguments
-    $process = Start-Process -FilePath $Path -ArgumentList $arguments -Wait -PassThru
-    if ($process.ExitCode -ne 0) {
-        throw "Installation silencieuse échouée avec le code $($process.ExitCode) : $Path"
+function Assert-CleanTestAccount {
+    # /DIR does not isolate Inno's AppId registration or per-user shortcuts.
+    foreach ($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser, [Microsoft.Win32.RegistryHive]::LocalMachine)) {
+        foreach ($view in @([Microsoft.Win32.RegistryView]::Registry32, [Microsoft.Win32.RegistryView]::Registry64)) {
+            $registry = [Microsoft.Win32.RegistryKey]::OpenBaseKey($hive, $view)
+            try {
+                $key = $registry.OpenSubKey($uninstallSubkey)
+                if ($key) {
+                    $key.Dispose()
+                    throw "Use a disposable Windows account without an existing BOTW Companion installation."
+                }
+            } finally { $registry.Dispose() }
+        }
+    }
+    foreach ($shortcut in @($desktopShortcut, $startMenuShortcut)) {
+        if (Test-Path -LiteralPath $shortcut) { throw "Existing shortcut must remain untouched: $shortcut" }
+    }
+    if (Get-Process -Name "BOTW Companion", "BOTW Companion Updater" -ErrorAction SilentlyContinue) {
+        throw "Use a disposable Windows account with no running BOTW Companion processes."
+    }
+}
+
+function Assert-InstallerLanguage([string]$InstallRoot, [string]$Language) {
+    $registration = Get-ItemProperty -LiteralPath "HKCU:\$uninstallSubkey"
+    if ($registration.'Inno Setup: Language' -ne $Language -or
+        $registration.DisplayVersion -ne $metadata.display_version -or
+        [IO.Path]::GetFullPath($registration.'Inno Setup: App Path') -ne [IO.Path]::GetFullPath($InstallRoot)) {
+        throw "Installed language/path/version mismatch: expected $Language in $InstallRoot; recorded language $($registration.'Inno Setup: Language')."
+    }
+    Write-Host "Inno Setup recorded language: $Language"
+}
+
+function Assert-InstalledShortcuts([string]$InstallRoot) {
+    foreach ($shortcut in @($desktopShortcut, $startMenuShortcut)) {
+        if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+            throw "Raccourci absent après mise à niveau : $shortcut"
+        }
+        $target = (New-Object -ComObject WScript.Shell).CreateShortcut($shortcut).TargetPath
+        if ([IO.Path]::GetFullPath($target) -ne [IO.Path]::GetFullPath((Join-Path $InstallRoot "BOTW Companion.exe"))) {
+            throw "Le raccourci ne cible pas l'application mise à niveau : $shortcut"
+        }
+    }
+}
+
+function Assert-PreservedData([string]$DataRoot, [hashtable]$Hashes) {
+    foreach ($name in $Hashes.Keys) {
+        $path = Join-Path $DataRoot $name
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf) -or
+            (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $Hashes[$name]) {
+            throw "Synthetic data changed or disappeared: $name"
+        }
+    }
+}
+
+function Start-ApplicationObservation {
+    $source = "BOTW-installation-$([guid]::NewGuid())"
+    Register-CimIndicationEvent -Namespace root/cimv2 -SourceIdentifier $source -OperationTimeoutSec 10 `
+        -Query "SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'BOTW Companion.exe'" | Out-Null
+    return $source
+}
+
+function Assert-ApplicationLaunches([string]$Source, [int]$ExpectedCount, [int]$ParentProcessId = 0) {
+    $launches = @()
+    $drain = [Diagnostics.Stopwatch]::StartNew()
+    # Drain asynchronous process notifications after the installer/relay exits.
+    while ($drain.ElapsedMilliseconds -lt 1000) {
+        Wait-Event -SourceIdentifier $Source -Timeout 1 | Out-Null
+        foreach ($event in @(Get-Event -SourceIdentifier $Source -ErrorAction SilentlyContinue)) {
+            $started = $event.SourceEventArgs.NewEvent
+            if (-not $started) { throw "Process-start observation failed: $($event.SourceEventArgs)" }
+            $launches += [ordered]@{ id = $started.ProcessID; parent_id = $started.ParentProcessID }
+            Remove-Event -EventIdentifier $event.EventIdentifier
+        }
+    }
+    ConvertTo-Json -InputObject @($launches) | Set-Content (Join-Path $testRoot "$Source.json") -Encoding UTF8
+    if ($launches.Count -ne $ExpectedCount -or
+        ($ExpectedCount -eq 1 -and $launches[0].parent_id -ne $ParentProcessId)) {
+        throw "Unexpected application launches: expected $ExpectedCount from parent $ParentProcessId; observed $($launches | ConvertTo-Json -Compress -AsArray)."
+    }
+}
+
+function Stop-ApplicationObservation([string]$Source) {
+    Unregister-Event -SourceIdentifier $Source
+    Get-Event -SourceIdentifier $Source -ErrorAction SilentlyContinue | Remove-Event
+}
+
+function Invoke-Installer([string]$Path, [string[]]$ExtraArguments, [string]$DataRoot,
+                          [switch]$Interactive) {
+    if (-not $DataRoot -or -not [IO.Path]::GetFullPath($DataRoot).StartsWith(
+        "$testRoot$([IO.Path]::DirectorySeparatorChar)", [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Installer validation requires data inside its owned temporary directory."
+    }
+    $arguments = @("/NORESTART", "/SP-") + $ExtraArguments
+    if (-not $Interactive) { $arguments += @("/VERYSILENT", "/SUPPRESSMSGBOXES") }
+    $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
+    $observation = Start-ApplicationObservation
+    $process = $null
+    try {
+        # An unexpected launch must inherit synthetic data, never the user's data.
+        $env:BOTW_COMPANION_DATA_DIR = $DataRoot
+        $process = Start-Process -FilePath $Path -ArgumentList $arguments -PassThru
+        if (-not $process.WaitForExit(120000)) {
+            $process.Kill($true)
+            $process.WaitForExit()
+            throw "Installer validation exceeded its deadline."
+        }
+        if ($process.ExitCode -ne 0) {
+            throw "Installation silencieuse échouée avec le code $($process.ExitCode) : $Path"
+        }
+        Assert-ApplicationLaunches $observation 0
+    } finally {
+        if ($process) { $process.Dispose() }
+        $env:BOTW_COMPANION_DATA_DIR = $originalDataRoot
+        Stop-ApplicationObservation $observation
     }
 }
 
@@ -62,7 +175,7 @@ function Invoke-ExactProcess([string]$Path, [string[]]$Arguments,
             $process.WaitForExit()
             throw "Le processus de validation a dépassé le délai autorisé : $Path"
         }
-        return $process.ExitCode
+        return [pscustomobject]@{ ExitCode = $process.ExitCode; Id = $process.Id }
     } finally {
         $process.Dispose()
     }
@@ -207,6 +320,7 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
     } | ConvertTo-Json -Compress | Set-Content `
         -LiteralPath $installerMetadata -Encoding UTF8 -NoNewline
     $originalDataRoot = $env:BOTW_COMPANION_DATA_DIR
+    $observation = $null
     try {
         $env:BOTW_COMPANION_DATA_DIR = $DataRoot
         $updaterArguments = @(
@@ -223,8 +337,10 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
             "--release-url", $releaseUrl,
             "--silent"
         )
-        $updaterExitCode = Invoke-ExactProcess $updater $updaterArguments `
+        $observation = Start-ApplicationObservation
+        $updaterProcess = Invoke-ExactProcess $updater $updaterArguments `
             $relayDirectory 120000
+        $updaterExitCode = $updaterProcess.ExitCode
         if ($updaterExitCode -ne 0) {
             $failureStatePath = Join-Path $updateRoot "installation.json"
             $failureDetails = ""
@@ -265,8 +381,11 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
         if (-not $stopped) {
             throw "La version relancée ne s'est pas arrêtée proprement après le test."
         }
+        # The relay must be the only parent launching the new application.
+        Assert-ApplicationLaunches $observation 1 $updaterProcess.Id
     } finally {
         $env:BOTW_COMPANION_DATA_DIR = $originalDataRoot
+        if ($observation) { Stop-ApplicationObservation $observation }
     }
 }
 
@@ -274,24 +393,54 @@ $resolvedInstaller = Resolve-TestPath $InstallerPath
 if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
     throw "Installateur introuvable : $resolvedInstaller"
 }
-if (Test-Path -LiteralPath $testRoot) { Remove-Item -LiteralPath $testRoot -Recurse -Force }
+Assert-CleanTestAccount
+New-Item -ItemType Directory -Path $testRoot | Out-Null
+Write-Host "Native installation diagnostics: $testRoot"
 
 # Clean installation and complete self-containment.
-$cleanInstallRoot = Join-Path $testRoot "Installation propre"
-$cleanDataRoot = Join-Path $testRoot "Données propres"
-New-Item -ItemType Directory -Force -Path $cleanDataRoot | Out-Null
-$cleanSentinel = Join-Path $cleanDataRoot "donnees-a-conserver.json"
-Set-Content -LiteralPath $cleanSentinel -Value '{"preserver":true}' -Encoding ASCII -NoNewline
-Invoke-Installer $resolvedInstaller @("/DIR=`"$cleanInstallRoot`"", "/TASKS=`"desktopicon`"")
-Assert-InstalledLayout $cleanInstallRoot
-Test-InstalledRuntime $cleanInstallRoot $cleanDataRoot 18766
-Test-AssistedUpdate $cleanInstallRoot $cleanDataRoot $resolvedInstaller 18767
-Invoke-Uninstaller (Join-Path $cleanInstallRoot "unins000.exe")
-if (Test-Path -LiteralPath (Join-Path $cleanInstallRoot "BOTW Companion.exe")) {
-    throw "L'exécutable est encore présent après désinstallation."
-}
-if (-not (Test-Path -LiteralPath $cleanSentinel -PathType Leaf)) {
-    throw "La désinstallation a supprimé les données personnelles."
+foreach ($language in @("english", "french")) {
+    $cleanInstallRoot = Join-Path $testRoot "Installation propre $language"
+    $cleanDataRoot = Join-Path $testRoot "Données propres $language"
+    New-Item -ItemType Directory -Force -Path $cleanDataRoot | Out-Null
+    $cleanSentinel = Join-Path $cleanDataRoot "donnees-a-conserver.json"
+    Set-Content -LiteralPath $cleanSentinel -Value '{"preserver":true}' -Encoding ASCII -NoNewline
+    Invoke-Installer $resolvedInstaller @(
+        "/LANG=$language", "/DIR=`"$cleanInstallRoot`"", "/TASKS=`"desktopicon`""
+    ) $cleanDataRoot
+    Assert-InstalledLayout $cleanInstallRoot
+    Assert-InstallerLanguage $cleanInstallRoot $language
+    Assert-InstalledShortcuts $cleanInstallRoot
+    & python (Join-Path $projectRoot "tools\seed_installation_data.py") $cleanDataRoot
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    $dataHashes = @{}
+    foreach ($file in Get-ChildItem -LiteralPath $cleanDataRoot -File) {
+        $dataHashes[$file.Name] = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
+    }
+
+    # Omit /LANG, /DIR and /TASKS to exercise Inno's previous choices.
+    Invoke-Installer $resolvedInstaller @() $cleanDataRoot
+    Assert-InstallerLanguage $cleanInstallRoot $language
+    Assert-InstalledShortcuts $cleanInstallRoot
+    Assert-PreservedData $cleanDataRoot $dataHashes
+    if ($InteractiveAssistedUpdate) {
+        # Complete the visible wizard to test the guard independently of skipifsilent.
+        Write-Host "Complete the $language assisted-update wizard within 120 seconds."
+        Invoke-Installer $resolvedInstaller @("/ASSISTEDUPDATE=1") $cleanDataRoot -Interactive
+        Assert-InstallerLanguage $cleanInstallRoot $language
+        Assert-InstalledShortcuts $cleanInstallRoot
+        Assert-PreservedData $cleanDataRoot $dataHashes
+    }
+    Test-InstalledRuntime $cleanInstallRoot $cleanDataRoot 18766 -ValidateUpgradeData
+    Test-AssistedUpdate $cleanInstallRoot $cleanDataRoot $resolvedInstaller 18767
+    Assert-InstallerLanguage $cleanInstallRoot $language
+    Assert-InstalledShortcuts $cleanInstallRoot
+    Assert-PreservedData $cleanDataRoot $dataHashes
+    Invoke-Uninstaller (Join-Path $cleanInstallRoot "unins000.exe")
+    if (Test-Path -LiteralPath (Join-Path $cleanInstallRoot "BOTW Companion.exe")) {
+        throw "L'exécutable est encore présent après désinstallation."
+    }
+    Assert-PreservedData $cleanDataRoot $dataHashes
+    Assert-CleanTestAccount
 }
 
 # A published stable package is mandatory after bootstrap. For the first stable
@@ -314,8 +463,8 @@ if ($PreviousInstallerPath) {
     $upgradeDataRoot = Join-Path $testRoot "Données version précédente"
     New-Item -ItemType Directory -Force -Path $upgradeDataRoot | Out-Null
     Invoke-Installer $resolvedPreviousInstaller @(
-        "/DIR=`"$upgradeInstallRoot`"", "/TASKS=`"desktopicon`""
-    )
+        "/LANG=french", "/DIR=`"$upgradeInstallRoot`"", "/TASKS=`"desktopicon`""
+    ) $upgradeDataRoot
 
     & python (Join-Path $projectRoot "tools\seed_installation_data.py") $upgradeDataRoot
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -323,21 +472,13 @@ if ($PreviousInstallerPath) {
     # Every supported stable package includes the updater and must complete
     # an assisted transition before the installer recovery/reinstallation checks.
     Test-AssistedUpdate $upgradeInstallRoot $upgradeDataRoot $resolvedInstaller 18769
+    Assert-InstallerLanguage $upgradeInstallRoot "french"
 
     # No /DIR or /TASKS: Inno must recover the installation and its choices.
-    Invoke-Installer $resolvedInstaller
+    Invoke-Installer $resolvedInstaller @() $upgradeDataRoot
     Assert-InstalledLayout $upgradeInstallRoot
-    $desktopShortcut = Join-Path ([Environment]::GetFolderPath("Desktop")) "BOTW Companion.lnk"
-    $startMenuShortcut = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\BOTW Companion\BOTW Companion.lnk"
-    foreach ($shortcut in @($desktopShortcut, $startMenuShortcut)) {
-        if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
-            throw "Raccourci absent après mise à niveau : $shortcut"
-        }
-        $target = (New-Object -ComObject WScript.Shell).CreateShortcut($shortcut).TargetPath
-        if ([IO.Path]::GetFullPath($target) -ne [IO.Path]::GetFullPath((Join-Path $upgradeInstallRoot "BOTW Companion.exe"))) {
-            throw "Le raccourci ne cible pas l'application mise à niveau : $shortcut"
-        }
-    }
+    Assert-InstallerLanguage $upgradeInstallRoot "french"
+    Assert-InstalledShortcuts $upgradeInstallRoot
     Test-InstalledRuntime $upgradeInstallRoot $upgradeDataRoot 18768 -ValidateUpgradeData
     Invoke-Uninstaller (Join-Path $upgradeInstallRoot "unins000.exe")
     foreach ($name in @("manual_tracking.json", "route_sessions.json", "preferences.json", "export-reference.json")) {
@@ -347,4 +488,4 @@ if ($PreviousInstallerPath) {
     }
 }
 
-Write-Host "Installation propre, mise à niveau, raccourcis, données, runtime et DSU validés." -ForegroundColor Green
+Write-Host "English/French installation, language retention, shortcuts, synthetic data, assisted restart, runtime and DSU validated." -ForegroundColor Green
