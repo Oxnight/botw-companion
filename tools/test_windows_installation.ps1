@@ -85,8 +85,42 @@ function Assert-PreservedData([string]$DataRoot, [hashtable]$Hashes) {
 function Start-ApplicationObservation {
     $source = "BOTW-installation-$([guid]::NewGuid())"
     Register-CimIndicationEvent -Namespace root/cimv2 -SourceIdentifier $source -OperationTimeoutSec 10 `
-        -Query "SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'BOTW Companion.exe'" | Out-Null
+        -Query "SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = 'BOTW Companion.exe' OR ProcessName = 'BOTW Companion Updater.exe'" | Out-Null
     return $source
+}
+
+function Test-ApplicationLineage([object[]]$Processes, [int]$ExpectedCount, [int]$ParentProcessId = 0) {
+    $applications = @($Processes | Where-Object { $_.name -eq "BOTW Companion.exe" })
+    if ($ExpectedCount -notin @(0, 1) -or $applications.Count -ne $ExpectedCount) { return $false }
+    $byId = @{}
+    foreach ($process in $Processes) {
+        $processId = [long]$process.id
+        if ($processId -le 0 -or $byId.ContainsKey($processId) -or
+            $process.name -notin @("BOTW Companion.exe", "BOTW Companion Updater.exe")) { return $false }
+        $byId[$processId] = $process
+    }
+    # Index the complete observation before walking any ancestry.
+    foreach ($process in $Processes) {
+        $seen = @{}
+        $ancestor = [long]$process.id
+        while ($byId.ContainsKey($ancestor)) {
+            if ($seen.ContainsKey($ancestor)) { return $false }
+            $seen[$ancestor] = $true
+            $ancestor = [long]$byId[$ancestor].parent_id
+        }
+    }
+    if ($ExpectedCount -eq 0) { return $true }
+    if (-not $byId.ContainsKey([long]$ParentProcessId) -or
+        $byId[[long]$ParentProcessId].name -ne "BOTW Companion Updater.exe") { return $false }
+    foreach ($process in $Processes) {
+        $ancestor = if ($process.name -eq "BOTW Companion.exe") { [long]$process.parent_id } else { [long]$process.id }
+        while ($ancestor -ne $ParentProcessId) {
+            if (-not $byId.ContainsKey($ancestor) -or
+                $byId[$ancestor].name -ne "BOTW Companion Updater.exe") { return $false }
+            $ancestor = [long]$byId[$ancestor].parent_id
+        }
+    }
+    return $true
 }
 
 function Assert-ApplicationLaunches([string]$Source, [int]$ExpectedCount, [int]$ParentProcessId = 0) {
@@ -98,13 +132,12 @@ function Assert-ApplicationLaunches([string]$Source, [int]$ExpectedCount, [int]$
         foreach ($event in @(Get-Event -SourceIdentifier $Source -ErrorAction SilentlyContinue)) {
             $started = $event.SourceEventArgs.NewEvent
             if (-not $started) { throw "Process-start observation failed: $($event.SourceEventArgs)" }
-            $launches += [ordered]@{ id = $started.ProcessID; parent_id = $started.ParentProcessID }
+            $launches += [ordered]@{ name = $started.ProcessName; id = $started.ProcessID; parent_id = $started.ParentProcessID }
             Remove-Event -EventIdentifier $event.EventIdentifier
         }
     }
     ConvertTo-Json -InputObject @($launches) | Set-Content (Join-Path $testRoot "$Source.json") -Encoding UTF8
-    if ($launches.Count -ne $ExpectedCount -or
-        ($ExpectedCount -eq 1 -and $launches[0].parent_id -ne $ParentProcessId)) {
+    if (-not (Test-ApplicationLineage $launches $ExpectedCount $ParentProcessId)) {
         throw "Unexpected application launches: expected $ExpectedCount from parent $ParentProcessId; observed $($launches | ConvertTo-Json -Compress -AsArray)."
     }
 }
@@ -381,7 +414,7 @@ function Test-AssistedUpdate([string]$InstallRoot, [string]$DataRoot,
         if (-not $stopped) {
             throw "La version relancée ne s'est pas arrêtée proprement après le test."
         }
-        # The relay must be the only parent launching the new application.
+        # The onefile updater relaunches the app from a bootloader child.
         Assert-ApplicationLaunches $observation 1 $updaterProcess.Id
     } finally {
         $env:BOTW_COMPANION_DATA_DIR = $originalDataRoot
@@ -393,6 +426,7 @@ $resolvedInstaller = Resolve-TestPath $InstallerPath
 if (-not (Test-Path -LiteralPath $resolvedInstaller -PathType Leaf)) {
     throw "Installateur introuvable : $resolvedInstaller"
 }
+& (Join-Path $projectRoot "tests\windows_process_lineage.ps1")
 Assert-CleanTestAccount
 New-Item -ItemType Directory -Path $testRoot | Out-Null
 Write-Host "Native installation diagnostics: $testRoot"
