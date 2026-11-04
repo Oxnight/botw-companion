@@ -1670,8 +1670,8 @@ function renderCompletionBlockers(score) {
 
 function formatUnit(value, unit, options = {}) {
     return new Intl.NumberFormat(BOTWI18n.formatLocale, {
-        style: "unit", unit, unitDisplay: "short", ...options
-    }).format(value);
+        style: "unit", unit, unitDisplay: "short", ...options, numberingSystem: "latn"
+    }).format(value).replace(/[\u061c\u200e\u200f]/g, "");
 }
 
 function bloodMoonDuration(seconds) {
@@ -1682,12 +1682,12 @@ function bloodMoonDuration(seconds) {
         return "-";
     }
 
-    const total = Math.max(
-        0,
-        Math.ceil(Number(seconds))
+    const totalMinutes = Math.max(
+        1,
+        Math.ceil(Number(seconds) / 60)
     ),
-        hours = Math.floor(total / 3600),
-        minutes = Math.ceil((total % 3600) / 60);
+        hours = Math.floor(totalMinutes / 60),
+        minutes = totalMinutes % 60;
 
     if (hours && minutes) {
         return `${formatUnit(hours, "hour")} ${formatUnit(minutes, "minute")}`;
@@ -2886,13 +2886,13 @@ function renderFilterNav() {
                                 progress =
                                     trackable.length
                                         ? `${done.toLocaleString(BOTWI18n.formatLocale)}/${trackable.length.toLocaleString(BOTWI18n.formatLocale)}`
-                                        : BOTWI18n.t("renderfilternav-point-count", {value0: items.length.toLocaleString(BOTWI18n.formatLocale)}),
+                                        : BOTWI18n.t("renderfilternav-point-count", {formattedCount: items.length.toLocaleString(BOTWI18n.formatLocale, {numberingSystem: "latn"}), count: items.length}),
                                 hint =
                                     trackable.length
                                         ? BOTWI18n.t("renderfilternav-completed-of", {value0: String(done), value1: String(done > 1 ? 's' : ''), value2: String(trackable.length), count: done})
                                         : BOTWI18n.t("renderfilternav-informational-point-no-completion-status", {value0: String(items.length), value1: String(items.length > 1 ? 's' : ''), value2: String(items.length > 1 ? 's' : ''), count: items.length});
 
-                            return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${progress}</small></label>`
+                            return `<label class="filterType ${selectedTypes.has(type.id) ? 'selected' : ''}" title="${esc(hint)}"><input type="checkbox" data-filter-type="${esc(type.id)}" ${selectedTypes.has(type.id) ? 'checked' : ''}><span>${esc(type.label)}</span><small class="filterProgress ${trackable.length ? '' : 'informational'}">${esc(progress)}</small></label>`
                         })
                         .join("");
 

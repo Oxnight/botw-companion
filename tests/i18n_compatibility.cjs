@@ -1,5 +1,5 @@
-/* Baseline: 8009763. Only formatUnit, bloodMoonDuration and formatDistance
- * were updated for locale-aware units; behavior is covered in localized_units.cjs.
+/* Baseline: 8009763. Unit formatting and escaped filter counts have dedicated
+ * behavior tests in localized_units.cjs and filter_localization.cjs.
  * All other symbolic hashes remain unchanged. */
 const {test} = require('node:test');
 const assert = require('node:assert/strict');

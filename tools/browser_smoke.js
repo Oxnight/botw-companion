@@ -1099,6 +1099,7 @@ async function runLocalTimezone(browser, baseUrl, browserName) {
 }
 
 async function runBilingual(browser, baseUrl, browserName) {
+  const {assertLocalizedLayout} = require("./browser_layout_checks.cjs");
   const context = await browser.newContext({viewport: {width: 1440, height: 900}});
   context.setDefaultTimeout(ACTION_TIMEOUT_MS);
   context.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT_MS);
@@ -1208,12 +1209,16 @@ async function runBilingual(browser, baseUrl, browserName) {
   assert(personal.body.entries[trackingId].note === personalNote, "English mode translated a personal note");
   await page.locator("#toggleRoute").click();
   await assertAccessible(page, "English main page");
+  progress(browserName, "languages:English-long-labels");
+  await assertLocalizedLayout(page);
   progress(browserName, "languages:French-English-persistence");
   await changeLanguage(page, "fr");
   assert((await fetchJson(page, "/api/language")).body.language === "fr",
     "Native launcher language was not saved in French");
   assert((await page.locator("#openHelp").textContent()).trim() === "Aide", "French document expected");
   await assertAccessible(page, "French page after language switch");
+  progress(browserName, "languages:French-long-labels");
+  await assertLocalizedLayout(page);
   await changeLanguage(page, "en");
   assert((await page.locator("#openHelp").textContent()).trim() === "Help", "English document expected");
   // Exercise remembered selection with a slow language bootstrap resource.

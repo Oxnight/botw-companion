@@ -1690,4 +1690,4 @@ legacy-bound-819 = { "Equip the armor Zora, go up the waterfall and talk to Gruv
 legacy-bound-820 = { "Equip the wand in front of Kula and talk to her without breaking her." }
 legacy-bound-821 = { "Equip the Master Sword in front of Aliza and talk to her again." }
 legacy-bound-822 = { "Supporting guide - Hinox " }{ $value0 }
-renderfilternav-point-count = { $value0 } pts
+renderfilternav-point-count = { $formattedCount } pts

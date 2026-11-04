@@ -17103,8 +17103,15 @@
   },
   "renderfilternav-point-count": {
     "params": [
-      "value0"
+      "formattedCount",
+      "count"
     ],
+    "required": [
+      "formattedCount"
+    ],
+    "raw_counts": {
+      "count": "items.length"
+    },
     "rich": false,
     "markup": [],
     "browser": true
