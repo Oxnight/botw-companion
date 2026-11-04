@@ -719,26 +719,85 @@ async function runDesktop(browser, baseUrl, browserName) {
   await page.waitForFunction(previous =>
     document.querySelectorAll("#routeSessionSelect option").length === previous + 1, sessionCount);
   progress(browserName, "bureau:itineraires");
-  const routesRoundTrip = await page.evaluate(async timeout => {
+  const routesRoundTrip = await page.evaluate(async ({timeout, expectedSessionCount}) => {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    try {
+    const result = {ok: false, phase: "save"};
+    const summary = data => ({revision: data.revision, active_session_id: data.active_session_id,
+      session_ids: Object.keys(data.sessions || {}).sort(), session_count: Object.keys(data.sessions || {}).length});
+    const stable = value => JSON.stringify(value, function (key, item) {
+      return item && typeof item === "object" && !Array.isArray(item)
+        ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item;
+    });
+    const content = (session, copy = false) => {
+      const {updated_at, ...fields} = session;
+      if (copy) delete fields.id;
+      fields.entries = fields.entries.map(entry => ({...entry,
+        snapshot: Object.fromEntries(Object.entries(entry.snapshot).filter(([, value]) => value !== null))}));
+      return stable(fields);
+    };
+    let timer;
+    const deadline = new Promise((resolve, reject) => {
+      timer = setTimeout(() => {
+        reject(new Error("Route persistence/export/import deadline exceeded"));
+        controller.abort();
+      }, timeout);
+    });
+    const check = async () => {
+      result.expected = {...summary(routesData), dom_session_count: expectedSessionCount};
+      await routeSaveQueue;
+      if (controller.signal.aborted) throw new Error("Route persistence deadline exceeded");
+      result.expected = {...summary(routesData), dom_session_count: expectedSessionCount};
+      const expected = JSON.parse(JSON.stringify(routesData));
+      const newSessionId = routeState.id;
+      result.expected.new_session_id = newSessionId;
+      result.phase = "export";
       const exportedResponse = await fetch("/api/routes/export", {signal: controller.signal});
+      result.exported = {status: exportedResponse.status};
       const exported = await exportedResponse.json();
-    const active = exported.sessions[exported.active_session_id];
-    const response = await fetch("/api/routes/import", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
+      Object.assign(result.exported, summary(exported), {error: exported.erreur});
+      if (!exportedResponse.ok) throw new Error("Route export rejected");
+      const active = exported.sessions?.[exported.active_session_id];
+      if (exported.revision !== expected.revision || exported.active_session_id !== newSessionId ||
+          result.exported.session_count !== expectedSessionCount ||
+          stable(result.exported.session_ids) !== stable(result.expected.session_ids) || !active ||
+          !result.expected.session_ids.every(id =>
+            content(exported.sessions[id]) === content(expected.sessions[id]))) {
+        throw new Error("The new session or existing routes were not persisted");
+      }
+      result.phase = "import";
+      const response = await fetch("/api/routes/import", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({session: active, expected_revision: exported.revision}),
         signal: controller.signal
-    });
-    return response.ok && Object.keys((await response.json()).sessions).length ===
-      Object.keys(exported.sessions).length + 1;
+      });
+      result.imported = {status: response.status};
+      const imported = await response.json();
+      Object.assign(result.imported, summary(imported), {error: imported.erreur});
+      if (!response.ok) throw new Error("Route import rejected");
+      const copied = imported.sessions?.[imported.active_session_id];
+      if (imported.revision !== exported.revision + 1 ||
+          result.imported.session_count !== result.exported.session_count + 1 || !copied ||
+          result.exported.session_ids.includes(imported.active_session_id) ||
+          !result.exported.session_ids.every(id => imported.sessions[id] &&
+            content(imported.sessions[id]) === content(exported.sessions[id])) ||
+          content(copied, true) !== content(active, true)) {
+        throw new Error("Route import changed session content or lost existing sessions");
+      }
+      result.ok = true;
+      return result;
+    };
+    try {
+      return await Promise.race([check(), deadline]);
+    } catch (error) {
+      result.error = error.message;
+      return result;
     } finally {
       clearTimeout(timer);
     }
-  }, FETCH_TIMEOUT_MS);
-  assert(routesRoundTrip, "L'export/import d'itinéraire ne reproduit pas la session");
+  }, {timeout: FETCH_TIMEOUT_MS, expectedSessionCount: sessionCount + 1});
+  assert(routesRoundTrip.ok,
+    `L'export/import d'itinéraire ne reproduit pas la session : ${JSON.stringify(routesRoundTrip)}`);
 
   progress(browserName, "bureau:dsu");
   await page.waitForFunction(() => !document.querySelector("#toggleDsu").disabled);

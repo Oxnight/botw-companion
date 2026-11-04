@@ -1,3 +1,4 @@
+from copy import deepcopy
 from pathlib import Path
 import tempfile
 import unittest
@@ -35,6 +36,31 @@ class RouteSessionStoreTests(unittest.TestCase):
         first = self.store.replace(self.populated(self.store), 0)
         with self.assertRaisesRegex(ManualTrackingError, "autre fenêtre"):
             self.store.replace(first, 0)
+
+    def test_import_rejects_export_before_pending_save_and_preserves_saved_sessions(self):
+        exported = self.store.replace(self.populated(self.store), 0)
+        pending = deepcopy(exported)
+        new = deepcopy(pending["sessions"][pending["active_session_id"]])
+        new.update(id="session-created", name="New route", entries=[])
+        pending["sessions"][new["id"]] = new
+        pending["active_session_id"] = new["id"]
+        saved = self.store.replace(pending, exported["revision"])
+
+        with self.assertRaisesRegex(ManualTrackingError, "autre fenêtre"):
+            self.store.import_session(exported["sessions"][exported["active_session_id"]], exported["revision"])
+        self.assertEqual(self.store.load(), saved)
+
+        active = saved["sessions"][saved["active_session_id"]]
+        imported = self.store.import_session(active, saved["revision"])
+        self.assertEqual(imported["revision"], saved["revision"] + 1)
+        self.assertEqual(len(imported["sessions"]), len(saved["sessions"]) + 1)
+        self.assertNotIn(imported["active_session_id"], saved["sessions"])
+        for sid, session in saved["sessions"].items():
+            self.assertEqual({key: value for key, value in imported["sessions"][sid].items() if key != "updated_at"},
+                             {key: value for key, value in session.items() if key != "updated_at"})
+        copied = imported["sessions"][imported["active_session_id"]]
+        self.assertEqual({key: value for key, value in copied.items() if key not in {"id", "updated_at"}},
+                         {key: value for key, value in active.items() if key not in {"id", "updated_at"}})
 
     def test_legacy_export_import_preserves_order_locks_and_snapshots(self):
         exported = {"schema_version": 1, "name": "Ancienne route", "start": {"x": 1, "z": 2, "label": "Départ"},
