@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "id": "ru",
+  "native_name": "Русский",
+  "format_locale": "ru-RU",
+  "direction": "ltr",
+  "aliases": [],
+  "fallback": null,
+  "enabled": false
+}
