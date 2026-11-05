@@ -752,4 +752,9 @@ export-manual = { "botw-companion-manual-tracking.json" }
 export-routes = { "botw-companion-routes.json" }
 export-backup = { "botw-companion-backup.json" }
 renderdetails-physical-chest-recorded-in-the-game-data = { $value16 }{ $value15 }{ $value0 }{ $value14 }{ $value13 }Сундуков в игровых данных: { $value1 }.{ $value12 }{ $value11 }{ $value5 }{ $value10 }{ $value9 }Координаты относятся к карте { $value6 }: они намеренно отделены от карты Хайрула.{ $value8 }{ $value7 }
-renderfilternav-point-count = { $value0 } т.
+renderfilternav-point-count = { $count ->
+    [one] { $formattedCount } точка
+    [few] { $formattedCount } точки
+    [many] { $formattedCount } точек
+   *[other] { $formattedCount } точки
+    }

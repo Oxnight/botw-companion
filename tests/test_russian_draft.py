@@ -27,3 +27,18 @@ class RussianDraftTests(unittest.TestCase):
             for section, values in supplied.items():
                 self.assertLessEqual(values.keys(), expected[section].keys())
                 self.assertTrue(all(isinstance(v, str) and v.strip() for v in values.values()))
+
+    def test_point_count_uses_russian_plural_forms_and_formatted_count(self):
+        from fluent.runtime import FluentBundle, FluentResource
+        source = (ROOT / 'botw_companion/locales/ru/messages.ftl').read_text('utf-8')
+        bundle = FluentBundle(['ru-RU'], use_isolating=False)
+        bundle.add_resource(FluentResource(source))
+        pattern = bundle.get_message('renderfilternav-point-count').value
+        for count, suffix in [(0, 'точек'), (1, 'точка'), (2, 'точки'),
+                              (5, 'точек'), (11, 'точек'), (21, 'точка'),
+                              (22, 'точки'), (25, 'точек'), (101, 'точка')]:
+            with self.subTest(count=count):
+                text, errors = bundle.format_pattern(pattern, {'count': count,
+                                                               'formattedCount': str(count)})
+                self.assertEqual(errors, [])
+                self.assertEqual(text, f'{count} {suffix}')
