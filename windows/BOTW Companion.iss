@@ -38,13 +38,14 @@ UsePreviousAppDir=yes
 UsePreviousTasks=yes
 VersionInfoVersion={#MyAppNumericVersion}
 VersionInfoProductVersion={#MyAppNumericVersion}
-VersionInfoDescription=Installateur BOTW Companion
+VersionInfoDescription=BOTW Companion Setup
 
 [Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"; GroupDescription: "Raccourcis supplémentaires :"; Flags: checkedonce
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkedonce
 
 [Files]
 Source: "..\dist\BOTW Companion\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -54,7 +55,7 @@ Name: "{group}\BOTW Companion"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "
 Name: "{autodesktop}\BOTW Companion"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Lancer BOTW Companion"; Flags: nowait postinstall skipifsilent; Check: not IsAssistedUpdate
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent; Check: not IsAssistedUpdate
 
 [Code]
 function IsAssistedUpdate: Boolean;
