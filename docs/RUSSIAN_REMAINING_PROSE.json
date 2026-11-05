@@ -1,0 +1,22 @@
+{
+  "status": "complete_translation_draft_human_review_pending",
+  "remaining": 0,
+  "entries": [],
+  "technical_literals_intentionally_retained": [
+    "Obj_BombFlèche en bois_A_02",
+    "Obj_BombFlèche en bois_A_03",
+    "Obj_ElectricFlèche en bois_A_02",
+    "Obj_FireFlèche en bois_A_02",
+    "Obj_FireFlèche en bois_A_03",
+    "Obj_Flèche en boisBundle_A_01",
+    "Obj_Flèche en boisBundle_A_02",
+    "Obj_IceFlèche en bois_A_02",
+    "Obj_IceFlèche en bois_A_03",
+    "Obj_archéoniqueFlèche en bois_C_01",
+    "attachment; filename=botw-companion-suivi-manuel.json",
+    "attachment; filename=botw-companion-sauvegarde.json",
+    "--formule-carte",
+    "--profil",
+    "--intervalle"
+  ]
+}
