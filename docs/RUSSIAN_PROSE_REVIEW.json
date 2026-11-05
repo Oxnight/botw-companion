@@ -78321,7 +78321,7 @@
     },
     {
       "key": "Compteur officiel, sans quêtes, coffres, souvenirs ni compendium.",
-      "english": "Official counter, without quests, chests, memories or compendium.",
+      "english": "Official map counter, excluding quests, chests, memories and the Hyrule Compendium.",
       "russian": "Официальный счётчик: без заданий, сундуков, воспоминаний и энциклопедии.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -81628,7 +81628,7 @@
     },
     {
       "key": "Objets exclusifs soumis au matériel possédé et à l'aléatoire.",
-      "english": "Exclusive items subject to owned material and randomness.",
+      "english": "Exclusive items that depend on the amiibo you own and random drops.",
       "russian": "Особые предметы, получение которых зависит от имеющегося устройства и случайности.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -96409,7 +96409,7 @@
     },
     {
       "key": "Objectifs automatiques du jeu de base, de l'Expansion Pass et de la mise à jour Xenoblade, sans amiibo, suivi manuel ni mode Expert.",
-      "english": "Automatic objectives of the base game, Expansion Pass and Xenoblade update, without amiibo, manual tracking or Expert mode.",
+      "english": "Automatic objectives in the base game, Expansion Pass and Xenoblade update, excluding amiibo, manual tracking and Master Mode.",
       "russian": "Автоматические цели основной игры, абонемента дополнений и обновления Xenoblade. Amiibo, ручные отметки и режим «Мастер» исключены.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -96417,7 +96417,7 @@
     },
     {
       "key": "Objectifs automatiques permanents du jeu de base, sans Expansion Pass, Xenoblade, amiibo, suivi manuel ni mode Expert.",
-      "english": "Permanent automatic objectives of the base game, without Expansion Pass, Xenoblade, amiibo, manual tracking or Expert mode.",
+      "english": "Permanent automatic objectives in the base game, excluding the Expansion Pass, Xenoblade update, amiibo, manual tracking and Master Mode.",
       "russian": "Постоянные автоматические цели основной игры. Абонемент дополнений, Xenoblade, amiibo, ручные отметки и режим «Мастер» исключены.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -100186,7 +100186,7 @@
     },
     {
       "key": "Profil base ou DLC choisi depuis les preuves présentes dans la sauvegarde, limité aux validations automatiques.",
-      "english": "Base or DLC profile chosen from the evidence present in the save, limited to automatic validations.",
+      "english": "Base-game or DLC profile selected from evidence in the save, limited to automatically tracked objectives.",
       "russian": "Основной профиль или профиль DLC выбирается по подтверждениям в сохранении и учитывает только автоматические отметки.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -100218,7 +100218,7 @@
     },
     {
       "key": "Progression automatique du slot Expert, indépendante des six slots normaux et du suivi manuel.",
-      "english": "Automatic progression of the Expert slot, independent of the six normal slots and manual tracking.",
+      "english": "Automatically tracked progress in the Master Mode save, separate from the six Normal Mode save slots and manual tracking.",
       "russian": "Автоматический прогресс слота режима «Мастер», независимый от шести обычных слотов и ручных отметок.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -103120,7 +103120,7 @@
     },
     {
       "key": "Compendium d'Hyrule",
-      "english": "Compendium d'Hyrule",
+      "english": "Hyrule Compendium",
       "russian": "Хайрулопедия",
       "references": [
         "visual runtime review: category labels"
@@ -103136,7 +103136,7 @@
     },
     {
       "key": "Yigas fixes",
-      "english": "Yigas fixes",
+      "english": "Fixed Yiga encounters",
       "russian": "Ига на постоянных местах",
       "references": [
         "visual runtime review: category labels"
@@ -103200,7 +103200,7 @@
     },
     {
       "key": "appareil gyroscopique",
-      "english": "appareil gyroscopique",
+      "english": "motion-controlled apparatus",
       "russian": "гироскопический механизм",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103208,7 +103208,7 @@
     },
     {
       "key": "bombes et trajectoires",
-      "english": "bombes et trajectoires",
+      "english": "bombs and trajectories",
       "russian": "бомбы и траектории",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103216,7 +103216,7 @@
     },
     {
       "key": "courants ascendants",
-      "english": "courants ascendants",
+      "english": "updrafts",
       "russian": "восходящие потоки",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103224,7 +103224,7 @@
     },
     {
       "key": "cryonis et niveau d'eau",
-      "english": "cryonis et niveau d'eau",
+      "english": "Cryonis and water level",
       "russian": "Крионис и уровень воды",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103232,7 +103232,7 @@
     },
     {
       "key": "observation et symboles",
-      "english": "observation et symboles",
+      "english": "observation and symbols",
       "russian": "наблюдательность и символы",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103240,7 +103240,7 @@
     },
     {
       "key": "parcours et construction",
-      "english": "parcours et construction",
+      "english": "traversal and construction",
       "russian": "прохождение и строительство",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103248,7 +103248,7 @@
     },
     {
       "key": "sanctuaires jumeaux",
-      "english": "sanctuaires jumeaux",
+      "english": "twin shrines",
       "russian": "парные святилища",
       "references": [
         "visual runtime review: shrine mechanics"
@@ -103256,7 +103256,7 @@
     },
     {
       "key": "tutoriel de combat",
-      "english": "tutoriel de combat",
+      "english": "combat tutorial",
       "russian": "обучение бою",
       "references": [
         "visual runtime review: shrine mechanics"

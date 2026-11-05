@@ -73,8 +73,8 @@ full sentences. No translation service or new dependency is used at runtime.
 
 - Every Russian input has the exact required key set and nonempty values.
 - All 1,692 Fluent messages pass the full parameter/markup contract.
-- 6,888 Python rendering probes pass, including Russian plural boundary cases,
-  negative values and fractions. All 691 browser-exposed probes also agree
+- 6,900 Python rendering probes pass, including Russian plural boundary cases,
+  negative values and fractions. All 703 browser-exposed probes also agree
   with their Python results; 6,197 probes cover Python-only messages.
 - The full generator succeeds with Russian enabled only in memory: 20 products,
   including all six Russian outputs. The actual manifest remains disabled.
@@ -95,6 +95,14 @@ Continue native and gameplay validation before enabling a release.
 ## Contribution staging
 
 This is the fourth contribution (guides/report prose), following shared fixes,
-interface/help and game names. The four Russian input files exactly match the
-preserved complete draft. Translation was AI-assisted and edited; automated
+interface/help and game names. The prose, game names and locale metadata match the preserved draft. The
+point-count Fluent message was adapted to the merged contract with Russian plural forms. Translation was AI-assisted and edited; automated
 checks and editorial review do not replace independent human terminology review.
+
+## Integration with master, 2026-11-05
+
+Rebased onto 1.2.0 (`57cb939`). The point-count message uses `formattedCount`
+and numeric `count`, matching the maintainer's merged contract. All 703 browser
+rendering probes agree with the Python results (6,900 total Python probes).
+The locale remains disabled; full generation is tested only in an isolated
+in-memory enabled configuration. Native and full browser-matrix review remain pending.

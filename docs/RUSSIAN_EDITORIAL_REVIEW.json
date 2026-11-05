@@ -623,5 +623,11 @@
       "topic": "Sunshroom Russian name",
       "source": "https://www.zeldawiki.wiki/wiki/Sunshroom"
     }
-  ]
+  ],
+  "integration_review_2026_11_05": {
+    "base": "57cb939",
+    "change": "Point-count Fluent message adapted to formattedCount/count contract and Russian plural forms; all prose/game translations retained.",
+    "python_rendering_probes": 6900,
+    "browser_parity_probes": 703
+  }
 }
