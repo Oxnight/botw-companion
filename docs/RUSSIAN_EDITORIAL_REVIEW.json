@@ -1,0 +1,811 @@
+{
+  "date": "2026-10-24",
+  "scope": "13 built-in help chapters and tutorial wording; reusable guide templates; 272 long action-text entries (including repeated variants) and 407 additional guidance entries; corpus-wide consistency checks. Selective source-based factual corrections, not a playthrough of every guide.",
+  "prose_values_changed": 84,
+  "ftl_messages_changed": 38,
+  "prose_changes": [
+    {
+      "key": "Œil octo",
+      "before": "Глаз  осьминоса",
+      "after": "Глаз осьминоса"
+    },
+    {
+      "key": "Baudruche octo",
+      "before": "Зуб  осьминоса",
+      "after": "Зоб осьминоса"
+    },
+    {
+      "key": "Apporte l'épice à Lester pour compléter son curry.",
+      "before": "Принесите приправу, чтобы закончить приготовление карри. Получатель: Лестер.",
+      "after": "Принесите Лестеру приправу, чтобы он мог закончить приготовление карри."
+    },
+    {
+      "key": "Donne l'un des plats royaux à Gotter.",
+      "before": "Отдайте одно из королевских блюд. Получатель: Готтер.",
+      "after": "Отдайте Готтеру одно из королевских блюд."
+    },
+    {
+      "key": "Donne la pomme cuite à Juney.",
+      "before": "Отдайте печёное яблоко. Получатель: Джуни.",
+      "after": "Отдайте Джуни печёное яблоко."
+    },
+    {
+      "key": "Donne le gâteau à Ruli pour soigner sa fille.",
+      "before": "Отдайте торт, чтобы помочь больной дочери. Получатель: Рули.",
+      "after": "Отдайте Рули торт, чтобы помочь её больной дочери."
+    },
+    {
+      "key": "Donne les cinq grenouilles à Tumbo en une seule fois.",
+      "before": "Передайте сразу пять лягушек. Получатель: Тумбо.",
+      "after": "Передайте Тумбо сразу пять лягушек."
+    },
+    {
+      "key": "Donne les dix lézards à Kima pour recevoir l'armure de pierre.",
+      "before": "Передайте десять ящериц, чтобы получить пожарные доспехи. Получатель: Масарк.",
+      "after": "Передайте Масарку десять ящериц, чтобы получить пожарные доспехи."
+    },
+    {
+      "key": "Donne un silex à Jogo pour rallumer son feu de cuisson.",
+      "before": "Отдайте кремень, чтобы снова разжечь огонь для готовки. Получатель: Джого.",
+      "after": "Отдайте Джого кремень, чтобы он снова разжёг огонь для готовки."
+    },
+    {
+      "key": "Donne-lui un durian max puis retourne faire ton rapport à Liana.",
+      "before": "Передайте макси-дуриан. Получатель: Барта. Затем вернитесь с отчётом к персонажу по имени Лиана.",
+      "after": "Передайте Барте макси-дуриан, затем вернитесь к Лиане и сообщите, что Барта найдена."
+    },
+    {
+      "key": "Dépose le coffre près d'Izra puis ouvre-le pour terminer la découverte.",
+      "before": "Положите сундук рядом с персонажем по имени Изра и откройте его, чтобы завершить находку.",
+      "after": "Положите сундук рядом с персонажем по имени Изра и откройте его, чтобы завершить задание."
+    },
+    {
+      "key": "Enregistre le cheval dans un relais puis présente-le à Toffa.",
+      "before": "Зарегистрируйте лошадь в конюшне, затем покажите её. Получатель: Тоффа.",
+      "after": "Зарегистрируйте лошадь в конюшне, затем покажите её Тоффе."
+    },
+    {
+      "key": "Le coffre possède un flag permanent : son ouverture sera détectée à la prochaine sauvegarde.",
+      "before": "У сундука есть постоянный флаг: его открытие будет обнаружено при следующем сохранении.",
+      "after": "Открытие этого сундука сохраняется в игре и будет обнаружено при следующем чтении сохранения."
+    },
+    {
+      "key": "Le flag persistant propre à ce coffre doit être présent.",
+      "before": "Должен быть записан постоянный флаг именно этого сундука.",
+      "after": "В сохранении должна быть отметка об открытии именно этого сундука."
+    },
+    {
+      "key": "Les deux nombres n’ont donc ni le même total ni le même rôle. Le sélecteur de formule ou de profil permet d’examiner le jeu de base, le DLC et les profils spécialisés.",
+      "before": "У этих показателей разные итоги и назначение. Выбор формулы и профиля позволяет отдельно учитывать основную игру, DLC и специализированные наборы целей.",
+      "after": "Эти показатели учитывают разные наборы целей и служат разным задачам. Выбор формулы и профиля позволяет отдельно учитывать основную игру, DLC и специализированные наборы целей."
+    },
+    {
+      "key": "Leurs totaux sont différents. Déplie les éléments bloquants pour comprendre précisément ce qui manque au profil de complétion.",
+      "before": "У них разные итоговые значения. Раскройте оставшиеся цели, чтобы понять, чего не хватает до завершения профиля.",
+      "after": "Эти показатели учитывают разные наборы целей. Раскройте оставшиеся цели, чтобы понять, чего не хватает до завершения профиля."
+    },
+    {
+      "key": "Module conseillé :",
+      "before": "Рекомендуемый модуль:",
+      "after": "Рекомендуется:"
+    },
+    {
+      "key": "Module conseillé : ZXQ0QXZ",
+      "before": "Рекомендуемый модуль: ZXQ0QXZ",
+      "after": "Рекомендуется: ZXQ0QXZ"
+    },
+    {
+      "key": "Montre la photo enregistrée à Laflat pour recevoir les jambières Zora.",
+      "before": "Покажите сохранённый снимок, чтобы получить поножи зора. Получатель: Лямоль.",
+      "after": "Покажите Лямоль сохранённый снимок, чтобы получить поножи зора."
+    },
+    {
+      "key": "Montre les trois photos à Loone pour qu'elle accepte de céder l'orbe.",
+      "before": "Покажите три снимка, чтобы получить согласие отдать сферу. Получатель: Луни.",
+      "after": "Покажите Луни три снимка, чтобы она согласилась отдать сферу."
+    },
+    {
+      "key": "Montre à Juannelle une photo nette où le Staldestrier est reconnu.",
+      "before": "Покажите чёткий снимок, на котором распознана сталлошадь. Получатель: Вишенка.",
+      "after": "Покажите Вишенке чёткий снимок, на котором распознана сталлошадь."
+    },
+    {
+      "key": "Montre à Peeks une photo reconnue comme Rumy.",
+      "before": "Покажите снимок, на котором распознан руми. Получатель: Пикс.",
+      "after": "Покажите Пиксу снимок, на котором распознан руми."
+    },
+    {
+      "key": "Niveau 2 - Conseil vérifié par famille",
+      "before": "Уровень 2 — проверенные советы для этого типа задач",
+      "after": "Уровень 2 — проверенные советы для задач этого типа"
+    },
+    {
+      "key": "Observe chaque nouvelle salle avant d'avancer, neutralise son mécanisme puis rejoins l'autel.",
+      "before": "Осмотрите каждую новую комнату, прежде чем идти дальше. Преодолейте её механизм и доберитесь до алтаря.",
+      "after": "Осмотрите каждую новую комнату, прежде чем идти дальше. Решите головоломку и доберитесь до алтаря."
+    },
+    {
+      "key": "Ouvre-le et sauvegarde afin d'enregistrer son flag permanent.",
+      "before": "Откройте его и сохранитесь, чтобы записать постоянный флаг.",
+      "after": "Откройте его и сохраните игру, чтобы открытие было записано."
+    },
+    {
+      "key": "Parle à Domidak et Prissen au relais des Géminés puis obtiens l'énigme contre 100 rubis.",
+      "before": "Поговорите с двумя искателями сокровищ в конюшне «Близнецы»: Домидак и Приссен. Заплатите за загадку; цена в рупиях: 100.",
+      "after": "Поговорите с Домидаком и Приссеном в конюшне «Близнецы» и заплатите 100 рупий, чтобы услышать загадку."
+    },
+    {
+      "key": "Parle à Mei puis retourne annoncer à Fronk qu'elle est saine et sauve.",
+      "before": "Поговорите с персонажем по имени Меи, затем сообщите, что она в безопасности. Получатель отчёта: Фронк.",
+      "after": "Поговорите с Меи, затем вернитесь к Фронку и сообщите, что она в безопасности."
+    },
+    {
+      "key": "Parle à Quill puis retourne rassurer Amali.",
+      "before": "Поговорите с персонажем по имени Кира, затем вернитесь успокоить мать по имени Амали.",
+      "after": "Поговорите с Кирой, затем вернитесь к её матери Амали и успокойте её."
+    },
+    {
+      "key": "Point informatif : aucun flag permanent n'est requis.",
+      "before": "Справочная точка: постоянный флаг не требуется.",
+      "after": "Справочная точка: отметка о выполнении не требуется."
+    },
+    {
+      "key": "Prends la photo et confirme son enregistrement, ou achète l'image au laboratoire antique lorsque disponible.",
+      "before": "Сделайте снимок и проверьте запись в энциклопедии либо купите фотографию в институте, когда это доступно.",
+      "after": "Сделайте снимок и проверьте, появилась ли запись в Хайрулопедии, либо купите фотографию в институте, когда эта возможность станет доступна."
+    },
+    {
+      "key": "Prépare un remède frais avec un insecte ou lézard résistant à la chaleur et une partie de monstre.",
+      "before": "Приготовьте охлаждающий эликсир из насекомого или ящерицы с защитой от жары и органа монстра.",
+      "after": "Приготовьте зелье с защитой от жары из охлаждающего насекомого и части монстра."
+    },
+    {
+      "key": "Ramasse le butin et sauvegarde après la victoire pour enregistrer le flag permanent.",
+      "before": "После победы соберите добычу и сохранитесь, чтобы записать постоянный флаг.",
+      "after": "После победы соберите добычу и сохраните игру, чтобы победа была записана."
+    },
+    {
+      "key": "Ramasse le butin puis sauvegarde : le flag individuel de cette victoire restera acquis.",
+      "before": "Соберите добычу и сохранитесь: отдельный флаг этой победы останется записанным.",
+      "after": "Соберите добычу и сохраните игру: отметка об этой победе сохранится."
+    },
+    {
+      "key": "Rapporte le viscère à Malena.",
+      "before": "Верните внутренности. Получатель: Малена.",
+      "after": "Принесите внутренности Малене."
+    },
+    {
+      "key": "Rejoins le domaine Zora, parle au roi Dorefah et obtiens l'armure Zora.",
+      "before": "Доберитесь до владений зора, поговорите с королём и получите доспехи зора. Имя короля: Король Дорефан.",
+      "after": "Доберитесь до владений зора, поговорите с королём Дорефаном и получите доспехи зора."
+    },
+    {
+      "key": "Remets les dix gemmes à Ledo, puis utilise son échange répétable si souhaité.",
+      "before": "Передайте десять драгоценных камней. Получатель: Ледо. После этого при желании можно повторять обмен.",
+      "after": "Передайте Ледо десять драгоценных камней. После этого обмен можно повторять."
+    },
+    {
+      "key": "Retourne auprès de Koyin après la disparition du groupe de monstres.",
+      "before": "После победы над группой монстров вернитесь. Получатель отчёта: Койин.",
+      "after": "После победы над группой монстров вернитесь к Койин."
+    },
+    {
+      "key": "Retourne voir Fugo pour annoncer la victoire.",
+      "before": "Вернитесь сообщить о победе. Получатель отчёта: Хуго.",
+      "after": "Вернитесь к Хуго и сообщите о победе."
+    },
+    {
+      "key": "Retourne voir Hagie après la destruction des deux machines.",
+      "before": "После уничтожения обеих машин вернитесь. Получатель отчёта: Хаги.",
+      "after": "После уничтожения обеих машин вернитесь к Хаги."
+    },
+    {
+      "key": "Retourne voir Perosa après l'élimination complète de la bande.",
+      "before": "После полного уничтожения банды вернитесь. Получатель отчёта: Пероса.",
+      "after": "После победы над всей бандой вернитесь к Перосе."
+    },
+    {
+      "key": "Retourne voir Rola après l'allumage simultané des quatre torches.",
+      "before": "Когда все четыре факела будут гореть одновременно, вернитесь. Получатель отчёта: Рола.",
+      "after": "Когда все четыре факела будут гореть одновременно, вернитесь к Роле."
+    },
+    {
+      "key": "Retourne voir Sebasto après la validation de la zone nettoyée.",
+      "before": "После подтверждения зачистки территории вернитесь. Получатель отчёта: Себасто.",
+      "after": "После зачистки территории вернитесь к Себасто."
+    },
+    {
+      "key": "Seuls les coffres possédant un flag permanent peuvent être prouvés automatiquement.",
+      "before": "Автоматически подтвердить открытие можно только у сундуков с постоянным флагом.",
+      "after": "Автоматически подтвердить открытие можно только у сундуков, для которых игра сохраняет отдельную отметку."
+    },
+    {
+      "key": "Son flag individuel de défaite doit être enregistré.",
+      "before": "В сохранении должен быть записан отдельный флаг победы над ним.",
+      "after": "В сохранении должна быть отдельная отметка о победе над ним."
+    },
+    {
+      "key": "Son flag persistant doit être enregistré.",
+      "before": "Его постоянный флаг должен быть записан в сохранении.",
+      "after": "В сохранении должна быть постоянная отметка о выполнении этой цели."
+    },
+    {
+      "key": "Traverse précisément cette zone à pied jusqu’à ce que son nom apparaisse à l’écran. Une simple proximité ou un survol peut ne pas déclencher le flag.",
+      "before": "Пройдите по этой области, пока её название не появится на экране. Близость или пролёт над ней могут не активировать флаг.",
+      "after": "Пройдите по этой области, пока её название не появится на экране. Нахождения рядом или полёта над ней может быть недостаточно для отметки об открытии."
+    },
+    {
+      "key": "Une absence de flag impose un suivi manuel et ne doit jamais être présentée comme automatique.",
+      "before": "Если постоянного флага нет, нужны ручные отметки. Такие цели нельзя представлять как автоматические.",
+      "after": "Если игра не сохраняет постоянную отметку, цель нужно отмечать вручную. Её выполнение нельзя считать подтверждённым автоматически."
+    },
+    {
+      "key": "Une lune de sang peut faire réapparaître la créature, mais son premier flag de victoire reste acquis.",
+      "before": "Кровавая луна может вернуть существо, но флаг первой победы сохраняется.",
+      "after": "Кровавая луна может возродить существо, но отметка о первой победе сохраняется."
+    },
+    {
+      "key": "Utilise l'architecture du château pour rompre son ciblage et choisis une sortie courte vers sa ligne de vue.",
+      "before": "Используйте стены и другие части замка, чтобы сбить прицел и ненадолго выйти в поле зрения противника.",
+      "after": "Используйте стены и другие части замка как укрытия: сбивайте прицел противника и выходите из укрытия лишь ненадолго."
+    },
+    {
+      "key": "avant de le quitter. Ce coffre possède un flag permanent et sera validé automatiquement après sauvegarde.",
+      "before": "У сундука есть постоянный флаг; его открытие автоматически подтвердится после сохранения.",
+      "after": "Открытие этого сундука сохраняется в игре и автоматически подтвердится после сохранения."
+    },
+    {
+      "key": "Élimine tous les ennemis, parle aux quatre voyageurs puis retourne voir Sesami.",
+      "before": "Победите всех врагов, поговорите с четырьмя путешественниками, затем вернитесь. Получатель отчёта: Сезами.",
+      "after": "Победите всех врагов, поговорите с четырьмя путешественниками и вернитесь к Сезами."
+    },
+    {
+      "key": "Module conseillé : Bombes",
+      "before": "Рекомендуемый модуль: бомбы",
+      "after": "Рекомендуется: бомбы"
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Quais. Contenu : Rubis doré.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле причала. Содержимое: золотая рупия.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле причала. Содержимое: золотая рупия."
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Quais. Contenu : Flèche archéonique.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле причала. Содержимое: древняя стрела.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле причала. Содержимое: древняя стрела."
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Escaliers. Contenu : Flèche archéonique x3.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле лестницы. Содержимое: древние стрелы ×3.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле лестницы. Содержимое: древние стрелы ×3."
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Quais. Contenu : Fragment d'étoile.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле причала. Содержимое: осколок звезды.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле причала. Содержимое: осколок звезды."
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Quais. Contenu : Flèche électrique x5.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле причала. Содержимое: грозовые стрелы ×5.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле причала. Содержимое: грозовые стрелы ×5."
+    },
+    {
+      "key": "Coffre persistant de E-4 près de Passage ouest. Contenu : Diamant brut.",
+      "before": "Сундук с постоянным флагом в секторе E-4 возле Западного прохода. Содержимое: необработанный алмаз.",
+      "after": "Сундук с постоянной отметкой об открытии в секторе E-4 возле Западного прохода. Содержимое: необработанный алмаз."
+    },
+    {
+      "key": "Module conseillé : ",
+      "before": "Рекомендуемый модуль: ",
+      "after": "Рекомендуется: "
+    },
+    {
+      "key": "reste",
+      "before": "Отдых",
+      "after": "осталось"
+    },
+    {
+      "key": " → niveau ZXQ0QXZ (ZXQ1QXZ)",
+      "before": " ⁇  уровень ZXQ0QXZ (ZXQ1QXZ)",
+      "after": " → уровень ZXQ0QXZ (ZXQ1QXZ)"
+    },
+    {
+      "key": "  reste ",
+      "before": "  Отдых ",
+      "after": "  осталось "
+    },
+    {
+      "key": "Photographie ZXQ0QXZ avec le module appareil photo jusqu’à obtenir l’identification, ou achète l’image auprès du laboratoire antique d’Elimith lorsque cette option est disponible.",
+      "before": "Сфотографируйте объект «ZXQ0QXZ» с помощью модуля фотоаппарата, чтобы игра распознала его, или купите снимок в лаборатории Хатено, когда эта возможность станет доступна.",
+      "after": "Сфотографируйте объект «ZXQ0QXZ» с помощью фотоаппарата, чтобы игра распознала его, или купите снимок в Хатенском институте, когда эта возможность станет доступна."
+    },
+    {
+      "key": "Sélectionne le champignon dans le détecteur, suis le signal jusqu'à un autre exemplaire et rapporte-le à Symin.",
+      "before": "Выберите гриб для поиска датчиком, найдите ещё один по сигналу и верните его. Получатель: Симин.",
+      "after": "Выберите гриб для поиска датчиком, найдите ещё один по сигналу и принесите его Симину."
+    },
+    {
+      "key": "Appareil photo débloqué",
+      "before": "Модуль «Камера» открыт",
+      "after": "Фотоаппарат доступен"
+    },
+    {
+      "key": "Chaque fiche rassemble l’état détecté, la position disponible, les étapes utiles, les récompenses, coffres ou conditions associées.",
+      "before": "Карточка показывает определённое состояние, известное местоположение, полезные шаги, награды, сундуки и необходимые условия.",
+      "after": "Карточка показывает состояние цели, известное местоположение, шаги прохождения, награды, сундуки и необходимые условия."
+    },
+    {
+      "key": "Déplace la carte par glisser-déposer, utilise la molette ou les boutons pour zoomer, et le bouton maison pour revenir à la vue d’ensemble.",
+      "before": "Перетаскивайте карту, меняйте масштаб колёсиком или кнопками, возвращайтесь к общему виду кнопкой начального вида.",
+      "after": "Перетаскивайте карту, меняйте масштаб колёсиком или кнопками, возвращайтесь к общему виду кнопкой «Показать всю карту»."
+    },
+    {
+      "key": "Module appareil photo débloqué",
+      "before": "Модуль «Камера» разблокирован",
+      "after": "Фотоаппарат доступен"
+    },
+    {
+      "key": "Module appareil photo",
+      "before": "Модуль «Камера»",
+      "after": "Фотоаппарат"
+    },
+    {
+      "key": "Apporte trois vis antiques pour Bombes +, trois axes antiques pour Cinetis + et trois cœurs antiques pour le détecteur +.",
+      "before": "Принесите три древних винта для бомбы+, три древних вала для Стазиса+ и три древних ядра для Датчика шиика+.",
+      "after": "Принесите три древних винта для Датчика шиика+, три древних вала для бомб+ и три древних ядра для Стазиса+."
+    },
+    {
+      "key": "Après le plateau, observe une étoile filante rouge depuis le pont d'Hylia, le sommet du crâne d'Hébra et le plus grand pic Gerudo.",
+      "before": "Покинув Великое плато, наблюдайте за красной падающей звездой с моста Хайлии, с вершины черепа в Эбере и с самой высокой вершины нагорья Герудо.",
+      "after": "Покинув Великое плато, наблюдайте за красной падающей звездой с моста Хайлии, с вершины черепа в Эбре и с самой высокой вершины нагорья Герудо."
+    },
+    {
+      "key": "Atteins le sommet dans les conditions demandées pour révéler le sanctuaire de Gorae'Torr.",
+      "before": "Доберитесь до вершины и выполните условия появления святилища Гораэ-Тор.",
+      "after": "Доберитесь до вершины и выполните условия появления святилища Горэ-Торр."
+    },
+    {
+      "key": "Bats le record de 1 min 30 s pour recevoir l'orbe, puis place-le dans le socle du sanctuaire de Raqa Zunzo.",
+      "before": "Побейте рекорд 1:30, получите сферу и поместите её на постамент святилища Ракка-Зунзо.",
+      "after": "Побейте рекорд 1:30, получите сферу и поместите её на постамент святилища Рака-Зунзо."
+    },
+    {
+      "key": "Brise les rochers qui condamnent l'entrée pour révéler le sanctuaire de Tahu'Naeh.",
+      "before": "Разбейте камни, перекрывающие вход, чтобы открыть святилище Тало-Наэ.",
+      "after": "Найдите и активируйте святилище Та-Мул к юго-западу от конюшни."
+    },
+    {
+      "key": "Descends la falaise jusqu'à la paroi friable et brise-la pour révéler le sanctuaire de Tahno'A.",
+      "before": "Спуститесь по скале к хрупкой стене и разрушьте её, чтобы открыть святилище Тано-А.",
+      "after": "Спуститесь по скале к хрупкой стене и разрушьте её, чтобы открыть святилище Тано-Оа."
+    },
+    {
+      "key": "Entre dans le temple oublié derrière la grande statue et ouvre les trois coffres contenant la tenue des Landes.",
+      "before": "Войдите в Забытый храм за большой статуей и откройте три сундука с комплектом Героя Просторов.",
+      "after": "В Забытом храме доберитесь до большой статуи богини и откройте три сундука с комплектом Героя Просторов."
+    },
+    {
+      "key": "Lis le message du dernier moine puis téléporte-toi au sanctuaire de Taro'Nihi.",
+      "before": "Прочитайте послание последнего священника, затем переместитесь в святилище Тало-Наэг.",
+      "after": "Прочитайте послание последнего священника, затем переместитесь в святилище Рона-Кахта в Забытом храме."
+    },
+    {
+      "key": "Navigue jusqu'au triangle de rochers puis plonge au centre avec Polaris activé.",
+      "before": "Подплывите к треугольнику камней и нырните в центр с включённым Магнезисом.",
+      "after": "Доберитесь на плоту до треугольника камней и поднимите сундуки со дна Магнезисом."
+    },
+    {
+      "key": "Ouvre les trois coffres tombés du ciel pour réunir casque, gilet et pantalon de récupérateur.",
+      "before": "Откройте три сундука в небе, чтобы собрать шлем, жилет и штаны спасателя.",
+      "after": "Откройте три упавших с неба сундука, чтобы собрать шлем, жилет и штаны спасателя."
+    },
+    {
+      "key": "Présente successivement une pomme, une citrouille armo, un champi soleil, une truite volt et un sabot de Lynel.",
+      "before": "По очереди покажите яблоко, латную тыкву, латноцвет, грозовую форель и копыто левра.",
+      "after": "По очереди покажите яблоко, латную тыкву, жаромор, грозовую форель и копыто левра."
+    },
+    {
+      "key": "Remets les trois ingrédients à Kiana et accepte la paella qu'elle prépare.",
+      "before": "Передайте три ингредиента и примите приготовленную паэлью. Получатель ингредиентов: Киана.",
+      "after": "Передайте Киане три ингредиента и заберите приготовленную паэлью."
+    },
+    {
+      "key": "Retrouve Gonguron dans le tunnel, apporte à Bladon un rôti de caillasse obtenu à la rôtisserie Gortram.",
+      "before": "Найдите персонажа по имени Гонгурон в туннеле. Принесите жаркое из камней из жаровни Горко; получатель: Блэйдон.",
+      "after": "Найдите Гонгурона в туннеле, затем принесите Блэйдону жаркое из камней из жаровни Горко."
+    },
+    {
+      "key": "Tire ensuite sur une corne, ramasse l'éclat et dépose-le à la source de la Sagesse pour ouvrir le sanctuaire de Jitan Sa'Mi.",
+      "before": "Попадите в рог, подберите осколок и положите его в Источник Мудрости, чтобы открыть святилище Зитан-Сами.",
+      "after": "После освобождения Нейдры выстрелите в её тело, подберите чешую и положите её в Источник Мудрости, чтобы открыть святилище Зитан-Сами."
+    },
+    {
+      "key": "Tire ensuite sur une corne, ramasse l'éclat et dépose-le à la source de la Sagesse pour ouvrir le sanctuaire de Jitah'Sami.",
+      "before": "Попадите в рог, подберите осколок и положите его в Источник Мудрости, чтобы открыть святилище Зитан-Сами.",
+      "after": "После освобождения Нейдры выстрелите в её тело, подберите чешую и положите её в Источник Мудрости, чтобы открыть святилище Зитан-Сами."
+    }
+  ],
+  "ftl_changes": [
+    {
+      "before": "app-the-two-numbers-do-not-have-the = { \"У этих показателей разные итоги и назначение. Выбор формулы и профиля позволяет отдельно учитывать основную игру, DLC и специализированные наборы целей.\" }",
+      "after": "app-the-two-numbers-do-not-have-the = { \"Эти показатели учитывают разные наборы целей и служат разным задачам. Выбор формулы и профиля позволяет отдельно учитывать основную игру, DLC и специализированные наборы целей.\" }"
+    },
+    {
+      "before": "app-their-totals-are-different-expands-the-blocking = { \"У них разные итоговые значения. Раскройте оставшиеся цели, чтобы понять, чего не хватает до завершения профиля.\" }",
+      "after": "app-their-totals-are-different-expands-the-blocking = { \"Эти показатели учитывают разные наборы целей. Раскройте оставшиеся цели, чтобы понять, чего не хватает до завершения профиля.\" }"
+    },
+    {
+      "before": "helpfor-photograph-with-the-camera-rune-until-it = Сфотографируйте объект «{ $value0 }» с помощью модуля фотоаппарата, чтобы игра распознала его, или купите снимок в лаборатории Хатено, когда эта возможность станет доступна.",
+      "after": "helpfor-photograph-with-the-camera-rune-until-it = Сфотографируйте объект «{ $value0 }» с помощью фотоаппарата, чтобы игра распознала его, или купите снимок в Хатенском институте, когда эта возможность станет доступна."
+    },
+    {
+      "before": "legacy-diagnostic-92 = { \" ⁇  уровень \" }{ $value0 } ({ $value1 })",
+      "after": "legacy-diagnostic-92 = { \" → уровень \" }{ $value0 } ({ $value1 })"
+    },
+    {
+      "before": "legacy-diagnostic-95 = Рекомендуемый модуль: { $value0 }",
+      "after": "legacy-diagnostic-95 = Рекомендуется: { $value0 }"
+    },
+    {
+      "before": "legacy-bound-488 = { \"Принесите приправу, чтобы закончить приготовление карри. Получатель: Лестер.\" }",
+      "after": "legacy-bound-488 = { \"Принесите Лестеру приправу, чтобы он мог закончить приготовление карри.\" }"
+    },
+    {
+      "before": "legacy-bound-566 = { \"Отдайте одно из королевских блюд. Получатель: Готтер.\" }",
+      "after": "legacy-bound-566 = { \"Отдайте Готтеру одно из королевских блюд.\" }"
+    },
+    {
+      "before": "legacy-bound-567 = { \"Отдайте печёное яблоко. Получатель: Джуни.\" }",
+      "after": "legacy-bound-567 = { \"Отдайте Джуни печёное яблоко.\" }"
+    },
+    {
+      "before": "legacy-bound-568 = { \"Отдайте торт, чтобы помочь больной дочери. Получатель: Рули.\" }",
+      "after": "legacy-bound-568 = { \"Отдайте Рули торт, чтобы помочь её больной дочери.\" }"
+    },
+    {
+      "before": "legacy-bound-569 = { \"Передайте сразу пять лягушек. Получатель: Тумбо.\" }",
+      "after": "legacy-bound-569 = { \"Передайте Тумбо сразу пять лягушек.\" }"
+    },
+    {
+      "before": "legacy-bound-572 = { \"Отдайте кремень, чтобы снова разжечь огонь для готовки. Получатель: Джого.\" }",
+      "after": "legacy-bound-572 = { \"Отдайте Джого кремень, чтобы он снова разжёг огонь для готовки.\" }"
+    },
+    {
+      "before": "legacy-bound-575 = { \"Положите сундук рядом с персонажем по имени Изра и откройте его, чтобы завершить находку.\" }",
+      "after": "legacy-bound-575 = { \"Положите сундук рядом с персонажем по имени Изра и откройте его, чтобы завершить задание.\" }"
+    },
+    {
+      "before": "legacy-bound-576 = { \"Зарегистрируйте лошадь в конюшне, затем покажите её. Получатель: Тоффа.\" }",
+      "after": "legacy-bound-576 = { \"Зарегистрируйте лошадь в конюшне, затем покажите её Тоффе.\" }"
+    },
+    {
+      "before": "legacy-bound-586 = { \"Покажите сохранённый снимок, чтобы получить поножи зора. Получатель: Лямоль.\" }",
+      "after": "legacy-bound-586 = { \"Покажите Лямоль сохранённый снимок, чтобы получить поножи зора.\" }"
+    },
+    {
+      "before": "legacy-bound-588 = { \"Покажите три снимка, чтобы получить согласие отдать сферу. Получатель: Луни.\" }",
+      "after": "legacy-bound-588 = { \"Покажите Луни три снимка, чтобы она согласилась отдать сферу.\" }"
+    },
+    {
+      "before": "legacy-bound-589 = { \"Покажите чёткий снимок, на котором распознана сталлошадь. Получатель: Вишенка.\" }",
+      "after": "legacy-bound-589 = { \"Покажите Вишенке чёткий снимок, на котором распознана сталлошадь.\" }"
+    },
+    {
+      "before": "legacy-bound-590 = { \"Покажите снимок, на котором распознан руми. Получатель: Пикс.\" }",
+      "after": "legacy-bound-590 = { \"Покажите Пиксу снимок, на котором распознан руми.\" }"
+    },
+    {
+      "before": "legacy-bound-635 = { \"Поговорите с персонажем по имени Кира, затем вернитесь успокоить мать по имени Амали.\" }",
+      "after": "legacy-bound-635 = { \"Поговорите с Кирой, затем вернитесь к её матери Амали и успокойте её.\" }"
+    },
+    {
+      "before": "legacy-bound-651 = { \"Верните внутренности. Получатель: Малена.\" }",
+      "after": "legacy-bound-651 = { \"Принесите внутренности Малене.\" }"
+    },
+    {
+      "before": "legacy-bound-818 = { \"Победите всех врагов, поговорите с четырьмя путешественниками, затем вернитесь. Получатель отчёта: Сезами.\" }",
+      "after": "legacy-bound-818 = { \"Победите всех врагов, поговорите с четырьмя путешественниками и вернитесь к Сезами.\" }"
+    },
+    {
+      "before": "legacy-bound-657 = { \"Передайте десять драгоценных камней. Получатель: Ледо. После этого при желании можно повторять обмен.\" }",
+      "after": "legacy-bound-657 = { \"Передайте Ледо десять драгоценных камней. После этого обмен можно повторять.\" }"
+    },
+    {
+      "before": "legacy-bound-661 = { \"После победы над группой монстров вернитесь. Получатель отчёта: Койин.\" }",
+      "after": "legacy-bound-661 = { \"После победы над группой монстров вернитесь к Койин.\" }"
+    },
+    {
+      "before": "legacy-bound-663 = { \"Когда все четыре факела будут гореть одновременно, вернитесь. Получатель отчёта: Рола.\" }",
+      "after": "legacy-bound-663 = { \"Когда все четыре факела будут гореть одновременно, вернитесь к Роле.\" }"
+    },
+    {
+      "before": "legacy-bound-664 = { \"После уничтожения обеих машин вернитесь. Получатель отчёта: Хаги.\" }",
+      "after": "legacy-bound-664 = { \"После уничтожения обеих машин вернитесь к Хаги.\" }"
+    },
+    {
+      "before": "legacy-bound-665 = { \"Вернитесь сообщить о победе. Получатель отчёта: Хуго.\" }",
+      "after": "legacy-bound-665 = { \"Вернитесь к Хуго и сообщите о победе.\" }"
+    },
+    {
+      "before": "legacy-bound-622 = { \"Поговорите с персонажем по имени Меи, затем сообщите, что она в безопасности. Получатель отчёта: Фронк.\" }",
+      "after": "legacy-bound-622 = { \"Поговорите с Меи, затем вернитесь к Фронку и сообщите, что она в безопасности.\" }"
+    },
+    {
+      "before": "legacy-bound-655 = { \"Доберитесь до владений зора, поговорите с королём и получите доспехи зора. Имя короля: Король Дорефан.\" }",
+      "after": "legacy-bound-655 = { \"Доберитесь до владений зора, поговорите с королём Дорефаном и получите доспехи зора.\" }"
+    },
+    {
+      "before": "legacy-bound-667 = { \"После полного уничтожения банды вернитесь. Получатель отчёта: Пероса.\" }",
+      "after": "legacy-bound-667 = { \"После победы над всей бандой вернитесь к Перосе.\" }"
+    },
+    {
+      "before": "legacy-bound-570 = { \"Передайте десять ящериц, чтобы получить пожарные доспехи. Получатель: Масарк.\" }",
+      "after": "legacy-bound-570 = { \"Передайте Масарку десять ящериц, чтобы получить пожарные доспехи.\" }"
+    },
+    {
+      "before": "legacy-bound-573 = { \"Передайте макси-дуриан. Получатель: Барта. Затем вернитесь с отчётом к персонажу по имени Лиана.\" }",
+      "after": "legacy-bound-573 = { \"Передайте Барте макси-дуриан, затем вернитесь к Лиане и сообщите, что Барта найдена.\" }"
+    },
+    {
+      "before": "legacy-bound-662 = { \"После подтверждения зачистки территории вернитесь. Получатель отчёта: Себасто.\" }",
+      "after": "legacy-bound-662 = { \"После зачистки территории вернитесь к Себасто.\" }"
+    },
+    {
+      "before": "legacy-bound-802 = { \"Выберите гриб для поиска датчиком, найдите ещё один по сигналу и верните его. Получатель: Симин.\" }",
+      "after": "legacy-bound-802 = { \"Выберите гриб для поиска датчиком, найдите ещё один по сигналу и принесите его Симину.\" }"
+    },
+    {
+      "before": "legacy-bound-666 = { \"После активации трёх святилищ вернитесь. Получатель отчёта: Чио.\" }",
+      "after": "legacy-bound-666 = { \"После активации трёх святилищ вернитесь к Чио.\" }"
+    },
+    {
+      "before": "app-drag-and-drop-the-map-use-the = { \"Перетаскивайте карту, меняйте масштаб колёсиком или кнопками, возвращайтесь к общему виду кнопкой начального вида.\" }",
+      "after": "app-drag-and-drop-the-map-use-the = { \"Перетаскивайте карту, меняйте масштаб колёсиком или кнопками, возвращайтесь к общему виду кнопкой «Показать всю карту».\" }"
+    },
+    {
+      "before": "app-each-detail-panel-shows-the-detected-status = { \"Карточка показывает определённое состояние, известное местоположение, полезные шаги, награды, сундуки и необходимые условия.\" }",
+      "after": "app-each-detail-panel-shows-the-detected-status = { \"Карточка показывает состояние цели, известное местоположение, шаги прохождения, награды, сундуки и необходимые условия.\" }"
+    },
+    {
+      "before": "legacy-bound-499 = { \"Покинув Великое плато, наблюдайте за красной падающей звездой с моста Хайлии, с вершины черепа в Эбере и с самой высокой вершины нагорья Герудо.\" }",
+      "after": "legacy-bound-499 = { \"Покинув Великое плато, наблюдайте за красной падающей звездой с моста Хайлии, с вершины черепа в Эбре и с самой высокой вершины нагорья Герудо.\" }"
+    },
+    {
+      "before": "legacy-bound-658 = { \"Передайте три ингредиента и примите приготовленную паэлью. Получатель ингредиентов: Киана.\" }",
+      "after": "legacy-bound-658 = { \"Передайте Киане три ингредиента и заберите приготовленную паэлью.\" }"
+    },
+    {
+      "before": "legacy-bound-668 = { \"Найдите персонажа по имени Гонгурон в туннеле. Принесите жаркое из камней из жаровни Горко; получатель: Блэйдон.\" }",
+      "after": "legacy-bound-668 = { \"Найдите Гонгурона в туннеле, затем принесите Блэйдону жаркое из камней из жаровни Горко.\" }"
+    }
+  ],
+  "factual_sources": [
+    {
+      "source": "https://zeldawiki.wiki/wiki/Chilly_Elixir",
+      "decision": "Cooling insects and monster parts, not a heat-resistant lizard; no new recipe quantities introduced."
+    },
+    {
+      "source": "https://gamemag.ru/news/117510/the-legend-of-zelda-breath-of-the-wild-interesnye-igrovye-mehaniki-o-kotoryh-vy-ne-znali",
+      "decision": "BOTW-specific Russian use of Зоб осьминоса reconciles the obvious Зуб transcription error; already used in the draft guide prose."
+    }
+  ],
+  "retained_deliberately": [
+    "Священник follows the supplied BOTW bilingual glossary; not changed to монах.",
+    "Осьминос names follow BOTW translation tables; Sky Octorok retains the user-supplied Небесный окторок.",
+    "Palais de Zelda, BotW Unexplored and BOTW Object Map are source website names, not untranslated guidance."
+  ],
+  "additional_factual_corrections": [
+    {
+      "topic": "Upgrade costs",
+      "source": "https://zeldawiki.wiki/wiki/Slated_for_Upgrades"
+    },
+    {
+      "topic": "Naydra scale",
+      "source": "https://zeldawiki.wiki/wiki/The_Spring_of_Wisdom"
+    },
+    {
+      "topic": "Forgotten Temple destination",
+      "source": "https://zeldawiki.wiki/wiki/A_Gift_from_the_Monks"
+    },
+    {
+      "topic": "Tah Muhl shrine",
+      "source": "https://zeldawiki.wiki/wiki/A_Landscape_of_a_Stable"
+    },
+    {
+      "topic": "Sunken chests: raft and Magnesis",
+      "source": "https://gamefaqs.gamespot.com/switch/189707-the-legend-of-zelda-breath-of-the-wild/faqs/75427/sunken-treasure"
+    },
+    {
+      "topic": "Walton: Sunshroom",
+      "source": "https://zeldawiki.wiki/wiki/Riddles_of_Hyrule"
+    },
+    {
+      "topic": "Sunshroom Russian name",
+      "source": "https://www.zeldawiki.wiki/wiki/Sunshroom"
+    }
+  ],
+  "integration_review_2026_11_05": {
+    "base": "57cb939",
+    "change": "Point-count Fluent message adapted to formattedCount/count contract and Russian plural forms; all prose/game translations retained.",
+    "python_rendering_probes": 6900,
+    "browser_parity_probes": 703
+  },
+  "maintainer_review_2026_11_09": {
+    "base": "b0ecd2635d9775d63e2600c120d4caa16d394764",
+    "scope": "Preserve merged interface fixes, correct reviewed prose defects, retain French source keys and keep the Russian locale disabled.",
+    "prose_changes": [
+      {
+        "key": "Bazar Assek",
+        "before": "Рынок «Кара-Кара",
+        "after": "Рынок «Кара-Кара»"
+      },
+      {
+        "key": "bazar Assek",
+        "before": "Рынок «Кара-Кара",
+        "after": "Рынок «Кара-Кара»"
+      },
+      {
+        "key": "Maritta Vieille place des commerces",
+        "before": "Рынок «Тихий",
+        "after": "Рынок «Тихий»"
+      },
+      {
+        "key": "Vérification toutes les",
+        "before": "Проверить всё",
+        "after": "Проверять каждые"
+      },
+      {
+        "key": "Vérifier toutes les",
+        "before": "Проверить всё",
+        "after": "Проверять каждые"
+      },
+      {
+        "key": "L’accès dépend de la quête «",
+        "before": "Доступ зависит от задания»",
+        "after": "Доступ зависит от задания «"
+      },
+      {
+        "key": "Armure zora obtenue",
+        "before": "Доспехи зора",
+        "after": "Доспехи зора получены"
+      },
+      {
+        "key": "Prérequis publié : Armure zora obtenue",
+        "before": "Указанное предварительное условие: Доспехи зора",
+        "after": "Указанное предварительное условие: Доспехи зора получены"
+      },
+      {
+        "key": "Récolte cinquante champignons tempo sans les cuisiner.",
+        "before": "Соберите пятьдесят прытковиков, не готовя их.",
+        "after": "Соберите 55 прытковиков, не готовя их."
+      },
+      {
+        "key": "Vends les cinquante champignons à Pirou en une fois.",
+        "before": "Продайте Пиру все пятьдесят грибов сразу.",
+        "after": "Передайте Пиру все 55 прытковиков сразу, чтобы получить алмаз."
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés :",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения:"
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. ",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: "
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ZXQ0QXZ",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: ZXQ0QXZ"
+      }
+    ],
+    "ftl_changes": [
+      {
+        "message": "renderdsudiagnostic-duplicates-timestamps-out-of-order",
+        "before": "renderdsudiagnostic-duplicates-timestamps-out-of-order = { $value0 }{ \" повторов • \" }{ $value1 }{ \" временных меток с нарушенным порядком\" }",
+        "after": "renderdsudiagnostic-duplicates-timestamps-out-of-order = Повторы: { $value0 } • временные метки с нарушенным порядком: { $value1 }"
+      },
+      {
+        "message": "renderdsudiagnostic-udp-invalid-requests",
+        "before": "renderdsudiagnostic-udp-invalid-requests = { $value0 }{ \" UDP • \" }{ $value1 }{ \" некорректных запросов\" }",
+        "after": "renderdsudiagnostic-udp-invalid-requests = UDP: { $value0 } • некорректные запросы: { $value1 }"
+      },
+      {
+        "message": "renderdetails-remove-from",
+        "before": "renderdetails-remove-from = { \"Удалить из\" }",
+        "after": "renderdetails-remove-from = { \"Удалить из маршрута\" }"
+      },
+      {
+        "message": "renderdetails-add-to",
+        "before": "renderdetails-add-to = { \"Добавить в\" }",
+        "after": "renderdetails-add-to = { \"Добавить в маршрут\" }"
+      },
+      {
+        "message": "renderitems-of",
+        "before": "renderitems-of = { \"из\" }",
+        "after": "renderitems-of = { \"из маршрута\" }"
+      },
+      {
+        "message": "renderitems-at",
+        "before": "renderitems-at = { \"в\" }",
+        "after": "renderitems-at = { \"в маршрут\" }"
+      },
+      {
+        "message": "renderitems-remove-from",
+        "before": "renderitems-remove-from = { \"Удалить из\" }",
+        "after": "renderitems-remove-from = { \"Удалить из маршрута\" }"
+      },
+      {
+        "message": "renderitems-add-to",
+        "before": "renderitems-add-to = { \"Добавить в\" }",
+        "after": "renderitems-add-to = { \"Добавить в маршрут\" }"
+      },
+      {
+        "message": "renderitems-the-route",
+        "before": "renderitems-the-route = { $value5 }{ \" маршрут\" }",
+        "after": "renderitems-the-route = { $value5 }"
+      },
+      {
+        "message": "renderitems-the-route-2",
+        "before": "renderitems-the-route-2 = { $value2 }{ \" \" }{ $value3 }{ \" \" }{ $value4 }{ \" маршрут\" }",
+        "after": "renderitems-the-route-2 = { $value2 }{ \" \" }{ $value3 }{ \" \" }{ $value4 }"
+      },
+      {
+        "message": "renderdetails-the-route-center-on-the-map-copy",
+        "before": "renderdetails-the-route-center-on-the-map-copy = { $value9 }{ $value0 }{ \" маршрут\" }{ $value8 }{ $value7 }{ \"Показать в центре карты\" }{ $value6 }{ $value5 }{ \"Скопировать основную точку\" }{ $value4 }{ $value3 }{ \"ObjMap ↗\" }{ $value2 }",
+        "after": "renderdetails-the-route-center-on-the-map-copy = { $value9 }{ $value0 }{ $value8 }{ $value7 }{ \"Показать в центре карты\" }{ $value6 }{ $value5 }{ \"Скопировать основную точку\" }{ $value4 }{ $value3 }{ \"ObjMap ↗\" }{ $value2 }"
+      },
+      {
+        "message": "legacy-diagnostic-3",
+        "before": "legacy-diagnostic-3 = Улучшение до { $value0 } звёзд: принесите предмет брони и необходимые материалы доступной большой фее.",
+        "after": "legacy-diagnostic-3 = Улучшение брони. Уровень (звёзд): { $value0 }. Принесите предмет брони и необходимые материалы доступной большой фее."
+      },
+      {
+        "message": "legacy-diagnostic-4",
+        "before": "legacy-diagnostic-4 = Улучшение до { $value0 } звёзд: принесите предмет брони и необходимые материалы доступной большой фее.",
+        "after": "legacy-diagnostic-4 = Улучшение брони. Уровень (звёзд): { $value0 }. Принесите предмет брони и необходимые материалы доступной большой фее."
+      }
+    ],
+    "contextual_source_corrections": [
+      {
+        "messages": [
+          "legacy-bound-571",
+          "legacy-bound-612"
+        ],
+        "reason": "Dragonfly side quest: Jana and Gleema are confirmed participants. Source guide mixes Jun and Tsukimi; names are resolved by the quest, not blindly transliterated.",
+        "source": "https://zeldawiki.wiki/wiki/Little_Sister%27s_Big_Request"
+      },
+      {
+        "messages": [
+          "legacy-bound-604"
+        ],
+        "reason": "Beloved gift quest involves Manny and Prima; Russian instruction follows the documented interaction rather than the unverified Dezelle name.",
+        "source": "https://zeldawiki.wiki/wiki/Prima"
+      },
+      {
+        "messages": [
+          "legacy-bound-616"
+        ],
+        "reason": "Official Russian name for Laine not found. Use the documented role and northwest gate to identify the NPC; exact name still requires review.",
+        "source": "https://zeldawiki.wiki/wiki/The_Silent_Swordswomen"
+      },
+      {
+        "messages": [
+          "legacy-bound-441",
+          "legacy-bound-530"
+        ],
+        "reason": "Use an explicit descriptive label for the lower piece of Tingle’s set. Exact official BOTW item name remains pending in game.json; TOTK names are not imported as BOTW evidence.",
+        "source": "https://shedevr.org.ru/zelda64rus/media.html#champion_ru",
+        "pdf_page": 192
+      }
+    ],
+    "additional_factual_corrections": [
+      {
+        "topic": "Rushroom Rush: 55 Rushrooms, not fifty",
+        "source": "https://zeldawiki.wiki/wiki/Rushroom_Rush%21"
+      }
+    ],
+    "human_review": "Independent Russian wording and official-terminology approval remains pending."
+  }
+}
