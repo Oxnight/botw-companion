@@ -45773,72 +45773,72 @@
       {
         "previous": "Прупелер",
         "current": "Дозорный",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «У подножия",
         "current": "Конюшня «У подножия»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Близнецы",
         "current": "Конюшня «Близнецы»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Озерная",
         "current": "Конюшня «Озерная»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Подгорная",
         "current": "Конюшня «Подгорная»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Лесная",
         "current": "Конюшня «Лесная»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Ущелье",
         "current": "Конюшня «Ущелье»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Тихая",
         "current": "Конюшня «Тихая»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Болотная",
         "current": "Конюшня «Болотная»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Рито",
         "current": "Конюшня «Рито»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Речная",
         "current": "Конюшня «Речная»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Табантская",
         "current": "Конюшня «Табантская»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Аккала",
         "current": "Конюшня «Аккала»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       },
       {
         "previous": "Конюшня «Ост-Аккала",
         "current": "Конюшня «Ост-Аккала»",
-        "reason": "User requested alignment with the bilingual glossary; exact matching term."
+        "reason": "Exact match in the preferred bilingual BOTW glossary."
       }
     ]
   },
@@ -46041,39 +46041,6 @@
       "status": "comparative_totk_reference_botw_confirmation_pending"
     }
   },
-  "source_content_corrections": [
-    {
-      "messages": [
-        "legacy-bound-571",
-        "legacy-bound-612"
-      ],
-      "reason": "Dragonfly side quest: Jana and Gleema are confirmed participants. Source guide mixes Jun and Tsukimi; names are resolved by the quest, not blindly transliterated.",
-      "source": "https://zeldawiki.wiki/wiki/Little_Sister%27s_Big_Request"
-    },
-    {
-      "messages": [
-        "legacy-bound-604"
-      ],
-      "reason": "Beloved gift quest involves Manny and Prima; Russian instruction follows the documented interaction rather than the unverified Dezelle name.",
-      "source": "https://zeldawiki.wiki/wiki/Prima"
-    },
-    {
-      "messages": [
-        "legacy-bound-616"
-      ],
-      "reason": "Official Russian name for Laine not found. Use the documented role and northwest gate to identify the NPC; exact name still requires review.",
-      "source": "https://zeldawiki.wiki/wiki/The_Silent_Swordswomen"
-    },
-    {
-      "messages": [
-        "legacy-bound-441",
-        "legacy-bound-530"
-      ],
-      "reason": "Use an explicit descriptive label for the lower piece of Tingle’s set. Exact official BOTW item name remains pending in game.json; TOTK names are not imported as BOTW evidence.",
-      "source": "https://shedevr.org.ru/zelda64rus/media.html#champion_ru",
-      "pdf_page": 192
-    }
-  ],
   "provisional_terms_for_botw_review": {
     "Restless Cricket": {
       "russian": "Бодрый сверчок",
@@ -46695,7 +46662,7 @@
     },
     "Travel Medallion": {
       "russian": "Медальон перемещения",
-      "reason": "Descriptive draft wording in prose; verify official BOTW inventory label. Not asserted as an official title.",
+      "reason": "Reserved terminology note for future report prose; not present in this contribution’s game catalog. Verify the official BOTW inventory label before using it as an official name.",
       "reference": "https://zeldawiki.wiki/wiki/Travel_Medallion",
       "editorial_review_2026_10_24": {
         "decision": "retain",

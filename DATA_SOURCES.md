@@ -80,9 +80,7 @@ on 7 March 2019. The author describes it as extracted Russian/English game
 terminology. This is a community-published reference, not a Nintendo-published
 dictionary; final wording review remains pending. Only factual names are used.
 The downloaded workbook is not bundled. Its hash and source are recorded in the
-name review report. Translations in `prose.json` are documented in `docs/RUSSIAN_PROSE_REVIEW.json`,
-including name/title matches, shared interface messages, stable identity aliases
-and translator-authored guide patterns. Ambiguous matches are excluded.
+name review report. Report prose is not included in this contribution.
 
 Anton’s Russian *Creating a Champion* v1.2 reference (2021-10-21), linked
 from the [Zelda64rus media page](https://shedevr.org.ru/zelda64rus/media.html#champion_ru),
@@ -91,11 +89,10 @@ report records page locators and the community-source status. No book pages,
 illustrations or descriptive paragraphs are included. A few terms are supported
 by Russian BOTW playthrough titles and explicitly marked for further review.
 
-Public French project strings were also submitted to a public Google Translate
-endpoint to prepare isolated draft candidates. Unchecked outputs are excluded
-from locale inputs and completion counts. Accepted editorial batches were
-reviewed and rewritten with source context. Translation remains entirely offline
-in the distributed application; no new runtime dependency is introduced.
+Translation preparation included AI assistance and editorial review. Automated
+checks and source comparisons do not establish independent human approval of
+every official name. The distributed application remains entirely offline; no
+translation service or new runtime dependency is introduced.
 
 These references do not establish complete human review or distribution rights
 for Nintendo content. Keep the locale disabled until its remaining content and
@@ -112,7 +109,7 @@ that every editorial sentence or French term has independent source coverage.
 
 ## Additional Russian draft comparisons
 
-The complete Russian draft additionally compares factual quest titles against
+The Russian name draft additionally compares factual quest titles against
 [this community quest-log reproduction](https://nastroy.sunnyfresh.ru/ispytanie-chuvstvo-mery-zelda/).
 Its errors and inconsistent NPC spellings mean it cannot replace game review.
 Only factual titles/names are used, not dialogue or guide paragraphs.
