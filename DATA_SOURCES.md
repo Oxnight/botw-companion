@@ -80,7 +80,7 @@ on 7 March 2019. The author describes it as extracted Russian/English game
 terminology. This is a community-published reference, not a Nintendo-published
 dictionary; final wording review remains pending. Only factual names are used.
 The downloaded workbook is not bundled. Its hash and source are recorded in the
-name review report. Report prose is not included in this contribution.
+name review report. Sources for report prose are documented separately below.
 
 Anton’s Russian *Creating a Champion* v1.2 reference (2021-10-21), linked
 from the [Zelda64rus media page](https://shedevr.org.ru/zelda64rus/media.html#champion_ru),
@@ -119,14 +119,21 @@ Only factual titles/names are used, not dialogue or guide paragraphs.
 [enemies](https://zelda.kiranico.com/ru/totk/data/enemies) are explicitly marked
 as comparative Tears of the Kingdom references. They do not certify BOTW names.
 Proposed editorial terms and comparisons are listed in
-`docs/RUSSIAN_TERMINOLOGY_REVIEW.md`; the disabled locale is a complete draft,
+`docs/RUSSIAN_TERMINOLOGY_REVIEW.md`; the disabled locale is an incremental draft,
 not a claim of independently validated official terminology.
 
+### Russian guides and report prose draft
 
-### Russian editorial review (2026-10-24)
+The disabled locale's prose mappings and translation decisions are recorded in
+`docs/RUSSIAN_PROSE_REVIEW.json`. Public French project strings were submitted
+to a public Google Translate endpoint to prepare isolated candidates. Accepted
+phrases were edited with their source context and AI assistance. No translation
+service or new runtime dependency is used by the distributed application.
 
-Selected quest mechanics and item labels were checked against the sources listed
-in `docs/RUSSIAN_EDITORIAL_REVIEW.json` (`additional_factual_corrections`).
-Only factual corrections and original Russian wording are included; source article
-paragraphs and media are not bundled. The 46-term audit is documented separately
-in `docs/RUSSIAN_TERMINOLOGY_AUDIT.json`; comparative TOTK labels remain provisional.
+Selected quest mechanics and item labels were checked against the sources in
+`docs/RUSSIAN_EDITORIAL_REVIEW.json`. These include the 55-Rushroom requirement
+for Pirou, and the corrections to rune upgrades, Naydra's scale, the Forgotten
+Temple, Tah Muhl, sunken chests and Walton's riddle. French source keys remain
+stable. Only factual corrections and original Russian wording are included;
+source articles, media and game binaries are not bundled. These records retain
+the contributor's editorial work and do not establish independent human review.

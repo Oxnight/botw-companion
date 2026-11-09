@@ -3562,10 +3562,11 @@
     {
       "key": "Bazar Assek",
       "english": "Kara Kara Bazaar",
-      "russian": "Рынок «Кара-Кара",
+      "russian": "Рынок «Кара-Кара»",
       "references": [
         "https://zelda64rus.ucoz.ru/_fr/6/BotW_StaticMsg.xlsx"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Sanctuaire de Kata'Chuki",
@@ -8790,10 +8791,11 @@
     {
       "key": "Maritta Vieille place des commerces",
       "english": "Maritta Exchange Ruins",
-      "russian": "Рынок «Тихий",
+      "russian": "Рынок «Тихий»",
       "references": [
         "https://zelda64rus.ucoz.ru/_fr/6/BotW_StaticMsg.xlsx"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Stalbokoblin 001",
@@ -43187,10 +43189,11 @@
     {
       "key": "Armure zora obtenue",
       "english": "Zora Armor",
-      "russian": "Доспехи зора",
+      "russian": "Доспехи зора получены",
       "references": [
         "game.names_by_id:armor_owned:Armor_006_Upper"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Herbes armo",
@@ -43353,10 +43356,11 @@
     {
       "key": "bazar Assek",
       "english": "Kara Kara Bazaar",
-      "russian": "Рынок «Кара-Кара",
+      "russian": "Рынок «Кара-Кара»",
       "references": [
         "https://zelda64rus.ucoz.ru/_fr/6/BotW_StaticMsg.xlsx"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Montagnes Gerudos",
@@ -57496,10 +57500,11 @@
     {
       "key": "Vérification toutes les",
       "english": "Check all",
-      "russian": "Проверить всё",
+      "russian": "Проверять каждые",
       "references": [
         "messages.ftl:page-check-all"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Vérification…",
@@ -57520,10 +57525,11 @@
     {
       "key": "Vérifier toutes les",
       "english": "Check all",
-      "russian": "Проверить всё",
+      "russian": "Проверять каждые",
       "references": [
         "messages.ftl:page-check-all"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Windows ne sera pas redémarré.",
@@ -72507,11 +72513,12 @@
     {
       "key": "Prérequis publié : Armure zora obtenue",
       "english": "Published prerequisite: Zora Armor obtained",
-      "russian": "Указанное предварительное условие: Доспехи зора",
+      "russian": "Указанное предварительное условие: Доспехи зора получены",
       "references": [
         "declared dynamic message pattern:legacy-diagnostic-94",
         "prose.json:Armure zora obtenue"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Donneur : Kamis",
@@ -73048,6 +73055,10 @@
       "russian": "Уровень улучшения (звёзд): ZXQ0QXZ",
       "references": [
         "messages.ftl:legacy-diagnostic-6"
+      ],
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1
       ]
     },
     {
@@ -80948,10 +80959,11 @@
     {
       "key": "L’accès dépend de la quête «",
       "english": "Access depends on the quest.”",
-      "russian": "Доступ зависит от задания»",
+      "russian": "Доступ зависит от задания «",
       "references": [
         "translator-authored editorial prose; French source key retained"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "L’ancienne version du Companion n’a pas pu être arrêtée proprement",
@@ -97284,10 +97296,13 @@
     {
       "key": "Récolte cinquante champignons tempo sans les cuisiner.",
       "english": "Collect fifty Rushrooms without cooking them.",
-      "russian": "Соберите пятьдесят прытковиков, не готовя их.",
+      "russian": "Соберите 55 прытковиков, не готовя их.",
       "references": [
-        "translator-authored editorial prose; French source key retained"
-      ]
+        "translator-authored editorial prose; French source key retained",
+        "https://zeldawiki.wiki/wiki/Rushroom_Rush%21"
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09.",
+      "note": "French and English source text says fifty; the Russian guide corrects the factual requirement to 55 Rushrooms. Source key retained."
     },
     {
       "key": "Récolte la quantité demandée sans utiliser les exemplaires nécessaires à tes améliorations, puis rapporte-la.",
@@ -97468,10 +97483,11 @@
     {
       "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés :",
       "english": "BOTW save not found automatically in Ryujinx. In Ryujinx: right-click the game > Open User Save Directory, and then pass this folder to the program.",
-      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения:",
       "references": [
         "translator-authored editorial prose; French source key retained"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Seconde phase : détruis les blocs de glace avec Cryonis, puis vise son œil lorsqu'il flotte.",
@@ -98296,19 +98312,23 @@
     {
       "key": "Vends les cinquante champignons à Pirou en une fois.",
       "english": "Sell the fifty mushrooms to Pirou at once.",
-      "russian": "Продайте Пиру все пятьдесят грибов сразу.",
+      "russian": "Передайте Пиру все 55 прытковиков сразу, чтобы получить алмаз.",
       "references": [
-        "translator-authored editorial prose; French source key retained"
-      ]
+        "translator-authored editorial prose; French source key retained",
+        "https://zeldawiki.wiki/wiki/Rushroom_Rush%21"
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09.",
+      "note": "French and English source text says fifty; the Russian guide corrects the factual requirement to 55 Rushrooms. Source key retained."
     },
     {
       "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ",
       "english": "Save BOTW not found automatically in Ryujinx. In Ryujinx: right-click the game > Open User Save Directory, and then pass this folder to the program.",
-      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. ",
+      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: ",
       "references": [
         "exact French prose match with source-owned boundary whitespace preserved",
         "prose.json:Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés :"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "1 gros Chuchu électrique, 2 Lézalfos, 2 Lézalfos bleus",
@@ -98913,10 +98933,11 @@
     {
       "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ZXQ0QXZ",
       "english": "BOTW save not found automatically in Ryujinx. In Ryujinx: right-click the game > Open User Save Directory, and then pass this folder to the program.",
-      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+      "russian": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: ZXQ0QXZ",
       "references": [
         "source-backed terminology / existing exact translation; complete application label pattern"
-      ]
+      ],
+      "maintainer_review": "2026-11-09: see RUSSIAN_EDITORIAL_REVIEW.json, maintainer_review_2026_11_09."
     },
     {
       "key": "Village d'Euzero - magasin général",
@@ -102714,7 +102735,10 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        2
+      ]
     },
     {
       "key": "ZXQ1QXZ coffreZXQ2QXZ physiqueZXQ3QXZ référencéZXQ4QXZ dans les données du jeu.",
@@ -102723,7 +102747,12 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        2,
+        3,
+        4
+      ]
     },
     {
       "key": "Ces coordonnées appartiennent à ZXQ6QXZ : elles ne sont volontairement pas superposées à la carte d'Hyrule.",
@@ -102740,7 +102769,11 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1,
+        2
+      ]
     },
     {
       "key": "ZXQ0QXZ noteZXQ1QXZ • révision ZXQ2QXZ • séparé du score automatique",
@@ -102749,7 +102782,10 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1
+      ]
     },
     {
       "key": "ZXQ0QXZ objectifZXQ1QXZ cochéZXQ2QXZ",
@@ -102758,7 +102794,11 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1,
+        2
+      ]
     },
     {
       "key": "ZXQ0QXZ pointZXQ1QXZ informatifZXQ2QXZ - sans statut terminé",
@@ -102767,7 +102807,11 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1,
+        2
+      ]
     },
     {
       "key": "ZXQ0QXZ résultatZXQ1QXZ",
@@ -102776,7 +102820,10 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1
+      ]
     },
     {
       "key": "ZXQ0QXZ terminéZXQ1QXZ sur ZXQ2QXZ",
@@ -102785,7 +102832,10 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1
+      ]
     },
     {
       "key": "ZXQ0QXZ validationZXQ1QXZ manuelleZXQ2QXZ • ZXQ3QXZ affichéeZXQ4QXZ",
@@ -102794,7 +102844,12 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1,
+        2,
+        4
+      ]
     },
     {
       "key": "ZXQ0QXZ étapeZXQ1QXZ ajoutéeZXQ2QXZZXQ3QXZ",
@@ -102803,7 +102858,11 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1,
+        2
+      ]
     },
     {
       "key": "ZXQ0QXZ étapeZXQ1QXZ • ZXQ2QXZZXQ3QXZ",
@@ -102812,7 +102871,10 @@
       "references": [
         "translator-authored editorial prose; French source key retained"
       ],
-      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain."
+      "note": "Count-neutral Russian wording intentionally omits French plural/gender suffix slots; numeric/display and non-suffix slots remain.",
+      "omitted_french_suffix_slots": [
+        1
+      ]
     },
     {
       "key": "Depuis le socle, tire une flèche à travers le cœur lorsque sa lumière l'illumine pour révéler le sanctuaire de Vorida'No.",

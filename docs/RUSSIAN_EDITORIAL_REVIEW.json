@@ -629,5 +629,183 @@
     "change": "Point-count Fluent message adapted to formattedCount/count contract and Russian plural forms; all prose/game translations retained.",
     "python_rendering_probes": 6900,
     "browser_parity_probes": 703
+  },
+  "maintainer_review_2026_11_09": {
+    "base": "b0ecd2635d9775d63e2600c120d4caa16d394764",
+    "scope": "Preserve merged interface fixes, correct reviewed prose defects, retain French source keys and keep the Russian locale disabled.",
+    "prose_changes": [
+      {
+        "key": "Bazar Assek",
+        "before": "Рынок «Кара-Кара",
+        "after": "Рынок «Кара-Кара»"
+      },
+      {
+        "key": "bazar Assek",
+        "before": "Рынок «Кара-Кара",
+        "after": "Рынок «Кара-Кара»"
+      },
+      {
+        "key": "Maritta Vieille place des commerces",
+        "before": "Рынок «Тихий",
+        "after": "Рынок «Тихий»"
+      },
+      {
+        "key": "Vérification toutes les",
+        "before": "Проверить всё",
+        "after": "Проверять каждые"
+      },
+      {
+        "key": "Vérifier toutes les",
+        "before": "Проверить всё",
+        "after": "Проверять каждые"
+      },
+      {
+        "key": "L’accès dépend de la quête «",
+        "before": "Доступ зависит от задания»",
+        "after": "Доступ зависит от задания «"
+      },
+      {
+        "key": "Armure zora obtenue",
+        "before": "Доспехи зора",
+        "after": "Доспехи зора получены"
+      },
+      {
+        "key": "Prérequis publié : Armure zora obtenue",
+        "before": "Указанное предварительное условие: Доспехи зора",
+        "after": "Указанное предварительное условие: Доспехи зора получены"
+      },
+      {
+        "key": "Récolte cinquante champignons tempo sans les cuisiner.",
+        "before": "Соберите пятьдесят прытковиков, не готовя их.",
+        "after": "Соберите 55 прытковиков, не готовя их."
+      },
+      {
+        "key": "Vends les cinquante champignons à Pirou en une fois.",
+        "before": "Продайте Пиру все пятьдесят грибов сразу.",
+        "after": "Передайте Пиру все 55 прытковиков сразу, чтобы получить алмаз."
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés :",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения:"
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. ",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: "
+      },
+      {
+        "key": "Sauvegarde BOTW introuvable automatiquement dans Ryujinx. Dans Ryujinx : clic droit sur le jeu > Open User Save Directory, puis passe ce dossier au programme. Emplacements vérifiés : ZXQ0QXZ",
+        "before": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе.",
+        "after": "Не удалось автоматически найти сохранение BOTW в Ryujinx. В Ryujinx щёлкните по игре правой кнопкой мыши, выберите «Open User Save Directory» и передайте эту папку программе. Проверенные расположения: ZXQ0QXZ"
+      }
+    ],
+    "ftl_changes": [
+      {
+        "message": "renderdsudiagnostic-duplicates-timestamps-out-of-order",
+        "before": "renderdsudiagnostic-duplicates-timestamps-out-of-order = { $value0 }{ \" повторов • \" }{ $value1 }{ \" временных меток с нарушенным порядком\" }",
+        "after": "renderdsudiagnostic-duplicates-timestamps-out-of-order = Повторы: { $value0 } • временные метки с нарушенным порядком: { $value1 }"
+      },
+      {
+        "message": "renderdsudiagnostic-udp-invalid-requests",
+        "before": "renderdsudiagnostic-udp-invalid-requests = { $value0 }{ \" UDP • \" }{ $value1 }{ \" некорректных запросов\" }",
+        "after": "renderdsudiagnostic-udp-invalid-requests = UDP: { $value0 } • некорректные запросы: { $value1 }"
+      },
+      {
+        "message": "renderdetails-remove-from",
+        "before": "renderdetails-remove-from = { \"Удалить из\" }",
+        "after": "renderdetails-remove-from = { \"Удалить из маршрута\" }"
+      },
+      {
+        "message": "renderdetails-add-to",
+        "before": "renderdetails-add-to = { \"Добавить в\" }",
+        "after": "renderdetails-add-to = { \"Добавить в маршрут\" }"
+      },
+      {
+        "message": "renderitems-of",
+        "before": "renderitems-of = { \"из\" }",
+        "after": "renderitems-of = { \"из маршрута\" }"
+      },
+      {
+        "message": "renderitems-at",
+        "before": "renderitems-at = { \"в\" }",
+        "after": "renderitems-at = { \"в маршрут\" }"
+      },
+      {
+        "message": "renderitems-remove-from",
+        "before": "renderitems-remove-from = { \"Удалить из\" }",
+        "after": "renderitems-remove-from = { \"Удалить из маршрута\" }"
+      },
+      {
+        "message": "renderitems-add-to",
+        "before": "renderitems-add-to = { \"Добавить в\" }",
+        "after": "renderitems-add-to = { \"Добавить в маршрут\" }"
+      },
+      {
+        "message": "renderitems-the-route",
+        "before": "renderitems-the-route = { $value5 }{ \" маршрут\" }",
+        "after": "renderitems-the-route = { $value5 }"
+      },
+      {
+        "message": "renderitems-the-route-2",
+        "before": "renderitems-the-route-2 = { $value2 }{ \" \" }{ $value3 }{ \" \" }{ $value4 }{ \" маршрут\" }",
+        "after": "renderitems-the-route-2 = { $value2 }{ \" \" }{ $value3 }{ \" \" }{ $value4 }"
+      },
+      {
+        "message": "renderdetails-the-route-center-on-the-map-copy",
+        "before": "renderdetails-the-route-center-on-the-map-copy = { $value9 }{ $value0 }{ \" маршрут\" }{ $value8 }{ $value7 }{ \"Показать в центре карты\" }{ $value6 }{ $value5 }{ \"Скопировать основную точку\" }{ $value4 }{ $value3 }{ \"ObjMap ↗\" }{ $value2 }",
+        "after": "renderdetails-the-route-center-on-the-map-copy = { $value9 }{ $value0 }{ $value8 }{ $value7 }{ \"Показать в центре карты\" }{ $value6 }{ $value5 }{ \"Скопировать основную точку\" }{ $value4 }{ $value3 }{ \"ObjMap ↗\" }{ $value2 }"
+      },
+      {
+        "message": "legacy-diagnostic-3",
+        "before": "legacy-diagnostic-3 = Улучшение до { $value0 } звёзд: принесите предмет брони и необходимые материалы доступной большой фее.",
+        "after": "legacy-diagnostic-3 = Улучшение брони. Уровень (звёзд): { $value0 }. Принесите предмет брони и необходимые материалы доступной большой фее."
+      },
+      {
+        "message": "legacy-diagnostic-4",
+        "before": "legacy-diagnostic-4 = Улучшение до { $value0 } звёзд: принесите предмет брони и необходимые материалы доступной большой фее.",
+        "after": "legacy-diagnostic-4 = Улучшение брони. Уровень (звёзд): { $value0 }. Принесите предмет брони и необходимые материалы доступной большой фее."
+      }
+    ],
+    "contextual_source_corrections": [
+      {
+        "messages": [
+          "legacy-bound-571",
+          "legacy-bound-612"
+        ],
+        "reason": "Dragonfly side quest: Jana and Gleema are confirmed participants. Source guide mixes Jun and Tsukimi; names are resolved by the quest, not blindly transliterated.",
+        "source": "https://zeldawiki.wiki/wiki/Little_Sister%27s_Big_Request"
+      },
+      {
+        "messages": [
+          "legacy-bound-604"
+        ],
+        "reason": "Beloved gift quest involves Manny and Prima; Russian instruction follows the documented interaction rather than the unverified Dezelle name.",
+        "source": "https://zeldawiki.wiki/wiki/Prima"
+      },
+      {
+        "messages": [
+          "legacy-bound-616"
+        ],
+        "reason": "Official Russian name for Laine not found. Use the documented role and northwest gate to identify the NPC; exact name still requires review.",
+        "source": "https://zeldawiki.wiki/wiki/The_Silent_Swordswomen"
+      },
+      {
+        "messages": [
+          "legacy-bound-441",
+          "legacy-bound-530"
+        ],
+        "reason": "Use an explicit descriptive label for the lower piece of Tingle’s set. Exact official BOTW item name remains pending in game.json; TOTK names are not imported as BOTW evidence.",
+        "source": "https://shedevr.org.ru/zelda64rus/media.html#champion_ru",
+        "pdf_page": 192
+      }
+    ],
+    "additional_factual_corrections": [
+      {
+        "topic": "Rushroom Rush: 55 Rushrooms, not fifty",
+        "source": "https://zeldawiki.wiki/wiki/Rushroom_Rush%21"
+      }
+    ],
+    "human_review": "Independent Russian wording and official-terminology approval remains pending."
   }
 }

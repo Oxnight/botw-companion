@@ -28,7 +28,7 @@ class RussianDraftTests(unittest.TestCase):
         tree = FluentParser().parse(self.source)
         identities = {n.id.name for n in tree.body if isinstance(n, ast.Message)}
         self.assertTrue(identities)
-        self.assertLessEqual(identities, contract.keys())
+        self.assertEqual(identities, contract.keys())
         parse_messages(self.folder / 'messages.ftl', {k: contract[k] for k in identities})
         html_contract = json.loads((ROOT / 'botw_companion/i18n/html.json').read_text(encoding='utf-8'))
         self.assertLessEqual(html_contract.keys(), identities)
@@ -43,7 +43,7 @@ class RussianDraftTests(unittest.TestCase):
             supplied = json.loads((self.folder / filename).read_text(encoding='utf-8'))
             self.assertEqual(supplied.keys(), expected.keys())
             for section, values in supplied.items():
-                self.assertLessEqual(values.keys(), expected[section].keys())
+                self.assertEqual(values.keys(), expected[section].keys())
                 self.assertTrue(all(isinstance(v, str) and v.strip() for v in values.values()))
 
     def test_point_count_uses_russian_plural_forms_and_formatted_count(self):
