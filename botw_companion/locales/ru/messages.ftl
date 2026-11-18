@@ -1750,3 +1750,13 @@ renderfilternav-point-count = { $count ->
     [many] { $formattedCount } точек
    *[other] { $formattedCount } точки
     }
+
+# Report guide labels and templates.
+guide-required-bow = Лук
+guide-enemy-sky-octorok-master-mode = Небесный окторок (режим мастера)
+guide-combat-variable-rank = Ранг меняется
+guide-combat-long-combos = Длинные серии атак
+guide-combat-final-laser = Финальный лазер
+guide-coordinates-3d = Координаты: X { $value0 }, Y { $value1 }, Z { $value2 }
+guide-solution-step = Решение { $value0 }/{ $value1 }
+guide-explore-sector = Исследуйте сектор { $value0 }.

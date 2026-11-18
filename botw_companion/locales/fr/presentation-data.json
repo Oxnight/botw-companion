@@ -12649,7 +12649,21 @@
     "observation et symboles": "observation et symboles",
     "parcours et construction": "parcours et construction",
     "sanctuaires jumeaux": "sanctuaires jumeaux",
-    "tutoriel de combat": "tutoriel de combat"
+    "tutoriel de combat": "tutoriel de combat",
+    "Récolte 55 champis tempo sans les cuisiner.": "Récolte 55 champis tempo sans les cuisiner.",
+    "Remets les 55 champis tempo à Pirou, puis ouvre le coffre derrière le relais pour récupérer le diamant brut.": "Remets les 55 champis tempo à Pirou, puis ouvre le coffre derrière le relais pour récupérer le diamant brut.",
+    "Apporte trois vis antiques pour le détecteur +, trois axes antiques pour Bombes + et trois cœurs antiques pour Cinetis +.": "Apporte trois vis antiques pour le détecteur +, trois axes antiques pour Bombes + et trois cœurs antiques pour Cinetis +.",
+    "Une fois Nedrac libéré, tire sur son corps, ramasse son écaille et dépose-la dans la source de la Sagesse pour ouvrir le sanctuaire de Jitah'Sami.": "Une fois Nedrac libéré, tire sur son corps, ramasse son écaille et dépose-la dans la source de la Sagesse pour ouvrir le sanctuaire de Jitah'Sami.",
+    "Lis le message du dernier moine puis téléporte-toi au sanctuaire de Rona'Kahta, dans le Temple oublié.": "Lis le message du dernier moine puis téléporte-toi au sanctuaire de Rona'Kahta, dans le Temple oublié.",
+    "Dans le Temple oublié, ouvre les trois coffres devant la grande statue de la Déesse pour récupérer la tenue des Landes.": "Dans le Temple oublié, ouvre les trois coffres devant la grande statue de la Déesse pour récupérer la tenue des Landes.",
+    "Trouve et active le sanctuaire de Ta'Mur, au sud-ouest du relais.": "Trouve et active le sanctuaire de Ta'Mur, au sud-ouest du relais.",
+    "Rejoins le triangle de rochers en radeau et utilise Polaris pour sortir les coffres de l'eau.": "Rejoins le triangle de rochers en radeau et utilise Polaris pour sortir les coffres de l'eau.",
+    "Ouvre les quatre coffres métalliques, puis retourne parler à Rozel.": "Ouvre les quatre coffres métalliques, puis retourne parler à Rozel.",
+    "Présente successivement une pomme, une citrouille armo, un champi piment, une truite volt et un sabot de Lynel.": "Présente successivement une pomme, une citrouille armo, un champi piment, une truite volt et un sabot de Lynel.",
+    "4 Stalbokoblins": "4 Stalbokoblins",
+    "7 Stalbokoblins montés": "7 Stalbokoblins montés",
+    "Salle 1 - Salle active - 4 Stalbokoblins : Utilise surtout les bombes, détruis les crânes et conserve toutes les armes en bois pour la suite.": "Salle 1 - Salle active - 4 Stalbokoblins : Utilise surtout les bombes, détruis les crânes et conserve toutes les armes en bois pour la suite.",
+    "Salle 4 - Salle active - 7 Stalbokoblins montés : Vole un cheval squelette, saute pour tirer en ralenti et vise la tête des cavaliers.": "Salle 4 - Salle active - 7 Stalbokoblins montés : Vole un cheval squelette, saute pour tirer en ralenti et vise la tête des cavaliers."
   },
   "glossary": {
     " Collection séparée : ZXQ0QXZ armures existent pour ZXQ1QXZ emplacements.": " Collection séparée : ZXQ0QXZ armures existent pour ZXQ1QXZ emplacements.",
@@ -25202,6 +25216,39 @@
     "Dungeon135": "Épreuve extrême de force"
   },
   "patterns": [
+    {
+      "source": "Explore le secteur ZXQ0QXZ.",
+      "message": "guide-explore-sector",
+      "preserve_values": [
+        0
+      ]
+    },
+    {
+      "source": "Solution ZXQ0QXZ/ZXQ1QXZ",
+      "message": "guide-solution-step",
+      "preserve_values": [
+        0,
+        1
+      ],
+      "numeric_values": [
+        0,
+        1
+      ]
+    },
+    {
+      "source": "Position tridimensionnelle : X ZXQ0QXZ, Y ZXQ1QXZ, Z ZXQ2QXZ",
+      "message": "guide-coordinates-3d",
+      "preserve_values": [
+        0,
+        1,
+        2
+      ],
+      "numeric_values": [
+        0,
+        1,
+        2
+      ]
+    },
     {
       "source": "Accompagnement - Stalhinox ZXQ0QXZ",
       "message": "legacy-template-1",

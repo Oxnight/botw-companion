@@ -104,6 +104,11 @@ Parameters such as `value0` contain formatted text; typed parameters such as
 `count` or `number0` support numeric selection. Keep coordinates and protocol
 values in their supplied display slots.
 
+Use `NUMBER()` only with a numeric literal or a parameter supplied as a number.
+The builder recognizes raw counts and legacy `numberN` slots; declare new named
+numeric slots in the contract's `number_params`. Required parameters must be
+evaluated on every branch of a select expression.
+
 Translate complete phrases rather than joining independently translated
 fragments. A translation-only contribution implements existing message IDs.
 Adding a new application message also requires a developer to add its source

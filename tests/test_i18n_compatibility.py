@@ -56,7 +56,12 @@ class HtmlCompatibilityTests(unittest.TestCase):
         package = Path(__file__).resolve().parents[1] / 'botw_companion'
         prose = json.loads((package / 'locales/en/prose.json').read_text(encoding='utf-8'))['strings']
         source = json.loads((package / 'i18n/cache-source.json').read_text(encoding='utf-8'))
-        keys = set(prose) | set(source)
+        added = set(reference.get('added_inputs', ()))
+        self.assertLessEqual(added, prose.keys())
+        self.assertTrue(added.isdisjoint(source))
+        for key in added:
+            self.assertNotEqual(translate_text(key, 'en'), key)
+        keys = (set(prose) | set(source)) - added
         presentation = {key: translate_text(key, 'en') for key in keys if not TECHNICAL_VALUE.fullmatch(key)}
         self.assertEqual(len(keys), reference['total_inputs'])
         self.assertEqual(len(presentation), reference['presentation_inputs'])
@@ -65,6 +70,12 @@ class HtmlCompatibilityTests(unittest.TestCase):
         for source, correction in reference.get('reviewed_corrections', {}).items():
             self.assertEqual(presentation[source], correction['after'], source)
             presentation[source] = correction['before']
+        french_coordinates = 'Position tridimensionnelle : '
+        positions = [key for key in presentation if key.startswith(french_coordinates)]
+        self.assertEqual(len(positions), reference['reviewed_3d_positions'])
+        for key in positions:
+            self.assertEqual(presentation[key], '3D position: ' + key.removeprefix(french_coordinates))
+            presentation[key] = key
         digest = hashlib.sha256(json.dumps(presentation, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()
         self.assertEqual(digest, reference['presentation_sha256'])
         for key in keys:

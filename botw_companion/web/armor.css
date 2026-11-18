@@ -531,7 +531,7 @@
 }
 
 .toolbar {
-    grid-template-columns: minmax(240px, 1fr) repeat(3, minmax(145px, auto));
+    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, max-content));
 }
 
 .filterScopeNotice {
@@ -756,6 +756,10 @@ aside {
     .toolbar > * {
         width: 100%;
         min-width: 0;
+    }
+
+    #status {
+        white-space: normal;
     }
 
     .guideTitle {

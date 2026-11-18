@@ -50,6 +50,20 @@ def walk(value):
             yield from walk(child)
 
 
+def rendered_variables(node):
+    """Find variables evaluated on every path through a Fluent pattern."""
+    if isinstance(node, ast.VariableReference):
+        return {node.id.name}
+    if isinstance(node, ast.SelectExpression):
+        alternatives = [rendered_variables(variant.value) for variant in node.variants]
+        return rendered_variables(node.selector) | set.intersection(*alternatives)
+    if isinstance(node, ast.BaseNode):
+        return rendered_variables(list(vars(node).values()))
+    if isinstance(node, list):
+        return set().union(*(rendered_variables(child) for child in node))
+    return set()
+
+
 def parse_messages(path, contract):
     tree = FluentParser().parse(path.read_text(encoding='utf-8'))
     entries = {}
@@ -74,6 +88,12 @@ def parse_messages(path, contract):
         required = set(contract[name].get('required', expected))
         if not required <= variables or not variables <= expected:
             raise ValueError(f'{path}: {name}: variables {sorted(variables)}, required {sorted(required)}, allowed {sorted(expected)}')
+        missing = required - rendered_variables(item.value)
+        if missing:
+            raise ValueError(f'{path}: {name}: required variables missing in a branch: {sorted(missing)}')
+        number_params = (set(contract[name].get('number_params', ())) |
+                         contract[name].get('raw_counts', {}).keys() |
+                         {param for param in expected if re.fullmatch(r'number\d+', param)})
         # References could bypass this message's parameter and rich-text checks.
         if any(isinstance(n, (ast.MessageReference, ast.TermReference)) for n in nodes):
             raise ValueError(f'{path}: {name}: references are outside the message contract')
@@ -85,6 +105,10 @@ def parse_messages(path, contract):
                            'maximumFractionDigits', 'minimumSignificantDigits', 'maximumSignificantDigits'}
                 if len(n.arguments.positional) != 1 or any(option.name.name not in allowed for option in n.arguments.named):
                     raise ValueError(f'{path}: {name}: unsupported NUMBER options')
+                argument = n.arguments.positional[0]
+                if not (isinstance(argument, ast.NumberLiteral) or
+                        isinstance(argument, ast.VariableReference) and argument.id.name in number_params):
+                    raise ValueError(f'{path}: {name}: NUMBER requires a numeric parameter or literal')
                 options = {}
                 for option in n.arguments.named:
                     key = option.name.name

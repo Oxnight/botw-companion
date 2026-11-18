@@ -1691,3 +1691,13 @@ legacy-bound-820 = { "Équipe la baguette devant Almus et parle-lui sans la cass
 legacy-bound-821 = { "Équipe la Épée de légende devant Aliza et reparle-lui." }
 legacy-bound-822 = { "Accompagnement - Stalhinox " }{ $value0 }
 renderfilternav-point-count = { $formattedCount } pts
+
+# Report guide labels and templates.
+guide-required-bow = Arc
+guide-enemy-sky-octorok-master-mode = Octociel - mode expert
+guide-combat-variable-rank = Rang variable
+guide-combat-long-combos = Longs combos
+guide-combat-final-laser = Laser final
+guide-coordinates-3d = Position tridimensionnelle : X { $value0 }, Y { $value1 }, Z { $value2 }
+guide-solution-step = Solution { $value0 }/{ $value1 }
+guide-explore-sector = Explore le secteur { $value0 }.

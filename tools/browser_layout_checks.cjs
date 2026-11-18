@@ -36,12 +36,17 @@ async function assertLocalizedLayout(page) {
                 Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1) overlaps.push(selector);
           }
         }
-        return {overflow, overlaps, buttonHeights: [...document.querySelectorAll('.appActionButtons button')]
+        const outsideViewport = ['.listPanel', '#bloodMoonPhase', '#gameMode'].filter(selector => {
+          const bounds = document.querySelector(selector).getBoundingClientRect();
+          return bounds.width && (bounds.left < -2 || bounds.right > innerWidth + 2);
+        });
+        return {overflow, overlaps, outsideViewport, buttonHeights: [...document.querySelectorAll('.appActionButtons button')]
           .map(element => element.getBoundingClientRect().height)};
       });
       const language = await page.locator('html').getAttribute('lang');
       assert.deepEqual(result.overflow, [], `${language}/${width}: long text overflows ${result.overflow}`);
       assert.deepEqual(result.overlaps, [], `${language}/${width}: controls overlap ${result.overlaps}`);
+      assert.deepEqual(result.outsideViewport, [], `${language}/${width}: content outside viewport ${result.outsideViewport}`);
       assert(result.buttonHeights.every(height => height >= 44), `${language}/${width}: action target too short`);
     }
   } finally {

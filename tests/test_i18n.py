@@ -102,7 +102,7 @@ class LocalizationTests(unittest.TestCase):
             shutil.copyfile(ROOT / name, target)
         contract = builder.read(self.package / 'i18n/contract.json')
         contract.update({'probe-count': {'params': ['count'], 'rich': False, 'markup': []},
-                         'probe-number': {'params': ['count'], 'rich': False, 'markup': []},
+                         'probe-number': {'params': ['count'], 'number_params': ['count'], 'rich': False, 'markup': []},
                          'probe-values': {'params': ['first', 'second'], 'rich': False, 'markup': []},
                          'probe-rich': {'params': ['open', 'name', 'close'], 'rich': True, 'markup': ['open', 'close']}})
         with windows_text_writes():
@@ -441,6 +441,23 @@ const rich=c.BOTWI18n.t('probe-rich',{open:'<b>',name:'&lt;/b&gt;&lt;script&gt;'
             with self.assertRaises(ValueError):
                 builder.build(self.root)
         path.write_text(original, encoding='utf-8', newline='\n')
+
+    def test_catalog_rejects_number_on_display_text_and_missing_branch_parameters(self):
+        path = self.package / 'locales/en/messages.ftl'
+        contract = builder.read(self.package / 'i18n/contract.json')
+        original = path.read_text(encoding='utf-8')
+        invalid = [
+            ('{ $second } { NUMBER($first) }', 'NUMBER requires a numeric parameter'),
+            ('{ $first ->\n    [one] { $second }\n   *[other] Missing value\n    }',
+             'required variables missing in a branch'),
+        ]
+        for pattern, error in invalid:
+            with self.subTest(pattern=pattern):
+                path.write_text(original.replace(
+                    'probe-values = { $first } / { $second } / { $first }',
+                    'probe-values = ' + pattern), encoding='utf-8', newline='\n')
+                with self.assertRaisesRegex(ValueError, error):
+                    builder.parse_messages(path, contract)
 
     def test_utf8_and_download_names_do_not_change_actual_paths(self):
         with loaded(self.package):
