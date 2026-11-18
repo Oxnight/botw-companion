@@ -17106,10 +17106,85 @@
       "formattedCount",
       "count"
     ],
-    "required": ["formattedCount"],
-    "raw_counts": {"count": "items.length"},
+    "required": [
+      "formattedCount"
+    ],
+    "raw_counts": {
+      "count": "items.length"
+    },
     "rich": false,
     "markup": [],
     "browser": true
+  },
+  "guide-required-bow": {
+    "params": [],
+    "rich": false,
+    "markup": [],
+    "browser": false
+  },
+  "guide-enemy-sky-octorok-master-mode": {
+    "params": [],
+    "rich": false,
+    "markup": [],
+    "browser": false
+  },
+  "guide-combat-variable-rank": {
+    "params": [],
+    "rich": false,
+    "markup": [],
+    "browser": false
+  },
+  "guide-combat-long-combos": {
+    "params": [],
+    "rich": false,
+    "markup": [],
+    "browser": false
+  },
+  "guide-combat-final-laser": {
+    "params": [],
+    "rich": false,
+    "markup": [],
+    "browser": false
+  },
+  "guide-coordinates-3d": {
+    "params": [
+      "value0",
+      "value1",
+      "value2",
+      "number0",
+      "number1",
+      "number2"
+    ],
+    "rich": false,
+    "markup": [],
+    "browser": false,
+    "required": [
+      "value0",
+      "value1",
+      "value2"
+    ]
+  },
+  "guide-solution-step": {
+    "params": [
+      "value0",
+      "value1",
+      "number0",
+      "number1"
+    ],
+    "rich": false,
+    "markup": [],
+    "browser": false,
+    "required": [
+      "value0",
+      "value1"
+    ]
+  },
+  "guide-explore-sector": {
+    "params": [
+      "value0"
+    ],
+    "rich": false,
+    "markup": [],
+    "browser": false
   }
 }

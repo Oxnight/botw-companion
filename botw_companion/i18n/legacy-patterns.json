@@ -1,5 +1,38 @@
 [
   {
+    "source": "Explore le secteur ZXQ0QXZ.",
+    "message": "guide-explore-sector",
+    "preserve_values": [
+      0
+    ]
+  },
+  {
+    "source": "Solution ZXQ0QXZ/ZXQ1QXZ",
+    "message": "guide-solution-step",
+    "preserve_values": [
+      0,
+      1
+    ],
+    "numeric_values": [
+      0,
+      1
+    ]
+  },
+  {
+    "source": "Position tridimensionnelle : X ZXQ0QXZ, Y ZXQ1QXZ, Z ZXQ2QXZ",
+    "message": "guide-coordinates-3d",
+    "preserve_values": [
+      0,
+      1,
+      2
+    ],
+    "numeric_values": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
     "source": "Accompagnement - Stalhinox ZXQ0QXZ",
     "message": "legacy-template-1",
     "preserve_values": [

@@ -1143,3 +1143,12 @@ legacy-bound-819 = { "Equip the armor Zora, go up the waterfall and talk to Gruv
 legacy-bound-820 = { "Equip the wand in front of Kula and talk to her without breaking her." }
 legacy-bound-821 = { "Equip the Master Sword in front of Aliza and talk to her again." }
 legacy-bound-822 = { "Supporting guide - Hinox " }{ $value0 }
+# Report guide labels and templates.
+guide-required-bow = Bow
+guide-enemy-sky-octorok-master-mode = Sky Octorok (Master Mode)
+guide-combat-variable-rank = Variable rank
+guide-combat-long-combos = Long combos
+guide-combat-final-laser = Final laser
+guide-coordinates-3d = 3D position: X { $value0 }, Y { $value1 }, Z { $value2 }
+guide-solution-step = Solution { $value0 }/{ $value1 }
+guide-explore-sector = Explore sector { $value0 }.

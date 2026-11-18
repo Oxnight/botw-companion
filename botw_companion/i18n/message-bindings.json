@@ -2092,5 +2092,25 @@
       "value0": "010",
       "number0": 10.0
     }
+  },
+  "Arc": {
+    "message": "guide-required-bow",
+    "values": {}
+  },
+  "Octociel - mode expert": {
+    "message": "guide-enemy-sky-octorok-master-mode",
+    "values": {}
+  },
+  "Rang variable": {
+    "message": "guide-combat-variable-rank",
+    "values": {}
+  },
+  "Longs combos": {
+    "message": "guide-combat-long-combos",
+    "values": {}
+  },
+  "Laser final": {
+    "message": "guide-combat-final-laser",
+    "values": {}
   }
 }

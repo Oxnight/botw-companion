@@ -181,7 +181,7 @@ def _chest(item: dict, category: str) -> dict:
     access = item.get("chest_access", {})
     interior = item.get("interior_position", {})
     position = (_position(item) if item.get("x") is not None else
-                interior.get("area") or access.get("area") or f"Explore {sector}.")
+                interior.get("area") or access.get("area") or f"Explore le secteur {sector}.")
     access_steps = access.get("steps") or ([access["access"]] if access.get("access") else [])
     steps = [
         _step("Rejoindre le coffre", position, _state(done, not done)),

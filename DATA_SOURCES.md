@@ -137,3 +137,9 @@ Temple, Tah Muhl, sunken chests and Walton's riddle. French source keys remain
 stable. Only factual corrections and original Russian wording are included;
 source articles, media and game binaries are not bundled. These records retain
 the contributor's editorial work and do not establish independent human review.
+
+Selected corrections now also inform the shared French source walkthroughs
+and English rendering. The current prose records link to the supporting quest
+walkthroughs and to Nintendo's Explorer's Guide for the name Korok Seed.
+Historical French prose keys and the original Russian decisions remain in the
+review records for traceability.

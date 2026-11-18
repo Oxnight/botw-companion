@@ -1950,7 +1950,7 @@
       "floor": 1,
       "kind": "combat",
       "kind_label": "Salle active",
-      "enemies": "4 Stalkoblins",
+      "enemies": "4 Stalbokoblins",
       "strategy": "Utilise surtout les bombes, détruis les crânes et conserve toutes les armes en bois pour la suite.",
       "source": {
         "name": "Zelda Dungeon - Trial of the Sword",
@@ -1992,7 +1992,7 @@
       "floor": 4,
       "kind": "combat",
       "kind_label": "Salle active",
-      "enemies": "7 Stalkoblins montés",
+      "enemies": "7 Stalbokoblins montés",
       "strategy": "Vole un cheval squelette, saute pour tirer en ralenti et vise la tête des cavaliers.",
       "source": {
         "name": "Zelda Dungeon - Trial of the Sword",

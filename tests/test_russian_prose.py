@@ -4,7 +4,8 @@ import unittest
 
 from fluent.runtime import FluentBundle, FluentResource
 
-from botw_companion.i18n.presentation import Presenter
+from botw_companion.analyzer import analyze
+from botw_companion.i18n.presentation import Presenter, present
 from tools.i18n import read
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,10 +21,29 @@ class RussianProseTests(unittest.TestCase):
         cls.review = read(ROOT / 'docs/RUSSIAN_PROSE_REVIEW.json')
         cls.bundle = FluentBundle(['ru-RU'], use_isolating=False)
         cls.bundle.add_resource(FluentResource((folder / 'messages.ftl').read_text(encoding='utf-8')))
+        shared = ROOT / 'botw_companion/i18n'
+
+        def render(identity, _locale, **values):
+            result, errors = cls.bundle.format_pattern(cls.bundle.get_message(identity).value, values)
+            if errors:
+                raise AssertionError((identity, errors))
+            return result
+
         cls.presenter = Presenter('ru', reference={
-            'strings': cls.prose, 'glossary': {}, 'patterns': [],
+            'strings': cls.prose, 'glossary': {},
+            'patterns': read(shared / 'legacy-patterns.json'),
+            'exact_messages': read(shared / 'message-bindings.json'),
             **read(folder / 'game.json'),
-        })
+        }, format_message=render)
+        report = analyze({})
+        cls.items = {item['tracking_id']: item for section in ('elements', 'map_layers')
+                     for item in report[section]}
+
+    def rendered_item(self, identity, locale):
+        item = self.items[identity]
+        rendered = self.presenter.present(item) if locale == 'ru' else present(item, locale)
+        self.assertEqual(rendered['tracking_id'], identity)
+        return rendered
 
     def test_review_covers_each_canonical_key_and_matches_supplied_values(self):
         records = self.review['mappings']
@@ -67,13 +87,58 @@ class RussianProseTests(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertEqual(self.presenter.translate_text(key), expected)
 
-    def test_rushroom_quest_keeps_its_factual_quantity(self):
-        for key in ('Récolte cinquante champignons tempo sans les cuisiner.',
-                    'Vends les cinquante champignons à Pirou en une fois.'):
-            with self.subTest(key=key):
-                result = self.presenter.translate_text(key)
-                self.assertIn('55 прытковиков', result)
-                self.assertNotIn('пятьдесят', result)
+    def test_corrected_walkthroughs_render_in_all_three_languages(self):
+        cases = {
+            'quetes_secondaires:rushroomrush': (2, (
+                ('55 champis tempo', 'coffre derrière le relais'),
+                ('55 Rushrooms', 'chest behind the stable'),
+                ('55 прытковиков', 'сундук за конюшней'))),
+            'quetes_secondaires:slatedforupgrades': (1, (
+                ('vis antiques pour le détecteur', 'axes antiques pour Bombes', 'cœurs antiques pour Cinetis'),
+                ('Screws for Sheikah Sensor', 'Shafts for Remote Bomb', 'Cores for Stasis'),
+                ('винта для Датчика', 'вала для бомб', 'ядра для Стазиса'))),
+            'quetes_sanctuaires:thespringofwisdom': (2, (('son écaille',), ('Naydra’s Scale',), ('чешую',))),
+            'quetes_secondaires:agiftfromthemonks': (1, (("Rona'Kahta",), ('Rona Kachta Shrine',), ('Рона-Кахта',))),
+            'quetes_sanctuaires:alandscapeofastable': (2, (("Ta'Mur",), ('Tah Muhl Shrine',), ('Та-Мул',))),
+            'quetes_secondaires:sunkentreasure': (1, (('en radeau', 'Polaris'), ('on a raft', 'Magnesis'), ('на плоту', 'Магнезисом'))),
+            'quetes_secondaires:riddlesofhyrule': (1, (('champi piment',), ('Sunshroom',), ('жаромор',))),
+        }
+        for identity, (index, cases_by_locale) in cases.items():
+            for locale, expected in zip(('fr', 'en', 'ru'), cases_by_locale):
+                with self.subTest(identity=identity, locale=locale):
+                    guide = self.rendered_item(identity, locale)['guide']
+                    for text in expected:
+                        self.assertIn(text, guide['detailed_steps'][index])
+                        self.assertTrue(any(text in step['instruction'] for step in guide['steps']))
+
+    def test_report_labels_are_translated_without_changing_coordinates_or_ids(self):
+        for locale, bow, space, step, sector, enemy in [
+            ('en', 'Bow', '3D position: ', 'Solution 1/3', 'Explore sector A-1.', '4 Stalkoblins'),
+            ('ru', 'Лук', 'Координаты: ', 'Решение 1/3', 'Исследуйте сектор A-1.', '4 сталкоблина'),
+        ]:
+            with self.subTest(locale=locale):
+                shrine = self.rendered_item('sanctuaires:Dungeon001', locale)
+                self.assertIn(bow, shrine['guide']['prerequisites'])
+                identity = 'korogus:MainField_Npc_HiddenKorokGround_3077381654'
+                korok = self.rendered_item(identity, locale)
+                raw_coordinates = next(line for line in self.items[identity]['guide']['preparation']
+                                       if line.startswith('Position tridimensionnelle : '))
+                self.assertIn(space + raw_coordinates.split(' : ', 1)[1], korok['guide']['preparation'])
+                quest = self.rendered_item('quetes_secondaires:rushroomrush', locale)
+                self.assertIn(step, [item['title'] for item in quest['guide']['steps']])
+                chest = self.rendered_item('coffres_monde:AocField-452454445', locale)
+                self.assertIn(sector, [item['instruction'] for item in chest['guide']['steps']])
+                trials = self.rendered_item('epreuves_epee:epreuves-expert', locale)
+                self.assertEqual(trials['guide']['trial_rooms'][0]['enemies'], enemy)
+
+    def test_english_korok_guide_names_the_reward_in_each_field(self):
+        identity = 'korogus:MainField_Npc_HiddenKorokGround_3077381654'
+        guide = self.rendered_item(identity, 'en')['guide']
+        self.assertEqual(guide['steps'][-1]['title'], 'Collect the Korok Seed')
+        self.assertEqual(guide['steps'][-1]['instruction'],
+                         'Talk to the Korok that appeared and collect the Korok Seed.')
+        self.assertEqual(guide['completion']['condition'],
+                         'The Korok must award the Korok Seed and its individual flag must be set.')
 
     def test_upgrade_diagnostics_accept_display_values_without_case_agreement(self):
         for identity in ('legacy-diagnostic-3', 'legacy-diagnostic-4'):

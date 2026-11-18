@@ -1,8 +1,8 @@
 {
   "status": "complete_translation_draft_human_review_pending",
   "method": "Draft sourced terminology, shared interface messages, stable category/ordinal aliases, and translator-authored complete-sentence patterns. French keys preserved. Human review pending.",
-  "translated": 12650,
-  "required": 12650,
+  "translated": 12664,
+  "required": 12664,
   "pending": 0,
   "mappings": [
     {
@@ -75773,50 +75773,56 @@
     },
     {
       "key": "Après la disparition de la dernière cible, récupère la noix auprès du Korogu.",
-      "english": "After the last target disappears, retrieve the nut from the Korok.",
+      "english": "After the last target disappears, retrieve the Korok Seed from the Korok.",
       "russian": "После исчезновения последней мишени заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Après le cinquième groupe, récupère la noix auprès du Korogu.",
-      "english": "After the fifth group, pick up the walnut from the Korok.",
+      "english": "After the fifth group, pick up the Korok Seed from the Korok.",
       "russian": "После пятой группы заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Après le dernier saut validé, récupère la noix auprès du Korogu.",
-      "english": "After the last validated jump, get the nut from the Korok.",
+      "english": "After the last validated jump, get the Korok Seed from the Korok.",
       "russian": "После подтверждения последнего прыжка заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Après le plongeon validé, récupère la noix auprès du Korogu.",
-      "english": "After the dive validated, recover the walnut from the Korok.",
+      "english": "After the dive validated, recover the Korok Seed from the Korok.",
       "russian": "После подтверждения нырка заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Après le tir réussi, récupère la noix auprès du Korogu.",
-      "english": "After the successful shot, retrieve the nut from the Korok.",
+      "english": "After the successful shot, retrieve the Korok Seed from the Korok.",
       "russian": "После удачного выстрела заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Après le tir validé, récupère la noix auprès du Korogu.",
-      "english": "After the validated shot, get the nut from the Korok.",
+      "english": "After the validated shot, get the Korok Seed from the Korok.",
       "russian": "После подтверждения попадания заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
@@ -75837,10 +75843,11 @@
     },
     {
       "key": "Après un lancer validé, récupère la noix auprès du Korogu.",
-      "english": "After a validated throw, get the nut from the Korok.",
+      "english": "After a validated throw, get the Korok Seed from the Korok.",
       "russian": "После подтверждения броска заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; canonical French key retained"
+        "translator-authored editorial prose; canonical French key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
@@ -79188,15 +79195,16 @@
     },
     {
       "key": "Examine la lueur révélée puis récupère la noix auprès du Korogu.",
-      "english": "Examine the revealed glow and retrieve the nut from the Korok.",
+      "english": "Examine the revealed glow and retrieve the Korok Seed from the Korok.",
       "russian": "Осмотрите появившийся огонёк и заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; French source key retained"
+        "translator-authored editorial prose; French source key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
       "key": "Examine le Korogu apparu et récupère la noix.",
-      "english": "Examine the appeared Korok and recover the nut.",
+      "english": "Talk to the Korok that appeared and collect the Korok Seed.",
       "russian": "Осмотрите появившегося корока и заберите семечко.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -80244,7 +80252,7 @@
     },
     {
       "key": "La noix doit être remise et le flag individuel du Korogu activé.",
-      "english": "The nut must be returned and the individual flag of the Korok activated.",
+      "english": "The Korok must award the Korok Seed and its individual flag must be set.",
       "russian": "Нужно забрать семечко и активировать отдельный флаг этого корока.",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -83123,10 +83131,11 @@
     },
     {
       "key": "Ramasse-la puis récupère la noix auprès du Korogu.",
-      "english": "Pick it up and collect the walnut from the Korok.",
+      "english": "Pick it up and collect the Korok Seed from the Korok.",
       "russian": "Поднимите его и заберите семечко у корока.",
       "references": [
-        "translator-authored editorial prose; French source key retained"
+        "translator-authored editorial prose; French source key retained",
+        "https://zelda.nintendo.com/breath-of-the-wild/assets/pdfs/ExplorersGuide.pdf"
       ]
     },
     {
@@ -83843,7 +83852,7 @@
     },
     {
       "key": "Récupérer la noix",
-      "english": "Recovering the nut",
+      "english": "Collect the Korok Seed",
       "russian": "Заберите семечко",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -86972,7 +86981,7 @@
     },
     {
       "key": "Épée de légende obtenue (13 cœurs requis)",
-      "english": "Master Sword obtained (13 cores required)",
+      "english": "Master Sword obtained (13 hearts required)",
       "russian": "Высший Меч получен (нужно 13 сердец)",
       "references": [
         "translator-authored editorial prose; French source key retained"
@@ -96662,10 +96671,11 @@
     },
     {
       "key": "Ouvre les trois coffres tombés du ciel pour réunir casque, gilet et pantalon de récupérateur.",
-      "english": "Open the three Sky chests to bring together helmet, vest and pants of recuperator.",
+      "english": "Open the three chests that fell from the sky to collect the Salvager Headwear, Vest, and Trousers.",
       "russian": "Откройте три упавших с неба сундука, чтобы собрать шлем, жилет и штаны спасателя.",
       "references": [
-        "translator-authored editorial prose; French source key retained"
+        "translator-authored editorial prose; French source key retained",
+        "https://www.zeldadungeon.net/wiki/Xenoblade_Chronicles_2_(Quest)"
       ],
       "editorial_review": "2026-10-24: wording and contextual factual review; see RUSSIAN_EDITORIAL_REVIEW.json"
     },
@@ -103322,6 +103332,122 @@
       "russian": "обучение бою",
       "references": [
         "visual runtime review: shrine mechanics"
+      ]
+    },
+    {
+      "key": "Récolte 55 champis tempo sans les cuisiner.",
+      "english": "Collect 55 Rushrooms without cooking them.",
+      "russian": "Соберите 55 прытковиков, не готовя их.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Rushroom_Rush!"
+      ]
+    },
+    {
+      "key": "Remets les 55 champis tempo à Pirou, puis ouvre le coffre derrière le relais pour récupérer le diamant brut.",
+      "english": "Give Pirou all 55 Rushrooms, then open the chest behind the stable to collect your Diamond.",
+      "russian": "Передайте Пиру все 55 прытковиков, затем откройте сундук за конюшней и заберите алмаз.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Rushroom_Rush!"
+      ]
+    },
+    {
+      "key": "Apporte trois vis antiques pour le détecteur +, trois axes antiques pour Bombes + et trois cœurs antiques pour Cinetis +.",
+      "english": "Bring three Ancient Screws for Sheikah Sensor+, three Ancient Shafts for Remote Bomb+, and three Ancient Cores for Stasis+.",
+      "russian": "Принесите три древних винта для Датчика шиика+, три древних вала для бомб+ и три древних ядра для Стазиса+.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Slated_for_Upgrades"
+      ]
+    },
+    {
+      "key": "Une fois Nedrac libéré, tire sur son corps, ramasse son écaille et dépose-la dans la source de la Sagesse pour ouvrir le sanctuaire de Jitah'Sami.",
+      "english": "Once Naydra is free, shoot its body, collect Naydra’s Scale and offer it at the Spring of Wisdom to open Jitan Sa’mi Shrine.",
+      "russian": "После освобождения Нейдры выстрелите в её тело, подберите чешую и положите её в Источник Мудрости, чтобы открыть святилище Зитан-Сами.",
+      "references": [
+        "https://www.zeldadungeon.net/breath-of-the-wild-walkthrough/breath-of-the-wild-shrine-quests/the-spring-of-wisdom/"
+      ]
+    },
+    {
+      "key": "Lis le message du dernier moine puis téléporte-toi au sanctuaire de Rona'Kahta, dans le Temple oublié.",
+      "english": "Read the last monk’s message, then warp to Rona Kachta Shrine in the Forgotten Temple.",
+      "russian": "Прочитайте послание последнего священника, затем переместитесь в святилище Рона-Кахта в Забытом храме.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/A_Gift_from_the_Monks"
+      ]
+    },
+    {
+      "key": "Dans le Temple oublié, ouvre les trois coffres devant la grande statue de la Déesse pour récupérer la tenue des Landes.",
+      "english": "In the Forgotten Temple, open the three chests in front of the large Goddess Statue to collect the Wild set.",
+      "russian": "В Забытом храме откройте три сундука перед большой статуей богини, чтобы получить комплект Героя Просторов.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/A_Gift_from_the_Monks"
+      ]
+    },
+    {
+      "key": "Trouve et active le sanctuaire de Ta'Mur, au sud-ouest du relais.",
+      "english": "Find and activate Tah Muhl Shrine southwest of the stable.",
+      "russian": "Найдите и активируйте святилище Та-Мул к юго-западу от конюшни.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/A_Landscape_of_a_Stable"
+      ]
+    },
+    {
+      "key": "Rejoins le triangle de rochers en radeau et utilise Polaris pour sortir les coffres de l'eau.",
+      "english": "Sail to the triangle of rocks on a raft and use Magnesis to lift the chests out of the sea.",
+      "russian": "Доберитесь на плоту до треугольника камней и поднимите сундуки со дна Магнезисом.",
+      "references": [
+        "https://zeldacentral.com/games/breath-of-the-wild/side-quests/sunken-treasure/"
+      ]
+    },
+    {
+      "key": "Ouvre les quatre coffres métalliques, puis retourne parler à Rozel.",
+      "english": "Open the four metal chests, then return to Rozel.",
+      "russian": "Откройте четыре металлических сундука, затем вернитесь к Розэлу.",
+      "references": [
+        "https://zeldacentral.com/games/breath-of-the-wild/side-quests/sunken-treasure/"
+      ]
+    },
+    {
+      "key": "Présente successivement une pomme, une citrouille armo, un champi piment, une truite volt et un sabot de Lynel.",
+      "english": "Present an Apple, a Fortified Pumpkin, a Sunshroom, a Voltfin Trout, and a Lynel Hoof in that order.",
+      "russian": "По очереди покажите яблоко, латную тыкву, жаромор, грозовую форель и копыто левра.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Riddles_of_Hyrule"
+      ]
+    },
+    {
+      "key": "4 Stalbokoblins",
+      "english": "4 Stalkoblins",
+      "russian": "4 сталкоблина",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword",
+        "game.names_by_id:compendium:Enemy_Bokoblin_Bone_Junior"
+      ]
+    },
+    {
+      "key": "7 Stalbokoblins montés",
+      "english": "7 mounted Stalkoblins",
+      "russian": "7 сталкоблинов верхом",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword",
+        "game.names_by_id:compendium:Enemy_Bokoblin_Bone_Junior"
+      ]
+    },
+    {
+      "key": "Salle 1 - Salle active - 4 Stalbokoblins : Utilise surtout les bombes, détruis les crânes et conserve toutes les armes en bois pour la suite.",
+      "english": "Room 1 - Combat room - 4 Stalkoblins: Mostly use bombs, destroy the skulls, and save all wooden weapons for later.",
+      "russian": "Комната 1 — зал боя — сталкоблины ×4. В основном используйте бомбы, разрушайте черепа и берегите деревянное оружие для следующих комнат.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword",
+        "game.names_by_id:compendium:Enemy_Bokoblin_Bone_Junior"
+      ]
+    },
+    {
+      "key": "Salle 4 - Salle active - 7 Stalbokoblins montés : Vole un cheval squelette, saute pour tirer en ralenti et vise la tête des cavaliers.",
+      "english": "Room 4 - Combat room - 7 Stalkoblins mounted: Steal a Stalhorse, jump to shoot in slow motion, and aim at the mounted enemies' heads.",
+      "russian": "Комната 4 — зал боя — сталкоблины верхом ×7. Захватите сталлошадь, выпрыгните для стрельбы в замедленном времени и цельтесь в головы всадников.",
+      "references": [
+        "https://www.zeldadungeon.net/wiki/Trial_of_the_Sword",
+        "game.names_by_id:compendium:Enemy_Bokoblin_Bone_Junior"
       ]
     }
   ],

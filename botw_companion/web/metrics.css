@@ -1867,9 +1867,13 @@
 
     .bloodMoonHeading {
         align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px 14px;
     }
 
     .bloodMoonPhase {
+        max-width: 100%;
+        overflow-wrap: anywhere;
         white-space: normal;
         text-align: center;
     }
